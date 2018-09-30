@@ -1,0 +1,4 @@
+{
+  "templateName": "test-pom-only.ftl"
+  //missing dataModel, is OK, assuming all required properies are found in pom
+}
