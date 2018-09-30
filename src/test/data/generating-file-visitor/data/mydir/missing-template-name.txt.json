@@ -1,0 +1,6 @@
+{
+  //not ok to be missing the templateName
+  "dataModel": {
+    "testVar": "test value"
+  }
+}

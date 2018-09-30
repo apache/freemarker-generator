@@ -1,0 +1,6 @@
+{
+  "templateName": "missing.ftl",
+  "dataModel": {
+    "testVar": "test value"
+  }
+}
