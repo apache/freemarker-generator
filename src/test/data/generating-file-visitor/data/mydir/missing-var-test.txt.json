@@ -1,0 +1,4 @@
+{
+  "templateName": "test.ftl"
+  //missing dataModel is not ok, since we are missing a variable needed to fill out the template
+}
