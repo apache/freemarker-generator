@@ -49,14 +49,15 @@ import mockit.Verifications;
 
 public class FreeMarkerMojoTest extends Assert {
 
-  public static final File testOutputDir = new File("target/test-output/freemarker-mojo");
+  private static final File TEST_OUTPUT_DIR = new File("target/test-output/freemarker-mojo");
+  private static final String FREEMARKER_VERSION = "2.3.29";
   
   @BeforeClass
   public static void beforeClass() throws IOException {
     // Clean output dir before each run.
-    if (testOutputDir.exists()) {
+    if (TEST_OUTPUT_DIR.exists()) {
       // Recursively delete output from previous run.
-      Files.walk(testOutputDir.toPath())
+      Files.walk(TEST_OUTPUT_DIR.toPath())
        .sorted(Comparator.reverseOrder())
        .map(Path::toFile)
        .forEach(File::delete);
@@ -89,8 +90,8 @@ public class FreeMarkerMojoTest extends Assert {
       mojo.execute();
     }).withMessage("freeMarkerVersion is required");
 
-    File testCaseOutputDir = new File(testOutputDir, "executeTest");
-    Deencapsulation.setField(mojo, "freeMarkerVersion", "2.3.23");
+    File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "executeTest");
+    Deencapsulation.setField(mojo, "freeMarkerVersion", FREEMARKER_VERSION);
     Deencapsulation.setField(mojo, "sourceDirectory", testCaseOutputDir);
     Deencapsulation.setField(mojo, "templateDirectory", new File(testCaseOutputDir, "template"));
     Deencapsulation.setField(mojo, "generatorDirectory", new File(testCaseOutputDir, "data"));
@@ -155,8 +156,8 @@ public class FreeMarkerMojoTest extends Assert {
 
     FreeMarkerMojo mojo = new FreeMarkerMojo();
     
-    File testCaseOutputDir = new File(testOutputDir, "generateTestSourceTest");
-    Deencapsulation.setField(mojo, "freeMarkerVersion", "2.3.23");
+    File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "generateTestSourceTest");
+    Deencapsulation.setField(mojo, "freeMarkerVersion", FREEMARKER_VERSION);
     Deencapsulation.setField(mojo, "sourceDirectory", testCaseOutputDir);
     Deencapsulation.setField(mojo, "templateDirectory", new File(testCaseOutputDir, "template"));
     Deencapsulation.setField(mojo, "generatorDirectory", new File(testCaseOutputDir, "data"));
@@ -192,8 +193,8 @@ public class FreeMarkerMojoTest extends Assert {
 
     FreeMarkerMojo mojo = new FreeMarkerMojo();
     
-    File testCaseOutputDir = new File(testOutputDir, "generateTestSourceTest");
-    Deencapsulation.setField(mojo, "freeMarkerVersion", "2.3.23");
+    File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "generateTestSourceTest");
+    Deencapsulation.setField(mojo, "freeMarkerVersion", FREEMARKER_VERSION);
     Deencapsulation.setField(mojo, "sourceDirectory", testCaseOutputDir);
     Deencapsulation.setField(mojo, "templateDirectory", new File(testCaseOutputDir, "template"));
     Deencapsulation.setField(mojo, "generatorDirectory", new File(testCaseOutputDir, "data"));
@@ -218,15 +219,15 @@ public class FreeMarkerMojoTest extends Assert {
       @Mocked Configuration config) {
     
     new Expectations(config, FactoryUtil.class) {{
-      FactoryUtil.createConfiguration("2.3.23"); result = config;
+      FactoryUtil.createConfiguration(FREEMARKER_VERSION); result = config;
       config.setTemplateLoader((TemplateLoader) any); result = new RuntimeException("test exception");
     }};
 
     FreeMarkerMojo mojo = new FreeMarkerMojo();
 
-    File testCaseOutputDir = new File(testOutputDir, "setTemplateLoaderException");
+    File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "setTemplateLoaderException");
 
-    Deencapsulation.setField(mojo, "freeMarkerVersion", "2.3.23");
+    Deencapsulation.setField(mojo, "freeMarkerVersion", FREEMARKER_VERSION);
     Deencapsulation.setField(mojo, "sourceDirectory", testCaseOutputDir);
     Deencapsulation.setField(mojo, "templateDirectory", new File(testCaseOutputDir, "template"));
     Deencapsulation.setField(mojo, "generatorDirectory", new File(testCaseOutputDir, "data"));
@@ -252,9 +253,9 @@ public class FreeMarkerMojoTest extends Assert {
     FreeMarkerMojo mojo = new FreeMarkerMojo();
 
     File sourceDirectory = new File("src/test/data/freemarker-mojo");
-    File testCaseOutputDir = new File(testOutputDir, "loadFreemarkerProperties");
+    File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "loadFreemarkerProperties");
 
-    Deencapsulation.setField(mojo, "freeMarkerVersion", "2.3.23");
+    Deencapsulation.setField(mojo, "freeMarkerVersion", FREEMARKER_VERSION);
     Deencapsulation.setField(mojo, "sourceDirectory", sourceDirectory);
     Deencapsulation.setField(mojo, "templateDirectory", new File( sourceDirectory, "template"));
     Deencapsulation.setField(mojo, "generatorDirectory", new File( sourceDirectory, "data"));
@@ -288,9 +289,9 @@ public class FreeMarkerMojoTest extends Assert {
     FreeMarkerMojo mojo = new FreeMarkerMojo();
 
     File sourceDirectory = new File("src/test/data/freemarker-mojo");
-    File testCaseOutputDir = new File(testOutputDir, "loadFreemarkerPropertiesExceptionTest");
+    File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "loadFreemarkerPropertiesExceptionTest");
 
-    Deencapsulation.setField(mojo, "freeMarkerVersion", "2.3.23");
+    Deencapsulation.setField(mojo, "freeMarkerVersion", FREEMARKER_VERSION);
     Deencapsulation.setField(mojo, "sourceDirectory", sourceDirectory);
     Deencapsulation.setField(mojo, "templateDirectory", new File( sourceDirectory, "template"));
     Deencapsulation.setField(mojo, "generatorDirectory", new File( sourceDirectory, "data"));
@@ -322,9 +323,9 @@ public class FreeMarkerMojoTest extends Assert {
     FreeMarkerMojo mojo = new FreeMarkerMojo();
 
     File sourceDirectory = new File("src/test/data/freemarker-mojo");
-    File testCaseOutputDir = new File(testOutputDir, "loadFreemarkerProperties");
+    File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "loadFreemarkerProperties");
 
-    Deencapsulation.setField(mojo, "freeMarkerVersion", "2.3.23");
+    Deencapsulation.setField(mojo, "freeMarkerVersion", FREEMARKER_VERSION);
     Deencapsulation.setField(mojo, "sourceDirectory", sourceDirectory);
     Deencapsulation.setField(mojo, "templateDirectory", new File( sourceDirectory, "template"));
     Deencapsulation.setField(mojo, "generatorDirectory", new File( sourceDirectory, "data"));
