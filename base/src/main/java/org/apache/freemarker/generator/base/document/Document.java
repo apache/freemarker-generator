@@ -14,12 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.cli.model;
+package org.apache.freemarker.generator.base.document;
 
-import org.apache.freemarker.generator.cli.activation.StringDataSource;
-import org.apache.freemarker.generator.cli.impl.CloseableReaper;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
+import org.apache.freemarker.generator.base.activation.ByteArrayDataSource;
+import org.apache.freemarker.generator.base.activation.StringDataSource;
+import org.apache.freemarker.generator.base.util.CloseableReaper;
 
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -41,9 +42,9 @@ import static org.apache.commons.io.IOUtils.lineIterator;
  */
 public class Document implements Closeable {
 
-    private static final int UKNOWN_LENGTH = -1;
+    public static final int UNKNOWN_LENGTH = -1;
 
-    /** Human-radable name of the document */
+    /** Human-readable name of the document */
     private final String name;
 
     /** Charset for directly accessing text-based content */
@@ -81,15 +82,17 @@ public class Document implements Closeable {
     /**
      * Try to get the length lazily, efficient and without consuming the input stream.
      *
-     * @return Length of document or "-1"
+     * @return Length of document or UNKNOWN_LENGTH
      */
     public long getLength() {
         if (dataSource instanceof FileDataSource) {
             return ((FileDataSource) dataSource).getFile().length();
         } else if (dataSource instanceof StringDataSource) {
             return ((StringDataSource) dataSource).getContent().length();
+        } else if (dataSource instanceof ByteArrayDataSource) {
+            return ((ByteArrayDataSource) dataSource).getContent().length;
         } else {
-            return UKNOWN_LENGTH;
+            return UNKNOWN_LENGTH;
         }
     }
 

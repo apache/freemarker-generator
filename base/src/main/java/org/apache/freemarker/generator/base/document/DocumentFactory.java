@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.cli.impl;
+package org.apache.freemarker.generator.base.document;
 
-import org.apache.freemarker.generator.cli.activation.InputStreamDataSource;
-import org.apache.freemarker.generator.cli.activation.StringDataSource;
-import org.apache.freemarker.generator.cli.model.Document;
+import org.apache.freemarker.generator.base.activation.ByteArrayDataSource;
+import org.apache.freemarker.generator.base.activation.InputStreamDataSource;
+import org.apache.freemarker.generator.base.activation.StringDataSource;
 
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
@@ -35,7 +35,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 public class DocumentFactory {
 
-    private static final String STRING_LOCATION = "string";
+    private static final String DEFAULT_LOCATION = "unknown";
     private static final String NAME_URL = "url";
 
     private DocumentFactory() {
@@ -48,12 +48,22 @@ public class DocumentFactory {
 
     public static Document create(String name, String content) {
         final StringDataSource dataSource = new StringDataSource(name, content, UTF_8);
-        return create(name, dataSource, STRING_LOCATION, UTF_8);
+        return create(name, dataSource, DEFAULT_LOCATION, UTF_8);
     }
 
     public static Document create(File file, Charset charset) {
         final FileDataSource dataSource = new FileDataSource(file);
         return create(file.getName(), dataSource, file.getAbsolutePath(), charset);
+    }
+
+    public static Document create(String name, byte[] content) {
+        final ByteArrayDataSource dataSource = new ByteArrayDataSource(name, content);
+        return create(name, dataSource, DEFAULT_LOCATION, UTF_8);
+    }
+
+    public static Document create(String name, InputStream is, Charset charset) {
+        final InputStreamDataSource dataSource = new InputStreamDataSource(name, is);
+        return create(name, dataSource, DEFAULT_LOCATION, charset);
     }
 
     public static Document create(String name, InputStream is, String location, Charset charset) {

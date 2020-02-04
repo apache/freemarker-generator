@@ -16,12 +16,12 @@
  */
 package org.apache.freemarker.generator.cli.tools.commonscsv;
 
-import org.apache.freemarker.generator.cli.impl.DocumentFactory;
-import org.apache.freemarker.generator.cli.model.Document;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.freemarker.generator.base.document.Document;
+import org.apache.freemarker.generator.base.document.DocumentFactory;
 import org.junit.Test;
 
 import java.io.File;

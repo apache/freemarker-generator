@@ -14,15 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.cli.util;
+package org.apache.freemarker.generator.base.util;
 
-public class StringUtils {
+import java.io.Closeable;
+import java.io.IOException;
 
-    public static boolean isNullOrEmtpty(String value) {
-        return value == null || value.trim().isEmpty();
-    }
+public class ClosableUtils {
 
-    public static boolean isNotEmpty(String value) {
-        return !isNullOrEmtpty(value);
+    public static void closeQuietly(final Closeable closeable) {
+        try {
+            if (closeable != null) {
+                closeable.close();
+            }
+        } catch (final IOException e) {
+            // e.printStackTrace();
+        }
     }
 }

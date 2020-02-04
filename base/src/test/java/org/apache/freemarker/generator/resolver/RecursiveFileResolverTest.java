@@ -14,11 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.cli.impl;
+package org.apache.freemarker.generator.resolver;
 
+import org.apache.freemarker.generator.base.config.RecursiveFileResolver;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
@@ -27,13 +29,13 @@ import static org.junit.Assert.assertTrue;
 
 public class RecursiveFileResolverTest {
 
-    private static final String ANY_DIRECTORY = ".";
-    private static final String ANY_FILE_NAME = "CHANGELOG.md";
+    private static final String ANY_DIRECTORY = "./src/test/data";
+    private static final String ANY_FILE_NAME = "file_01.csv";
     private static final String UNKNOWN_FILE_NAME = "unknown.file";
 
     @Test
     public void shouldResolveAllFilesOfDirectory() {
-        assertTrue(fileResolver(ANY_DIRECTORY, null).resolve().size() > 100);
+        assertEquals(3, fileResolver(ANY_DIRECTORY, null).resolve().size());
         assertTrue(fileResolver(ANY_DIRECTORY, UNKNOWN_FILE_NAME).resolve().isEmpty());
     }
 
@@ -46,13 +48,37 @@ public class RecursiveFileResolverTest {
     }
 
     @Test
-    public void shouldResolveMultipleFilesRecursivelyWithIncludes() {
-        final List<File> files = fileResolver("./site", "*.csv").resolve();
+    public void shouldResolveMultipleFiles() {
+        final List<String> sources = Arrays.asList("pom.xml", "LICENSE");
+        final List<File> files = fileResolver(sources, "*").resolve();
 
-        assertEquals(5, files.size());
+        assertEquals(2, files.size());
+        assertEquals("pom.xml", files.get(0).getName());
+        assertEquals("LICENSE", files.get(1).getName());
+    }
+
+    @Test
+    public void shouldResolveMultipleFilesWithIncludeFilter() {
+        final List<String> sources = Arrays.asList("pom.xml", "LICENSE");
+        final List<File> files = fileResolver(sources, "*.xml").resolve();
+
+        assertEquals(1, files.size());
+        assertEquals("pom.xml", files.get(0).getName());
+    }
+
+    @Test
+    public void shouldResolveMultipleFilesRecursivelyWithIncludes() {
+        final List<File> files = fileResolver(ANY_DIRECTORY, "*.csv").resolve();
+
+        assertEquals(2, files.size());
     }
 
     private static RecursiveFileResolver fileResolver(String directory, String include) {
         return new RecursiveFileResolver(singletonList(directory), include);
     }
+
+    private static RecursiveFileResolver fileResolver(List<String> sources, String include) {
+        return new RecursiveFileResolver(sources, include);
+    }
+
 }

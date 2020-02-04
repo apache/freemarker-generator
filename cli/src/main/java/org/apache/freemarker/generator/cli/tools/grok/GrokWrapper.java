@@ -17,7 +17,7 @@
 package org.apache.freemarker.generator.cli.tools.grok;
 
 import io.krakens.grok.api.Grok;
-import org.apache.freemarker.generator.cli.util.StringUtils;
+import org.apache.freemarker.generator.base.util.StringUtils;
 
 import java.util.Collections;
 import java.util.Map;
@@ -33,7 +33,7 @@ public class GrokWrapper {
     }
 
     public Map<String, Object> match(String line) {
-        if (StringUtils.isNullOrEmtpty(line)) {
+        if (StringUtils.isEmpty(line)) {
             return Collections.emptyMap();
         }
 

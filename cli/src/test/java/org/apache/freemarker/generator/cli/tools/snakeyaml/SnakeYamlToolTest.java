@@ -16,8 +16,8 @@
  */
 package org.apache.freemarker.generator.cli.tools.snakeyaml;
 
-import org.apache.freemarker.generator.cli.impl.DocumentFactory;
-import org.apache.freemarker.generator.cli.model.Document;
+import org.apache.freemarker.generator.base.document.Document;
+import org.apache.freemarker.generator.base.document.DocumentFactory;
 import org.junit.Test;
 
 import java.util.List;
@@ -39,7 +39,7 @@ public class SnakeYamlToolTest {
             final Map<String, Object> map = snakeYamlTool().parse(document);
 
             assertEquals(1, map.size());
-            assertEquals(3, ((List) map.get("docker")).size());
+            assertEquals(3, ((List<?>) map.get("docker")).size());
         }
     }
 
@@ -48,7 +48,7 @@ public class SnakeYamlToolTest {
         final Map<String, Object> map = snakeYamlTool().parse(ANY_YAML_STRING);
 
         assertEquals(1, map.size());
-        assertEquals(3, ((List) map.get("docker")).size());
+        assertEquals(3, ((List<?>) map.get("docker")).size());
     }
 
     private SnakeYamlTool snakeYamlTool() {

@@ -16,18 +16,18 @@
  */
 package org.apache.freemarker.generator.cli;
 
-import org.apache.freemarker.generator.cli.impl.ConfigurationSupplier;
-import org.apache.freemarker.generator.cli.impl.DocumentFactory;
-import org.apache.freemarker.generator.cli.impl.DocumentSupplier;
-import org.apache.freemarker.generator.cli.impl.TemplateLoaderSupplier;
-import org.apache.freemarker.generator.cli.impl.ToolsSupplier;
-import org.apache.freemarker.generator.cli.model.Document;
-import org.apache.freemarker.generator.cli.model.Documents;
-import org.apache.freemarker.generator.cli.model.Settings;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.apache.commons.io.FileUtils;
+import org.apache.freemarker.generator.base.document.Document;
+import org.apache.freemarker.generator.base.document.DocumentFactory;
+import org.apache.freemarker.generator.base.document.DocumentSupplier;
+import org.apache.freemarker.generator.base.document.Documents;
+import org.apache.freemarker.generator.cli.impl.ConfigurationSupplier;
+import org.apache.freemarker.generator.cli.impl.TemplateLoaderSupplier;
+import org.apache.freemarker.generator.cli.impl.ToolsSupplier;
+import org.apache.freemarker.generator.cli.model.Settings;
 
 import java.io.File;
 import java.io.IOException;
@@ -110,7 +110,7 @@ public class FreeMarkerTask implements Callable<Integer> {
      * which are mostly irrelevant when running on the command line. So we resolve the absolute file
      * instead of relying on existing template loaders.
      *
-     * @param settings Settings
+     * @param settings              Settings
      * @param configurationSupplier Supplies FreeMarker configuration
      * @return FreeMarker template
      */

@@ -16,7 +16,7 @@
  */
 package org.apache.freemarker.generator.cli.tools.snakeyaml;
 
-import org.apache.freemarker.generator.cli.model.Document;
+import org.apache.freemarker.generator.base.document.Document;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;

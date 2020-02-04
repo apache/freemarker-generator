@@ -50,6 +50,7 @@
     </scm>
 
     <modules>
+        <module>base</module>
         <module>cli</module>
         <module>maven-plugin</module>
     </modules>
@@ -72,7 +73,6 @@
 
     <build>
         <pluginManagement>
-
             <plugins>
                 <plugin>
                     <artifactId>maven-antrun-plugin</artifactId>

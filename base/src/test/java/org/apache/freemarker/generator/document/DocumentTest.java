@@ -14,10 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.cli.model;
+package org.apache.freemarker.generator.document;
 
-import org.apache.freemarker.generator.cli.impl.DocumentFactory;
 import org.apache.commons.io.LineIterator;
+import org.apache.freemarker.generator.base.document.Document;
+import org.apache.freemarker.generator.base.document.DocumentFactory;
 import org.junit.Test;
 
 import java.io.File;
@@ -41,7 +42,7 @@ public class DocumentTest {
     public void shouldSupportTextDocument() throws IOException {
         try (Document document = DocumentFactory.create("stdin", ANY_TEXT)) {
             assertEquals("stdin", document.getName());
-            assertEquals("string", document.getLocation());
+            assertEquals("unknown", document.getLocation());
             assertEquals(UTF_8, document.getCharset());
             assertTrue(document.getLength() > 0);
             assertEquals(ANY_TEXT, document.getText());
@@ -60,7 +61,7 @@ public class DocumentTest {
     }
 
     @Test
-    public void shouldSupportLineInterator() throws IOException {
+    public void shouldSupportLineIterator() throws IOException {
         try (Document document = DocumentFactory.create("test", ANY_TEXT)) {
             try (LineIterator iterator = document.getLineIterator(ANY_CHAR_SET.name())) {
                 assertEquals(1, count(iterator));
@@ -83,7 +84,7 @@ public class DocumentTest {
         }
     }
 
-    private static int count(Iterator iterator) {
+    private static int count(Iterator<String> iterator) {
         int count = 0;
         while (iterator.hasNext()) {
             count++;

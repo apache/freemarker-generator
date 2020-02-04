@@ -16,13 +16,13 @@
  */
 package org.apache.freemarker.generator.cli.tools.commonscsv;
 
-import org.apache.freemarker.generator.cli.model.Document;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.input.BOMInputStream;
-import org.apache.freemarker.generator.cli.util.StringUtils;
+import org.apache.freemarker.generator.base.document.Document;
+import org.apache.freemarker.generator.base.util.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,7 +61,7 @@ public class CommonsCSVTool {
     }
 
     public CSVParser parse(String csv, CSVFormat format) {
-        if (StringUtils.isNullOrEmtpty(csv)) {
+        if (StringUtils.isEmpty(csv)) {
             throw new IllegalArgumentException("No CSV was provided");
         }
 

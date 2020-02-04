@@ -16,8 +16,8 @@
  */
 package org.apache.freemarker.generator.cli.tools.properties;
 
-import org.apache.freemarker.generator.cli.impl.DocumentFactory;
-import org.apache.freemarker.generator.cli.model.Document;
+import org.apache.freemarker.generator.base.document.Document;
+import org.apache.freemarker.generator.base.document.DocumentFactory;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;

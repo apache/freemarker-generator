@@ -14,11 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.cli.impl;
+package org.apache.freemarker.generator.base.document;
 
-import org.apache.freemarker.generator.cli.model.Document;
 
-import java.io.File;
+import org.apache.freemarker.generator.base.config.RecursiveFileResolver;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
@@ -61,10 +61,8 @@ public class DocumentSupplier implements Supplier<List<Document>> {
     private List<Document> get(String source) {
         if (isUrl(source)) {
             return singletonList(resolveUrl(source));
-        } else if (isFile(source)) {
-            return singletonList(resolveFile(source, charset));
         } else {
-            return resolveDirectory(source, include, charset);
+            return resolveFile(source, include, charset);
         }
     }
 
@@ -72,26 +70,18 @@ public class DocumentSupplier implements Supplier<List<Document>> {
         return DocumentFactory.create(toUrl(url));
     }
 
-    private Document resolveFile(String name, Charset charset) {
-        return DocumentFactory.create(new File(name), charset);
-    }
-
-    private List<Document> resolveDirectory(String directory, String include, Charset charset) {
-        return fileResolver(directory, include).resolve().stream()
+    private List<Document> resolveFile(String source, String include, Charset charset) {
+        return fileResolver(source, include).resolve().stream()
                 .map(file -> DocumentFactory.create(file, charset))
                 .collect(toList());
     }
 
-    private RecursiveFileResolver fileResolver(String directory, String include) {
-        return new RecursiveFileResolver(directory, include);
+    private RecursiveFileResolver fileResolver(String source, String include) {
+        return new RecursiveFileResolver(source, include);
     }
 
     private static boolean isUrl(String value) {
         return value.startsWith("http://") || value.startsWith("https://");
-    }
-
-    private static boolean isFile(String value) {
-        return new File(value).isFile();
     }
 
     private static URL toUrl(String value) {

@@ -16,7 +16,7 @@
  */
 package org.apache.freemarker.generator.cli.tools.jsoup;
 
-import org.apache.freemarker.generator.cli.model.Document;
+import org.apache.freemarker.generator.base.document.Document;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;

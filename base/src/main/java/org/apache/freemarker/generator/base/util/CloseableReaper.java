@@ -14,20 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.cli.util;
+package org.apache.freemarker.generator.base.util;
 
 import java.io.Closeable;
-import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
-public class ClosableUtils {
+/**
+ * Keep track of closables created on behalf of the client to close
+ * them all later on.
+ */
+public class CloseableReaper implements Closeable {
 
-    public static void closeQuietly(final Closeable closeable) {
-        try {
-            if (closeable != null) {
-                closeable.close();
-            }
-        } catch (final IOException e) {
-            // e.printStackTrace();
+    private final List<WeakReference<Closeable>> closeables = new ArrayList<>();
+
+    public synchronized <T extends Closeable> T add(T closeable) {
+        if (closeable != null) {
+            closeables.add(new WeakReference<>(closeable));
         }
+        return closeable;
+    }
+
+    @Override
+    public synchronized void close() {
+        closeables.forEach(c -> ClosableUtils.closeQuietly(c.get()));
+        closeables.clear();
     }
 }
+

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.cli.activation;
+package org.apache.freemarker.generator.base.activation;
 
 import javax.activation.DataSource;
 import java.io.ByteArrayInputStream;
@@ -22,8 +22,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
-import static org.apache.commons.codec.Charsets.UTF_8;
 
 public class StringDataSource implements DataSource {
 

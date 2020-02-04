@@ -14,9 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.cli.model;
+package org.apache.freemarker.generator.document;
 
-import org.apache.freemarker.generator.cli.impl.DocumentFactory;
+import org.apache.freemarker.generator.base.document.Document;
+import org.apache.freemarker.generator.base.document.DocumentFactory;
+import org.apache.freemarker.generator.base.document.Documents;
 import org.junit.Test;
 
 import java.io.File;
@@ -104,5 +106,4 @@ public class DocumentsTest {
             throw new RuntimeException(e);
         }
     }
-
 }

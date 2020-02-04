@@ -16,8 +16,8 @@
  */
 package org.apache.freemarker.generator.cli.tools.excel;
 
-import org.apache.freemarker.generator.cli.impl.DocumentFactory;
-import org.apache.freemarker.generator.cli.model.Document;
+import org.apache.freemarker.generator.base.document.Document;
+import org.apache.freemarker.generator.base.document.DocumentFactory;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.Test;

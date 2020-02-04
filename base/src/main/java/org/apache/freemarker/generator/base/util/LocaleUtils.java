@@ -14,34 +14,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.cli.impl;
+package org.apache.freemarker.generator.base.util;
 
-import java.io.Closeable;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Locale;
 
-import static org.apache.freemarker.generator.cli.util.ClosableUtils.closeQuietly;
+public class LocaleUtils {
 
-/**
- * Keep track of closables created on behalf of the client to close
- * them all later on.
- */
-public class CloseableReaper implements Closeable {
-
-    private final List<WeakReference<Closeable>> closeables = new ArrayList<>();
-
-    public synchronized <T extends Closeable> T add(T closeable) {
-        if (closeable != null) {
-            closeables.add(new WeakReference<>(closeable));
+    public static Locale parseLocale(String value) {
+        if (StringUtils.isEmpty(value)) {
+            return Locale.getDefault();
         }
-        return closeable;
-    }
 
-    @Override
-    public synchronized void close() {
-        closeables.forEach(c -> closeQuietly(c.get()));
-        closeables.clear();
+        final String[] parts = value.split("_");
+        return parts.length == 1 ? new Locale(parts[0]) : new Locale(parts[0], parts[1]);
     }
 }
-

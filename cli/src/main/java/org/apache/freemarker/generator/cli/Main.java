@@ -16,12 +16,12 @@
  */
 package org.apache.freemarker.generator.cli;
 
+import org.apache.freemarker.generator.base.util.ClosableUtils;
+import org.apache.freemarker.generator.base.util.StringUtils;
 import org.apache.freemarker.generator.cli.impl.PropertiesFileResolver;
 import org.apache.freemarker.generator.cli.impl.TemplateDirectorySupplier;
 import org.apache.freemarker.generator.cli.model.Settings;
 import org.apache.freemarker.generator.cli.picocli.GitVersionProvider;
-import org.apache.freemarker.generator.cli.util.ClosableUtils;
-import org.apache.freemarker.generator.cli.util.StringUtils;
 import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
@@ -180,7 +180,7 @@ public class Main implements Callable<Integer> {
         try {
             if (userSuppliedWriter != null) {
                 return userSuppliedWriter;
-            } else if (StringUtils.isNotEmpty(outputFile)) {
+            } else if (!StringUtils.isEmpty(outputFile)) {
                 return new BufferedWriter(new FileWriter(outputFile));
             } else {
                 return new BufferedWriter(new OutputStreamWriter(System.out, ouputEncoding));

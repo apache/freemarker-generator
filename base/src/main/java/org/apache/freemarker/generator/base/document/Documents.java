@@ -14,9 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.cli.model;
+package org.apache.freemarker.generator.base.document;
 
-import org.apache.freemarker.generator.cli.util.ClosableUtils;
+import org.apache.freemarker.generator.base.util.ClosableUtils;
 
 import java.io.Closeable;
 import java.util.ArrayList;

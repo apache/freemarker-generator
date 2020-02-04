@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.cli.impl;
+package org.apache.freemarker.generator.base.util;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -27,11 +27,11 @@ import static java.util.Objects.requireNonNull;
  * Commons CSV integration uses the FreeMarker writer directly but
  * some implementation could call "CSVPrinter#close"
  */
-public class NonClosableFreeMarkerWriterWrapper extends Writer {
+public class NonClosableWriterWrapper extends Writer {
 
     private final Writer delegate;
 
-    public NonClosableFreeMarkerWriterWrapper(Writer delegate) {
+    public NonClosableWriterWrapper(Writer delegate) {
         this.delegate = requireNonNull(delegate);
     }
 

@@ -16,8 +16,8 @@
  */
 package org.apache.freemarker.generator.cli.model;
 
-import org.apache.freemarker.generator.cli.impl.NonClosableFreeMarkerWriterWrapper;
-import org.apache.freemarker.generator.cli.util.LocaleUtils;
+import org.apache.freemarker.generator.base.util.LocaleUtils;
+import org.apache.freemarker.generator.base.util.NonClosableWriterWrapper;
 
 import java.io.File;
 import java.io.Writer;
@@ -124,7 +124,7 @@ public class Settings {
         this.sources = requireNonNull(sources);
         this.properties = requireNonNull(properties);
         this.configuration = requireNonNull(configuration);
-        this.writer = new NonClosableFreeMarkerWriterWrapper(requireNonNull(writer));
+        this.writer = new NonClosableWriterWrapper(requireNonNull(writer));
     }
 
     public static SettingsBuilder builder() {

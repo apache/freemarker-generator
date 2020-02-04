@@ -16,11 +16,11 @@
  */
 package org.apache.freemarker.generator.cli.tools.jsonpath;
 
-import org.apache.freemarker.generator.cli.model.Document;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
+import org.apache.freemarker.generator.base.document.Document;
 
 import java.io.IOException;
 import java.io.InputStream;

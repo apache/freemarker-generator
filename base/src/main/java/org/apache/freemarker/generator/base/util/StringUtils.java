@@ -14,18 +14,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.cli.util;
+package org.apache.freemarker.generator.base.util;
 
-import java.util.Locale;
+public class StringUtils {
 
-public class LocaleUtils {
-
-    public static Locale parseLocale(String value) {
-        if (StringUtils.isNullOrEmtpty(value)) {
-            return Locale.getDefault();
-        }
-
-        final String[] parts = value.split("_");
-        return parts.length == 1 ? new Locale(parts[0]) : new Locale(parts[0], parts[1]);
+    public static boolean isEmpty(String value) {
+        return value == null || value.trim().isEmpty();
     }
 }

@@ -14,23 +14,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.cli.impl;
+package org.apache.freemarker.generator.base.config;
 
 import org.apache.commons.io.filefilter.AndFileFilter;
-import org.apache.commons.io.filefilter.HiddenFileFilter;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
-import org.apache.freemarker.generator.cli.util.StringUtils;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.io.FileUtils.listFiles;
+import static org.apache.commons.io.filefilter.HiddenFileFilter.VISIBLE;
 
 /**
  * Resolve a list of files or directories recursively and
@@ -38,10 +38,11 @@ import static org.apache.commons.io.FileUtils.listFiles;
  */
 public class RecursiveFileResolver {
 
-    private static final String DEFAULT_INCLUDE = "*";
+    public static final String MATCH_ALL = "*";
 
     private final Collection<String> sources;
-    private final String includes;
+    private final IOFileFilter fileFilter;
+    private final IOFileFilter directoryFilter;
 
     public RecursiveFileResolver(String source, String includes) {
         this(singletonList(source), includes);
@@ -49,7 +50,8 @@ public class RecursiveFileResolver {
 
     public RecursiveFileResolver(Collection<String> sources, String includes) {
         this.sources = requireNonNull(sources);
-        this.includes = StringUtils.isNullOrEmtpty(includes) ? DEFAULT_INCLUDE : includes;
+        this.fileFilter = fileFilter(includes);
+        this.directoryFilter = directoryFilter();
     }
 
     public List<File> resolve() {
@@ -61,22 +63,33 @@ public class RecursiveFileResolver {
 
     private List<File> resolve(String source) {
         final File file = new File(source);
+
         if (file.isFile()) {
-            return singletonList(file);
-        } else {
+            return resolveFile(file);
+        } else if (file.isDirectory()) {
             return new ArrayList<>(resolveDirectory(file));
+        } else {
+            throw new IllegalArgumentException("Unable to find source: " + source);
         }
     }
 
-    private List<File> resolveDirectory(File directory) {
-        return new ArrayList<>(listFiles(directory, fileFilter(), directoryFilter()));
+    private List<File> resolveFile(File file) {
+        return fileFilter.accept(file) ? singletonList(file) : emptyList();
     }
 
-    private IOFileFilter fileFilter() {
-        return new AndFileFilter(new WildcardFileFilter(includes), HiddenFileFilter.VISIBLE);
+    private List<File> resolveDirectory(File directory) {
+        return new ArrayList<>(listFiles(directory, fileFilter, directoryFilter));
+    }
+
+    private static IOFileFilter fileFilter(String includes) {
+        if (includes == null || includes.trim().isEmpty()) {
+            return new AndFileFilter(new WildcardFileFilter(MATCH_ALL), VISIBLE);
+        } else {
+            return new AndFileFilter(new WildcardFileFilter(includes), VISIBLE);
+        }
     }
 
     private static IOFileFilter directoryFilter() {
-        return HiddenFileFilter.VISIBLE;
+        return VISIBLE;
     }
 }

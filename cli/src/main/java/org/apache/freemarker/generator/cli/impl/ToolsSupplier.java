@@ -74,22 +74,22 @@ public class ToolsSupplier implements Supplier<Map<String, Object>> {
         try {
             final Class<?> clazz = Class.forName(clazzName);
             final Constructor<?>[] constructors = clazz.getConstructors();
-            final Constructor constructorWithSettings = findSingleParameterConstructor(constructors, Map.class);
-            final Constructor defaultConstructor = findDefaultConstructor(constructors);
+            final Constructor<?> constructorWithSettings = findSingleParameterConstructor(constructors, Map.class);
+            final Constructor<?> defaultConstructor = findDefaultConstructor(constructors);
             return constructorWithSettings != null ? constructorWithSettings.newInstance(settings) : defaultConstructor.newInstance();
         } catch (Exception e) {
             throw new RuntimeException("Failed to create tool: " + clazzName, e);
         }
     }
 
-    private static Constructor findSingleParameterConstructor(Constructor[] constructors, Class parameterClazz) {
+    private static Constructor<?> findSingleParameterConstructor(Constructor<?>[] constructors, Class<?> parameterClazz) {
         return stream(constructors)
                 .filter(c -> c.getParameterCount() == 1 && c.getParameterTypes()[0].equals(parameterClazz))
                 .findFirst()
                 .orElse(null);
     }
 
-    private static Constructor findDefaultConstructor(Constructor[] constructors) {
+    private static Constructor<?> findDefaultConstructor(Constructor<?>[] constructors) {
         return stream(constructors)
                 .filter(c -> c.getParameterCount() == 0)
                 .findFirst()
