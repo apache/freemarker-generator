@@ -12,7 +12,7 @@
     <artifactId>parent</artifactId>
     <packaging>pom</packaging>
     <version>0.1.0-SNAPSHOT</version>
-    <name>Apache FreeMarker Generator: Root</name>
+    <name>Apache FreeMarker Generator: Parent</name>
     <url>https://freemarker.apache.org/</url>
 
     <issueManagement>
@@ -50,9 +50,9 @@
     </scm>
 
     <modules>
-        <module>base</module>
-        <module>cli</module>
-        <module>maven-plugin</module>
+        <module>freemarker-generator-base</module>
+        <module>freemarker-generator-cli</module>
+        <module>freemarker-generator-maven-plugin</module>
     </modules>
 
     <properties>
