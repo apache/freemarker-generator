@@ -16,14 +16,12 @@
  */
 package org.apache.freemarker.generator.cli.impl;
 
-import freemarker.template.utility.ClassUtil;
+import org.apache.freemarker.generator.base.tools.ToolsFactory;
 
-import java.lang.reflect.Constructor;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Supplier;
 
-import static java.util.Arrays.stream;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toMap;
 
@@ -50,50 +48,11 @@ public class ToolsSupplier implements Supplier<Map<String, Object>> {
         return configuration.stringPropertyNames().stream()
                 .filter(name -> name.startsWith(FREEMARKER_TOOLS_PREFIX))
                 .filter(name -> toolClassCanBeLoaded(configuration.getProperty(name)))
-                .collect(toMap(ToolsSupplier::toolName, name -> createTool(configuration.getProperty(name), settings)));
+                .collect(toMap(ToolsSupplier::toolName, name -> ToolsFactory.create(configuration.getProperty(name), settings)));
     }
 
     private boolean toolClassCanBeLoaded(String clazzName) {
-        try {
-            ClassUtil.forName(clazzName);
-            return true;
-        } catch (NoClassDefFoundError | ClassNotFoundException e) {
-            return false;
-        }
-    }
-
-    /**
-     * Create a tool instance either using single argument constructor taking a map or
-     * the default constructor.
-     *
-     * @param clazzName Class to instantiate
-     * @param settings  Settings used to configure the tool
-     * @return Tool instance
-     */
-    private static Object createTool(String clazzName, Map<String, Object> settings) {
-        try {
-            final Class<?> clazz = Class.forName(clazzName);
-            final Constructor<?>[] constructors = clazz.getConstructors();
-            final Constructor<?> constructorWithSettings = findSingleParameterConstructor(constructors, Map.class);
-            final Constructor<?> defaultConstructor = findDefaultConstructor(constructors);
-            return constructorWithSettings != null ? constructorWithSettings.newInstance(settings) : defaultConstructor.newInstance();
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to create tool: " + clazzName, e);
-        }
-    }
-
-    private static Constructor<?> findSingleParameterConstructor(Constructor<?>[] constructors, Class<?> parameterClazz) {
-        return stream(constructors)
-                .filter(c -> c.getParameterCount() == 1 && c.getParameterTypes()[0].equals(parameterClazz))
-                .findFirst()
-                .orElse(null);
-    }
-
-    private static Constructor<?> findDefaultConstructor(Constructor<?>[] constructors) {
-        return stream(constructors)
-                .filter(c -> c.getParameterCount() == 0)
-                .findFirst()
-                .orElse(null);
+        return ToolsFactory.exists(clazzName);
     }
 
     private static String toolName(String propertyName) {

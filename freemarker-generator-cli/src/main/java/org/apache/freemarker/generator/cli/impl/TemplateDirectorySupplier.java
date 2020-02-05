@@ -37,7 +37,7 @@ public class TemplateDirectorySupplier implements Supplier<List<File>> {
 
     private static final String UNDEFINED = "__undefined__";
 
-    /** Installation directory of "freemarkr-cli" */
+    /** Installation directory of "freemarker-cli" */
     private static final String APP_HOME = "app.home";
 
     /** Current working directory */

@@ -84,6 +84,12 @@ public class DocumentsSupplierTest {
         assertEquals(0, supplier("/does-not-exist", MATCH_ALL).get().size());
     }
 
+    @Test
+    public void shouldAllowDuplicateFiles() {
+        final List<String> sources = Arrays.asList("pom.xml", "pom.xml");
+        assertEquals(2, supplier(sources, "*.xml").get().size());
+    }
+
     private static DocumentsSupplier supplier(String directory, String include) {
         return new DocumentsSupplier(singletonList(directory), include, Charset.defaultCharset());
     }

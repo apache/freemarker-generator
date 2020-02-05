@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.cli.util;
+package org.apache.freemarker.generator.base.util;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -88,5 +88,9 @@ public class NonClosableWriterWrapper extends Writer {
     @Override
     public String toString() {
         return delegate.toString();
+    }
+
+    public Writer getDelegate() {
+        return delegate;
     }
 }

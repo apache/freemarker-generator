@@ -16,8 +16,8 @@
  */
 package org.apache.freemarker.generator.cli.model;
 
-import org.apache.freemarker.generator.cli.util.LocaleUtils;
-import org.apache.freemarker.generator.cli.util.NonClosableWriterWrapper;
+import org.apache.freemarker.generator.base.util.LocaleUtils;
+import org.apache.freemarker.generator.base.util.NonClosableWriterWrapper;
 
 import java.io.File;
 import java.io.Writer;
