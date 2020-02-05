@@ -25,7 +25,7 @@
         <version>0.1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>freemarker-cli</artifactId>
+    <artifactId>freemarker-generator-cli</artifactId>
     <packaging>jar</packaging>
     <name>Apache FreeMarker Generator: CLI</name>
     <description>Command-line client for Apache FreeMarker</description>
