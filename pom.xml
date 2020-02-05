@@ -51,6 +51,7 @@
 
     <modules>
         <module>freemarker-generator-base</module>
+        <module>freemarker-generator-tools</module>
         <module>freemarker-generator-cli</module>
         <module>freemarker-generator-maven-plugin</module>
     </modules>
