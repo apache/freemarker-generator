@@ -16,9 +16,9 @@
  */
 package org.apache.freemarker.generator.cli;
 
+import org.apache.freemarker.generator.base.file.PropertiesFileSupplier;
 import org.apache.freemarker.generator.base.util.ClosableUtils;
 import org.apache.freemarker.generator.base.util.StringUtils;
-import org.apache.freemarker.generator.base.file.PropertiesFileSupplier;
 import org.apache.freemarker.generator.cli.impl.TemplateDirectorySupplier;
 import org.apache.freemarker.generator.cli.model.Settings;
 import org.apache.freemarker.generator.cli.picocli.GitVersionProvider;
@@ -49,7 +49,7 @@ public class Main implements Callable<Integer> {
 
     private static final String FREEMARKER_CLI_PROPERTY_FILE = "freemarker-cli.properties";
 
-    @ArgGroup(exclusive = true, multiplicity = "1")
+    @ArgGroup(multiplicity = "1")
     private TemplateSourceOptions templateSourceOptions;
 
     private static final class TemplateSourceOptions {
@@ -67,7 +67,7 @@ public class Main implements Callable<Integer> {
     private Map<String, String> properties;
 
     @Option(names = { "-e", "--input-encoding" }, description = "Encoding of input file", defaultValue = "UTF-8")
-    String inputEncoding;
+    private String inputEncoding;
 
     @Option(names = { "-E", "--expose-env" }, description = "Expose environment variables and user-supplied properties globally")
     private boolean isEnvironmentExposed;
@@ -85,7 +85,7 @@ public class Main implements Callable<Integer> {
     private String include;
 
     @Option(names = { "--output-encoding" }, description = "Encoding of output file, e.g. UTF-8", defaultValue = "UTF-8")
-    String outputEncoding;
+    private String outputEncoding;
 
     @Option(names = { "--stdin" }, description = "Read input document from stdin")
     private boolean readFromStdin;

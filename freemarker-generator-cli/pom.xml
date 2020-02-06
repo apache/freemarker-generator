@@ -26,13 +26,11 @@
     </parent>
 
     <artifactId>freemarker-generator-cli</artifactId>
-    <packaging>jar</packaging>
     <name>Apache FreeMarker Generator: CLI</name>
     <description>Command-line client for Apache FreeMarker</description>
-    <inceptionYear>2016</inceptionYear>
 
     <build>
-        <defaultGoal>clean package</defaultGoal>
+        <defaultGoal>package</defaultGoal>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -92,25 +90,6 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>org.apache.freemarker.generator.cli.Main</mainClass>
-                                </manifest>
-                            </archive>
-                            <descriptorRefs>
-                                <descriptorRef>jar-with-dependencies</descriptorRef>
-                            </descriptorRefs>
-                            <descriptors>
-                                <descriptor>src/main/assembly/small.xml</descriptor>
-                            </descriptors>
-                        </configuration>
-                    </execution>
                     <execution>
                         <id>make-assembly</id>
                         <phase>package</phase>

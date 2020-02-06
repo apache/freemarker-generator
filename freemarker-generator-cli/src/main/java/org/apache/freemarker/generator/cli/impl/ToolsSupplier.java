@@ -24,6 +24,7 @@ import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toMap;
+import static org.apache.freemarker.generator.base.util.PropertiesTransformer.removeKeyPrefix;
 
 public class ToolsSupplier implements Supplier<Map<String, Object>> {
 
@@ -45,17 +46,17 @@ public class ToolsSupplier implements Supplier<Map<String, Object>> {
 
     @Override
     public Map<String, Object> get() {
-        return configuration.stringPropertyNames().stream()
-                .filter(name -> name.startsWith(FREEMARKER_TOOLS_PREFIX))
-                .filter(name -> toolClassCanBeLoaded(configuration.getProperty(name)))
-                .collect(toMap(ToolsSupplier::toolName, name -> ToolsFactory.create(configuration.getProperty(name), settings)));
+        final Properties properties = toolsProperties();
+        return properties.stringPropertyNames().stream()
+                .filter(key -> toolExists(properties.getProperty(key)))
+                .collect(toMap(key -> key, key -> ToolsFactory.create(properties.getProperty(key), settings)));
     }
 
-    private boolean toolClassCanBeLoaded(String clazzName) {
+    private Properties toolsProperties() {
+        return removeKeyPrefix(this.configuration, FREEMARKER_TOOLS_PREFIX);
+    }
+
+    private static boolean toolExists(String clazzName) {
         return ToolsFactory.exists(clazzName);
-    }
-
-    private static String toolName(String propertyName) {
-        return propertyName.substring(FREEMARKER_TOOLS_PREFIX.length());
     }
 }

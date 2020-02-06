@@ -12,7 +12,7 @@
     <packaging>maven-plugin</packaging>
 
     <name>Apache FreeMarker Generator: Maven Plugin</name>
-    <url>http://freemarker.apache.org/</url>
+    <description>Maven plugin for Apache FreeMarker</description>
 
     <properties>
         <maven-core.version>3.5.2</maven-core.version>
@@ -116,22 +116,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

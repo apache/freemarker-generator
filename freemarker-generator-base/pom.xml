@@ -26,10 +26,8 @@
     </parent>
 
     <artifactId>freemarker-generator-base</artifactId>
-    <packaging>jar</packaging>
     <name>Apache FreeMarker Generator: Base</name>
-    <description>Command-line client for Apache FreeMarker</description>
-    <inceptionYear>2020</inceptionYear>
+    <description>Common functionality</description>
 
     <dependencies>
         <dependency>

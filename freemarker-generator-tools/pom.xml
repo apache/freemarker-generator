@@ -26,10 +26,8 @@
     </parent>
 
     <artifactId>freemarker-generator-tools</artifactId>
-    <packaging>jar</packaging>
     <name>Apache FreeMarker Generator: Tools</name>
-    <description>Tools for Apache FreeMarker</description>
-    <inceptionYear>2020</inceptionYear>
+    <description>Document processing tools for Apache FreeMarker Generator</description>
 
     <dependencies>
         <dependency>
