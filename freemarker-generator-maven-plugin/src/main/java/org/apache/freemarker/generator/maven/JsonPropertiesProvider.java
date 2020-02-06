@@ -28,7 +28,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,8 +45,8 @@ public class JsonPropertiesProvider implements OutputGeneratorPropertiesProvider
         this.dataDir = dataDir;
         this.templateDir = templateDir;
         this.outputDir = outputDir;
-        gson = new GsonBuilder().setLenient().create();
-        stringObjectMap = new TypeToken<Map<String, Object>>() {}.getType();
+        this.gson = new GsonBuilder().setLenient().create();
+        this.stringObjectMap = new TypeToken<Map<String, Object>>() {}.getType();
     }
 
     public static JsonPropertiesProvider create(File dataDir, File templateDir, File outputDir) {
@@ -56,8 +55,8 @@ public class JsonPropertiesProvider implements OutputGeneratorPropertiesProvider
 
     @Override
     public void providePropertiesFromFile(Path path, OutputGenerator.OutputGeneratorBuilder builder) {
-        File jsonDataFile = path.toFile();
-        Map<String, Object> data = parseJson(jsonDataFile);
+        final File jsonDataFile = path.toFile();
+        final Map<String, Object> data = parseJson(jsonDataFile);
 
         Object obj = data.get("dataModel");
         if (obj != null) {
@@ -72,16 +71,16 @@ public class JsonPropertiesProvider implements OutputGeneratorPropertiesProvider
         }
         builder.addTemplateLocation(templateDir.toPath().resolve(obj.toString()));
 
-        String dataDirName = dataDir.getAbsolutePath();
-        String jsonFileName = jsonDataFile.getAbsolutePath();
+        final String dataDirName = dataDir.getAbsolutePath();
+        final String jsonFileName = jsonDataFile.getAbsolutePath();
         if (!jsonFileName.startsWith(dataDirName)) {
             throw new IllegalStateException("visitFile() given file not in sourceDirectory: " + jsonDataFile);
         }
 
         String outputFileName = jsonFileName.substring(dataDirName.length() + 1);
         outputFileName = outputFileName.substring(0, outputFileName.length() - 5);
-        Path outputPath = outputDir.toPath();
-        Path resolved = outputPath.resolve(outputFileName);
+        final Path outputPath = outputDir.toPath();
+        final Path resolved = outputPath.resolve(outputFileName);
         builder.addOutputLocation(resolved);
     }
 

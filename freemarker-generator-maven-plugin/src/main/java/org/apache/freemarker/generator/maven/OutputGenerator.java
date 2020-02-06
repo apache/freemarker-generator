@@ -115,16 +115,21 @@ class OutputGenerator {
          * @throws IllegalStateException if any of the parts of the OutputGenerator were not set.
          */
         public OutputGenerator create() {
-            if (pomModifiedTimestamp == Long.MAX_VALUE)
+            if (pomModifiedTimestamp == Long.MAX_VALUE) {
                 throw new IllegalStateException("Must set the pomModifiedTimestamp");
-            if (generatorLocation == null)
+            }
+            if (generatorLocation == null) {
                 throw new IllegalStateException("Must set a non-null generatorLocation");
-            if (templateLocation == null)
+            }
+            if (templateLocation == null) {
                 throw new IllegalStateException("Must set a non-null templateLocation");
-            if (outputLocation == null)
+            }
+            if (outputLocation == null) {
                 throw new IllegalStateException("Must set a non-null outputLocation");
-            if (dataModel == null)
+            }
+            if (dataModel == null) {
                 throw new IllegalStateException("Must set a non-null dataModel");
+            }
             return new OutputGenerator(pomModifiedTimestamp, generatorLocation, templateLocation, outputLocation, dataModel);
         }
     }
@@ -137,9 +142,9 @@ class OutputGenerator {
      */
     public void generate(Configuration config) {
         //Use "createFile" for testing purposes only
-        File outputFile = FactoryUtil.createFile(outputLocation.toFile().toString());
-        File templateFile = templateLocation.toFile();
-        File generatorFile = generatorLocation.toFile();
+        final File outputFile = FactoryUtil.createFile(outputLocation.toFile().toString());
+        final File templateFile = templateLocation.toFile();
+        final File generatorFile = generatorLocation.toFile();
         if (outputFile.exists()) {
             //early exit only if the output file is newer than all files that contribute to its generation
             if (outputFile.lastModified() > generatorFile.lastModified()
@@ -148,7 +153,7 @@ class OutputGenerator {
                 return;
             }
         } else {
-            File parentDir = outputFile.getParentFile();
+            final File parentDir = outputFile.getParentFile();
             if (parentDir.isFile()) {
                 throw new RuntimeException("Parent directory of output file is a file: " + parentDir.getAbsoluteFile());
             }
@@ -158,7 +163,7 @@ class OutputGenerator {
             }
         }
 
-        Template template;
+        final Template template;
         try {
             template = config.getTemplate(templateFile.getName());
         } catch (Throwable t) {

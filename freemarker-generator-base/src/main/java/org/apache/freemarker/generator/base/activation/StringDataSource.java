@@ -69,6 +69,10 @@ public class StringDataSource implements DataSource {
         return charset;
     }
 
+    public long length() {
+        return content.length();
+    }
+
     @Override
     public String toString() {
         return "StringDataSource{" +

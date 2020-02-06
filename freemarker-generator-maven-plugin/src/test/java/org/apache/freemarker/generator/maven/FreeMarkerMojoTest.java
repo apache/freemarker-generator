@@ -91,7 +91,7 @@ public class FreeMarkerMojoTest extends Assert {
             mojo.execute();
         }).withMessage("freeMarkerVersion is required");
 
-        File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "executeTest");
+        final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "executeTest");
         Deencapsulation.setField(mojo, "freeMarkerVersion", FREEMARKER_VERSION);
         Deencapsulation.setField(mojo, "sourceDirectory", testCaseOutputDir);
         Deencapsulation.setField(mojo, "templateDirectory", new File(testCaseOutputDir, "template"));

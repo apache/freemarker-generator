@@ -74,4 +74,8 @@ public class ByteArrayDataSource implements DataSource {
     public byte[] getContent() {
         return content;
     }
+
+    public long length() {
+        return content.length;
+    }
 }

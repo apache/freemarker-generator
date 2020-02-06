@@ -65,7 +65,7 @@ public class FreeMarkerMojo extends AbstractMojo {
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
 
-        if (freeMarkerVersion == null || freeMarkerVersion.length() == 0) {
+        if (freeMarkerVersion == null || freeMarkerVersion.isEmpty()) {
             throw new MojoExecutionException("freeMarkerVersion is required");
         }
 
@@ -73,7 +73,7 @@ public class FreeMarkerMojo extends AbstractMojo {
             throw new MojoExecutionException("Required directory does not exist: " + generatorDirectory);
         }
 
-        Configuration config = FactoryUtil.createConfiguration(freeMarkerVersion);
+        final Configuration config = FactoryUtil.createConfiguration(freeMarkerVersion);
 
         config.setDefaultEncoding("UTF-8");
 
@@ -87,9 +87,9 @@ public class FreeMarkerMojo extends AbstractMojo {
             throw new MojoExecutionException("Could not establish file template loader for directory: " + templateDirectory);
         }
 
-        File freeMarkerProps = FactoryUtil.createFile(sourceDirectory, "freemarker.properties");
+        final File freeMarkerProps = FactoryUtil.createFile(sourceDirectory, "freemarker.properties");
         if (freeMarkerProps.isFile()) {
-            Properties configProperties = new Properties();
+            final Properties configProperties = new Properties();
             try (InputStream is = FactoryUtil.createFileInputStream(freeMarkerProps)) {
                 configProperties.load(is);
             } catch (Throwable t) {
@@ -110,10 +110,10 @@ public class FreeMarkerMojo extends AbstractMojo {
             session.getCurrentProject().addTestCompileSourceRoot(outputDirectory.toString());
         }
 
-        Map<String, OutputGeneratorPropertiesProvider> extensionToBuilders = new HashMap<>(1);
+        final Map<String, OutputGeneratorPropertiesProvider> extensionToBuilders = new HashMap<>(1);
         extensionToBuilders.put(".json", JsonPropertiesProvider.create(generatorDirectory, templateDirectory, outputDirectory));
 
-        GeneratingFileVisitor fileVisitor = GeneratingFileVisitor.create(config, session, extensionToBuilders);
+        final GeneratingFileVisitor fileVisitor = GeneratingFileVisitor.create(config, session, extensionToBuilders);
         try {
             Files.walkFileTree(generatorDirectory.toPath(), fileVisitor);
         } catch (Throwable t) {

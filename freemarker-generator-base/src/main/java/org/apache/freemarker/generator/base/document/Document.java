@@ -88,9 +88,9 @@ public class Document implements Closeable {
         if (dataSource instanceof FileDataSource) {
             return ((FileDataSource) dataSource).getFile().length();
         } else if (dataSource instanceof StringDataSource) {
-            return ((StringDataSource) dataSource).getContent().length();
+            return ((StringDataSource) dataSource).length();
         } else if (dataSource instanceof ByteArrayDataSource) {
-            return ((ByteArrayDataSource) dataSource).getContent().length;
+            return ((ByteArrayDataSource) dataSource).length();
         } else {
             return UNKNOWN_LENGTH;
         }

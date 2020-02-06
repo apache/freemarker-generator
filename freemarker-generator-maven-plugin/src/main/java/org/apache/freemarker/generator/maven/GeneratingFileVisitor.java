@@ -59,12 +59,12 @@ public class GeneratingFileVisitor extends SimpleFileVisitor<Path> {
     @Override
     public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) {
         if (attrs.isRegularFile()) {
-            OutputGenerator.OutputGeneratorBuilder builder = OutputGenerator.builder()
+            final OutputGenerator.OutputGeneratorBuilder builder = OutputGenerator.builder()
                     .addGeneratorLocation(path)
                     .addPomLastModifiedTimestamp(pomLastModifiedTimestamp);
-            String fileName = path.getFileName().toString();
-            String extenstion = fileName.substring(fileName.lastIndexOf('.'));
-            OutputGeneratorPropertiesProvider pathProcessor = extensionToBuilder.get(extenstion);
+            final String fileName = path.getFileName().toString();
+            final String extenstion = fileName.substring(fileName.lastIndexOf('.'));
+            final OutputGeneratorPropertiesProvider pathProcessor = extensionToBuilder.get(extenstion);
             if (pathProcessor == null) {
                 throw new RuntimeException("Unknown file extension: " + path);
             }
