@@ -54,7 +54,7 @@ public class DocumentFactoryTest {
 
         assertEquals("test.txt", document.getName());
         assertEquals(UTF_8, document.getCharset());
-        assertEquals(UNKOWN_LOCATION, document.getLocation());
+        assertEquals("string", document.getLocation());
         assertEquals(ANY_TEXT, document.getText());
         assertEquals(1, document.getLines().size());
     }
@@ -65,7 +65,7 @@ public class DocumentFactoryTest {
 
         assertEquals("test.txt", document.getName());
         assertEquals(UTF_8, document.getCharset());
-        assertEquals(UNKOWN_LOCATION, document.getLocation());
+        assertEquals("bytes", document.getLocation());
         assertEquals(ANY_TEXT, document.getText());
         assertEquals(1, document.getLines().size());
     }
@@ -77,7 +77,7 @@ public class DocumentFactoryTest {
 
         assertEquals("test.txt", document.getName());
         assertEquals(UTF_8, document.getCharset());
-        assertEquals(UNKOWN_LOCATION, document.getLocation());
+        assertEquals("is", document.getLocation());
         assertEquals(ANY_TEXT, document.getText());
     }
 

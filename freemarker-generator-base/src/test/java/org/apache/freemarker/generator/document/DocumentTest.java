@@ -42,7 +42,7 @@ public class DocumentTest {
     public void shouldSupportTextDocument() throws IOException {
         try (Document document = DocumentFactory.create("stdin", ANY_TEXT)) {
             assertEquals("stdin", document.getName());
-            assertEquals("unknown", document.getLocation());
+            assertEquals("string", document.getLocation());
             assertEquals(UTF_8, document.getCharset());
             assertTrue(document.getLength() > 0);
             assertEquals(ANY_TEXT, document.getText());

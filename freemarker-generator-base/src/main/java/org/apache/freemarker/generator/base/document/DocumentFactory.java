@@ -35,20 +35,19 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 public class DocumentFactory {
 
-    private static final String DEFAULT_LOCATION = "unknown";
-    private static final String NAME_URL = "url";
+    public static final String LOCATION_STDIN = "stdin";
 
     private DocumentFactory() {
     }
 
     public static Document create(URL url) {
         final URLDataSource dataSource = new URLDataSource(url);
-        return create(NAME_URL, dataSource, url.toExternalForm(), UTF_8);
+        return create("url", dataSource, url.toExternalForm(), UTF_8);
     }
 
     public static Document create(String name, String content) {
         final StringDataSource dataSource = new StringDataSource(name, content, UTF_8);
-        return create(name, dataSource, DEFAULT_LOCATION, UTF_8);
+        return create(name, dataSource, "string", UTF_8);
     }
 
     public static Document create(File file, Charset charset) {
@@ -58,12 +57,12 @@ public class DocumentFactory {
 
     public static Document create(String name, byte[] content) {
         final ByteArrayDataSource dataSource = new ByteArrayDataSource(name, content);
-        return create(name, dataSource, DEFAULT_LOCATION, UTF_8);
+        return create(name, dataSource, "bytes", UTF_8);
     }
 
     public static Document create(String name, InputStream is, Charset charset) {
         final InputStreamDataSource dataSource = new InputStreamDataSource(name, is);
-        return create(name, dataSource, DEFAULT_LOCATION, charset);
+        return create(name, dataSource, "is", charset);
     }
 
     public static Document create(String name, InputStream is, String location, Charset charset) {

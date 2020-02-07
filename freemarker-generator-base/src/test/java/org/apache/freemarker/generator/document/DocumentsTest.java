@@ -32,13 +32,12 @@ import static org.junit.Assert.assertNotNull;
 
 public class DocumentsTest {
 
-    private static final String STDIN = "stdin";
     private static final String UNKNOWN = "unknown";
     private static final String ANY_TEXT = "Hello World";
     private static final String ANY_FILE_NAME = "pom.xml";
     private static final String ANY_FILE_EXTENSION = "xml";
     private static final File ANY_FILE = new File(ANY_FILE_NAME);
-    private static final String ANY_URL = "https://server.invalid";
+    private static final String ANY_URL = "https://server.invalid?foo=bar";
 
     @Test
     public void shouldFindByWildcard() {
