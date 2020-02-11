@@ -16,8 +16,6 @@
  */
 package org.apache.freemarker.generator.base.util;
 
-import org.apache.freemarker.generator.base.util.StringUtils;
-
 import java.util.Locale;
 
 public class LocaleUtils {

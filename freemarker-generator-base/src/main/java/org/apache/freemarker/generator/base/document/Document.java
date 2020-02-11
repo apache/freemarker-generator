@@ -167,8 +167,7 @@ public class Document implements Closeable {
 
     /**
      * Returns an Iterator for the lines in an <code>InputStream</code>, using
-     * the character encoding specified. The caller is responsible to close
-     * the line iterator.
+     * the character encoding specified.
      *
      * @param charsetName The name of the requested charset
      * @return line iterator

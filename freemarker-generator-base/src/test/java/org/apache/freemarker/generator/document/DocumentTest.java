@@ -21,6 +21,7 @@ import org.apache.freemarker.generator.base.document.Document;
 import org.apache.freemarker.generator.base.document.DocumentFactory;
 import org.junit.Test;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -62,7 +63,7 @@ public class DocumentTest {
 
     @Test
     public void shouldSupportLineIterator() throws IOException {
-        try (Document document = DocumentFactory.create("test", ANY_TEXT)) {
+        try (Document document = textDocument()) {
             try (LineIterator iterator = document.getLineIterator(ANY_CHAR_SET.name())) {
                 assertEquals(1, count(iterator));
             }
@@ -71,7 +72,7 @@ public class DocumentTest {
 
     @Test
     public void shouldReadLines() throws IOException {
-        try (Document document = DocumentFactory.create("test", ANY_TEXT)) {
+        try (Document document = textDocument()) {
             assertEquals(1, document.getLines().size());
             assertEquals(ANY_TEXT, document.getLines().get(0));
         }
@@ -79,9 +80,21 @@ public class DocumentTest {
 
     @Test
     public void shouldGetBytes() throws IOException {
-        try (Document document = DocumentFactory.create("test", ANY_TEXT)) {
+        try (Document document = textDocument()) {
             assertEquals(11, document.getBytes().length);
         }
+    }
+
+    @Test
+    public void shouldCloseDocument() {
+        final Document document = textDocument();
+        final TestClosable closable1 = document.addClosable(new TestClosable());
+        final TestClosable closable2 = document.addClosable(new TestClosable());
+
+        document.close();
+
+        assertTrue(closable1.isClosed());
+        assertTrue(closable2.isClosed());
     }
 
     private static int count(Iterator<String> iterator) {
@@ -91,5 +104,23 @@ public class DocumentTest {
             iterator.next();
         }
         return count;
+    }
+
+    private static Document textDocument() {
+        return DocumentFactory.create("stdin", ANY_TEXT);
+    }
+
+    private static final class TestClosable implements Closeable {
+
+        private boolean closed = false;
+
+        @Override
+        public void close() throws IOException {
+            closed = true;
+        }
+
+        public boolean isClosed() {
+            return closed;
+        }
     }
 }

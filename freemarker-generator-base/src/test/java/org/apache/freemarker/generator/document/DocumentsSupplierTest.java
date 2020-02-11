@@ -76,7 +76,7 @@ public class DocumentsSupplierTest {
     @Test
     public void shouldResolveLargeDirectory() {
         final List<Document> documents = supplier(".", null).get();
-        assertTrue(documents.size() > 0);
+        assertTrue(!documents.isEmpty());
     }
 
     @Test(expected = RuntimeException.class)

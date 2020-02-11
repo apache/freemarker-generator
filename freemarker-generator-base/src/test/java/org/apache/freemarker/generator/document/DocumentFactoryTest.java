@@ -45,7 +45,7 @@ public class DocumentFactoryTest {
         assertEquals(ANY_FILE_NAME, document.getName());
         assertEquals(UTF_8, document.getCharset());
         assertEquals(ANY_FILE.getAbsolutePath(), document.getLocation());
-        assertTrue(document.getLines().size() > 0);
+        assertTrue(!document.getLines().isEmpty());
     }
 
     @Test

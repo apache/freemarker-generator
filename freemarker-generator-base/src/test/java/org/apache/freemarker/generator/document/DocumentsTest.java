@@ -28,6 +28,7 @@ import java.net.URL;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 public class DocumentsTest {
@@ -66,6 +67,24 @@ public class DocumentsTest {
         assertNotNull(documents().get(ANY_FILE_NAME));
     }
 
+    @Test
+    public void shouldGetAllDocuments() {
+        final Documents documents = documents();
+
+        assertEquals("unknown", documents().get(0).getName());
+        assertEquals("pom.xml", documents().get(1).getName());
+        assertEquals("url", documents().get(2).getName());
+        assertEquals("unknown", documents().getFirst().getName());
+        assertEquals(3, documents.getList().size());
+        assertEquals(3, documents.size());
+        assertFalse(documents.isEmpty());
+    }
+
+    @Test
+    public void shouldGetNames() {
+        assertEquals(asList("unknown", "pom.xml", "url"), documents().getNames());
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionWhenGetDoesNotFindDocument() {
         documents().get("file-does-not-exist");
@@ -74,16 +93,6 @@ public class DocumentsTest {
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionWhenGetFindsMultipleDocuments() {
         documents().get("*");
-    }
-
-    @Test
-    public void shouldGetAllDocuments() {
-        assertEquals(3, documents().getList().size());
-    }
-
-    @Test
-    public void shouldGetNames() {
-        assertEquals(asList("unknown", "pom.xml", "url"), documents().getNames());
     }
 
     private static Documents documents() {

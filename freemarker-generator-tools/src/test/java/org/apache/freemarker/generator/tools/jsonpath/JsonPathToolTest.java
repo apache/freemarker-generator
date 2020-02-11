@@ -47,16 +47,35 @@ public class JsonPathToolTest {
             "   ]\n" +
             "}";
 
+    private static final String JSON_WITH_COMMENTS = "{\n" +
+            "    // Single line comment\n" +
+            "    \"fruit\": \"Apple\",\n" +
+            "    \"size\": \"Large\",\n" +
+            "    \"color\": \"Red\"\n" +
+            "}";
+
     @Test
     public void shallParseJsonObject() {
-        assertEquals(parse(JSON_OBJECT_STRING).read("$.language"), "Python");
-        assertEquals(parse(JSON_OBJECT_STRING).read("$['language']"), "Python");
+        final DocumentContext json = parse(JSON_OBJECT_STRING);
+
+        assertEquals(json.read("$.language"), "Python");
+        assertEquals(json.read("$['language']"), "Python");
     }
 
     @Test
     public void shallParseJsonArray() {
-        assertEquals(parse(JSON_ARRAY_STRING).read("$.eBooks[0].language"), "Pascal");
-        assertEquals(parse(JSON_ARRAY_STRING).read("$['eBooks'][0]['language']"), "Pascal");
+        final DocumentContext json = parse(JSON_ARRAY_STRING);
+
+        assertEquals(json.read("$.eBooks[0].language"), "Pascal");
+        assertEquals(json.read("$['eBooks'][0]['language']"), "Pascal");
+    }
+
+    @Test
+    public void failsToParseJsonComments() {
+        final DocumentContext json = parse(JSON_WITH_COMMENTS);
+
+        assertNull(json.read("$.fruit"));
+        assertEquals("Large", json.read("$.size"));
     }
 
     @Test
