@@ -201,8 +201,6 @@ public class CommonsCSVTool {
             throw new IllegalArgumentException("No input stream was provided");
         }
 
-        // As stated in the documentation : "If you do not read all records from the given {@code reader},
-        // you should call {@link #close()} on the parser, unless you close the {@code reader}."
         return CSVParser.parse(is, charset, format);
     }
 

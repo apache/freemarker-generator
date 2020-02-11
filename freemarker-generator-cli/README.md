@@ -137,6 +137,7 @@ templates/demo.ftl
 templates/csv/html/transform.ftl
 templates/csv/md/transform.ftl
 templates/csv/shell/curl.ftl
+templates/csv/md/filter.ftl
 templates/csv/fo/transform.ftl
 fop -fo target/out/locker-test-users.fo target/out/locker-test-users.pdf
 templates/csv/fo/transactions.ftl
@@ -155,34 +156,36 @@ templates/properties/csv/locker-test-users.ftl
 templates/yaml/txt/transform.ftl
 templates/xml/txt/recipients.ftl
 Created the following sample files in ./target/out
-total 1200
--rw-r--r--  1 sgoeschl  staff     646 Jan 26 15:13 combined-access.log.txt
--rw-r--r--  1 sgoeschl  staff   22548 Jan 26 15:13 contract.html
--rw-r--r--  1 sgoeschl  staff    7933 Jan 26 15:13 contract.md
--rw-r--r--  1 sgoeschl  staff     784 Jan 26 15:13 curl.sh
--rw-r--r--  1 sgoeschl  staff     232 Jan 26 15:13 customer.txt
--rw-r--r--  1 sgoeschl  staff    5873 Jan 26 15:13 demo.txt
--rw-r--r--  1 sgoeschl  staff    1310 Jan 26 15:13 dependencies.csv
--rw-r--r--  1 sgoeschl  staff    2029 Jan 26 15:13 github-users-curl.md
--rw-r--r--  1 sgoeschl  staff    1584 Jan 26 15:13 info.txt
--rw-r--r--  1 sgoeschl  staff      66 Jan 26 15:13 interactive-html.txt
--rw-r--r--  1 sgoeschl  staff      16 Jan 26 15:13 interactive-json.txt
--rw-r--r--  1 sgoeschl  staff      10 Jan 26 15:13 interactive-xml.txt
--rw-r--r--  1 sgoeschl  staff     239 Jan 26 15:13 locker-test-users.csv
--rw-r--r--  1 sgoeschl  staff    6288 Jan 26 15:13 locker-test-users.fo
--rw-r--r--  1 sgoeschl  staff    5488 Jan 26 15:13 locker-test-users.pdf
--rw-r--r--  1 sgoeschl  staff     921 Jan 26 15:13 recipients.txt
--rw-r--r--  1 sgoeschl  staff     379 Jan 26 15:13 swagger-spec.csv
--rw-r--r--  1 sgoeschl  staff     156 Jan 26 15:13 test-multiple-sheets.xlsx.csv
--rw-r--r--  1 sgoeschl  staff    1917 Jan 26 15:13 test-multiple-sheets.xlsx.html
--rw-r--r--  1 sgoeschl  staff     389 Jan 26 15:13 test-multiple-sheets.xlsx.md
--rw-r--r--  1 sgoeschl  staff     150 Jan 26 15:13 test-transform-xls.csv
--rw-r--r--  1 sgoeschl  staff    1556 Jan 26 15:13 test.xls.html
--rw-r--r--  1 sgoeschl  staff    1558 Jan 26 15:13 test.xslx.html
--rw-r--r--  1 sgoeschl  staff   25758 Jan 26 15:13 transactions-fo.pdf
--rw-r--r--  1 sgoeschl  staff   66016 Jan 26 15:13 transactions-html.pdf
--rw-r--r--  1 sgoeschl  staff  330128 Jan 26 15:13 transactions.fo
--rw-r--r--  1 sgoeschl  staff   51008 Jan 26 15:13 transactions.html
+total 1208
+-rw-r--r--  1 sgoeschl  staff     646 Feb 11 22:17 combined-access.log.txt
+-rw-r--r--  1 sgoeschl  staff   22548 Feb 11 22:17 contract.html
+-rw-r--r--  1 sgoeschl  staff    7933 Feb 11 22:17 contract.md
+-rw-r--r--  1 sgoeschl  staff     784 Feb 11 22:17 curl.sh
+-rw-r--r--  1 sgoeschl  staff     232 Feb 11 22:17 customer.txt
+-rw-r--r--  1 sgoeschl  staff    5908 Feb 11 22:17 demo.txt
+-rw-r--r--  1 sgoeschl  staff    1310 Feb 11 22:17 dependencies.csv
+-rw-r--r--  1 sgoeschl  staff    2029 Feb 11 22:17 github-users-curl.md
+-rw-r--r--  1 sgoeschl  staff    1708 Feb 11 22:17 info.txt
+-rw-r--r--  1 sgoeschl  staff      66 Feb 11 22:17 interactive-html.txt
+-rw-r--r--  1 sgoeschl  staff      16 Feb 11 22:17 interactive-json.txt
+-rw-r--r--  1 sgoeschl  staff      10 Feb 11 22:17 interactive-xml.txt
+-rw-r--r--  1 sgoeschl  staff     285 Feb 11 22:17 locker-test-users.csv
+-rw-r--r--  1 sgoeschl  staff    6341 Feb 11 22:17 locker-test-users.fo
+-rw-r--r--  1 sgoeschl  staff    5526 Feb 11 22:17 locker-test-users.pdf
+-rw-r--r--  1 sgoeschl  staff     921 Feb 11 22:17 recipients.txt
+-rw-r--r--  1 sgoeschl  staff     910 Feb 11 22:17 sales-records.md
+-rw-r--r--  1 sgoeschl  staff     379 Feb 11 22:17 swagger-spec.csv
+-rw-r--r--  1 sgoeschl  staff     156 Feb 11 22:17 test-multiple-sheets.xlsx.csv
+-rw-r--r--  1 sgoeschl  staff    1917 Feb 11 22:17 test-multiple-sheets.xlsx.html
+-rw-r--r--  1 sgoeschl  staff     389 Feb 11 22:17 test-multiple-sheets.xlsx.md
+-rw-r--r--  1 sgoeschl  staff     150 Feb 11 22:17 test-transform-xls.csv
+-rw-r--r--  1 sgoeschl  staff    1556 Feb 11 22:17 test.xls.html
+-rw-r--r--  1 sgoeschl  staff    1558 Feb 11 22:17 test.xslx.html
+-rw-r--r--  1 sgoeschl  staff   25758 Feb 11 22:17 transactions-fo.pdf
+-rw-r--r--  1 sgoeschl  staff   66016 Feb 11 22:17 transactions-html.pdf
+-rw-r--r--  1 sgoeschl  staff  330129 Feb 11 22:17 transactions.fo
+-rw-r--r--  1 sgoeschl  staff   51008 Feb 11 22:17 transactions.html
+
 ```
 
 Please note that generated PDF files are very likely not found since they require `wkhtmltopdf` and `Apache FOP` installation.
@@ -1004,7 +1007,104 @@ John Smith
 <a href="${project.url}" title="FreeMarker CLI">FreeMarker CLI</a>
 ```
 
-## 6.14 Using Advanced FreeMarker Features
+## 6.14 Filtering & Transforming CSV
+
+During an integration project we imported large transactions CSV files (500.000+ records) and in case of import failures the developers would be happy to get a nice outline of the transactions causing the problem (the CSV records have 60+ columns) - in essence it is filtering (based on some primary key) and and transforming into an output format (Markdown).
+
+So lets start the filtering & transformation using the following command line
+
+```
+> bin/freemarker-cli -e UTF-8 -l de_AT -Dcolumn="Order ID" -Dvalues=226939189,957081544 -Dformat=DEFAULT -Ddelimiter=COMMA -t templates/csv/md/filter.ftl site/sample/csv/sales-records.csv
+```
+
+and Apache FreeMarker template
+
+```
+<#ftl output_format="plainText" strip_text="true">
+<#assign document = Documents.get(0)>
+<#assign parser = parser(document)>
+<#assign headers = parser.getHeaderNames()>
+<#assign column = SystemTool.getProperty("column")>
+<#assign values = SystemTool.getProperty("values")?split(",")>
+
+<#-- Process each line without materializing the whole file in memory -->
+
+<#compress>
+    <@writePageHeader document/>
+    <#list parser.iterator() as record>
+        <#if filter(record)>
+            <@writeCsvRecord headers record/>
+        </#if>
+    </#list>
+</#compress>
+
+<#function parser document>
+    <#assign format = CSVTool.formats[SystemTool.getProperty("format", "DEFAULT")]>
+    <#assign delimiter = CSVTool.toDelimiter(SystemTool.getProperty("delimiter", format.getDelimiter()))>
+    <#return CSVTool.parse(document, format.withFirstRecordAsHeader().withDelimiter(delimiter))>
+</#function>
+
+<#function filter record>
+    <#return values?seq_contains(record.get(column))>
+</#function>
+
+<#macro writePageHeader document>
+    # ${document.name}
+</#macro>
+
+<#macro writeCsvRecord headers record>
+    ## Line ${record.getRecordNumber()}
+    | Column    | Value                       |
+    | --------- | --------------------------- |
+    <#list headers as header>
+    | ${header} | ${record.get(header)}       |
+    </#list>
+</#macro>
+
+
+```
+
+yields
+
+```
+# sales-records.csv
+## Line 1
+| Column | Value |
+| --------- | --------------------------- |
+| Region | Central America and the Caribbean |
+| Country | Antigua and Barbuda |
+| Item Type | Baby Food |
+| Sales Channel | Online |
+| Order Priority | M |
+| Order Date | 12/20/2013 |
+| Order ID | 957081544 |
+| Ship Date | 1/11/2014 |
+| Units Sold | 552 |
+| Unit Price | 255.28 |
+| Unit Cost | 159.42 |
+| Total Revenue | 140914.56 |
+| Total Cost | 87999.84 |
+| Total Profit | 52914.72 |
+## Line 4.998
+| Column | Value |
+| --------- | --------------------------- |
+| Region | Asia |
+| Country | Myanmar |
+| Item Type | Baby Food |
+| Sales Channel | Offline |
+| Order Priority | H |
+| Order Date | 11/23/2016 |
+| Order ID | 226939189 |
+| Ship Date | 12/10/2016 |
+| Units Sold | 5204 |
+| Unit Price | 255.28 |
+| Unit Cost | 159.42 |
+| Total Revenue | 1328477.12 |
+| Total Cost | 829621.68 |
+| Total Profit | 498855.44 |
+```
+
+## 6.15 Using Advanced FreeMarker Features
 
 There is a `demo.ftl` which shows some advanced FreeMarker functionality
 

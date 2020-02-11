@@ -25,6 +25,6 @@ disposer,user,password,token,device,name,description
 <#list csvRecords as record>
     <#assign user = record.get(0)>
     <#assign token = record.get(1)>
-    ${user},${user},,${token},,${user},HU performance test user ${user}
+    ${user},${user},,${token},,${user},performance test user ${user}
 </#list>
 </#compress>

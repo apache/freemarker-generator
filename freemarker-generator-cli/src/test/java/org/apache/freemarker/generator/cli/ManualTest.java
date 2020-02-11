@@ -16,6 +16,8 @@
  */
 package org.apache.freemarker.generator.cli;
 
+import java.util.Arrays;
+
 /**
  * Invoke freemarker-cli and dump the output for ad-hoc manual testing.
  */
@@ -31,9 +33,15 @@ public class ManualTest {
     // private static final String CMD = "-i ${JsonPathTool.parse(Documents.first).read('$.info.title')} site/sample/json/swagger-spec.json";
     // private static final String CMD = "-i ${XmlTool.parse(Documents.first)['recipients/person[1]/name']} site/sample/xml/recipients.xml";
     // private static final String CMD = "-i ${JsoupTool.parse(Documents.first).select('a')[0]} site/sample/html/dependencies.html";
-    private static final String CMD = "-b ./src/test -t templates/properties/csv/locker-test-users.ftl site/sample/properties";
+    // private static final String CMD = "-b ./src/test -t templates/properties/csv/locker-test-users.ftl site/sample/properties";
+    private static final String CMD = "-b ./src/test -e UTF-8 -l de_AT -Dcolumn=Order%20ID -Dvalues=226939189,957081544 -Dformat=DEFAULT -Ddelimiter=COMMA -t templates/csv/md/filter.ftl site/sample/csv/sales-records.csv";
 
     public static void main(String[] args) {
-        Main.execute(CMD.split(SPACE));
+        Main.execute(toArgs(CMD));
+    }
+
+    private static String[] toArgs(String line) {
+        // map a "%20" to space to protect system property values containing a space
+        return Arrays.stream(line.split(SPACE)).map(s -> s.replace("%20", " ")).toArray(String[]::new);
     }
 }
