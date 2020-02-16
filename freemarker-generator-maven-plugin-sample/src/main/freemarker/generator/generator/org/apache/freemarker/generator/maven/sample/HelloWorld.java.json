@@ -1,0 +1,6 @@
+{
+  "templateName": "HelloWorld.java.ftl",
+  "dataModel": {
+    "name": "Apache FreeMarker Maven Plugin"
+  }
+}

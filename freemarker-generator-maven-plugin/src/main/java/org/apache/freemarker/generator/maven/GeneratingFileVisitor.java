@@ -69,6 +69,7 @@ public class GeneratingFileVisitor extends SimpleFileVisitor<Path> {
                 throw new RuntimeException("Unknown file extension: " + path);
             }
             pathProcessor.providePropertiesFromFile(path, builder);
+            builder.addToDataModel("session", session);
             builder.addToDataModel("pomProperties", session.getCurrentProject().getProperties());
             builder.create().generate(config);
         }

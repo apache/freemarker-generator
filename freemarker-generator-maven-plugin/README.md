@@ -28,7 +28,7 @@ Add the following snippet within the `<plugins>` tag of your pom.xml:
 
 ```xml
       <plugin>
-        <groupId>com.oath</groupId>
+        <groupId>org.apache.freemarker.generator</groupId>
         <artifactId>freemarker-generator-maven-plugin</artifactId>
         <version>${freemarker-generator-maven-plugin.version}</version>
         <configuration>
