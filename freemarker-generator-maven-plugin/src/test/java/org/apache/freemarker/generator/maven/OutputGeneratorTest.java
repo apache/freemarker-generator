@@ -192,9 +192,9 @@ public class OutputGeneratorTest {
 
         assertTrue(outputFile.isFile());
         List<String> lines = Files.readAllLines(outputFile.toPath(), StandardCharsets.UTF_8);
-        assertEquals(1, lines.size());
+        assertEquals(17, lines.size());
         assertEquals("This is a test freemarker template. Test json data: 'test value'. Test pom data: 'pom value'.", lines
-                .get(0));
+                .get(16));
 
         // Process same file again, should not regenerate file.
         long lastMod = outputFile.lastModified();

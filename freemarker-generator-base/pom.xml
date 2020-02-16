@@ -45,4 +45,21 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.rat</groupId>
+                <artifactId>apache-rat-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>*.md</exclude>
+                        <exclude>**/*.csv</exclude>
+                        <exclude>src/test/data/txt/file_01.txt</exclude>
+                      </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+
 </project>

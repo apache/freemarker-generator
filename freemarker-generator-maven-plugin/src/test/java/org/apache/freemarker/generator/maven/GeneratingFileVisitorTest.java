@@ -114,8 +114,8 @@ public class GeneratingFileVisitorTest extends Assert {
         File outputFile = new File(outputDir, "mydir/success-test-2.txt");
         assertTrue(outputFile.isFile());
         List<String> lines = Files.readAllLines(outputFile.toPath(), StandardCharsets.UTF_8);
-        assertEquals(1, lines.size());
-        assertEquals("This is a test freemarker template. Test pom data: 'pom value'.", lines.get(0));
+        assertEquals(17, lines.size());
+        assertEquals("This is a test freemarker template. Test pom data: 'pom value'.", lines.get(16));
     }
 
     @Test
@@ -148,9 +148,9 @@ public class GeneratingFileVisitorTest extends Assert {
         File outputFile = new File(outputDir, "mydir/success-test.txt");
         assertTrue(outputFile.isFile());
         List<String> lines = Files.readAllLines(outputFile.toPath(), StandardCharsets.UTF_8);
-        assertEquals(1, lines.size());
+        assertEquals(17, lines.size());
         assertEquals("This is a test freemarker template. Test json data: 'test value'. Test pom data: 'pom value'.", lines
-                .get(0));
+                .get(16));
     }
 
     @Test

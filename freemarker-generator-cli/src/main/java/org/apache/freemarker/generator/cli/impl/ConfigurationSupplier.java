@@ -20,7 +20,6 @@ import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.DefaultObjectWrapperBuilder;
-import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.Version;
 import org.apache.freemarker.generator.cli.model.Settings;
 
