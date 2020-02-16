@@ -23,15 +23,27 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import static org.apache.freemarker.generator.base.util.PropertiesTransformer.filterKeyPrefix;
+import static org.apache.freemarker.generator.base.util.PropertiesTransformer.removeKeyPrefix;
 import static org.junit.Assert.assertEquals;
 
 public class PropertiesTransformerTest {
 
+    private final String PREFIX = "freemarker.tools.";
     private final Map<String, Object> settings = new HashMap<>();
 
     @Test
-    public void shouldCreateToolWithDefaultConstructor() {
-        final Properties properties = PropertiesTransformer.removeKeyPrefix(properties(), "freemarker.tools.");
+    public void shouldFilterKeyPrefix() {
+        final Properties properties = filterKeyPrefix(properties(), PREFIX);
+
+        assertEquals(2, properties.size());
+        assertEquals("o.a.f.g.t.commonscsv.CommonsCSVTool", properties.getProperty("freemarker.tools.CSVTool"));
+        assertEquals("o.a.f.g.t.commonscsv.ExecTool", properties.getProperty("freemarker.tools.ExecTool"));
+    }
+
+    @Test
+    public void shouldRemoveKeyPrefix() {
+        final Properties properties = removeKeyPrefix(filterKeyPrefix(properties(), PREFIX), PREFIX);
 
         assertEquals(2, properties.size());
         assertEquals("o.a.f.g.t.commonscsv.CommonsCSVTool", properties.getProperty("CSVTool"));

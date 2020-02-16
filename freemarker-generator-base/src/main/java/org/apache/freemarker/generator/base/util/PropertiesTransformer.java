@@ -24,7 +24,23 @@ import java.util.Properties;
 public class PropertiesTransformer {
 
     /**
-     * Create a new <code>java.util.Properties</code> instance having the matching key prefix removed
+     * Create a new <code>java.util.Properties</code> instance having only key with the prefix.
+     *
+     * @param properties the properties
+     * @param prefix     prefix
+     * @return Properties
+     */
+    public static Properties filterKeyPrefix(Properties properties, String prefix) {
+        final Properties result = new Properties();
+        properties.entrySet()
+                .stream()
+                .filter(entry -> entry.getKey().toString().startsWith(prefix))
+                .forEach(entry -> result.put(entry.getKey().toString(), entry.getValue()));
+        return result;
+    }
+
+    /**
+     * Create a new <code>java.util.Properties</code> instance having the key prefix removed.
      *
      * @param properties the properties
      * @param prefix     prefix to be removed from the matching keys
@@ -33,8 +49,6 @@ public class PropertiesTransformer {
     public static Properties removeKeyPrefix(Properties properties, String prefix) {
         final Properties result = new Properties();
         properties.entrySet()
-                .stream()
-                .filter(entry -> entry.getKey().toString().startsWith(prefix))
                 .forEach(entry -> result.put(entry.getKey().toString().substring(prefix.length()), entry.getValue()));
         return result;
     }

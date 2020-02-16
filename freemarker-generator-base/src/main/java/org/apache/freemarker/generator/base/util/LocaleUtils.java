@@ -18,10 +18,12 @@ package org.apache.freemarker.generator.base.util;
 
 import java.util.Locale;
 
+import static org.apache.freemarker.generator.base.util.StringUtils.isEmpty;
+
 public class LocaleUtils {
 
     public static Locale parseLocale(String value) {
-        if (StringUtils.isEmpty(value)) {
+        if (isEmpty(value) || value.equalsIgnoreCase("JVM default") || value.equalsIgnoreCase("default")) {
             return Locale.getDefault();
         }
 

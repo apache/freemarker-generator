@@ -42,7 +42,7 @@ public class Settings {
     private static final Locale DEFAULT_LOCALE = US;
     private static final Charset DEFAULT_CHARSET = UTF_8;
 
-    private static final String FREEMARKER_CLI_LOCALE_KEY = "freemarker.locale";
+    private static final String FREEMARKER_CLI_LOCALE_KEY = "freemarker.configuration.setting.locale";
 
     /** FreeMarker CLI configuration containing tools */
     private final Properties configuration;
