@@ -27,39 +27,44 @@ This plugin generates source files from FreeMarker templates with a flexible pro
 Add the following snippet within the `<plugins>` tag of your pom.xml:
 
 ```xml
-      <plugin>
-        <groupId>org.apache.freemarker.generator</groupId>
-        <artifactId>freemarker-generator-maven-plugin</artifactId>
-        <version>${freemarker-generator-maven-plugin.version}</version>
-        <configuration>
-          <!-- Required. Specifies the compatibility version for template processing -->
-          <freeMarkerVersion>2.3.29</freeMarkerVersion>
-        </configuration>
-        <executions>
-          <!-- If you want to generate files during other phases, just add more execution
-               tags and specify appropriate phase, sourceDirectory and outputDirectory values.
-          -->
-          <execution>
-            <id>freemarker</id>
-            <!-- Optional, defaults to generate-sources -->
-            <phase>generate-sources</phase>
-            <goals>
-              <!-- Required, must be generate -->
-              <goal>generate</goal>
-            </goals>
+<build>
+    <plugins>
+        <plugin>
+            <groupId>org.apache.freemarker.generator</groupId>
+            <artifactId>freemarker-generator-maven-plugin</artifactId>
+            <version>${project.version}</version>
             <configuration>
-              <!-- Optional, defaults to src/main/freemarker/generator -->
-              <sourceDirectory>src/main/freemarker</sourceDirectory>
-              <!-- Optional, defaults to src/main/freemarker/generator/template -->
-              <templateDirectory>src/main/freemarker/template</templateDirectory>
-              <!-- Optional, defaults to src/main/freemarker/generator -->
-              <generatorDirectory>src/main/freemarker/generator/generator</generatorDirectory>
-              <!-- Optional, defaults to target/generated-sources/freemarker -->
-              <outputDirectory>target/generated-sources/freemarker/generator</outputDirectory>
+                <!-- Required. Specifies the compatibility version for template processing -->
+                <freeMarkerVersion>${freemarker.version}</freeMarkerVersion>
             </configuration>
-          </execution>
-        </executions>
-      </plugin>
+            <executions>
+                <!-- 
+                    If you want to generate files during other phases, just add more execution
+                    tags and specify appropriate phase, sourceDirectory and outputDirectory values.
+                -->
+                <execution>
+                    <id>freemarker-generator</id>
+                    <!-- Optional, defaults to generate-sources -->
+                    <phase>generate-sources</phase>
+                    <goals>
+                        <!-- Required, must be generate -->
+                        <goal>generate</goal>
+                    </goals>
+                    <configuration>
+                        <!-- Optional, defaults to src/main/freemarker/generator -->
+                        <sourceDirectory>src/main/freemarker/generator</sourceDirectory>
+                        <!-- Optional, defaults to src/main/freemarker/generator/templatee -->
+                        <templateDirectory>src/main/freemarker/generator/template</templateDirectory>
+                        <!-- Optional, defaults to src/main/freemarker/generator/generatorr -->
+                        <generatorDirectory>src/main/freemarker/generator/generator</generatorDirectory>
+                        <!-- Optional, defaults to target/generated-sources/freemarker/generator -->
+                        <outputDirectory>target/generated-sources/freemarker/generator</outputDirectory>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+</build>
 ```
 
 # Usage
