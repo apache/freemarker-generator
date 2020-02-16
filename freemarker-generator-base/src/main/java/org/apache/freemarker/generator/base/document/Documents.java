@@ -65,6 +65,20 @@ public class Documents implements Closeable {
         return documents.get(index);
     }
 
+    public boolean add(Document document) {
+        return documents.add(document);
+    }
+
+    public Document remove(int index) {
+        return documents.remove(index);
+    }
+
+    /**
+     * Get exactly one document.
+     *
+     * @param name name of the document
+     * @return document
+     */
     public Document get(String name) {
         final List<Document> list = find(name);
 
@@ -79,6 +93,12 @@ public class Documents implements Closeable {
         return list.get(0);
     }
 
+    /**
+     * Find document based on theit name and globbing pattern.
+     *
+     * @param wildcard globbing pattern
+     * @return list of mathching documents
+     */
     public List<Document> find(String wildcard) {
         return documents.stream()
                 .filter(d -> wildcardMatch(d.getName(), wildcard))

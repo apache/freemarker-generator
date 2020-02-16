@@ -48,6 +48,11 @@ public class FreeMarkerTool {
     public TemplateHashModel getStatics() {
         return getBeansWrapper().getStaticModels();
     }
+
+    @Override
+    public String toString() {
+        return "Expose useful Apache FreeMarker classes";
+    }
 }
 
 

@@ -16,10 +16,12 @@
  */
 package org.apache.freemarker.generator.cli;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
 
+@Ignore("Manual security testing")
 public class SecurityRelatedTest extends AbstractMainTest {
 
     @Test(expected = RuntimeException.class)

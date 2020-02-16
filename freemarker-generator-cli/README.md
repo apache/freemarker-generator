@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/sgoeschl/freemarker-cli.svg?branch=master)](https://travis-ci.org/sgoeschl/freemarker-cli)
+# Apache FreeMarker Generator CLI
 
 # 1. Is This Project For You?
 
@@ -75,37 +75,36 @@ You can test the installation by executing
 
 ```text
 > ./bin/freemarker-cli -t templates/info.ftl 
+
 FreeMarker CLI Information
 ---------------------------------------------------------------------------
 FreeMarker version     : 2.3.29
 Template name          : templates/info.ftl
 Language               : en
 Locale                 : en_US
-Timestamp              : Dec 23, 2019 4:12:43 PM
+Timestamp              : Feb 16, 2020 4:11:07 PM
 Output encoding        : UTF-8
 Output format          : plainText
 
 FreeMarker CLI Template Directories
 ---------------------------------------------------------------------------
-[1] /Users/sgoeschl/work/github/sgoeschl/freemarker-cli/target/appassembler
+[1] /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler
 [2] /Users/sgoeschl/.freemarker-cli
 
-FreeMarker Document Model
+FreeMarker CLI Tools
 ---------------------------------------------------------------------------
-- CSVTool
-- Documents
-- ExcelTool
-- ExecTool
-- FreeMarkerTool
-- GrokTool
-- JsonPathTool
-- JsoupTool
-- PropertiesTool
-- Settings
-- SystemTool
-- UUIDTool
-- XmlTool
-- YamlTool
+- CSVTool              : Process CSV files using Apache Commons CSV (see https://commons.apache.org/proper/commons-csv/)
+- ExcelTool            : Process Excels files (XLS, XLSX) using Apache POI (see https://poi.apache.org)
+- ExecTool             : Execute command line tools using Apache Commons Exec (see https://commons.apache.org/proper/commons-exec/)
+- FreeMarkerTool       : Expose useful Apache FreeMarker classes
+- GrokTool             : Process text files using Grok expressions (see https://github.com/thekrakken/java-grok)
+- JsonPathTool         : Process JSON files using Java JSON Path (see https://github.com/json-path/JsonPath)
+- JsoupTool            : Process  HTML files using Jsoup (see https://jsoup.org)
+- PropertiesTool       : Process JDK properties files
+- SystemTool           : Expose System-related utility methods
+- UUIDTool             : Create UUIDs
+- XmlTool              : Process XML files using Apache FreeMarker (see https://freemarker.apache.org/docs/xgui.html)
+- YamlTool             : Process YAML files using SnakeYAML(see https://bitbucket.org/asomov/snakeyaml/wiki/Home)
 
 FreeMarker CLI Documents
 ---------------------------------------------------------------------------
@@ -123,9 +122,9 @@ User Supplied Properties
 
 SystemTool
 ---------------------------------------------------------------------------
-Host name       : W0GL5179.local
-User name       : sgoeschl
-Command line    : -t, templates/info.ftl
+Host name            : W0GL5179.local
+User name            : sgoeschl
+Command line         : -t, ./templates/info.ftl
 ```
 
 There a many examples (see below) available you can execute - run `./run-samples.sh` and have a look at the generated output
@@ -1191,7 +1190,6 @@ user.home    : /Users/sgoeschl
 - MAVEN_OPTS ==> -Xmx2048m
 - DISPLAY ==> :0.0
 - JAVA_11_HOME ==> /Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home
-- BEEONE_NEXUS_CREDENTIALS ==> H50N0OB:fRidnevo0719!
 - LOGNAME ==> sgoeschl
 - XPC_SERVICE_NAME ==> 0
 - PWD ==> /Users/sgoeschl/work/github/sgoeschl/freemarker-cli/target/appassembler
@@ -1202,7 +1200,6 @@ user.home    : /Users/sgoeschl
 - TERM_PROGRAM ==> Apple_Terminal
 - LSCOLORS ==> ExFxCxDxBxegedabagacad
 - PROFILE_ENV ==> default
-- SECURITYSESSIONID ==> 186ab
 - USER ==> sgoeschl
 - CLICOLOR ==> 1
 - GATLING_HOME ==> /Applications/Java/gatling-3.1.2
@@ -1278,21 +1275,22 @@ Mon Dec 23 16:18:04 CET 2019
 
 Within the script a FreeMarker data model is set up and passed to the template - it contains the documents to be processed and the following tools
 
-| Helper                | Description                                                         |
-|-----------------------|---------------------------------------------------------------------|
-| CSVTool               | CSV parser exposing a `parse` method                                |
-| ExecTool              | Executing commons using Apache Commons Exec                         |
-| Documents             | Helper to find documents, e.g. by name, extension or index          |
-| ExcelTool             | Excel parser exposing a `parse` method                              |
-| FreeMarkerTool        | FreeMarker helper classes                                           |
-| GrokTool              | Use Grok for powerful regular expressions                           |
-| JsonPathTool          | JSON Parser                                                         |
-| JsoupTool             | Jsoup HTML parser                                                   |
-| PropertiesTool        | Properties parser exposing a `parse` method                         |
-| Settings              | Settings for template rendering                                     |
-| UUIDTool              | Create UUIDs                                                        |
-| XmlTool               | XML parser exposing a `parse` method                                |
-| YamlTool              | SnakeYAML to parse YAML files                                       |
+| Entry                 | Description                                                                                               |
+|-----------------------|-----------------------------------------------------------------------------------------------------------|
+| CSVTool               | Process CSV files using [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/)              |
+| ExecTool              | Execute command line tools using [Apache Commons Exec](https://commons.apache.org/proper/commons-exec/)   |
+| ExcelTool             | Process Excels files (XLS, XLSX) using [Apache POI](https://poi.apache.org)                               |
+| Documents             | Helper class to find documents, e.g. by name, extension or index                                          |
+| FreeMarkerTool        | Expose useful FreeMarker classes                                                                          |
+| GrokTool              | Process text files using [Grok](https://github.com/thekrakken/java-grok) instead of regular expressions   |
+| JsonPathTool          | Process JSON file using [Java JSON Path](https://github.com/json-path/JsonPath)                           |
+| JsoupTool             | Processing HTML files using [Jsoup](https://jsoup.org)                                                    |
+| PropertiesTool        | Process JDK properties files                                                                              |
+| SystemTool            | System-related utility methods                                                                            |
+| XmlTool               | Process XML files using [Apache FreeMarker](https://freemarker.apache.org/docs/xgui.html)                 |
+| YamlTool              | Process YAML files using [SnakeYAML](https://bitbucket.org/asomov/snakeyaml/wiki/Home)                    |
+| UUIDTool              | Create UUIDs                                                                                              |
+
 
 # 8. Tips & Tricks
 

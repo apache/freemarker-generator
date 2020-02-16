@@ -29,4 +29,9 @@ public class UUIDTool {
     public UUID namedUUID(String name) {
         return UUID.nameUUIDFromBytes(name.getBytes(UTF_8));
     }
+
+    @Override
+    public String toString() {
+        return "Create UUIDs";
+    }
 }

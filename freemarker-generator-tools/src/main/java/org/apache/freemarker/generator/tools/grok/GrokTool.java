@@ -33,4 +33,9 @@ public class GrokTool {
         final Grok grok = grokCompiler.compile(pattern);
         return new GrokWrapper(grok);
     }
+
+    @Override
+    public String toString() {
+        return "Process text files using Grok expressions (see https://github.com/thekrakken/java-grok)";
+    }
 }

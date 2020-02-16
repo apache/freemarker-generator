@@ -40,4 +40,9 @@ public class XmlTool {
             throw new RuntimeException("Failed to parse XML document: " + value, e);
         }
     }
+
+    @Override
+    public String toString() {
+        return "Process XML files using Apache FreeMarker (see https://freemarker.apache.org/docs/xgui.html)";
+    }
 }

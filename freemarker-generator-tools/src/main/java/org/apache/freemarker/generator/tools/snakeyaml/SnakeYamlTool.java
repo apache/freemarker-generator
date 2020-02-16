@@ -36,4 +36,9 @@ public class SnakeYamlTool {
     public Map<String, Object> parse(String value) {
         return new Yaml().load(value);
     }
+
+    @Override
+    public String toString() {
+        return "Process YAML files using SnakeYAML(see https://bitbucket.org/asomov/snakeyaml/wiki/Home)";
+    }
 }

@@ -35,6 +35,11 @@ public class CommonsExecTool {
         return execute(commandLine(executable, args));
     }
 
+    @Override
+    public String toString() {
+        return "Execute command line tools using Apache Commons Exec (see https://commons.apache.org/proper/commons-exec/)";
+    }
+
     private String execute(CommandLine commandLine) {
         try (ByteArrayOutputStream boas = new ByteArrayOutputStream()) {
             final Executor executor = new DefaultExecutor();

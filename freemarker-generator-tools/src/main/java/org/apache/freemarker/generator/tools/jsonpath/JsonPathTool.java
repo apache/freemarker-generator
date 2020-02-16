@@ -37,6 +37,11 @@ public class JsonPathTool {
         return JsonPath.using(configuration()).parse(json);
     }
 
+    @Override
+    public String toString() {
+        return "Process JSON files using Java JSON Path (see https://github.com/json-path/JsonPath)";
+    }
+
     private Configuration configuration() {
         return Configuration.builder()
                 .options(Option.SUPPRESS_EXCEPTIONS)

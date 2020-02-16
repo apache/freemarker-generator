@@ -196,6 +196,11 @@ public class CommonsCSVTool {
         }
     }
 
+    @Override
+    public String toString() {
+        return "Process CSV files using Apache Commons CSV (see https://commons.apache.org/proper/commons-csv/)";
+    }
+
     private static CSVParser parse(InputStream is, Charset charset, CSVFormat format) throws IOException {
         if (is == null) {
             throw new IllegalArgumentException("No input stream was provided");

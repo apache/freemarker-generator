@@ -5,13 +5,19 @@ All notable changes to this project will be documented in this file. We try to a
 ## 0.1.0-SNAPSHOT
 
 ### Added
+* [FREEMARKER-129] Migrate `freemarker-cli` into `freemarker-generator` project (see [https://github.com/sgoeschl/freemarker-cli](https://github.com/sgoeschl/freemarker-cli))
 
 ### Changed
-
-[FREEMARKER-129] freemarker-generator: Merge "freemarker-cli" into "freemarker-generator"
+* [FREEMARKER-129] Provide a `toString()` metheod for all tools
+* [FREEMARKER-129] Use version "0.X.Y" to cater for API changes according to [Sematik Versioning](https://semver.org)
+* [FREEMARKER-129] Change artifact `freemarker-maven-plugin` to `freemarker-generator-maven-plugin`
+* [FREEMARKER-128] Update `freemarker-maven-plugin` to Apache FreeMarker 2.3.29
 
 ### Deleted
 
 ### Fixed 
+* [FREEMARKER-127] Site build fails with missing "org/apache/maven/doxia/siterenderer/DocumentContent"
 
+[FREEMARKER-127]: https://issues.apache.org/jira/browse/FREEMARKER-127
+[FREEMARKER-128]: https://issues.apache.org/jira/browse/FREEMARKER-128
 [FREEMARKER-129]: https://issues.apache.org/jira/browse/FREEMARKER-129

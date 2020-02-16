@@ -16,12 +16,12 @@
  */
 package org.apache.freemarker.generator.base.document;
 
-
 import org.apache.freemarker.generator.base.file.RecursiveFileSupplier;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
@@ -36,17 +36,17 @@ import static java.util.stream.Collectors.toList;
  */
 public class DocumentsSupplier implements Supplier<List<Document>> {
 
-    /** List of input files and/or directories */
+    /** List of source files and/or directories */
     private final Collection<String> sources;
 
-    /** Include pattern for resolving files from a directory */
+    /** Include pattern for resolving source files or directory */
     private final String include;
 
-    /** The charset to use for loading text files */
+    /** The charset for loading text files */
     private final Charset charset;
 
     public DocumentsSupplier(Collection<String> sources, String include, Charset charset) {
-        this.sources = requireNonNull(sources);
+        this.sources = new ArrayList<>(sources);
         this.include = include;
         this.charset = charset;
     }

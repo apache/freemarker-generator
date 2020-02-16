@@ -52,14 +52,7 @@ public class ConfigurationSupplier implements Supplier<Configuration> {
         configuration.setOutputEncoding(settings.getOutputEncoding().name());
         configuration.setTemplateLoader(templateLoader.get());
         configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-
-        // Try to decrease an attack surface if "FreeMarkerTool" is not exposed
-        // https://www.blackhat.com/docs/us-15/materials/us-15-Kettle-Server-Side-Template-Injection-RCE-For-The-Modern-Web-App-wp.pdf
-        // https://ackcent.com/blog/in-depth-freemarker-template-injection/
-        // Not relevant for a command line tool but good to remember ...
-        configuration.setAPIBuiltinEnabled(false); // is default anyway
         configuration.setNewBuiltinClassResolver(ALLOWS_NOTHING_RESOLVER);
-
         return configuration;
     }
 

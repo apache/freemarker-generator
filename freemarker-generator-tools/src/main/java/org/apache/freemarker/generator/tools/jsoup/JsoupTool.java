@@ -35,4 +35,9 @@ public class JsoupTool {
     public org.jsoup.nodes.Document parse(String html) {
         return Jsoup.parse(html);
     }
+
+    @Override
+    public String toString() {
+        return "Process  HTML files using Jsoup (see https://jsoup.org)";
+    }
 }

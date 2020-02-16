@@ -112,6 +112,11 @@ public class ExcelTool {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "Process Excels files (XLS, XLSX) using Apache POI (see https://poi.apache.org)";
+    }
+
     private static List<String> toColumns(Row row, DataFormatter dataFormatter) {
         final List<String> columnValues = new ArrayList<>();
         for (int columnIndex = 0; columnIndex < row.getLastCellNum(); columnIndex++) {

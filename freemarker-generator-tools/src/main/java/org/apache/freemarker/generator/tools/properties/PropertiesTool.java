@@ -44,4 +44,9 @@ public class PropertiesTool {
             throw new RuntimeException("Failed to parse properties: " + value, e);
         }
     }
+
+    @Override
+    public String toString() {
+        return "Process JDK properties files";
+    }
 }

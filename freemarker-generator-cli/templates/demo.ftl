@@ -74,7 +74,7 @@ user.home    : ${SystemTool.properties["user.home"]!""}
 9) List Environment Variables
 ---------------------------------------------------------------------------
 <#list SystemTool.envs as name,value>
-    - ${name} ==> ${value}<#lt>
+- ${name} ==> ${value}<#lt>
 </#list>
 
 10) Access Documents
@@ -98,22 +98,30 @@ Get all documents
     - ${document.name} => ${document.location}
 </#list>
 
-11) Document Data Model
+11) FreeMarker CLI Tools
 ---------------------------------------------------------------------------
 <#list .data_model?keys?sort as key>
-    - ${key}<#lt>
+<#if key?ends_with("Tool")>
+- ${key?right_pad(20)} : ${.data_model[key]}
+</#if>
 </#list>
 
-12) Create a UUID
+12) Document Data Model
+---------------------------------------------------------------------------
+<#list .data_model?keys?sort as key>
+- ${key}<#lt>
+</#list>
+
+13) Create a UUID
 ---------------------------------------------------------------------------
 UUIDTool Random UUID  : ${UUIDTool.randomUUID()}
 UUIDTool Named UUID   : ${UUIDTool.namedUUID("value and salt")}
 
-13) Printing Special Characters
+14) Printing Special Characters
 ---------------------------------------------------------------------------
 German Special Characters: äöüßÄÖÜ
 
-14) Locale-specific output
+15) Locale-specific output
 ---------------------------------------------------------------------------
 <#setting number_format=",##0.00">
 <#assign smallNumber = 1.234>
@@ -123,7 +131,7 @@ Large Number :  ${largeNumber}
 Date         :  ${.now?date}
 Time         :  ${.now?time}
 
-15) Execute a program
+16) Execute a program
 ---------------------------------------------------------------------------
 > date
 ${ExecTool.execute("date")}

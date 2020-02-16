@@ -93,4 +93,9 @@ public class SystemTool {
     public long currentTimeMillis() {
         return System.currentTimeMillis();
     }
+
+    @Override
+    public String toString() {
+        return "Expose System-related utility methods";
+    }
 }

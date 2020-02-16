@@ -31,10 +31,12 @@ FreeMarker CLI Template Directories
 [${directory?counter}] ${directory}
 </#list>
 
-FreeMarker Document Model
+FreeMarker CLI Tools
 ---------------------------------------------------------------------------
 <#list .data_model?keys?sort as key>
-- ${key}
+<#if key?ends_with("Tool")>
+- ${key?right_pad(20)} : ${.data_model[key]}
+</#if>
 </#list>
 
 FreeMarker CLI Documents
@@ -57,6 +59,6 @@ User Supplied Properties
 
 SystemTool
 ---------------------------------------------------------------------------
-Host name       : ${SystemTool.getHostName()}
-User name       : ${SystemTool.getProperty("user.name", "N.A.")}
-Command line    : ${SystemTool.getCommandLineArgs()?join(", ")}
+Host name            : ${SystemTool.getHostName()}
+User name            : ${SystemTool.getProperty("user.name", "N.A.")}
+Command line         : ${SystemTool.getCommandLineArgs()?join(", ")}

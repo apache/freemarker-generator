@@ -21,10 +21,9 @@
 <#assign column = SystemTool.getProperty("column")>
 <#assign values = SystemTool.getProperty("values")?split(",")>
 
-<#-- Process each line without materializing the whole file in memory -->
-
 <#compress>
     <@writePageHeader document/>
+    <#-- Process each line without materializing the whole file in memory -->
     <#list parser.iterator() as record>
         <#if filter(record)>
             <@writeCsvRecord headers record/>
