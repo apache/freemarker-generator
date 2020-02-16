@@ -48,8 +48,7 @@ public class PropertiesTransformer {
      */
     public static Properties removeKeyPrefix(Properties properties, String prefix) {
         final Properties result = new Properties();
-        properties.entrySet()
-                .forEach(entry -> result.put(entry.getKey().toString().substring(prefix.length()), entry.getValue()));
+        properties.forEach((key, value) -> result.put(key.toString().substring(prefix.length()), value));
         return result;
     }
 }

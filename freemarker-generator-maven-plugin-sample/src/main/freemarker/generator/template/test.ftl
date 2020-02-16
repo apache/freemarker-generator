@@ -25,7 +25,7 @@ This is a test freemarker template. Test json data: '${testVar}'
 Maven Project Properties
 -----------------------------------------------------------------------------
 <#list properties as key,value>
-    - ${key?right_pad(38)} ==> ${value}<#lt>
+- ${key?right_pad(38)} ==> ${value}<#lt>
 </#list>
 
 Maven Project Model
