@@ -1,0 +1,10 @@
+language: java
+jdk:
+  - openjdk8
+  - openjdk9
+  - openjdk10
+  - openjdk11
+  - openjdk12
+script:
+  - mvn clean install
+  - sh ./run-samples.sh
