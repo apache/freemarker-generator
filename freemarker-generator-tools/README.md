@@ -1,7 +1,7 @@
 Apache FreeMarker Generator Tools
 =============================================================================
 
-A "tool" is just a POJO (plain old java object) that is "useful" in a template and is not meant to be rendered in the output. In other words, a "tool" is meant to be used but not seen themselves (e.g. for formatting dates or numbers, url building, etc)
+A "tool" is just a POJO (plain old java object) that is "useful" in a template and is not meant to be rendered in the output. 
 
 Design Considerations
 ------------------------------------------------------------------------------
