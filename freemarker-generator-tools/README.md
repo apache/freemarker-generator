@@ -25,9 +25,9 @@ The following tools are currently provided
 | FreeMarkerTool        | Expose useful Apache FreeMarker classes                                                                   |
 | GrokTool              | Process text files using [Grok](https://github.com/thekrakken/java-grok) expressions                      |
 | JsonPathTool          | Process JSON files using [Java JSON Path](https://github.com/json-path/JsonPath)                          |
-| JsoupTool             | Processing HTML files using [Jsoup](https://jsoup.org)                                                    |
+| JsoupTool             | Process  HTML files using [Jsoup](https://jsoup.org)                                                      |
 | PropertiesTool        | Process JDK properties files                                                                              |
-| SystemTool            | System-related utility methods                                                                            |
+| SystemTool            | Expose System-related utility methods                                                                     |
 | XmlTool               | Process XML files using [Apache FreeMarker](https://freemarker.apache.org/docs/xgui.html)                 |
 | YamlTool              | Process YAML files using [SnakeYAML](https://bitbucket.org/asomov/snakeyaml/wiki/Home)                    |
 | UUIDTool              | Create UUIDs                                                                                              |
