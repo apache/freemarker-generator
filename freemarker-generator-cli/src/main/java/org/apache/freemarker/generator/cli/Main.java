@@ -16,7 +16,9 @@
  */
 package org.apache.freemarker.generator.cli;
 
-import org.apache.freemarker.generator.base.file.PropertiesFileSupplier;
+import org.apache.freemarker.generator.base.file.PropertiesClassPathSupplier;
+import org.apache.freemarker.generator.base.file.PropertiesFileSystemSupplier;
+import org.apache.freemarker.generator.base.file.PropertiesSupplier;
 import org.apache.freemarker.generator.base.util.ClosableUtils;
 import org.apache.freemarker.generator.base.util.StringUtils;
 import org.apache.freemarker.generator.cli.impl.TemplateDirectorySupplier;
@@ -40,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Callable;
+import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 import static java.util.Objects.requireNonNull;
@@ -202,14 +205,20 @@ public class Main implements Callable<Integer> {
 
     private static Properties loadFreeMarkerCliConfiguration(String fileName) {
         try {
-            final Properties properties = new PropertiesFileSupplier(fileName).get();
+            final Properties properties = propertiesSupplier(fileName).get();
             if (properties != null) {
                 return properties;
             } else {
-                throw new RuntimeException("FreeMarker tools properties not found" + fileName);
+                throw new RuntimeException("FreeMarker CLI configuration file not found: " + fileName);
             }
         } catch (RuntimeException e) {
             throw new RuntimeException("Failed to load FreeMarker tools properties: " + fileName, e);
         }
+    }
+
+    private static Supplier<Properties> propertiesSupplier(String fileName) {
+        return new PropertiesSupplier(
+                new PropertiesFileSystemSupplier(fileName),
+                new PropertiesClassPathSupplier(fileName));
     }
 }

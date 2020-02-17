@@ -19,10 +19,11 @@ package org.apache.freemarker.generator.cli.impl;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
 
 /**
  * Determine a list of directories to load a relative template file in the following order
@@ -35,18 +36,16 @@ import static java.util.Arrays.asList;
  */
 public class TemplateDirectorySupplier implements Supplier<List<File>> {
 
-    private static final String UNDEFINED = "__undefined__";
-
-    /** Installation directory of "freemarker-cli" */
+    /** Installation directory of "freemarker-cli" when invoked with shell wrapper */
     private static final String APP_HOME = "app.home";
 
-    /** Current working directory */
+    /** Current working directory when invoked with shell wrapper */
     private static final String USER_DIR = "user.dir";
 
     /** Home directory of the user */
     private static final String USER_HOME = "user.home";
 
-    /** The user's "freemarker-cli" directory */
+    /** The user's optional "freemarker-cli" directory */
     private static final String USER_CONFIGURATION_DIR_NAME = ".freemarker-cli";
 
     /** User-defined template directory */
@@ -58,23 +57,36 @@ public class TemplateDirectorySupplier implements Supplier<List<File>> {
 
     @Override
     public List<File> get() {
-        final File applicationDir = new File(System.getProperty(APP_HOME, UNDEFINED));
-        final File userHomeDir = new File(System.getProperty(USER_HOME, UNDEFINED));
-        final File currentWorkingDir = new File(System.getProperty(USER_DIR, UNDEFINED));
-        final File userConfigDir = new File(userHomeDir, USER_CONFIGURATION_DIR_NAME);
-        final File userTemplateDir = userDefinedTemplateDir != null ? new File(userDefinedTemplateDir) : null;
-
-        final List<File> templateLoaderDirectories = new ArrayList<>(asList(
-                userTemplateDir,
-                currentWorkingDir,
-                userConfigDir,
-                applicationDir
+        final List<String> templateLoaderDirectories = new ArrayList<>(asList(
+                userTemplateDirName(),
+                currentWorkingDirName(),
+                userConfigDirName(),
+                applicationDirName()
         ));
 
         return templateLoaderDirectories.stream()
-                .filter(TemplateDirectorySupplier::isTemplateDirectory)
+                .filter(Objects::nonNull)
                 .distinct()
-                .collect(Collectors.toList());
+                .map(File::new)
+                .filter(TemplateDirectorySupplier::isTemplateDirectory)
+                .collect(toList());
+    }
+
+    private String userTemplateDirName() {
+        return userDefinedTemplateDir != null ? new File(userDefinedTemplateDir).getAbsolutePath() : null;
+    }
+
+    private String userConfigDirName() {
+        final String userHomeDir = System.getProperty(USER_HOME);
+        return new File(userHomeDir, USER_CONFIGURATION_DIR_NAME).getAbsolutePath();
+    }
+
+    private static String applicationDirName() {
+        return System.getProperty(APP_HOME);
+    }
+
+    private static String currentWorkingDirName() {
+        return System.getProperty(USER_DIR);
     }
 
     private static boolean isTemplateDirectory(File directory) {

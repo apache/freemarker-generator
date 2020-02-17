@@ -16,8 +16,8 @@
  */
 package org.apache.freemarker.generator.base.file;
 
-import java.io.File;
-import java.io.FileInputStream;
+import org.apache.freemarker.generator.base.util.PropertiesFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -26,57 +26,36 @@ import java.util.function.Supplier;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Resolve a given properties file either from the file system or the classpath.
+ * Resolve a given properties file from the classpath.
  */
-public class PropertiesFileSupplier implements Supplier<Properties> {
+public class PropertiesClassPathSupplier implements Supplier<Properties> {
 
     private final String fileName;
 
-    public PropertiesFileSupplier(String fileName) {
+    public PropertiesClassPathSupplier(String fileName) {
         this.fileName = requireNonNull(fileName);
     }
 
     @Override
     public Properties get() {
         try {
-            return resolveFromFileSystemOrClassPath(fileName);
+            return resolve(fileName);
         } catch (IOException e) {
             throw new RuntimeException("Failed to supply properties file:" + fileName);
         }
     }
 
-    private static Properties resolveFromFileSystemOrClassPath(String fileName) throws IOException {
-        final Properties result = resolveFromFileSystem(fileName);
-        return result != null ? result : resolveFromClassPath(fileName);
-    }
-
-    private static Properties resolveFromClassPath(String fileName) throws IOException {
-        final Properties properties = new Properties();
-        final InputStream is = PropertiesFileSupplier.class.getResourceAsStream(resourceName(fileName));
+    private static Properties resolve(String fileName) throws IOException {
+        final InputStream is = PropertiesClassPathSupplier.class.getResourceAsStream(resourceName(fileName));
 
         if (is == null) {
             return null;
         }
 
         try {
-            properties.load(is);
-            return properties;
+            return PropertiesFactory.create(is);
         } finally {
             is.close();
-        }
-    }
-
-    private static Properties resolveFromFileSystem(String fileName) throws IOException {
-        final File file = new File(fileName);
-
-        if (!file.exists()) {
-            return null;
-        }
-
-        try (InputStream input = new FileInputStream(file)) {
-            final Properties properties = new Properties();
-            properties.load(input);
-            return properties;
         }
     }
 

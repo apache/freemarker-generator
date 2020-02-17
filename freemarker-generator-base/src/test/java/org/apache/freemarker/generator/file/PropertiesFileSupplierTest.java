@@ -16,10 +16,14 @@
  */
 package org.apache.freemarker.generator.file;
 
-import org.apache.freemarker.generator.base.file.PropertiesFileSupplier;
+import org.apache.freemarker.generator.base.file.PropertiesClassPathSupplier;
+import org.apache.freemarker.generator.base.file.PropertiesFileSystemSupplier;
+import org.apache.freemarker.generator.base.file.PropertiesSupplier;
+import org.apache.freemarker.generator.base.util.CachingSupplier;
 import org.junit.Test;
 
 import java.util.Properties;
+import java.util.function.Supplier;
 
 import static junit.framework.TestCase.assertNull;
 import static org.junit.Assert.assertEquals;
@@ -42,7 +46,10 @@ public class PropertiesFileSupplierTest {
         assertNull(supplier("unknown.properties").get());
     }
 
-    private static PropertiesFileSupplier supplier(String fileName) {
-        return new PropertiesFileSupplier(fileName);
+    private static Supplier<Properties> supplier(String fileName) {
+        return new CachingSupplier<>(new PropertiesSupplier(
+                new PropertiesFileSystemSupplier(fileName),
+                new PropertiesClassPathSupplier(fileName))
+        );
     }
 }
