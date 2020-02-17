@@ -24,7 +24,8 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Wraps an InputStream into a DataSource. Please note that the input stream
- * can be consumed only once.
+ * is not buffered and can be consumed only once to support streaming of
+ * arbitrary large amount of data.
  */
 public class InputStreamDataSource implements DataSource {
 

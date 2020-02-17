@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.io.FilenameUtils.wildcardMatch;
 
@@ -36,9 +35,14 @@ public class Documents implements Closeable {
     private final List<Document> documents;
 
     public Documents(Collection<Document> documents) {
-        this.documents = new ArrayList<>(requireNonNull(documents));
+        this.documents = new ArrayList<>(documents);
     }
 
+    /**
+     * Get the names of all documents.
+     *
+     * @return document names
+     */
     public List<String> getNames() {
         return documents.stream()
                 .map(Document::getName)
@@ -74,7 +78,8 @@ public class Documents implements Closeable {
     }
 
     /**
-     * Get exactly one document.
+     * Get exactly one document. If not exactly one document
+     * is found an exception is thrown.
      *
      * @param name name of the document
      * @return document

@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import static java.util.Collections.singletonList;
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -38,16 +39,23 @@ public class DocumentsSupplier implements Supplier<List<Document>> {
     /** List of source files and/or directories */
     private final Collection<String> sources;
 
-    /** Include pattern for resolving source files or directory */
+    /** Optional include pattern for resolving source files or directory */
     private final String include;
 
     /** The charset for loading text files */
     private final Charset charset;
 
+    /**
+     * Constructor.
+     *
+     * @param sources List of source files and/or directories
+     * @param include Optional include pattern for resolving source files or directory
+     * @param charset The charset for loading text files
+     */
     public DocumentsSupplier(Collection<String> sources, String include, Charset charset) {
         this.sources = new ArrayList<>(sources);
         this.include = include;
-        this.charset = charset;
+        this.charset = requireNonNull(charset);
     }
 
     @Override
