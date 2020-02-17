@@ -7,4 +7,5 @@ jdk:
   - openjdk12
 script:
   - mvn clean install
+  - cd freemarker-generator-cli
   - sh ./run-samples.sh
