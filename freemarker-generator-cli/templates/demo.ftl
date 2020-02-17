@@ -57,7 +57,7 @@ List all files:
 Host name       : ${SystemTool.getHostName()}
 Command line    : ${SystemTool.getCommandLineArgs()?join(", ")}
 System property : ${SystemTool.getProperty("user.name", "N.A.")}
-Timestamp       : ${SystemTool.currentTimeMillis()?c}
+Timestamp       : ${SystemTool.currentTimeMillis?c}
 Environment var : ${SystemTool.envs["USER"]!"N.A."}
 
 8) Access System Properties

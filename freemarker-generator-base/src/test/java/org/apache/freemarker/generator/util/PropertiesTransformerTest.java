@@ -16,25 +16,24 @@
  */
 package org.apache.freemarker.generator.util;
 
-import org.apache.freemarker.generator.base.util.PropertiesTransformer;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import static org.apache.freemarker.generator.base.FreeMarkerConstants.Configuration.TOOLS_PREFIX;
 import static org.apache.freemarker.generator.base.util.PropertiesTransformer.filterKeyPrefix;
 import static org.apache.freemarker.generator.base.util.PropertiesTransformer.removeKeyPrefix;
 import static org.junit.Assert.assertEquals;
 
 public class PropertiesTransformerTest {
 
-    private final String PREFIX = "freemarker.tools.";
     private final Map<String, Object> settings = new HashMap<>();
 
     @Test
     public void shouldFilterKeyPrefix() {
-        final Properties properties = filterKeyPrefix(properties(), PREFIX);
+        final Properties properties = filterKeyPrefix(properties(), TOOLS_PREFIX);
 
         assertEquals(2, properties.size());
         assertEquals("o.a.f.g.t.commonscsv.CommonsCSVTool", properties.getProperty("freemarker.tools.CSVTool"));
@@ -43,7 +42,7 @@ public class PropertiesTransformerTest {
 
     @Test
     public void shouldRemoveKeyPrefix() {
-        final Properties properties = removeKeyPrefix(filterKeyPrefix(properties(), PREFIX), PREFIX);
+        final Properties properties = removeKeyPrefix(filterKeyPrefix(properties(), TOOLS_PREFIX), TOOLS_PREFIX);
 
         assertEquals(2, properties.size());
         assertEquals("o.a.f.g.t.commonscsv.CommonsCSVTool", properties.getProperty("CSVTool"));

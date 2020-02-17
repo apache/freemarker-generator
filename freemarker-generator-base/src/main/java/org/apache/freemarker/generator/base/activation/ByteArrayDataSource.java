@@ -23,17 +23,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import static java.util.Objects.requireNonNull;
+import static org.apache.freemarker.generator.base.FreeMarkerConstants.APPLICATION_OCTET_STREAM;
 
 public class ByteArrayDataSource implements DataSource {
-
-    private static final String DEFAULT_CONTENT_TYPE = "application/octet-stream";
 
     private final String name;
     private final byte[] content;
     private final String contentType;
 
     public ByteArrayDataSource(String name, byte[] content) {
-        this(name, content, DEFAULT_CONTENT_TYPE);
+        this(name, content, APPLICATION_OCTET_STREAM);
     }
 
     public ByteArrayDataSource(String name, byte[] content, String contentType) {

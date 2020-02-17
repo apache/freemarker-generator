@@ -15,7 +15,6 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign writer = Settings["freemarker.writer"]>
 <#assign format = SystemTool.properties["csv.format"]!"DEFAULT">
 <#assign salt = SystemTool.properties["salt"]!"salt">
 <#-- Parse the first document & sheet of the Excel document -->
@@ -24,7 +23,7 @@
 <#assign records = ExcelTool.toTable(sheet)>
 <#-- Setup CSVPrinter  -->
 <#assign cvsFormat = CSVTool.formats[format]>
-<#assign csvPrinter = CSVTool.printer(cvsFormat, writer)>
+<#assign csvPrinter = CSVTool.printer(cvsFormat, SystemTool.writer)>
 <#--
     Transform an arbitrary Excel file and add addition columns using Commons CSV
     We are using an instance of CSVPrinter directly have proper quoting of the output

@@ -25,7 +25,7 @@ public class ManualTest {
 
     private static final String SPACE = " ";
     // private static final String CMD = "-b ./src/test -t templates/csv/html/transactions.ftl site/sample/csv/transactions.csv";
-    // private static final String CMD = "-b ./src/test -l de_AT -Dfoo=bar -t templates/info.ftl site/sample/csv/transactions.csv";
+    private static final String CMD = "-b ./src/test -l de_AT -DFOO=foo -DBAR=bar -t templates/info.ftl site/sample/csv/transactions.csv";
     // private static final String CMD = "-b ./src/test -DFOO=foo -DBAR=bar -l de -t templates/demo.ftl site/sample/csv/transactions.csv";
     // private static final String CMD = "-b ./src/test -DFOO=foo -DBAR=bar -t templates/demo.ftl site/sample/csv/transactions.csv";
     // private static final String CMD = "-b ./src/test -Dcsv.out.format=TDF -t templates/csv/transform.ftl site/sample/csv/contract.csv";
@@ -34,7 +34,7 @@ public class ManualTest {
     // private static final String CMD = "-i ${XmlTool.parse(Documents.first)['recipients/person[1]/name']} site/sample/xml/recipients.xml";
     // private static final String CMD = "-i ${JsoupTool.parse(Documents.first).select('a')[0]} site/sample/html/dependencies.html";
     // private static final String CMD = "-b ./src/test -t templates/properties/csv/locker-test-users.ftl site/sample/properties";
-    private static final String CMD = "-b ./src/test -e UTF-8 -l de_AT -Dcolumn=Order%20ID -Dvalues=226939189,957081544 -Dformat=DEFAULT -Ddelimiter=COMMA -t templates/csv/md/filter.ftl site/sample/csv/sales-records.csv";
+    // private static final String CMD = "-b ./src/test -e UTF-8 -l de_AT -Dcolumn=Order%20ID -Dvalues=226939189,957081544 -Dformat=DEFAULT -Ddelimiter=COMMA -t templates/csv/md/filter.ftl site/sample/csv/sales-records.csv";
 
     public static void main(String[] args) {
         Main.execute(toArgs(CMD));

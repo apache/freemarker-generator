@@ -16,6 +16,7 @@
  */
 package org.apache.freemarker.generator.cli;
 
+import org.apache.freemarker.generator.base.FreeMarkerConstants.Model;
 import org.apache.freemarker.generator.base.util.LocaleUtils;
 import org.apache.freemarker.generator.base.util.NonClosableWriterWrapper;
 
@@ -31,19 +32,16 @@ import java.util.Properties;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.emptyList;
-import static java.util.Locale.US;
 import static java.util.Objects.requireNonNull;
+import static org.apache.freemarker.generator.base.FreeMarkerConstants.Configuration.LOCALE_KEY;
+import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_CHARSET;
+import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_LOCALE;
 import static org.apache.freemarker.generator.base.util.StringUtils.isEmpty;
 
 /**
  * Capture all the settings required for rendering a FreeMarker template.
  */
 public class Settings {
-
-    private static final Locale DEFAULT_LOCALE = US;
-    private static final Charset DEFAULT_CHARSET = UTF_8;
-
-    private static final String FREEMARKER_CLI_LOCALE_KEY = "freemarker.configuration.setting.locale";
 
     /** FreeMarker CLI configuration containing tools */
     private final Properties configuration;
@@ -216,11 +214,11 @@ public class Settings {
      */
     public Map<String, Object> toMap() {
         final Map<String, Object> result = new HashMap<>();
-        result.put("freemarker.cli.args", getArgs());
-        result.put("freemarker.locale", getLocale());
-        result.put("freemarker.template.directories", getTemplateDirectories());
-        result.put("freemarker.writer", getWriter());
-        result.put("user.properties", getProperties());
+        result.put(Model.FREEMARKER_CLI_ARGS, getArgs());
+        result.put(Model.FREEMARKER_LOCALE, getLocale());
+        result.put(Model.FREEMARKER_TEMPLATE_DIRECTORIES, getTemplateDirectories());
+        result.put(Model.FREEMARKER_USER_PROPERTIES, getProperties());
+        result.put(Model.FREEMARKER_WRITER, getWriter());
         return result;
     }
 
@@ -398,8 +396,8 @@ public class Settings {
 
         private String getDefaultLocale() {
             return configuration.getProperty(
-                    FREEMARKER_CLI_LOCALE_KEY,
-                    System.getProperty(FREEMARKER_CLI_LOCALE_KEY, DEFAULT_LOCALE.toString()));
+                    LOCALE_KEY,
+                    System.getProperty(LOCALE_KEY, DEFAULT_LOCALE.toString()));
         }
     }
 }

@@ -16,6 +16,7 @@
  */
 package org.apache.freemarker.generator.base.document;
 
+import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.activation.ByteArrayDataSource;
 import org.apache.freemarker.generator.base.activation.InputStreamDataSource;
 import org.apache.freemarker.generator.base.activation.StringDataSource;
@@ -35,8 +36,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 public class DocumentFactory {
 
-    public static final String LOCATION_STDIN = "stdin";
-
     private DocumentFactory() {
     }
 
@@ -47,7 +46,7 @@ public class DocumentFactory {
 
     public static Document create(String name, String content) {
         final StringDataSource dataSource = new StringDataSource(name, content, UTF_8);
-        return create(name, dataSource, "string", UTF_8);
+        return create(name, dataSource, Location.STRING, UTF_8);
     }
 
     public static Document create(File file, Charset charset) {
@@ -57,12 +56,12 @@ public class DocumentFactory {
 
     public static Document create(String name, byte[] content) {
         final ByteArrayDataSource dataSource = new ByteArrayDataSource(name, content);
-        return create(name, dataSource, "bytes", UTF_8);
+        return create(name, dataSource, Location.BYTES, UTF_8);
     }
 
     public static Document create(String name, InputStream is, Charset charset) {
         final InputStreamDataSource dataSource = new InputStreamDataSource(name, is);
-        return create(name, dataSource, "is", charset);
+        return create(name, dataSource, Location.INPUTSTREAM, charset);
     }
 
     public static Document create(String name, InputStream is, String location, Charset charset) {

@@ -36,7 +36,6 @@ public class DocumentFactoryTest {
     private static final String ANY_FILE_NAME = "pom.xml";
     private static final Charset ANY_CHAR_SET = UTF_8;
     private static final File ANY_FILE = new File(ANY_FILE_NAME);
-    private static final String UNKOWN_LOCATION = "unknown";
 
     @Test
     public void shouldCreateFileBasedDocument() throws IOException {
@@ -77,7 +76,7 @@ public class DocumentFactoryTest {
 
         assertEquals("test.txt", document.getName());
         assertEquals(UTF_8, document.getCharset());
-        assertEquals("is", document.getLocation());
+        assertEquals("inputstream", document.getLocation());
         assertEquals(ANY_TEXT, document.getText());
     }
 

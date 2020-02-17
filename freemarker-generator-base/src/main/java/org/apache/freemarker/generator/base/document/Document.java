@@ -34,6 +34,7 @@ import java.util.List;
 import static java.nio.charset.Charset.forName;
 import static java.util.Objects.requireNonNull;
 import static org.apache.commons.io.IOUtils.lineIterator;
+import static org.apache.freemarker.generator.base.FreeMarkerConstants.DOCUMENT_UNKNOWN_LENGTH;
 
 /**
  * Source document which encapsulates a data source. When accessing
@@ -41,8 +42,6 @@ import static org.apache.commons.io.IOUtils.lineIterator;
  * processing of large volumes of data.
  */
 public class Document implements Closeable {
-
-    public static final int UNKNOWN_LENGTH = -1;
 
     /** Human-readable name of the document */
     private final String name;
@@ -92,7 +91,7 @@ public class Document implements Closeable {
         } else if (dataSource instanceof ByteArrayDataSource) {
             return ((ByteArrayDataSource) dataSource).length();
         } else {
-            return UNKNOWN_LENGTH;
+            return DOCUMENT_UNKNOWN_LENGTH;
         }
     }
 

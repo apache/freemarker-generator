@@ -22,7 +22,7 @@ Template name          : ${.current_template_name}
 Language               : ${.lang}
 Locale                 : ${.locale}
 Timestamp              : ${.now}
-Output encoding        : ${.output_encoding!"not set"}
+Output encoding        : ${.output_encoding}
 Output format          : ${.output_format}
 
 FreeMarker CLI Template Directories
@@ -45,20 +45,17 @@ FreeMarker CLI Documents
 [${document?counter}] ${document.name}, ${document.location}, ${document.length} Bytes
 </#list>
 
-FreeMarker CLI Settings
----------------------------------------------------------------------------
-<#list Settings?keys?sort as key>
-- ${key}
-</#list>
-
 User Supplied Properties
 ---------------------------------------------------------------------------
-<#list Settings["user.properties"] as name,value>
+<#list SystemTool.userProperties as name,value>
 - ${name} ==> ${value}
 </#list>
 
 SystemTool
 ---------------------------------------------------------------------------
-Host name            : ${SystemTool.getHostName()}
-User name            : ${SystemTool.getProperty("user.name", "N.A.")}
 Command line         : ${SystemTool.getCommandLineArgs()?join(", ")}
+Host Name            : ${SystemTool.getHostName()}
+Java Home            : ${SystemTool.getEnv("JAVA_HOME", "N.A.")}
+User Name            : ${SystemTool.getProperty("user.name", "N.A.")}
+Timestamp            : ${SystemTool.currentTimeMillis}
+Writer               : ${SystemTool.writer.class.name}

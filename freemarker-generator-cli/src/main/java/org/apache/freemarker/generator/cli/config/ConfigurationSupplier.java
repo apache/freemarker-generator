@@ -29,12 +29,12 @@ import java.util.function.Supplier;
 import static freemarker.core.TemplateClassResolver.ALLOWS_NOTHING_RESOLVER;
 import static freemarker.template.Configuration.VERSION_2_3_29;
 import static java.util.Objects.requireNonNull;
+import static org.apache.freemarker.generator.base.FreeMarkerConstants.Configuration.SETTING_PREFIX;
 import static org.apache.freemarker.generator.base.util.PropertiesTransformer.filterKeyPrefix;
 import static org.apache.freemarker.generator.base.util.PropertiesTransformer.removeKeyPrefix;
 
 public class ConfigurationSupplier implements Supplier<Configuration> {
 
-    private static final String FREEMARGER_CONFIGURATION_SETTING_PREFIX = "freemarker.configuration.setting.";
     private static final Version FREEMARKER_VERSION = VERSION_2_3_29;
 
     private final Settings settings;
@@ -78,7 +78,7 @@ public class ConfigurationSupplier implements Supplier<Configuration> {
 
     private Properties freeMarkerConfigurationSettings() {
         return removeKeyPrefix(
-                filterKeyPrefix(settings.getConfiguration(), FREEMARGER_CONFIGURATION_SETTING_PREFIX),
-                FREEMARGER_CONFIGURATION_SETTING_PREFIX);
+                filterKeyPrefix(settings.getConfiguration(), SETTING_PREFIX),
+                SETTING_PREFIX);
     }
 }

@@ -19,40 +19,60 @@ package org.apache.freemarker.generator.tools.system;
 import org.apache.freemarker.generator.base.util.PropertiesTransformer;
 
 import java.io.File;
+import java.io.Writer;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 import static java.util.Objects.requireNonNull;
+import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model.FREEMARKER_CLI_ARGS;
+import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model.FREEMARKER_TEMPLATE_DIRECTORIES;
+import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model.FREEMARKER_USER_PROPERTIES;
+import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model.FREEMARKER_WRITER;
 
 /**
  * Provides system related functionality, e.g. accessing environment variable,
- * system properties, hostname, etc.
+ * system properties, commandl-line arguments, hostname, FreeMarker writer, etc.
  */
 @SuppressWarnings("unchecked")
 public class SystemTool {
 
+    /** Command line arguments */
     private final List<String> commandLineArgs;
-    private final List<File> templateDirectories;
+
+    /** Merged from <code>System.properties</code> and <code>userProperties</code> */
     private final Properties properties;
+
+    /** List of FreeMarker's template directories */
+    private final List<File> templateDirectories;
+
+    /** User-supplied properties */
+    private final Map<String, String> userProperties;
+
+    /** Underlying FreeMarker writer for rendering templates */
+    private final Writer writer;
 
     public SystemTool() {
         this.commandLineArgs = emptyList();
-        this.templateDirectories = emptyList();
         this.properties = PropertiesTransformer.copy(System.getProperties());
+        this.templateDirectories = emptyList();
+        this.userProperties = emptyMap();
+        this.writer = null;
     }
 
     public SystemTool(Map<String, Object> settings) {
         requireNonNull(settings);
-        this.commandLineArgs = (List<String>) settings.getOrDefault("freemarker.cli.args", emptyList());
-        this.templateDirectories = (List<File>) settings.getOrDefault("freemarker.template.directories", emptyList());
+        this.commandLineArgs = (List<String>) settings.getOrDefault(FREEMARKER_CLI_ARGS, emptyList());
         this.properties = PropertiesTransformer.copy(System.getProperties());
+        this.templateDirectories = (List<File>) settings.getOrDefault(FREEMARKER_TEMPLATE_DIRECTORIES, emptyList());
+        this.userProperties = (Map<String, String>) settings.getOrDefault(FREEMARKER_USER_PROPERTIES, emptyMap());
+        this.writer = (Writer) settings.getOrDefault(FREEMARKER_WRITER, null);
 
-        final Map<String, String> userProperties = (Map<String, String>) settings.getOrDefault("user.properties", new HashMap<String, String>());
+        // copy the user-supplied properties into properties
         userProperties.forEach(properties::setProperty);
     }
 
@@ -97,7 +117,15 @@ public class SystemTool {
         }
     }
 
-    public long currentTimeMillis() {
+    public Writer getWriter() {
+        return writer;
+    }
+
+    public Map<String, String> getUserProperties() {
+        return userProperties;
+    }
+
+    public long getCurrentTimeMillis() {
         return System.currentTimeMillis();
     }
 

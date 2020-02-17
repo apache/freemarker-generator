@@ -24,12 +24,11 @@ import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toMap;
+import static org.apache.freemarker.generator.base.FreeMarkerConstants.Configuration.TOOLS_PREFIX;
 import static org.apache.freemarker.generator.base.util.PropertiesTransformer.filterKeyPrefix;
 import static org.apache.freemarker.generator.base.util.PropertiesTransformer.removeKeyPrefix;
 
 public class ToolsSupplier implements Supplier<Map<String, Object>> {
-
-    private static final String FREEMARKER_TOOLS_PREFIX = "freemarker.tools.";
 
     private final Properties configuration;
     private final Map<String, Object> settings;
@@ -54,7 +53,7 @@ public class ToolsSupplier implements Supplier<Map<String, Object>> {
     }
 
     private Properties toolsProperties() {
-        return removeKeyPrefix(filterKeyPrefix(this.configuration, FREEMARKER_TOOLS_PREFIX), FREEMARKER_TOOLS_PREFIX);
+        return removeKeyPrefix(filterKeyPrefix(this.configuration, TOOLS_PREFIX), TOOLS_PREFIX);
     }
 
     private static boolean toolExists(String clazzName) {

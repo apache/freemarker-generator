@@ -20,6 +20,7 @@ import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.apache.commons.io.FileUtils;
+import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.document.Document;
 import org.apache.freemarker.generator.base.document.DocumentFactory;
 import org.apache.freemarker.generator.base.document.Documents;
@@ -40,7 +41,7 @@ import java.util.function.Supplier;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
-import static org.apache.freemarker.generator.base.document.DocumentFactory.LOCATION_STDIN;
+import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model.DOCUMENTS;
 
 /**
  * Renders a FreeMarker template.
@@ -97,7 +98,7 @@ public class FreeMarkerTask implements Callable<Integer> {
         // Add optional document from STDIN at the start of the list since
         // this allows easy sequence slicing in FreeMarker.
         if (settings.isReadFromStdin()) {
-            documents.add(0, DocumentFactory.create(LOCATION_STDIN, System.in, LOCATION_STDIN, UTF_8));
+            documents.add(0, DocumentFactory.create(Location.STDIN, System.in, Location.STDIN, UTF_8));
         }
 
         return new Documents(documents);
@@ -140,9 +141,7 @@ public class FreeMarkerTask implements Callable<Integer> {
     protected Map<String, Object> dataModel(Settings settings, Documents documents, Supplier<Map<String, Object>> tools) {
         final Map<String, Object> dataModel = new HashMap<>();
 
-        dataModel.put("Documents", documents);
-        // pass a map to decouple from the implementation class
-        dataModel.put("Settings", settings.toMap());
+        dataModel.put(DOCUMENTS, documents);
 
         if (settings.isEnvironmentExposed()) {
             // add all system & user-supplied properties as top-lvel entries
