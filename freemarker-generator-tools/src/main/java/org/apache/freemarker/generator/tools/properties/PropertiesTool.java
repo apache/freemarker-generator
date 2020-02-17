@@ -17,32 +17,24 @@
 package org.apache.freemarker.generator.tools.properties;
 
 import org.apache.freemarker.generator.base.document.Document;
+import org.apache.freemarker.generator.base.util.PropertiesFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
 import java.util.Properties;
 
 public class PropertiesTool {
 
     public Properties parse(Document document) {
         try (InputStream is = document.getUnsafeInputStream()) {
-            final Properties properties = new Properties();
-            properties.load(is);
-            return properties;
+            return PropertiesFactory.create(is);
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse properties: " + document, e);
         }
     }
 
     public Properties parse(String value) {
-        try (StringReader reader = new StringReader(value)) {
-            final Properties properties = new Properties();
-            properties.load(reader);
-            return properties;
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to parse properties: " + value, e);
-        }
+        return PropertiesFactory.create(value);
     }
 
     @Override

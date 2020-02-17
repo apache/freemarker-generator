@@ -14,14 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.cli.impl;
+package org.apache.freemarker.generator.cli.config;
 
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.DefaultObjectWrapperBuilder;
 import freemarker.template.Version;
-import org.apache.freemarker.generator.cli.model.Settings;
+import org.apache.freemarker.generator.cli.Settings;
 
 import java.util.Properties;
 import java.util.function.Supplier;

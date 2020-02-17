@@ -24,10 +24,9 @@ import org.apache.freemarker.generator.base.document.Document;
 import org.apache.freemarker.generator.base.document.DocumentFactory;
 import org.apache.freemarker.generator.base.document.Documents;
 import org.apache.freemarker.generator.base.document.DocumentsSupplier;
-import org.apache.freemarker.generator.cli.impl.ConfigurationSupplier;
-import org.apache.freemarker.generator.cli.impl.TemplateLoaderSupplier;
-import org.apache.freemarker.generator.cli.impl.ToolsSupplier;
-import org.apache.freemarker.generator.cli.model.Settings;
+import org.apache.freemarker.generator.cli.config.ConfigurationSupplier;
+import org.apache.freemarker.generator.cli.config.TemplateLoaderSupplier;
+import org.apache.freemarker.generator.cli.config.ToolsSupplier;
 
 import java.io.File;
 import java.io.IOException;

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.cli.model;
+package org.apache.freemarker.generator.cli;
 
 import org.apache.freemarker.generator.base.util.LocaleUtils;
 import org.apache.freemarker.generator.base.util.NonClosableWriterWrapper;
@@ -33,6 +33,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.emptyList;
 import static java.util.Locale.US;
 import static java.util.Objects.requireNonNull;
+import static org.apache.freemarker.generator.base.util.StringUtils.isEmpty;
 
 /**
  * Capture all the settings required for rendering a FreeMarker template.
@@ -109,6 +110,10 @@ public class Settings {
             List<String> sources,
             Map<String, String> properties,
             Writer writer) {
+        if (isEmpty(template) && isEmpty(interactiveTemplate)) {
+            throw new IllegalArgumentException("Either 'template' or 'interactiveTemplate' must be provided");
+        }
+
         this.args = requireNonNull(args);
         this.templateDirectories = requireNonNull(templateDirectories);
         this.templateName = template;

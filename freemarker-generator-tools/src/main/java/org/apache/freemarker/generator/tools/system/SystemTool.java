@@ -16,11 +16,12 @@
  */
 package org.apache.freemarker.generator.tools.system;
 
+import org.apache.freemarker.generator.base.util.PropertiesTransformer;
+
 import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.security.AccessController;
-import java.security.PrivilegedAction;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -30,23 +31,29 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Provides system related functionality, e.g. accessing environment variable,
- * system properties, hostname, ...
+ * system properties, hostname, etc.
  */
 @SuppressWarnings("unchecked")
 public class SystemTool {
 
     private final List<String> commandLineArgs;
     private final List<File> templateDirectories;
+    private final Properties properties;
 
     public SystemTool() {
         this.commandLineArgs = emptyList();
         this.templateDirectories = emptyList();
+        this.properties = PropertiesTransformer.copy(System.getProperties());
     }
 
     public SystemTool(Map<String, Object> settings) {
         requireNonNull(settings);
         this.commandLineArgs = (List<String>) settings.getOrDefault("freemarker.cli.args", emptyList());
         this.templateDirectories = (List<File>) settings.getOrDefault("freemarker.template.directories", emptyList());
+        this.properties = PropertiesTransformer.copy(System.getProperties());
+
+        final Map<String, String> userProperties = (Map<String, String>) settings.getOrDefault("user.properties", new HashMap<String, String>());
+        userProperties.forEach(properties::setProperty);
     }
 
     public List<String> getCommandLineArgs() {
@@ -58,23 +65,23 @@ public class SystemTool {
     }
 
     public Properties getProperties() {
-        return (Properties) AccessController.doPrivileged((PrivilegedAction) System::getProperties);
+        return properties;
     }
 
     public String getProperty(String key) {
-        return (String) AccessController.doPrivileged((PrivilegedAction) () -> System.getProperty(key));
+        return properties.getProperty(key);
     }
 
     public String getProperty(String key, String def) {
-        return (String) AccessController.doPrivileged((PrivilegedAction) () -> System.getProperty(key, def));
+        return properties.getProperty(key, def);
     }
 
     public Map<String, String> getEnvs() {
-        return (Map<String, String>) AccessController.doPrivileged((PrivilegedAction) System::getenv);
+        return System.getenv();
     }
 
     public String getEnv(String name) {
-        return (String) AccessController.doPrivileged((PrivilegedAction) () -> System.getenv(name));
+        return System.getenv(name);
     }
 
     public String getEnv(String name, String def) {

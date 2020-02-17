@@ -24,8 +24,8 @@ import freemarker.template.utility.ObjectConstructor;
 
 public class FreeMarkerTool {
 
-    private volatile BeansWrapper beansWrapper;
-    private volatile ObjectConstructor objectConstructor;
+    private BeansWrapper beansWrapper;
+    private ObjectConstructor objectConstructor;
 
     public synchronized ObjectConstructor getObjectConstructor() {
         if (objectConstructor == null) {
