@@ -50,13 +50,13 @@ public class Settings {
     /** User-supplied command line arguments */
     private final List<String> args;
 
-    /** Optional template directories */
+    /** List of FreeMarker template directories */
     private final List<File> templateDirectories;
 
     /** Name of the template to be loaded and rendered */
     private final String templateName;
 
-    /** Tempplate provided by the user interactivly */
+    /** Template provided by the user interactivly */
     private final String interactiveTemplate;
 
     /** Encoding of input files */
@@ -71,7 +71,7 @@ public class Settings {
     /** Optional output file if not written to stdout */
     private final File outputFile;
 
-    /** Include pattern for recursice directly search of source files */
+    /** Optional include pattern for recursice directly search of source files */
     private final String include;
 
     /** The locale to use for rendering */
@@ -89,7 +89,7 @@ public class Settings {
     /** User-supplied system properties, i.e. "-Dfoo=bar" */
     private final Map<String, String> properties;
 
-    /** The writer used for rendering templates */
+    /** The writer used for rendering templates, e.g. stdout or a file writer */
     private final Writer writer;
 
     private Settings(
