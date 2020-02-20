@@ -47,6 +47,7 @@ public class FreeMarkerConstants {
         }
 
         public static final String BYTES = "bytes";
+        public static final String INTERACTIVE = "interactive";
         public static final String INPUTSTREAM = "inputstream";
         public static final String STDIN = "stdin";
         public static final String STRING = "string";

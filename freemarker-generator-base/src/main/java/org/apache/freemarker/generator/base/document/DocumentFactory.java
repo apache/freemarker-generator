@@ -41,7 +41,7 @@ public class DocumentFactory {
 
     public static Document create(URL url) {
         final URLDataSource dataSource = new URLDataSource(url);
-        return create("url", dataSource, url.toExternalForm(), UTF_8);
+        return create(Location.URL, dataSource, url.toExternalForm(), UTF_8);
     }
 
     public static Document create(String name, String content) {

@@ -21,8 +21,10 @@ import org.apache.freemarker.generator.base.file.PropertiesFileSystemSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesSupplier;
 import org.apache.freemarker.generator.base.util.ClosableUtils;
 import org.apache.freemarker.generator.base.util.StringUtils;
+import org.apache.freemarker.generator.cli.config.Settings;
 import org.apache.freemarker.generator.cli.config.TemplateDirectorySupplier;
 import org.apache.freemarker.generator.cli.picocli.GitVersionProvider;
+import org.apache.freemarker.generator.cli.task.FreeMarkerTask;
 import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
@@ -139,11 +141,12 @@ public class Main implements Callable<Integer> {
 
     @Override
     public Integer call() {
-        updateSystemProperties();
-        return IntStream.range(0, times).map(i -> callOnce()).max().orElse(0);
+        return IntStream.range(0, times).map(i -> onCall()).max().orElse(0);
     }
 
-    private Integer callOnce() {
+    private Integer onCall() {
+        updateSystemProperties();
+
         final Properties configuration = loadFreeMarkerCliConfiguration(configFile);
         final List<File> templateDirectories = getTemplateDirectories(baseDir);
         final Settings settings = settings(configuration, templateDirectories);

@@ -24,6 +24,7 @@ import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Stream.of;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.Configuration.TOOLS_PREFIX;
 import static org.apache.freemarker.generator.base.util.PropertiesTransformer.filterKeyPrefix;
 import static org.apache.freemarker.generator.base.util.PropertiesTransformer.removeKeyPrefix;
@@ -37,7 +38,7 @@ public class ToolsSupplier implements Supplier<Map<String, Object>> {
      * Constructor.
      *
      * @param configuration Containing "freemarker.tools.XXX=class"
-     * @param settings      Passed to the instantiated tools
+     * @param settings      Settings passed to the instantiated tools
      */
     public ToolsSupplier(Properties configuration, Map<String, Object> settings) {
         this.configuration = requireNonNull(configuration);
@@ -53,7 +54,10 @@ public class ToolsSupplier implements Supplier<Map<String, Object>> {
     }
 
     private Properties toolsProperties() {
-        return removeKeyPrefix(filterKeyPrefix(this.configuration, TOOLS_PREFIX), TOOLS_PREFIX);
+        return of(configuration)
+                .map(p -> filterKeyPrefix(p, TOOLS_PREFIX))
+                .map(p -> removeKeyPrefix(p, TOOLS_PREFIX))
+                .findFirst().get();
     }
 
     private static boolean toolExists(String clazzName) {

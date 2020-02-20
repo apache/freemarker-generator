@@ -57,19 +57,21 @@ public class TemplateDirectorySupplier implements Supplier<List<File>> {
 
     @Override
     public List<File> get() {
-        final List<String> templateLoaderDirectories = new ArrayList<>(asList(
+        return templateLoaderDirectories().stream()
+                .filter(Objects::nonNull)
+                .distinct()
+                .map(File::new)
+                .filter(TemplateDirectorySupplier::isDirectory)
+                .collect(toList());
+    }
+
+    private List<String> templateLoaderDirectories() {
+        return new ArrayList<>(asList(
                 userTemplateDirName(),
                 currentWorkingDirName(),
                 userConfigDirName(),
                 applicationDirName()
         ));
-
-        return templateLoaderDirectories.stream()
-                .filter(Objects::nonNull)
-                .distinct()
-                .map(File::new)
-                .filter(TemplateDirectorySupplier::isTemplateDirectory)
-                .collect(toList());
     }
 
     private String userTemplateDirName() {
@@ -89,7 +91,7 @@ public class TemplateDirectorySupplier implements Supplier<List<File>> {
         return System.getProperty(USER_DIR);
     }
 
-    private static boolean isTemplateDirectory(File directory) {
+    private static boolean isDirectory(File directory) {
         return directory != null && directory.exists() && directory.isDirectory() && directory.canRead();
     }
 }

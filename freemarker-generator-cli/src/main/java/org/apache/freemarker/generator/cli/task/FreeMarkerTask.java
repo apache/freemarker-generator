@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.cli;
+package org.apache.freemarker.generator.cli.task;
 
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
@@ -26,6 +26,7 @@ import org.apache.freemarker.generator.base.document.DocumentFactory;
 import org.apache.freemarker.generator.base.document.Documents;
 import org.apache.freemarker.generator.base.document.DocumentsSupplier;
 import org.apache.freemarker.generator.cli.config.ConfigurationSupplier;
+import org.apache.freemarker.generator.cli.config.Settings;
 import org.apache.freemarker.generator.cli.config.TemplateLoaderSupplier;
 import org.apache.freemarker.generator.cli.config.ToolsSupplier;
 
@@ -41,6 +42,7 @@ import java.util.function.Supplier;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
+import static org.apache.freemarker.generator.base.FreeMarkerConstants.Location.STDIN;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model.DOCUMENTS;
 
 /**
@@ -58,47 +60,47 @@ public class FreeMarkerTask implements Callable<Integer> {
 
     @Override
     public Integer call() {
-        return call(settings);
+        return onCall(settings);
     }
 
-    protected Integer call(Settings settings) {
-        final Supplier<Map<String, Object>> tools = tools(settings);
-        final Supplier<List<Document>> documentResolver = documentResolver(settings);
-        final Supplier<TemplateLoader> templateLoader = templateLoader(settings);
-        final Supplier<Configuration> configuration = configuration(settings, templateLoader);
+    protected Integer onCall(Settings settings) {
+        final Supplier<Map<String, Object>> toolsSupplier = toolsSupplier(settings);
+        final Supplier<List<Document>> documentsSupplier = documentsSupplier(settings);
+        final Supplier<TemplateLoader> templateLoaderSupplier = templateLoaderSupplier(settings);
+        final Supplier<Configuration> configurationSupplier = configurationSupplier(settings, templateLoaderSupplier);
 
-        final Template template = getTemplate(settings, configuration);
+        final Template template = getTemplate(settings, configurationSupplier);
 
-        try (Writer writer = settings.getWriter(); Documents documents = documents(settings, documentResolver)) {
-            final Map<String, Object> dataModel = dataModel(settings, documents, tools);
+        try (Writer writer = settings.getWriter(); Documents documents = documents(settings, documentsSupplier)) {
+            final Map<String, Object> dataModel = dataModel(settings, documents, toolsSupplier);
             template.process(dataModel, writer);
             return SUCCESS;
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
-            throw new RuntimeException("Failed to render FreeMarker Template: " + template.getName(), e);
+            throw new RuntimeException("Failed to render FreeMarker template: " + template.getName(), e);
         }
     }
 
-    protected Supplier<Configuration> configuration(Settings settings, Supplier<TemplateLoader> templateLoader) {
+    protected Supplier<Configuration> configurationSupplier(Settings settings, Supplier<TemplateLoader> templateLoader) {
         return new ConfigurationSupplier(settings, templateLoader);
     }
 
-    protected Supplier<TemplateLoader> templateLoader(Settings settings) {
+    protected Supplier<TemplateLoader> templateLoaderSupplier(Settings settings) {
         return new TemplateLoaderSupplier(settings.getTemplateDirectories());
     }
 
-    protected Supplier<List<Document>> documentResolver(Settings settings) {
+    protected Supplier<List<Document>> documentsSupplier(Settings settings) {
         return new DocumentsSupplier(settings.getSources(), settings.getInclude(), settings.getInputEncoding());
     }
 
-    protected Documents documents(Settings settings, Supplier<List<Document>> documentResolver) {
-        final List<Document> documents = new ArrayList<>(documentResolver.get());
+    protected Documents documents(Settings settings, Supplier<List<Document>> documentsSupplier) {
+        final List<Document> documents = new ArrayList<>(documentsSupplier.get());
 
         // Add optional document from STDIN at the start of the list since
         // this allows easy sequence slicing in FreeMarker.
         if (settings.isReadFromStdin()) {
-            documents.add(0, DocumentFactory.create(Location.STDIN, System.in, Location.STDIN, UTF_8));
+            documents.add(0, DocumentFactory.create(STDIN, System.in, STDIN, UTF_8));
         }
 
         return new Documents(documents);
@@ -119,7 +121,7 @@ public class FreeMarkerTask implements Callable<Integer> {
 
         try {
             if (settings.getInteractiveTemplate() != null) {
-                return new Template("interactive",
+                return new Template(Location.INTERACTIVE,
                         settings.getInteractiveTemplate(),
                         configuration);
             }
@@ -154,7 +156,7 @@ public class FreeMarkerTask implements Callable<Integer> {
         return dataModel;
     }
 
-    protected Supplier<Map<String, Object>> tools(Settings settings) {
+    protected Supplier<Map<String, Object>> toolsSupplier(Settings settings) {
         return new ToolsSupplier(settings.getConfiguration(), settings.toMap());
     }
 

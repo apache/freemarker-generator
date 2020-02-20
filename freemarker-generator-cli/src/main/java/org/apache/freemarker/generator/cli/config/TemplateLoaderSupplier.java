@@ -27,6 +27,9 @@ import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * Supply a FreeMarker template loader using a list of directories.
+ */
 public class TemplateLoaderSupplier implements Supplier<TemplateLoader> {
 
     private final List<File> templateDirectories;
@@ -51,7 +54,7 @@ public class TemplateLoaderSupplier implements Supplier<TemplateLoader> {
         try {
             return new FileTemplateLoader(directory);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to create MultiTemplateLoader: " + directory, e);
+            throw new RuntimeException("Failed to create template loader: " + directory, e);
         }
     }
 }
