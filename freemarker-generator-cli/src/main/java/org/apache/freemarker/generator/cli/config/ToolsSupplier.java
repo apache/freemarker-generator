@@ -50,7 +50,7 @@ public class ToolsSupplier implements Supplier<Map<String, Object>> {
         final Properties properties = toolsProperties();
         return properties.stringPropertyNames().stream()
                 .filter(key -> toolExists(properties.getProperty(key)))
-                .collect(toMap(key -> key, key -> ToolsFactory.create(properties.getProperty(key), settings)));
+                .collect(toMap(key -> key, key -> tool(properties.getProperty(key), settings)));
     }
 
     private Properties toolsProperties() {
@@ -62,5 +62,9 @@ public class ToolsSupplier implements Supplier<Map<String, Object>> {
 
     private static boolean toolExists(String clazzName) {
         return ToolsFactory.exists(clazzName);
+    }
+
+    private static Object tool(String clazzName, Map<String, Object> settings) {
+        return ToolsFactory.create(clazzName, settings);
     }
 }

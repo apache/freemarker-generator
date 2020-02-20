@@ -20,6 +20,7 @@ import java.lang.reflect.Constructor;
 import java.util.Map;
 
 import static java.util.Arrays.stream;
+import static org.apache.freemarker.generator.base.util.StringUtils.isEmpty;
 
 public class ToolsFactory {
 
@@ -30,6 +31,10 @@ public class ToolsFactory {
      * @return true if loaded
      */
     public static boolean exists(String clazzName) {
+        if (isEmpty(clazzName)) {
+            return false;
+        }
+
         try {
             return forName(clazzName) != null;
         } catch (NoClassDefFoundError | ClassNotFoundException e) {
