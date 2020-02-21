@@ -70,6 +70,12 @@ public class ConfigurationSupplier implements Supplier<Configuration> {
         }
     }
 
+    /**
+     * Slice through the given configuration to extract
+     * FreeMarker configuration settings.
+     *
+     * @return FreeMarker configuration settings
+     */
     private Properties freeMarkerConfigurationSettings() {
         return of(settings.getConfiguration())
                 .map(p -> filterKeyPrefix(p, SETTING_PREFIX))

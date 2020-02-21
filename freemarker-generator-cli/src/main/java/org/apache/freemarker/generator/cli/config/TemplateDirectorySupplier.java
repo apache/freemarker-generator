@@ -16,6 +16,8 @@
  */
 package org.apache.freemarker.generator.cli.config;
 
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,8 +61,9 @@ public class TemplateDirectorySupplier implements Supplier<List<File>> {
     public List<File> get() {
         return templateLoaderDirectories().stream()
                 .filter(Objects::nonNull)
-                .distinct()
+                .map(FilenameUtils::normalize)
                 .map(File::new)
+                .distinct()
                 .filter(TemplateDirectorySupplier::isDirectory)
                 .collect(toList());
     }

@@ -132,9 +132,9 @@ public class FreeMarkerTask implements Callable<Integer> {
                 return new Template(settings.getTemplateName(),
                         FileUtils.readFileToString(templateFile, settings.getTemplateEncoding()),
                         configuration);
-            } else {
-                return configuration.getTemplate(settings.getTemplateName());
             }
+
+            return configuration.getTemplate(settings.getTemplateName());
         } catch (IOException e) {
             throw new RuntimeException("Failed to load template", e);
         }

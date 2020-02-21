@@ -29,6 +29,9 @@ import static org.apache.freemarker.generator.base.FreeMarkerConstants.Configura
 import static org.apache.freemarker.generator.base.util.PropertiesTransformer.filterKeyPrefix;
 import static org.apache.freemarker.generator.base.util.PropertiesTransformer.removeKeyPrefix;
 
+/**
+ * Supplies FreeMarker tools based on the provided settings.
+ */
 public class ToolsSupplier implements Supplier<Map<String, Object>> {
 
     private final Properties configuration;
@@ -53,6 +56,12 @@ public class ToolsSupplier implements Supplier<Map<String, Object>> {
                 .collect(toMap(key -> key, key -> tool(properties.getProperty(key), settings)));
     }
 
+    /**
+     * Slice through the properties to create a list of "tool" to
+     * implementation class mapping.
+     *
+     * @return tool properties
+     */
     private Properties toolsProperties() {
         return of(configuration)
                 .map(p -> filterKeyPrefix(p, TOOLS_PREFIX))
