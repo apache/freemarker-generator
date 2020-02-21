@@ -222,6 +222,10 @@ public class Settings {
         return result;
     }
 
+    public boolean isInteractiveTemplate() {
+        return interactiveTemplate != null;
+    }
+
     @Override
     public String toString() {
         return "Settings{" +

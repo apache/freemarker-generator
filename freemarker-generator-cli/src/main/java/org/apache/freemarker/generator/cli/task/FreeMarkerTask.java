@@ -16,7 +16,6 @@
  */
 package org.apache.freemarker.generator.cli.task;
 
-import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.apache.commons.io.FileUtils;
@@ -24,11 +23,7 @@ import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.document.Document;
 import org.apache.freemarker.generator.base.document.DocumentFactory;
 import org.apache.freemarker.generator.base.document.Documents;
-import org.apache.freemarker.generator.base.document.DocumentsSupplier;
-import org.apache.freemarker.generator.cli.config.ConfigurationSupplier;
 import org.apache.freemarker.generator.cli.config.Settings;
-import org.apache.freemarker.generator.cli.config.TemplateLoaderSupplier;
-import org.apache.freemarker.generator.cli.config.ToolsSupplier;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,6 +39,9 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.Location.STDIN;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model.DOCUMENTS;
+import static org.apache.freemarker.generator.cli.config.Suppliers.configurationSupplier;
+import static org.apache.freemarker.generator.cli.config.Suppliers.documentsSupplier;
+import static org.apache.freemarker.generator.cli.config.Suppliers.toolsSupplier;
 
 /**
  * Renders a FreeMarker template.
@@ -53,24 +51,27 @@ public class FreeMarkerTask implements Callable<Integer> {
     private static final int SUCCESS = 0;
 
     private final Settings settings;
+    private final Supplier<Map<String, Object>> toolsSupplier;
+    private final Supplier<List<Document>> documentsSupplier;
+    private final Supplier<Configuration> configurationSupplier;
 
     public FreeMarkerTask(Settings settings) {
+        this(settings, toolsSupplier(settings), documentsSupplier(settings), configurationSupplier(settings));
+    }
+
+    public FreeMarkerTask(Settings settings,
+                          Supplier<Map<String, Object>> toolsSupplier,
+                          Supplier<List<Document>> documentsSupplier,
+                          Supplier<Configuration> configurationSupplier) {
         this.settings = requireNonNull(settings);
+        this.toolsSupplier = requireNonNull(toolsSupplier);
+        this.documentsSupplier = requireNonNull(documentsSupplier);
+        this.configurationSupplier = requireNonNull(configurationSupplier);
     }
 
     @Override
     public Integer call() {
-        return onCall(settings);
-    }
-
-    protected Integer onCall(Settings settings) {
-        final Supplier<Map<String, Object>> toolsSupplier = toolsSupplier(settings);
-        final Supplier<List<Document>> documentsSupplier = documentsSupplier(settings);
-        final Supplier<TemplateLoader> templateLoaderSupplier = templateLoaderSupplier(settings);
-        final Supplier<Configuration> configurationSupplier = configurationSupplier(settings, templateLoaderSupplier);
-
-        final Template template = getTemplate(settings, configurationSupplier);
-
+        final Template template = template(settings, configurationSupplier);
         try (Writer writer = settings.getWriter(); Documents documents = documents(settings, documentsSupplier)) {
             final Map<String, Object> dataModel = dataModel(settings, documents, toolsSupplier);
             template.process(dataModel, writer);
@@ -82,19 +83,7 @@ public class FreeMarkerTask implements Callable<Integer> {
         }
     }
 
-    protected Supplier<Configuration> configurationSupplier(Settings settings, Supplier<TemplateLoader> templateLoader) {
-        return new ConfigurationSupplier(settings, templateLoader);
-    }
-
-    protected Supplier<TemplateLoader> templateLoaderSupplier(Settings settings) {
-        return new TemplateLoaderSupplier(settings.getTemplateDirectories());
-    }
-
-    protected Supplier<List<Document>> documentsSupplier(Settings settings) {
-        return new DocumentsSupplier(settings.getSources(), settings.getInclude(), settings.getInputEncoding());
-    }
-
-    protected Documents documents(Settings settings, Supplier<List<Document>> documentsSupplier) {
+    private static Documents documents(Settings settings, Supplier<List<Document>> documentsSupplier) {
         final List<Document> documents = new ArrayList<>(documentsSupplier.get());
 
         // Add optional document from STDIN at the start of the list since
@@ -116,31 +105,24 @@ public class FreeMarkerTask implements Callable<Integer> {
      * @param configurationSupplier Supplies FreeMarker configuration
      * @return FreeMarker template
      */
-    protected Template getTemplate(Settings settings, Supplier<Configuration> configurationSupplier) {
+    private static Template template(Settings settings, Supplier<Configuration> configurationSupplier) {
+        final String templateName = settings.getTemplateName();
         final Configuration configuration = configurationSupplier.get();
 
         try {
-            if (settings.getInteractiveTemplate() != null) {
-                return new Template(Location.INTERACTIVE,
-                        settings.getInteractiveTemplate(),
-                        configuration);
+            if (settings.isInteractiveTemplate()) {
+                return interactiveTemplate(settings, configuration);
+            } else if (isAbsoluteTemplateFile(settings)) {
+                return fileTemplate(settings, configuration);
+            } else {
+                return configuration.getTemplate(templateName);
             }
-
-            final File templateFile = new File(settings.getTemplateName());
-
-            if (isAbsoluteTemplateFile(templateFile)) {
-                return new Template(settings.getTemplateName(),
-                        FileUtils.readFileToString(templateFile, settings.getTemplateEncoding()),
-                        configuration);
-            }
-
-            return configuration.getTemplate(settings.getTemplateName());
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load template", e);
+            throw new RuntimeException("Failed to load template: " + templateName, e);
         }
     }
 
-    protected Map<String, Object> dataModel(Settings settings, Documents documents, Supplier<Map<String, Object>> tools) {
+    private static Map<String, Object> dataModel(Settings settings, Documents documents, Supplier<Map<String, Object>> tools) {
         final Map<String, Object> dataModel = new HashMap<>();
 
         dataModel.put(DOCUMENTS, documents);
@@ -156,11 +138,29 @@ public class FreeMarkerTask implements Callable<Integer> {
         return dataModel;
     }
 
-    protected Supplier<Map<String, Object>> toolsSupplier(Settings settings) {
-        return new ToolsSupplier(settings.getConfiguration(), settings.toMap());
-    }
-
-    private static boolean isAbsoluteTemplateFile(File file) {
+    private static boolean isAbsoluteTemplateFile(Settings settings) {
+        final File file = new File(settings.getTemplateName());
         return file.isAbsolute() && file.exists() & !file.isDirectory();
     }
+
+    private static Template fileTemplate(Settings settings, Configuration configuration) {
+        final String templateName = settings.getTemplateName();
+        try {
+            final File templateFile = new File(templateName);
+            return new Template(settings.getTemplateName(),
+                    FileUtils.readFileToString(templateFile, settings.getTemplateEncoding()),
+                    configuration);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load template: " + templateName, e);
+        }
+    }
+
+    private static Template interactiveTemplate(Settings settings, Configuration configuration) {
+        try {
+            return new Template(Location.INTERACTIVE, settings.getInteractiveTemplate(), configuration);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load interactive template", e);
+        }
+    }
+
 }
