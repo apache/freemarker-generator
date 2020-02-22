@@ -44,6 +44,10 @@ import static org.apache.commons.io.IOUtils.toInputStream;
 
 public class CommonsCSVTool {
 
+    public CSVParser parse(Document document) {
+        return parse(document, CSVFormat.DEFAULT);
+    }
+
     public CSVParser parse(Document document, CSVFormat format) {
         if (document == null) {
             throw new IllegalArgumentException("No document was provided");

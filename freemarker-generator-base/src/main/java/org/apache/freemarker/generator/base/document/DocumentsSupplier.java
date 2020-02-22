@@ -67,14 +67,14 @@ public class DocumentsSupplier implements Supplier<List<Document>> {
     }
 
     private List<Document> get(String source) {
-        if (isUrl(source)) {
-            return singletonList(resolveUrl(source));
+        if (isHttpUrl(source)) {
+            return singletonList(resolveHttpUrl(source));
         } else {
             return resolveFile(source, include, charset);
         }
     }
 
-    private static Document resolveUrl(String url) {
+    private static Document resolveHttpUrl(String url) {
         return DocumentFactory.create(toUrl(url));
     }
 
@@ -88,7 +88,7 @@ public class DocumentsSupplier implements Supplier<List<Document>> {
         return new RecursiveFileSupplier(singletonList(source), include);
     }
 
-    private static boolean isUrl(String value) {
+    private static boolean isHttpUrl(String value) {
         return value.startsWith("http://") || value.startsWith("https://");
     }
 
