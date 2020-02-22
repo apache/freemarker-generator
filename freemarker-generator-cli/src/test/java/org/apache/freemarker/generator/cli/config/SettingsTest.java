@@ -42,7 +42,8 @@ public class SettingsTest {
     private static final String ANY_OUTPUT_FILE = "outputFile";
     private static final List<String> ANY_SOURCES = singletonList("sources");
     private static final String ANY_TEMPLATE_NAME = "templateName";
-    private static final Map<String, String> ANY_USER_PROPERTIES = new HashMap<>();
+    private static final Map<String, String> ANY_USER_PARAMETERS = new HashMap<>();
+    private static final Properties ANY_SYSTEM_PROPERTIES = new Properties();
 
     @Test
     public void shouldProvideAllExpectedSettings() {
@@ -56,7 +57,8 @@ public class SettingsTest {
         assertEquals(ANY_OUTPUT_FILE, settings.getOutputFile().getName());
         assertEquals(ANY_TEMPLATE_NAME, settings.getTemplateName());
         assertNotNull(settings.getSources());
-        assertNotNull(settings.getProperties());
+        assertNotNull(settings.getParameters());
+        assertNotNull(settings.getSytemProperties());
         assertTrue(settings.isReadFromStdin());
         assertTrue(settings.isEnvironmentExposed());
         assertTrue(settings.isInteractiveTemplate());
@@ -75,8 +77,9 @@ public class SettingsTest {
                 .setLocale(ANY_LOCALE)
                 .setOutputEncoding(ANY_OUTPUT_ENCODING)
                 .setOutputFile(ANY_OUTPUT_FILE)
-                .setProperties(ANY_USER_PROPERTIES)
+                .setParameters(ANY_USER_PARAMETERS)
                 .setSources(ANY_SOURCES)
+                .setSystemProperties(ANY_SYSTEM_PROPERTIES)
                 .setTemplateName(ANY_TEMPLATE_NAME)
                 .setWriter(new StringWriter())
                 .setVerbose(true);

@@ -18,8 +18,8 @@
 <#assign document = Documents.get(0)>
 <#assign parser = parser(document)>
 <#assign headers = parser.getHeaderNames()>
-<#assign column = SystemTool.getProperty("column")>
-<#assign values = SystemTool.getProperty("values")?split(",")>
+<#assign column = SystemTool.getParameter("column")>
+<#assign values = SystemTool.getParameter("values")?split(",")>
 
 <#compress>
     <@writePageHeader document/>
@@ -32,8 +32,8 @@
 </#compress>
 
 <#function parser document>
-    <#assign format = CSVTool.formats[SystemTool.getProperty("format", "DEFAULT")]>
-    <#assign delimiter = CSVTool.toDelimiter(SystemTool.getProperty("delimiter", format.getDelimiter()))>
+    <#assign format = CSVTool.formats[SystemTool.getParameter("format", "DEFAULT")]>
+    <#assign delimiter = CSVTool.toDelimiter(SystemTool.getParameter("delimiter", format.getDelimiter()))>
     <#return CSVTool.parse(document, format.withFirstRecordAsHeader().withDelimiter(delimiter))>
 </#function>
 

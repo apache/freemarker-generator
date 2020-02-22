@@ -26,8 +26,8 @@ public class ManualTest {
     private static final String SPACE = " ";
     // private static final String CMD = "-b ./src/test -t templates/csv/html/transactions.ftl site/sample/csv/transactions.csv";
     private static final String CMD = "-b ./src/test -l de_AT -DFOO=foo -DBAR=bar -t templates/info.ftl site/sample/csv/transactions.csv";
-    // private static final String CMD = "-b ./src/test -DFOO=foo -DBAR=bar -l de -t templates/demo.ftl site/sample/csv/transactions.csv";
-    // private static final String CMD = "-b ./src/test -DFOO=foo -DBAR=bar -t templates/demo.ftl site/sample/csv/transactions.csv";
+    // private static final String CMD = "-b ./src/test -DFOO=foo -PBAR=bar -l de -t templates/demo.ftl site/sample/csv/transactions.csv";
+    // private static final String CMD = "-b ./src/test -DFOO=foo -PBAR=bar -t templates/demo.ftl site/sample/csv/transactions.csv";
     // private static final String CMD = "-b ./src/test -Dcsv.out.format=TDF -t templates/csv/transform.ftl site/sample/csv/contract.csv";
     // private static final String CMD = "-t templates/excel/csv/transform.ftl -l de_AT site/sample/excel/test.xlsx";
     // private static final String CMD = "-i ${JsonPathTool.parse(Documents.first).read('$.info.title')} site/sample/json/swagger-spec.json";

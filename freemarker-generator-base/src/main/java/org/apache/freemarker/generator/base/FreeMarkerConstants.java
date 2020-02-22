@@ -65,6 +65,7 @@ public class FreeMarkerConstants {
         public static final String FREEMARKER_LOCALE = "freemarker.locale";
         public static final String FREEMARKER_WRITER = "freemarker.writer";
         public static final String FREEMARKER_TEMPLATE_DIRECTORIES = "freemarker.template.directories";
-        public static final String FREEMARKER_USER_PROPERTIES = "freemarker.user.properties";
+        public static final String FREEMARKER_USER_SYSTEM_PROPERTIES = "freemarker.user.system.properties";
+        public static final String FREEMARKER_USER_PARAMETERS = "freemarker.user.parameters";
     }
 }

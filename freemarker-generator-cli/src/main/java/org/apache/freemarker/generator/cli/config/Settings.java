@@ -43,16 +43,16 @@ import static org.apache.freemarker.generator.base.util.StringUtils.isEmpty;
  */
 public class Settings {
 
-    /** FreeMarker CLI configuration containing tools */
+    /** FreeMarker CLI configuration containing tool mappings, etc. */
     private final Properties configuration;
 
-    /** User-supplied command line arguments */
+    /** Command line arguments */
     private final List<String> args;
 
     /** List of FreeMarker template directories */
     private final List<File> templateDirectories;
 
-    /** Name of the template to be loaded and rendered */
+    /** Name of the template to be loaded and rendered  */
     private final String templateName;
 
     /** Template provided by the user interactivly */
@@ -64,7 +64,7 @@ public class Settings {
     /** Encoding of output files */
     private final Charset outputEncoding;
 
-    /** Enable verbose mode **/
+    /** Enable verbose mode (currently not used) **/
     private final boolean verbose;
 
     /** Optional output file if not written to stdout */
@@ -73,10 +73,10 @@ public class Settings {
     /** Optional include pattern for recursice directly search of source files */
     private final String include;
 
-    /** The locale to use for rendering */
+    /** The locale used for rendering the template */
     private final Locale locale;
 
-    /** Read from "System.in" */
+    /** Read from stdin? */
     private final boolean isReadFromStdin;
 
     /** Expose environment variables globally in the data model? */
@@ -85,8 +85,11 @@ public class Settings {
     /** User-supplied list of source files or directories */
     private final List<String> sources;
 
-    /** User-supplied system properties, i.e. "-Dfoo=bar" */
-    private final Map<String, String> properties;
+    /** User-supplied parameters */
+    private final Map<String, String> parameters;
+
+    /** User-supplied system properties */
+    private final Properties sytemProperties;
 
     /** The writer used for rendering templates, e.g. stdout or a file writer */
     private final Writer writer;
@@ -106,7 +109,8 @@ public class Settings {
             boolean isReadFromStdin,
             boolean isEnvironmentExposed,
             List<String> sources,
-            Map<String, String> properties,
+            Map<String, String> parameters,
+            Properties sytemProperties,
             Writer writer) {
         if (isEmpty(template) && isEmpty(interactiveTemplate)) {
             throw new IllegalArgumentException("Either 'template' or 'interactiveTemplate' must be provided");
@@ -125,7 +129,8 @@ public class Settings {
         this.isReadFromStdin = isReadFromStdin;
         this.isEnvironmentExposed = isEnvironmentExposed;
         this.sources = requireNonNull(sources);
-        this.properties = requireNonNull(properties);
+        this.parameters = requireNonNull(parameters);
+        this.sytemProperties = requireNonNull(sytemProperties);
         this.configuration = requireNonNull(configuration);
         this.writer = new NonClosableWriterWrapper(requireNonNull(writer));
     }
@@ -194,8 +199,12 @@ public class Settings {
         return sources;
     }
 
-    public Map<String, String> getProperties() {
-        return properties;
+    public Map<String, String> getParameters() {
+        return parameters;
+    }
+
+    public Properties getSytemProperties() {
+        return sytemProperties;
     }
 
     public boolean hasOutputFile() {
@@ -217,7 +226,8 @@ public class Settings {
         result.put(Model.FREEMARKER_CLI_ARGS, getArgs());
         result.put(Model.FREEMARKER_LOCALE, getLocale());
         result.put(Model.FREEMARKER_TEMPLATE_DIRECTORIES, getTemplateDirectories());
-        result.put(Model.FREEMARKER_USER_PROPERTIES, getProperties());
+        result.put(Model.FREEMARKER_USER_PARAMETERS, getParameters());
+        result.put(Model.FREEMARKER_USER_SYSTEM_PROPERTIES, getSytemProperties());
         result.put(Model.FREEMARKER_WRITER, getWriter());
         return result;
     }
@@ -229,9 +239,11 @@ public class Settings {
     @Override
     public String toString() {
         return "Settings{" +
-                "args=" + args +
+                "configuration=" + configuration +
+                ", args=" + args +
                 ", templateDirectories=" + templateDirectories +
                 ", templateName='" + templateName + '\'' +
+                ", interactiveTemplate='" + interactiveTemplate + '\'' +
                 ", inputEncoding=" + inputEncoding +
                 ", outputEncoding=" + outputEncoding +
                 ", verbose=" + verbose +
@@ -239,14 +251,16 @@ public class Settings {
                 ", include='" + include + '\'' +
                 ", locale=" + locale +
                 ", isReadFromStdin=" + isReadFromStdin +
+                ", isEnvironmentExposed=" + isEnvironmentExposed +
                 ", sources=" + sources +
-                ", properties=" + properties +
-                ", tools=" + configuration +
+                ", properties=" + parameters +
+                ", sytemProperties=" + sytemProperties +
                 ", writer=" + writer +
                 ", templateEncoding=" + getTemplateEncoding() +
                 ", readFromStdin=" + isReadFromStdin() +
                 ", environmentExposed=" + isEnvironmentExposed() +
                 ", hasOutputFile=" + hasOutputFile() +
+                ", toMap=" + toMap() +
                 '}';
     }
 
@@ -264,7 +278,8 @@ public class Settings {
         private boolean isReadFromStdin;
         private boolean isEnvironmentExposed;
         private List<String> sources;
-        private Map<String, String> properties;
+        private Map<String, String> parameters;
+        private Properties systemProperties;
         private Properties configuration;
         private Writer writer;
 
@@ -272,7 +287,8 @@ public class Settings {
             this.args = emptyList();
             this.configuration = new Properties();
             this.locale = DEFAULT_LOCALE.toString();
-            this.properties = new HashMap<>();
+            this.parameters = new HashMap<>();
+            this.systemProperties = new Properties();
             this.setInputEncoding(DEFAULT_CHARSET.name());
             this.setOutputEncoding(DEFAULT_CHARSET.name());
             this.sources = emptyList();
@@ -353,9 +369,16 @@ public class Settings {
             return this;
         }
 
-        public SettingsBuilder setProperties(Map<String, String> properties) {
-            if (properties != null) {
-                this.properties = properties;
+        public SettingsBuilder setParameters(Map<String, String> parameters) {
+            if (parameters != null) {
+                this.parameters = parameters;
+            }
+            return this;
+        }
+
+        public SettingsBuilder setSystemProperties(Properties systemProperties) {
+            if(systemProperties != null) {
+                this.systemProperties = systemProperties;
             }
             return this;
         }
@@ -393,7 +416,8 @@ public class Settings {
                     isReadFromStdin,
                     isEnvironmentExposed,
                     sources,
-                    properties,
+                    parameters,
+                    systemProperties,
                     writer
             );
         }

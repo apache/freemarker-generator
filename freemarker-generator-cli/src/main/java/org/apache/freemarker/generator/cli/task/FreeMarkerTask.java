@@ -128,9 +128,9 @@ public class FreeMarkerTask implements Callable<Integer> {
         dataModel.put(DOCUMENTS, documents);
 
         if (settings.isEnvironmentExposed()) {
-            // add all system & user-supplied properties as top-lvel entries
+            // add all system & user-supplied properties as top-level entries
             dataModel.putAll(System.getenv());
-            dataModel.putAll(settings.getProperties());
+            dataModel.putAll(settings.getParameters());
         }
 
         dataModel.putAll(tools.get());

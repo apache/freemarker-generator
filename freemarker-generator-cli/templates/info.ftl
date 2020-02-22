@@ -45,9 +45,15 @@ FreeMarker CLI Documents
 [${document?counter}] ${document.name}, ${document.location}, ${document.length} Bytes
 </#list>
 
-User Supplied Properties
+User Supplied Parameters
 ---------------------------------------------------------------------------
-<#list SystemTool.userProperties as name,value>
+<#list SystemTool.parameters as name,value>
+- ${name} ==> ${value}
+</#list>
+
+User Supplied System Properties
+---------------------------------------------------------------------------
+<#list SystemTool.userSystemProperties as name,value>
 - ${name} ==> ${value}
 </#list>
 
@@ -56,6 +62,6 @@ SystemTool
 Command line         : ${SystemTool.getCommandLineArgs()?join(", ")}
 Host Name            : ${SystemTool.getHostName()}
 Java Home            : ${SystemTool.getEnv("JAVA_HOME", "N.A.")}
-User Name            : ${SystemTool.getProperty("user.name", "N.A.")}
+User Name            : ${SystemTool.getSystemProperty("user.name", "N.A.")}
 Timestamp            : ${SystemTool.currentTimeMillis}
 Writer               : ${SystemTool.writer.class.name}

@@ -64,8 +64,8 @@ public class Main implements Callable<Integer> {
     @Option(names = { "-b", "--basedir" }, description = "Optional template base directory")
     private String baseDir;
 
-    @Option(names = { "-D", "--property" }, description = "Set system property")
-    private Map<String, String> properties;
+    @Option(names = { "-D", "--system-property" }, description = "Set system property")
+    private Properties systemProperties;
 
     @Option(names = { "-e", "--input-encoding" }, description = "Encoding of input file", defaultValue = "UTF-8")
     private String inputEncoding;
@@ -78,6 +78,9 @@ public class Main implements Callable<Integer> {
 
     @Option(names = { "-o", "--output" }, description = "Output file")
     private String outputFile;
+
+    @Option(names = { "-P", "--param" }, description = "Set parameter")
+    private Map<String, String> parameters;
 
     @Option(names = { "--config" }, defaultValue = FREEMARKER_CLI_PROPERTY_FILE, description = "FreeMarker CLI configuration file")
     private String configFile;
@@ -163,17 +166,18 @@ public class Main implements Callable<Integer> {
                 .isEnvironmentExposed(isEnvironmentExposed)
                 .isReadFromStdin(readFromStdin)
                 .setArgs(args)
+                .setConfiguration(configuration)
                 .setInclude(include)
                 .setInputEncoding(inputEncoding)
+                .setInteractiveTemplate(templateSourceOptions.interactiveTemplate)
                 .setLocale(locale)
                 .setOutputEncoding(outputEncoding)
                 .setOutputFile(outputFile)
-                .setProperties(properties != null ? properties : new HashMap<>())
+                .setParameters(parameters != null ? parameters : new HashMap<>())
                 .setSources(sources != null ? sources : new ArrayList<>())
+                .setSystemProperties(systemProperties != null ? systemProperties : new Properties())
                 .setTemplateDirectories(templateDirectories)
                 .setTemplateName(templateSourceOptions.template)
-                .setInteractiveTemplate(templateSourceOptions.interactiveTemplate)
-                .setConfiguration(configuration)
                 .setWriter(writer(outputFile, outputEncoding))
                 .build();
     }
@@ -193,8 +197,8 @@ public class Main implements Callable<Integer> {
     }
 
     private void updateSystemProperties() {
-        if (properties != null && !properties.isEmpty()) {
-            System.getProperties().putAll(properties);
+        if (systemProperties != null && !systemProperties.isEmpty()) {
+            System.getProperties().putAll(systemProperties);
         }
     }
 

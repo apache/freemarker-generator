@@ -61,6 +61,7 @@ Some years later the not-so-small-any-longer-and-not-having-tests Groovy script 
 * Support for reading document content from STDIN to integrate with command line tools
 * Support execution of arbitrary commands using [Apache Commons Exec](https://commons.apache.org/proper/commons-exec/)
 * Add some commonly useful information such as `System Properties`, `Enviroment Variables`
+* Support embedding the code in existing applications
 
 # 4. Installation
 
@@ -82,14 +83,13 @@ FreeMarker version     : 2.3.29
 Template name          : templates/info.ftl
 Language               : en
 Locale                 : en_US
-Timestamp              : Feb 16, 2020 4:11:07 PM
+Timestamp              : Feb 22, 2020 4:42:01 PM
 Output encoding        : UTF-8
 Output format          : plainText
 
 FreeMarker CLI Template Directories
 ---------------------------------------------------------------------------
 [1] /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler
-[2] /Users/sgoeschl/.freemarker-cli
 
 FreeMarker CLI Tools
 ---------------------------------------------------------------------------
@@ -109,22 +109,20 @@ FreeMarker CLI Tools
 FreeMarker CLI Documents
 ---------------------------------------------------------------------------
 
-FreeMarker CLI Settings
+User Supplied Parameters
 ---------------------------------------------------------------------------
-- freemarker.cli.args
-- freemarker.locale
-- freemarker.template.directories
-- freemarker.writer
-- user.properties
 
-User Supplied Properties
+User Supplied System Properties
 ---------------------------------------------------------------------------
 
 SystemTool
 ---------------------------------------------------------------------------
-Host name            : W0GL5179.local
-User name            : sgoeschl
-Command line         : -t, ./templates/info.ftl
+Command line         : -t, templates/info.ftl
+Host Name            : W0GL5179.local
+Java Home            : /Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home
+User Name            : sgoeschl
+Timestamp            : 1,582,386,121,793
+Writer               : org.apache.freemarker.generator.base.util.NonClosableWriterWrapper
 ```
 
 There a many examples (see below) available you can execute - run `./run-samples.sh` and have a look at the generated output
@@ -155,36 +153,35 @@ templates/properties/csv/locker-test-users.ftl
 templates/yaml/txt/transform.ftl
 templates/xml/txt/recipients.ftl
 Created the following sample files in ./target/out
-total 1208
--rw-r--r--  1 sgoeschl  staff     646 Feb 11 22:17 combined-access.log.txt
--rw-r--r--  1 sgoeschl  staff   22548 Feb 11 22:17 contract.html
--rw-r--r--  1 sgoeschl  staff    7933 Feb 11 22:17 contract.md
--rw-r--r--  1 sgoeschl  staff     784 Feb 11 22:17 curl.sh
--rw-r--r--  1 sgoeschl  staff     232 Feb 11 22:17 customer.txt
--rw-r--r--  1 sgoeschl  staff    5908 Feb 11 22:17 demo.txt
--rw-r--r--  1 sgoeschl  staff    1310 Feb 11 22:17 dependencies.csv
--rw-r--r--  1 sgoeschl  staff    2029 Feb 11 22:17 github-users-curl.md
--rw-r--r--  1 sgoeschl  staff    1708 Feb 11 22:17 info.txt
--rw-r--r--  1 sgoeschl  staff      66 Feb 11 22:17 interactive-html.txt
--rw-r--r--  1 sgoeschl  staff      16 Feb 11 22:17 interactive-json.txt
--rw-r--r--  1 sgoeschl  staff      10 Feb 11 22:17 interactive-xml.txt
--rw-r--r--  1 sgoeschl  staff     285 Feb 11 22:17 locker-test-users.csv
--rw-r--r--  1 sgoeschl  staff    6341 Feb 11 22:17 locker-test-users.fo
--rw-r--r--  1 sgoeschl  staff    5526 Feb 11 22:17 locker-test-users.pdf
--rw-r--r--  1 sgoeschl  staff     921 Feb 11 22:17 recipients.txt
--rw-r--r--  1 sgoeschl  staff     910 Feb 11 22:17 sales-records.md
--rw-r--r--  1 sgoeschl  staff     379 Feb 11 22:17 swagger-spec.csv
--rw-r--r--  1 sgoeschl  staff     156 Feb 11 22:17 test-multiple-sheets.xlsx.csv
--rw-r--r--  1 sgoeschl  staff    1917 Feb 11 22:17 test-multiple-sheets.xlsx.html
--rw-r--r--  1 sgoeschl  staff     389 Feb 11 22:17 test-multiple-sheets.xlsx.md
--rw-r--r--  1 sgoeschl  staff     150 Feb 11 22:17 test-transform-xls.csv
--rw-r--r--  1 sgoeschl  staff    1556 Feb 11 22:17 test.xls.html
--rw-r--r--  1 sgoeschl  staff    1558 Feb 11 22:17 test.xslx.html
--rw-r--r--  1 sgoeschl  staff   25758 Feb 11 22:17 transactions-fo.pdf
--rw-r--r--  1 sgoeschl  staff   66016 Feb 11 22:17 transactions-html.pdf
--rw-r--r--  1 sgoeschl  staff  330129 Feb 11 22:17 transactions.fo
--rw-r--r--  1 sgoeschl  staff   51008 Feb 11 22:17 transactions.html
-
+total 1344
+-rw-r--r--  1 sgoeschl  staff     646 Feb 22 16:43 combined-access.log.txt
+-rw-r--r--  1 sgoeschl  staff   22548 Feb 22 16:43 contract.html
+-rw-r--r--  1 sgoeschl  staff    7933 Feb 22 16:43 contract.md
+-rw-r--r--  1 sgoeschl  staff     784 Feb 22 16:43 curl.sh
+-rw-r--r--  1 sgoeschl  staff     232 Feb 22 16:43 customer.txt
+-rw-r--r--  1 sgoeschl  staff   15084 Feb 22 16:43 demo.txt
+-rw-r--r--  1 sgoeschl  staff    1310 Feb 22 16:43 dependencies.csv
+-rw-r--r--  1 sgoeschl  staff    2029 Feb 22 16:43 github-users-curl.md
+-rw-r--r--  1 sgoeschl  staff    2668 Feb 22 16:43 info.txt
+-rw-r--r--  1 sgoeschl  staff      66 Feb 22 16:43 interactive-html.txt
+-rw-r--r--  1 sgoeschl  staff      16 Feb 22 16:43 interactive-json.txt
+-rw-r--r--  1 sgoeschl  staff      10 Feb 22 16:43 interactive-xml.txt
+-rw-r--r--  1 sgoeschl  staff     285 Feb 22 16:43 locker-test-users.csv
+-rw-r--r--  1 sgoeschl  staff    6341 Feb 22 16:43 locker-test-users.fo
+-rw-r--r--  1 sgoeschl  staff    5526 Feb 22 16:43 locker-test-users.pdf
+-rw-r--r--  1 sgoeschl  staff     921 Feb 22 16:43 recipients.txt
+-rw-r--r--  1 sgoeschl  staff     910 Feb 22 16:43 sales-records.md
+-rw-r--r--  1 sgoeschl  staff     379 Feb 22 16:43 swagger-spec.csv
+-rw-r--r--  1 sgoeschl  staff     156 Feb 22 16:43 test-multiple-sheets.xlsx.csv
+-rw-r--r--  1 sgoeschl  staff    1917 Feb 22 16:43 test-multiple-sheets.xlsx.html
+-rw-r--r--  1 sgoeschl  staff     389 Feb 22 16:43 test-multiple-sheets.xlsx.md
+-rw-r--r--  1 sgoeschl  staff     150 Feb 22 16:43 test-transform-xls.csv
+-rw-r--r--  1 sgoeschl  staff    1556 Feb 22 16:43 test.xls.html
+-rw-r--r--  1 sgoeschl  staff    1558 Feb 22 16:43 test.xslx.html
+-rw-r--r--  1 sgoeschl  staff   25756 Feb 22 16:43 transactions-fo.pdf
+-rw-r--r--  1 sgoeschl  staff   66016 Feb 22 16:43 transactions-html.pdf
+-rw-r--r--  1 sgoeschl  staff  330128 Feb 22 16:43 transactions.fo
+-rw-r--r--  1 sgoeschl  staff   51008 Feb 22 16:43 transactions.html
 ```
 
 Please note that generated PDF files are very likely not found since they require `wkhtmltopdf` and `Apache FOP` installation.
@@ -192,17 +189,19 @@ Please note that generated PDF files are very likely not found since they requir
 # 5. Usage
 
 ```text
-./bin/freemarker-cli  -h
+> ./bin/freemarker-cli  -h
+
 Usage: freemarker-cli (-t=<template> | -i=<interactiveTemplate>) [-EhV]
                       [--stdin] [-b=<baseDir>] [--config=<configFile>]
                       [-e=<inputEncoding>] [--include=<include>] [-l=<locale>]
                       [-o=<outputFile>] [--output-encoding=<outputEncoding>]
-                      [--times=<times>] [-D=<String=String>]... [<sources>...]
+                      [--times=<times>] [-D=<String=String>]...
+                      [-P=<String=String>]... [<sources>...]
 Apache FreeMarker CLI
       [<sources>...]        List of input files and/or input directories
   -b, --basedir=<baseDir>   Optional template base directory
       --config=<configFile> FreeMarker CLI configuration file
-  -D, --property=<String=String>
+  -D, --system-property=<String=String>
                             Set system property
   -e, --input-encoding=<inputEncoding>
                             Encoding of input file
@@ -216,11 +215,12 @@ Apache FreeMarker CLI
   -o, --output=<outputFile> Output file
       --output-encoding=<outputEncoding>
                             Encoding of output file, e.g. UTF-8
+  -P, --param=<String=String>
+                            Set parameter
       --stdin               Read input document from stdin
   -t, --template=<template> FreeMarker template to render
       --times=<times>       Re-run X times for profiling
   -V, --version             Print version information and exit.
-
 ```
 
 # 6. Examples
@@ -289,47 +289,27 @@ Sometimes you have a CSV file which needs to be translated in Markdown or HTML -
 The FreeMarker template is shown below
 
 ```text
-<#ftl output_format="HTML" >
-<#assign document = Documents.get(0)>
-<#assign name = document.name>
+<#ftl output_format="plainText">
 <#assign cvsFormat = CSVTool.formats["DEFAULT"].withHeader()>
-<#assign csvParser = CSVTool.parse(document, cvsFormat)>
-<#assign csvHeaders = csvParser.getHeaderNames()>
+<#assign csvParser = CSVTool.parse(Documents.get(0), cvsFormat)>
+<#assign csvHeaders = csvParser.getHeaderMap()?keys>
+<#assign csvRecords = csvParser.records>
 <#--------------------------------------------------------------------------->
-<!DOCTYPE html>
-<html>
-<head>
-    <title>${name}</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
-</head>
-<body>
-<table class="table table-striped">
-    <@writeHeaders csvParser.getHeaderNames()/>
-    <#list csvParser.iterator() as record>
-        <@writeColumns record/>
-    </#list>
-</table>
-</body>
-</html>
+<#compress>
+<@writeHeaders headers=csvHeaders/>
+<@writeColums columns=csvRecords/>
+</#compress>
 <#--------------------------------------------------------------------------->
 <#macro writeHeaders headers>
-    <tr>
-        <#list headers as header>
-            <th>${header}</th>
-        </#list>
-    </tr>
+| ${csvHeaders?join(" | ", "")} |
+    <#list csvHeaders as csvHeader>| --------</#list>|
 </#macro>
 <#--------------------------------------------------------------------------->
-<#macro writeColumns record>
-    <tr>
-        <#list record.iterator() as field>
-            <th>${field}</th>
-        </#list>
-    </tr>
+<#macro writeColums columns>
+    <#list columns as column>
+    | ${column.iterator()?join(" | ", "")} |
+    </#list>
 </#macro>
-
 ```
 
 The resulting file actually looks pleasant when compared to raw CSV
@@ -341,7 +321,7 @@ The resulting file actually looks pleasant when compared to raw CSV
 Of course you can also transform a XML document
 
 ```text
-> ./bin/freemarker-cli -t ./templates/xml/txt/recipients.ftl site/sample/xml/recipients.xml
+> ./bin/freemarker-cli -t templates/xml/txt/recipients.ftl site/sample/xml/recipients.xml
 ```
 
 using the following template
@@ -394,6 +374,7 @@ D. H.
 One day I was asked a to prepare a CSV files containing REST endpoints described by Swagger - technically this is a JSON to CSV transformation. Of course I could create that CSV manually but writing a FTL template doing that was simply more fun and saves time in the future.
 
 ```text
+<#ftl output_format="plainText" strip_text="true">
 <#assign json = JsonPathTool.parse(Documents.get(0))>
 <#assign basePath = json.read("$.basePath")>
 <#assign paths = json.read("$.paths")>
@@ -425,7 +406,6 @@ ${'\n'}
         <#return "">
     </#if>
 </#function>
-
 ```
 
 Invoking the FTL template
@@ -777,7 +757,7 @@ For a customer project we wanted to record REST request / responses using WireMo
 
 and the final FTL is found below
 
-```
+```text
 <#ftl output_format="plainText">
 <#assign cvsFormat = CSVTool.formats["DEFAULT"].withHeader()>
 <#assign csvParser = CSVTool.parse(Documents.get(0), cvsFormat)>
@@ -861,7 +841,7 @@ TIMESTAMP;VERB;REQUEST;HTTPVERSION
 
 using the following FreeMarker template
 
-```
+```text
 <#ftl output_format="plainText" strip_whitespace=true>
 <#assign grok = GrokTool.compile("%{COMBINEDAPACHELOG}")>
 <#assign document = Documents.get(0)>
@@ -890,11 +870,11 @@ While this looks small and tidy there are some nifty features
 
 Sometimes you have a CSV file which is not quite right - you need to change the format. Lets have a look how `freemarker-cli` can help
 
-> bin/freemarker-cli -Dcsv.in.delimiter=COMMA -Dcsv.out.delimiter=PIPE -t templates/csv/transform.ftl ./site/sample/csv/contract.csv 
+> bin/freemarker-cli -Pcsv.in.delimiter=COMMA -Pcsv.out.delimiter=PIPE -t templates/csv/transform.ftl ./site/sample/csv/contract.csv 
 
 renders the following template
 
-```
+```text
 <#ftl output_format="plainText" strip_text="true">
 <#assign csvParser = createCsvParser(Documents.get(0))>
 <#assign csvPrinter = createCsvPrinter()>
@@ -906,21 +886,21 @@ renders the following template
 </#compress>
 
 <#function createCsvParser document>
-    <#assign initialCvsInFormat = CSVTool.formats[SystemTool.getProperty("csv.in.format", "DEFAULT")]>
-    <#assign csvInDelimiter = CSVTool.toDelimiter(SystemTool.getProperty("csv.in.delimiter", initialCvsInFormat.getDelimiter()))>
+    <#assign initialCvsInFormat = CSVTool.formats[SystemTool.getParameter("csv.in.format", "DEFAULT")]>
+    <#assign csvInDelimiter = CSVTool.toDelimiter(SystemTool.getParameter("csv.in.delimiter", initialCvsInFormat.getDelimiter()))>
     <#assign cvsInFormat = initialCvsInFormat.withDelimiter(csvInDelimiter)>
     <#return CSVTool.parse(document, cvsInFormat)>
 </#function>
 
 <#function createCsvPrinter>
-    <#assign initialCvsOutFormat = CSVTool.formats[SystemTool.getProperty("csv.out.format", "DEFAULT")]>
-    <#assign csvOutDelimiter = CSVTool.toDelimiter(SystemTool.getProperty("csv.out.delimiter", initialCvsOutFormat.getDelimiter()))>
+    <#assign initialCvsOutFormat = CSVTool.formats[SystemTool.getParameter("csv.out.format", "DEFAULT")]>
+    <#assign csvOutDelimiter = CSVTool.toDelimiter(SystemTool.getParameter("csv.out.delimiter", initialCvsOutFormat.getDelimiter()))>
     <#assign cvsOutFormat = initialCvsOutFormat.withDelimiter(csvOutDelimiter)>
-    <#return CSVTool.printer(cvsOutFormat)>
+    <#return CSVTool.printer(cvsOutFormat, SystemTool.writer)>
 </#function>
 ```
 
-and generates
+and generates the following output
 
 ```text
 contract_id|seller_company_name|customer_company_name|customer_duns_number|contract_affiliate|FERC_tariff_reference|contract_service_agreement_id|contract_execution_date|contract_commencement_date|contract_termination_date|actual_termination_date|extension_provision_description|class_name|term_name|increment_name|increment_peaking_name|product_type_name|product_name|quantity|units_for_contract|rate|rate_minimum|rate_maximum|rate_description|units_for_rate|point_of_receipt_control_area|point_of_receipt_specific_location|point_of_delivery_control_area|point_of_delivery_specific_location|begin_date|end_date|time_zone
@@ -941,7 +921,7 @@ Using Apache Commons Exec allows to execute arbitrary commands - nice but danger
 
 A few snippets to illustrate the points
 
-```
+```text
 <#ftl output_format="plainText" strip_whitespace="true">
 <#assign profile = SystemTool.getProperty("profile", "default")>
 <#assign ec2Instances = ec2Instances()/>
@@ -995,7 +975,7 @@ h3. AWS EC2 Instance
 
 Sometime you need to apply a CSS, JSON or XPath query in ad ad-hoc way without installing `xmllint`, `jq` or `pup` - in this case you can pass a FreeMarker template in an interactive fashion
 
-```
+```text
 > bin/freemarker-cli -i 'Hello ${SystemTool.envs["USER"]}'; echo
 Hello sgoeschl
 
@@ -1022,13 +1002,17 @@ During an integration project we imported large transactions CSV files (500.000+
 
 So lets start the filtering & transformation using the following command line
 
-```
-> bin/freemarker-cli -e UTF-8 -l de_AT -Dcolumn="Order ID" -Dvalues=226939189,957081544 -Dformat=DEFAULT -Ddelimiter=COMMA -t templates/csv/md/filter.ftl site/sample/csv/sales-records.csv
+```text
+> bin/freemarker-cli -e UTF-8 -l de_AT -Dcolumn="Order ID" \
+  -Dvalues=226939189,957081544 \
+  -Dformat=DEFAULT \
+  -Ddelimiter=COMMA \
+  -t templates/csv/md/filter.ftl site/sample/csv/sales-records.csv
 ```
 
 and Apache FreeMarker template
 
-```
+```text
 <#ftl output_format="plainText" strip_text="true">
 <#assign document = Documents.get(0)>
 <#assign parser = parser(document)>
@@ -1136,7 +1120,7 @@ FreeMarker version     : 2.3.29
 Template name          : templates/demo.ftl
 Language               : en
 Locale                 : en_US
-Timestamp              : Dec 23, 2019 4:18:04 PM
+Timestamp              : Feb 22, 2020 4:54:19 PM
 Output encoding        : UTF-8
 Output format          : plainText
 
@@ -1146,8 +1130,8 @@ new java.utilDate(1000 * 3600 * 24): Jan 2, 1970 1:00:00 AM
 
 3) Invoke a static method of an non-constructor class
 ---------------------------------------------------------------------------
-Random UUID              : 62e2370b-1847-4650-b0ff-ae8ffe169bb1
-System.currentTimeMillis : 1,577,114,284,581
+Random UUID              : 1fdb5ead-80a3-418c-bcc7-242e41b4e950
+System.currentTimeMillis : 1,582,386,859,782
 
 4) Access an Enumeration
 ---------------------------------------------------------------------------
@@ -1173,68 +1157,60 @@ List all files:
 Host name       : W0GL5179.local
 Command line    : -t, templates/demo.ftl
 System property : sgoeschl
-Timestamp       : 1577114284595
+Timestamp       : 1582386860080
 Environment var : sgoeschl
 
 8) Access System Properties
 ---------------------------------------------------------------------------
 app.dir      : 
-app.home     : /Users/sgoeschl/work/github/sgoeschl/freemarker-cli/target/appassembler
-app.pid      : 23706
-basedir      : /Users/sgoeschl/work/github/sgoeschl/freemarker-cli/target/appassembler
+app.home     : /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler
+app.pid      : 71792
+basedir      : /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler
 java.version : 1.8.0_192
 user.name    : sgoeschl
-user.dir     : /Users/sgoeschl/work/github/sgoeschl/freemarker-cli/target/appassembler
+user.dir     : /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler
 user.home    : /Users/sgoeschl
 
 9) List Environment Variables
 ---------------------------------------------------------------------------
-- PATH ==> /Users/sgoeschl/bin:/Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home/bin:/usr/local/Cellar/ruby/2.5.3//bin:/usr/local/Cellar/git/2.19.1/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Applications/Java/apache-fop-2.3:/Applications/Java/freemarker-cli-2.0.0/bin:/Applications/Java/gatling-3.1.2/bin
-- GIT_HOME ==> /usr/local/Cellar/git/2.19.1
-- JAVA_MAIN_CLASS_23706 ==> com.github.sgoeschl.freemarker.cli.Main
-- JAVA_8_HOME ==> /Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home
-- JAVA_HOME ==> /Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home
-- FOP_HOME ==> /Applications/Java/apache-fop-2.3
 - TERM ==> xterm-256color
 - LANG ==> en_US
-- MAVEN_OPTS ==> -Xmx2048m
 - DISPLAY ==> :0.0
-- JAVA_11_HOME ==> /Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home
-- LOGNAME ==> sgoeschl
-- XPC_SERVICE_NAME ==> 0
-- PWD ==> /Users/sgoeschl/work/github/sgoeschl/freemarker-cli/target/appassembler
-- TERM_PROGRAM_VERSION ==> 421.2
-- RUBY_HOME ==> /usr/local/Cellar/ruby/2.5.3/
 - SHELL ==> /bin/bash
-- PROFILE_TYPE ==> development
-- TERM_PROGRAM ==> Apple_Terminal
-- LSCOLORS ==> ExFxCxDxBxegedabagacad
-- PROFILE_ENV ==> default
-- USER ==> sgoeschl
-- CLICOLOR ==> 1
-- GATLING_HOME ==> /Applications/Java/gatling-3.1.2
-- TMPDIR ==> /var/folders/cd/jbgc9cg14ld7dlsqk44tpmrw0000gn/T/
-- SSH_AUTH_SOCK ==> /private/tmp/com.apple.launchd.lAqkSD19TM/Listeners
 - EDITOR ==> vi
-- XPC_FLAGS ==> 0x0
-- FREEMARKER_CLI_HOME ==> /Applications/Java/freemarker-cli-2.0.0
-- TERM_SESSION_ID ==> 1DC5DA58-1829-4911-AA84-7D09360B8416
-- LC_ALL ==> en_US.utf-8
-- __CF_USER_TEXT_ENCODING ==> 0x1F5:0x0:0x0
-- Apple_PubSub_Socket_Render ==> /private/tmp/com.apple.launchd.eT4kWX8K9z/Render
-- LC_CTYPE ==> UTF-8
-- HOME ==> /Users/sgoeschl
-- SHLVL ==> 1
 
-10) Access Documents
+10) List System Properties
+---------------------------------------------------------------------------
+- java.runtime.name ==> Java(TM) SE Runtime Environment
+- java.vm.version ==> 25.192-b12
+- java.vm.vendor ==> Oracle Corporation
+- java.vendor.url ==> http://java.oracle.com/
+- java.vm.name ==> Java HotSpot(TM) 64-Bit Server VM
+
+11) Access Documents
 ---------------------------------------------------------------------------
 Get the number of documents:
-    - 0
+- 0
 List all files containing "README" in the name
 List all files having "md" extension
 Get all documents
 
-11) Document Data Model
+12) FreeMarker CLI Tools
+---------------------------------------------------------------------------
+- CSVTool              : Process CSV files using Apache Commons CSV (see https://commons.apache.org/proper/commons-csv/)
+- ExcelTool            : Process Excels files (XLS, XLSX) using Apache POI (see https://poi.apache.org)
+- ExecTool             : Execute command line tools using Apache Commons Exec (see https://commons.apache.org/proper/commons-exec/)
+- FreeMarkerTool       : Expose useful Apache FreeMarker classes
+- GrokTool             : Process text files using Grok expressions (see https://github.com/thekrakken/java-grok)
+- JsonPathTool         : Process JSON files using Java JSON Path (see https://github.com/json-path/JsonPath)
+- JsoupTool            : Process  HTML files using Jsoup (see https://jsoup.org)
+- PropertiesTool       : Process JDK properties files
+- SystemTool           : Expose System-related utility methods
+- UUIDTool             : Create UUIDs
+- XmlTool              : Process XML files using Apache FreeMarker (see https://freemarker.apache.org/docs/xgui.html)
+- YamlTool             : Process YAML files using SnakeYAML(see https://bitbucket.org/asomov/snakeyaml/wiki/Home)
+
+13) Document Data Model
 ---------------------------------------------------------------------------
 - CSVTool
 - Documents
@@ -1245,32 +1221,31 @@ Get all documents
 - JsonPathTool
 - JsoupTool
 - PropertiesTool
-- Settings
 - SystemTool
 - UUIDTool
 - XmlTool
 - YamlTool
 
-12) Create a UUID
+14) Create a UUID
 ---------------------------------------------------------------------------
-UUIDTool Random UUID  : 019dcf78-5ed4-451e-89ac-7b4d0c204056
+UUIDTool Random UUID  : 936315a5-ee3d-44cd-a32c-2be10d2249a6
 UUIDTool Named UUID   : 298415f9-e888-3d98-90e7-6c0d63ad14dc
 
-13) Printing Special Characters
+15) Printing Special Characters
 ---------------------------------------------------------------------------
 German Special Characters: äöüßÄÖÜ
 
-14) Locale-specific output
+16) Locale-specific output
 ---------------------------------------------------------------------------
 Small Number :  1.23
 Large Number :  12,345,678.90
-Date         :  Dec 23, 2019
-Time         :  4:18:04 PM
+Date         :  Feb 22, 2020
+Time         :  4:54:20 PM
 
-15) Execute a program
+17) Execute a program
 ---------------------------------------------------------------------------
 > date
-Mon Dec 23 16:18:04 CET 2019
+Sat Feb 22 16:54:20 CET 2020
 ```
 
 # 7. Design Considerations

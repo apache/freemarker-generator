@@ -42,34 +42,34 @@ java.math.RoundingMode#UP: ${FreeMarkerTool.enums["java.math.RoundingMode"].UP}
 5) Loop Over The Values Of An Enumeration
 ---------------------------------------------------------------------------
 <#list FreeMarkerTool.enums["java.math.RoundingMode"]?values as roundingMode>
-    - java.math.RoundingMode.${roundingMode}<#lt>
+- java.math.RoundingMode.${roundingMode}<#lt>
 </#list>
 
 6) Display list of input files
 ---------------------------------------------------------------------------
 List all files:
 <#list Documents.list as document>
-    - Document: name=${document.name} location=${document.location} length=${document.length} encoding=${document.encoding!""}
+- Document: name=${document.name} location=${document.location} length=${document.length} encoding=${document.encoding!""}
 </#list>
 
 7) SystemTool
 ---------------------------------------------------------------------------
 Host name       : ${SystemTool.getHostName()}
 Command line    : ${SystemTool.getCommandLineArgs()?join(", ")}
-System property : ${SystemTool.getProperty("user.name", "N.A.")}
+System property : ${SystemTool.getSystemProperty("user.name", "N.A.")}
 Timestamp       : ${SystemTool.currentTimeMillis?c}
 Environment var : ${SystemTool.envs["USER"]!"N.A."}
 
 8) Access System Properties
 ---------------------------------------------------------------------------
-app.dir      : ${SystemTool.properties["app.dir"]!""}
-app.home     : ${SystemTool.properties["app.home"]!""}
-app.pid      : ${SystemTool.properties["app.pid"]!""}
-basedir      : ${SystemTool.properties["basedir"]!""}
-java.version : ${SystemTool.properties["java.version"]!""}
-user.name    : ${SystemTool.properties["user.name"]!""}
-user.dir     : ${SystemTool.properties["user.dir"]!""}
-user.home    : ${SystemTool.properties["user.home"]!""}
+app.dir      : ${SystemTool.systemProperties["app.dir"]!""}
+app.home     : ${SystemTool.systemProperties["app.home"]!""}
+app.pid      : ${SystemTool.systemProperties["app.pid"]!""}
+basedir      : ${SystemTool.systemProperties["basedir"]!""}
+java.version : ${SystemTool.systemProperties["java.version"]!""}
+user.name    : ${SystemTool.systemProperties["user.name"]!""}
+user.dir     : ${SystemTool.systemProperties["user.dir"]!""}
+user.home    : ${SystemTool.systemProperties["user.home"]!""}
 
 9) List Environment Variables
 ---------------------------------------------------------------------------
@@ -77,28 +77,34 @@ user.home    : ${SystemTool.properties["user.home"]!""}
 - ${name} ==> ${value}<#lt>
 </#list>
 
-10) Access Documents
+10) List System Properties
+---------------------------------------------------------------------------
+<#list SystemTool.systemProperties as name,value>
+- ${name} ==> ${value}<#lt>
+</#list>
+
+11) Access Documents
 ---------------------------------------------------------------------------
 Get the number of documents:
-    - ${Documents.size()}
+- ${Documents.size()}
 <#if !Documents.isEmpty()>
 Get the first document
-    - ${Documents.get(0)!"NA"}
+- ${Documents.get(0)!"NA"}
 </#if>
 List all files containing "README" in the name
 <#list Documents.find("*README*") as document>
-    - ${document.name}
+- ${document.name}
 </#list>
 List all files having "md" extension
 <#list Documents.find("*.md") as document>
-    - ${document.name}
+- ${document.name}
 </#list>
 Get all documents
 <#list Documents.list as document>
-    - ${document.name} => ${document.location}
+- ${document.name} => ${document.location}
 </#list>
 
-11) FreeMarker CLI Tools
+12) FreeMarker CLI Tools
 ---------------------------------------------------------------------------
 <#list .data_model?keys?sort as key>
 <#if key?ends_with("Tool")>
@@ -106,22 +112,22 @@ Get all documents
 </#if>
 </#list>
 
-12) Document Data Model
+13) Document Data Model
 ---------------------------------------------------------------------------
 <#list .data_model?keys?sort as key>
 - ${key}<#lt>
 </#list>
 
-13) Create a UUID
+14) Create a UUID
 ---------------------------------------------------------------------------
 UUIDTool Random UUID  : ${UUIDTool.randomUUID()}
 UUIDTool Named UUID   : ${UUIDTool.namedUUID("value and salt")}
 
-14) Printing Special Characters
+15) Printing Special Characters
 ---------------------------------------------------------------------------
 German Special Characters: äöüßÄÖÜ
 
-15) Locale-specific output
+16) Locale-specific output
 ---------------------------------------------------------------------------
 <#setting number_format=",##0.00">
 <#assign smallNumber = 1.234>
@@ -131,7 +137,7 @@ Large Number :  ${largeNumber}
 Date         :  ${.now?date}
 Time         :  ${.now?time}
 
-16) Execute a program
+17) Execute a program
 ---------------------------------------------------------------------------
 > date
 ${ExecTool.execute("date")}

@@ -64,7 +64,7 @@ echo "templates/csv/shell/curl.ftl"
 $FREEMARKER_CMD -t ./templates/csv/shell/curl.ftl site/sample/csv/user.csv > target/out/curl.sh || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 echo "templates/csv/md/filter.ftl"
-$FREEMARKER_CMD -e UTF-8 -l de_AT -Dcolumn="Order ID" -Dvalues=226939189,957081544 -Dformat=DEFAULT -Ddelimiter=COMMA -t templates/csv/md/filter.ftl site/sample/csv/sales-records.csv > target/out/sales-records.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -e UTF-8 -l de_AT -Pcolumn="Order ID" -Pvalues=226939189,957081544 -Pformat=DEFAULT -Pdelimiter=COMMA -t templates/csv/md/filter.ftl site/sample/csv/sales-records.csv > target/out/sales-records.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
 # CSV To XML-FO & PDF
@@ -121,7 +121,7 @@ echo "templates/excel/csv/transform.ftl"
 $FREEMARKER_CMD -t templates/excel/csv/transform.ftl site/sample/excel/test-multiple-sheets.xlsx > target/out/test-multiple-sheets.xlsx.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 echo "templates/excel/csv/custom.ftl"
-$FREEMARKER_CMD -t templates/excel/csv/custom.ftl -Dcsv.format=MYSQL site/sample/excel/test.xls > target/out/test-transform-xls.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -t templates/excel/csv/custom.ftl -Pcsv.format=MYSQL site/sample/excel/test.xls > target/out/test-transform-xls.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
 # HTML

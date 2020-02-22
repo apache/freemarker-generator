@@ -24,7 +24,7 @@ public class SystemToolTest {
 
     @Test
     public void shallGetProperties() {
-        assertFalse(systemTool().getProperties().isEmpty());
+        assertFalse(systemTool().getSystemProperties().isEmpty());
     }
 
     @Test
