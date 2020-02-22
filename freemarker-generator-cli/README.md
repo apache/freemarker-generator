@@ -996,6 +996,9 @@ h3. AWS EC2 Instance
 Sometime you need to apply a CSS, JSON or XPath query in ad ad-hoc way without installing `xmllint`, `jq` or `pup` - in this case you can pass a FreeMarker template in an interactive fashion
 
 ```
+> bin/freemarker-cli -i 'Hello ${SystemTool.envs["USER"]}'; echo
+Hello sgoeschl
+
 > bin/freemarker-cli -i '${JsonPathTool.parse(Documents.first).read("$.info.title")}' site/sample/json/swagger-spec.json; echo
 Swagger Petstore
 
@@ -1004,6 +1007,13 @@ John Smith
 
 > bin/freemarker-cli -i '${JsoupTool.parse(Documents.first).select("a")[0]}' site/sample/html/dependencies.html; echo
 <a href="${project.url}" title="FreeMarker CLI">FreeMarker CLI</a>
+
+> ./bin/freemarker-cli -i '<#list SystemTool.envs as name,value>${name} ==> ${value}${"\n"}</#list>'
+TERM ==> xterm-256color
+LANG ==> en_US
+DISPLAY ==> :0.0
+SHELL ==> /bin/bash
+EDITOR ==> vi
 ```
 
 ## 6.14 Filtering & Transforming CSV

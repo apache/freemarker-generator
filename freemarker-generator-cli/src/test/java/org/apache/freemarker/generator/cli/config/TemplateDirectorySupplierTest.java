@@ -24,35 +24,32 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Depending on the configuration the "~/.freemarker-cli" directory
- * might be found.
- */
 public class TemplateDirectorySupplierTest {
 
-    private final int nrOfDefaultTemplateDirectories = supplier(null).get().size();
+    // Depending on the local configuration the "~/.freemarker-cli" directory might be found.
+    private final int nrOfDefaultTemplateDirectories = templateDirectories(null).size();
 
     @Test
     public void shouldRemoveDuplicateTemplateDirectorie() throws IOException {
-        final List<File> directories = supplier(".").get();
+        final List<File> directories = templateDirectories(".");
 
         assertEquals(nrOfDefaultTemplateDirectories, directories.size());
     }
 
     @Test
-    public void shouldAddTemplateDirectorie() throws IOException {
-        assertEquals(nrOfDefaultTemplateDirectories + 1, supplier("templates").get().size());
-        assertEquals(nrOfDefaultTemplateDirectories + 1, supplier("./templates").get().size());
+    public void shouldAddTemplateDirectory() throws IOException {
+        assertEquals(nrOfDefaultTemplateDirectories + 1, templateDirectories("templates").size());
+        assertEquals(nrOfDefaultTemplateDirectories + 1, templateDirectories("./templates").size());
     }
 
     @Test
     public void shouldSkippedNonExistingTemplateDirectorie() throws IOException {
-        final List<File> directories = supplier("does-not-exist").get();
+        final List<File> directories = templateDirectories("does-not-exist");
 
         assertEquals(nrOfDefaultTemplateDirectories, directories.size());
     }
 
-    private TemplateDirectorySupplier supplier(String directory) {
-        return new TemplateDirectorySupplier(directory);
+    private List<File> templateDirectories(String directory) {
+        return new TemplateDirectorySupplier(directory).get();
     }
 }

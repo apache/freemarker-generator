@@ -95,7 +95,7 @@ public class ToolsFactoryTest {
         private final Map<String, Object> settings;
 
         public ToolWithDefaultAndMapConstructor() {
-            this.settings = null;
+            this(null);
         }
 
         public ToolWithDefaultAndMapConstructor(Map<String, Object> settings) {
