@@ -67,13 +67,13 @@ public class Main implements Callable<Integer> {
     @Option(names = { "-D", "--system-property" }, description = "Set system property")
     private Properties systemProperties;
 
-    @Option(names = { "-e", "--input-encoding" }, description = "Encoding of input file", defaultValue = "UTF-8")
+    @Option(names = { "-e", "--input-encoding" }, description = "Encoding of input documents", defaultValue = "UTF-8")
     private String inputEncoding;
 
     @Option(names = { "-E", "--expose-env" }, description = "Expose environment variables and user-supplied properties globally")
     private boolean isEnvironmentExposed;
 
-    @Option(names = { "-l", "--locale" }, description = "Locale being used for output file, e.g. 'en_US'")
+    @Option(names = { "-l", "--locale" }, description = "Locale being used for the output, e.g. 'en_US'")
     private String locale;
 
     @Option(names = { "-o", "--output" }, description = "Output file")
@@ -85,10 +85,10 @@ public class Main implements Callable<Integer> {
     @Option(names = { "--config" }, defaultValue = FREEMARKER_CLI_PROPERTY_FILE, description = "FreeMarker CLI configuration file")
     private String configFile;
 
-    @Option(names = { "--include" }, description = "File pattern for input directory")
+    @Option(names = { "--include" }, description = "File pattern for document input directory")
     private String include;
 
-    @Option(names = { "--output-encoding" }, description = "Encoding of output file, e.g. UTF-8", defaultValue = "UTF-8")
+    @Option(names = { "--output-encoding" }, description = "Encoding of output, e.g. UTF-8", defaultValue = "UTF-8")
     private String outputEncoding;
 
     @Option(names = { "--stdin" }, description = "Read input document from stdin")
