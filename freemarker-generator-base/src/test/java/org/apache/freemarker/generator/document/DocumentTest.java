@@ -19,11 +19,13 @@ package org.apache.freemarker.generator.document;
 import org.apache.commons.io.LineIterator;
 import org.apache.freemarker.generator.base.document.Document;
 import org.apache.freemarker.generator.base.document.DocumentFactory;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Iterator;
 
@@ -43,6 +45,8 @@ public class DocumentTest {
     public void shouldSupportTextDocument() throws IOException {
         try (Document document = DocumentFactory.create("stdin", ANY_TEXT)) {
             assertEquals("stdin", document.getName());
+            assertEquals("stdin", document.getBaseName());
+            assertEquals("", document.getExtension());
             assertEquals("string", document.getLocation());
             assertEquals(UTF_8, document.getCharset());
             assertTrue(document.getLength() > 0);
@@ -54,9 +58,25 @@ public class DocumentTest {
     public void shouldSupportFileDocument() throws IOException {
         try (Document document = DocumentFactory.create(ANY_FILE, ANY_CHAR_SET)) {
             assertEquals(ANY_FILE_NAME, document.getName());
+            assertEquals("pom", document.getBaseName());
+            assertEquals("xml", document.getExtension());
             assertEquals(ANY_FILE.getAbsolutePath(), document.getLocation());
             assertEquals(Charset.defaultCharset(), document.getCharset());
             assertTrue(document.getLength() > 0);
+            assertFalse(document.getText().isEmpty());
+        }
+    }
+
+    @Ignore
+    @Test
+    public void shouldSupportUrlDocument() throws IOException {
+        try (Document document = DocumentFactory.create(new URL("https://google.com?foo=bar"))) {
+            assertEquals("google.com", document.getName());
+            assertEquals("google", document.getBaseName());
+            assertEquals("com", document.getExtension());
+            assertEquals("https://google.com", document.getLocation());
+            assertEquals(UTF_8, document.getCharset());
+            assertEquals(-1, document.getLength());
             assertFalse(document.getText().isEmpty());
         }
     }

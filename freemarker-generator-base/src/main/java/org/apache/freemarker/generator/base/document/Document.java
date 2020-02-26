@@ -16,6 +16,7 @@
  */
 package org.apache.freemarker.generator.base.document;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.freemarker.generator.base.activation.ByteArrayDataSource;
@@ -68,6 +69,14 @@ public class Document implements Closeable {
 
     public String getName() {
         return name;
+    }
+
+    public String getBaseName() {
+        return FilenameUtils.getBaseName(name);
+    }
+
+    public String getExtension() {
+        return FilenameUtils.getExtension(name);
     }
 
     public Charset getCharset() {

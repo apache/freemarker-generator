@@ -50,7 +50,7 @@ public class DocumentsTest {
         assertEquals(0, documents.find("foo.*").size());
         assertEquals(0, documents.find("foo.bar").size());
 
-        assertEquals(1, documents.find("*.*").size());
+        assertEquals(2, documents.find("*.*").size());
         assertEquals(1, documents.find("*." + ANY_FILE_EXTENSION).size());
         assertEquals(1, documents.find("*.???").size());
         assertEquals(1, documents.find("*om*").size());
@@ -73,7 +73,7 @@ public class DocumentsTest {
 
         assertEquals("unknown", documents().get(0).getName());
         assertEquals("pom.xml", documents().get(1).getName());
-        assertEquals("url", documents().get(2).getName());
+        assertEquals("server.invalid", documents().get(2).getName());
         assertEquals("unknown", documents().getFirst().getName());
         assertEquals(3, documents.getList().size());
         assertEquals(3, documents.size());
@@ -82,7 +82,7 @@ public class DocumentsTest {
 
     @Test
     public void shouldGetNames() {
-        assertEquals(asList("unknown", "pom.xml", "url"), documents().getNames());
+        assertEquals(asList("unknown", "pom.xml", "server.invalid"), documents().getNames());
     }
 
     @Test(expected = IllegalArgumentException.class)

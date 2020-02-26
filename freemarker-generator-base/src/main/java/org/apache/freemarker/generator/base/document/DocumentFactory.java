@@ -40,8 +40,9 @@ public class DocumentFactory {
     }
 
     public static Document create(URL url) {
+        final String location = url.getProtocol() + "://" + url.getHost();
         final URLDataSource dataSource = new URLDataSource(url);
-        return create(Location.URL, dataSource, url.toExternalForm(), UTF_8);
+        return create(url.getHost(), dataSource, location, UTF_8);
     }
 
     public static Document create(String name, String content) {
