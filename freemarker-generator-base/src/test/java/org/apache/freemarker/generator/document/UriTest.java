@@ -60,13 +60,21 @@ public class UriTest {
     }
 
     @Test
+    public void shouldParseFileNameOnlyUri() throws Exception {
+        final URI uri = new URI("file.json");
+
+        assertEquals("file.json", uri.getPath());
+        assertEquals("file.json", uri.toASCIIString());
+    }
+
+    @Test
     public void shouldParseFileUriWithContentTypeAndEncoding() throws Exception {
-        final URI uri = new URI("file:///tmp/my/file.json?type=application/json&charset=UTF-16");
+        final URI uri = new URI("file:///tmp/my/file.json#type=application/json&charset=UTF-16");
 
         assertEquals("file", uri.getScheme());
         assertEquals("/tmp/my/file.json", uri.getPath());
-        assertEquals("file:///tmp/my/file.json?type=application/json&charset=UTF-16", uri.toASCIIString());
-        assertEquals("type=application/json&charset=UTF-16", uri.getQuery());
+        assertEquals("file:///tmp/my/file.json#type=application/json&charset=UTF-16", uri.toASCIIString());
+        assertEquals("type=application/json&charset=UTF-16", uri.getFragment());
     }
 
 }

@@ -35,13 +35,13 @@ public class RecursiveFileResolverTest {
 
     @Test
     public void shouldResolveAllFilesOfDirectory() {
-        assertEquals(4, fileResolver(ANY_DIRECTORY, null).get().size());
-        assertTrue(fileResolver(ANY_DIRECTORY, UNKNOWN_FILE_NAME).get().isEmpty());
+        assertEquals(4, fileResolver(ANY_DIRECTORY, null, null).get().size());
+        assertTrue(fileResolver(ANY_DIRECTORY, UNKNOWN_FILE_NAME, null).get().isEmpty());
     }
 
     @Test
     public void shouldResolveSingleMatchingFile() {
-        final List<File> files = fileResolver(ANY_DIRECTORY, ANY_FILE_NAME).get();
+        final List<File> files = fileResolver(ANY_DIRECTORY, ANY_FILE_NAME, null).get();
 
         assertEquals(1, files.size());
         assertEquals(ANY_FILE_NAME, files.get(0).getName());
@@ -50,7 +50,7 @@ public class RecursiveFileResolverTest {
     @Test
     public void shouldResolveMultipleFiles() {
         final List<String> sources = Arrays.asList("pom.xml", "README.md");
-        final List<File> files = fileResolver(sources, "*").get();
+        final List<File> files = fileResolver(sources, "*", null).get();
 
         assertEquals(2, files.size());
         assertEquals("pom.xml", files.get(0).getName());
@@ -60,25 +60,49 @@ public class RecursiveFileResolverTest {
     @Test
     public void shouldResolveMultipleFilesWithIncludeFilter() {
         final List<String> sources = Arrays.asList("pom.xml", "README.md");
-        final List<File> files = fileResolver(sources, "*.xml").get();
+        final List<File> files = fileResolver(sources, "*.xml", null).get();
 
         assertEquals(1, files.size());
         assertEquals("pom.xml", files.get(0).getName());
     }
 
     @Test
+    public void shouldExcludeAllFiles() {
+        final List<File> files = fileResolver(ANY_DIRECTORY, null, "*").get();
+
+        assertEquals(0, files.size());
+    }
+
+    @Test
+    public void shouldExcludeFiles() {
+        final List<File> files = fileResolver(ANY_DIRECTORY, null, "*.csv").get();
+
+        assertEquals(2, files.size());
+        assertEquals("file_01.txt", files.get(0).getName());
+        assertEquals("test.properties", files.get(1).getName());
+    }
+
+    @Test
+    public void shouldIncludeAndExcludeFiles() {
+        final List<File> files = fileResolver(ANY_DIRECTORY, "file*.*", "*.csv").get();
+
+        assertEquals(1, files.size());
+        assertEquals("file_01.txt", files.get(0).getName());
+    }
+
+    @Test
     public void shouldResolveMultipleFilesRecursivelyWithIncludes() {
-        final List<File> files = fileResolver(ANY_DIRECTORY, "*.csv").get();
+        final List<File> files = fileResolver(ANY_DIRECTORY, "*.csv", null).get();
 
         assertEquals(2, files.size());
     }
 
-    private static RecursiveFileSupplier fileResolver(String source, String include) {
-        return new RecursiveFileSupplier(singletonList(source), include);
+    private static RecursiveFileSupplier fileResolver(String source, String include, String exclude) {
+        return fileResolver(singletonList(source), include, exclude);
     }
 
-    private static RecursiveFileSupplier fileResolver(List<String> sources, String include) {
-        return new RecursiveFileSupplier(sources, include);
+    private static RecursiveFileSupplier fileResolver(List<String> sources, String include, String exclude) {
+        return new RecursiveFileSupplier(sources, singletonList(include), singletonList(exclude));
     }
 
 }

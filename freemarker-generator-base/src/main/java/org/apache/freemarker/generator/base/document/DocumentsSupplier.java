@@ -42,6 +42,9 @@ public class DocumentsSupplier implements Supplier<List<Document>> {
     /** Optional include pattern for resolving source files or directory */
     private final String include;
 
+    /** Optional exclude pattern for resolving source files or directory */
+    private final String exclude;
+
     /** The charset for loading text files */
     private final Charset charset;
 
@@ -52,9 +55,10 @@ public class DocumentsSupplier implements Supplier<List<Document>> {
      * @param include Optional include pattern for resolving source files or directory
      * @param charset The charset for loading text files
      */
-    public DocumentsSupplier(Collection<String> sources, String include, Charset charset) {
+    public DocumentsSupplier(Collection<String> sources, String include, String exclude, Charset charset) {
         this.sources = new ArrayList<>(sources);
         this.include = include;
+        this.exclude = exclude;
         this.charset = requireNonNull(charset);
     }
 
@@ -70,7 +74,7 @@ public class DocumentsSupplier implements Supplier<List<Document>> {
         if (isHttpUrl(source)) {
             return singletonList(resolveHttpUrl(source));
         } else {
-            return resolveFile(source, include, charset);
+            return resolveFile(source, include, exclude, charset);
         }
     }
 
@@ -78,14 +82,14 @@ public class DocumentsSupplier implements Supplier<List<Document>> {
         return DocumentFactory.create(toUrl(url));
     }
 
-    private static List<Document> resolveFile(String source, String include, Charset charset) {
-        return fileResolver(source, include).get().stream()
+    private static List<Document> resolveFile(String source, String include, String exclude, Charset charset) {
+        return fileResolver(source, include, exclude).get().stream()
                 .map(file -> DocumentFactory.create(file, charset))
                 .collect(toList());
     }
 
-    private static RecursiveFileSupplier fileResolver(String source, String include) {
-        return new RecursiveFileSupplier(singletonList(source), include);
+    private static RecursiveFileSupplier fileResolver(String source, String include, String exclude) {
+        return new RecursiveFileSupplier(singletonList(source), singletonList(include), singletonList(exclude));
     }
 
     private static boolean isHttpUrl(String value) {

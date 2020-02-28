@@ -73,6 +73,9 @@ public class Settings {
     /** Optional include pattern for recursice directly search of source files */
     private final String include;
 
+    /** Optional exclude pattern for recursice directly search of source files */
+    private final String exclude;
+
     /** The locale used for rendering the template */
     private final Locale locale;
 
@@ -105,6 +108,7 @@ public class Settings {
             boolean verbose,
             File outputFile,
             String include,
+            String exclude,
             Locale locale,
             boolean isReadFromStdin,
             boolean isEnvironmentExposed,
@@ -125,6 +129,7 @@ public class Settings {
         this.verbose = verbose;
         this.outputFile = outputFile;
         this.include = include;
+        this.exclude = exclude;
         this.locale = requireNonNull(locale);
         this.isReadFromStdin = isReadFromStdin;
         this.isEnvironmentExposed = isEnvironmentExposed;
@@ -181,6 +186,10 @@ public class Settings {
 
     public String getInclude() {
         return include;
+    }
+
+    public String getExclude() {
+        return exclude;
     }
 
     public Locale getLocale() {
@@ -249,6 +258,7 @@ public class Settings {
                 ", verbose=" + verbose +
                 ", outputFile=" + outputFile +
                 ", include='" + include + '\'' +
+                ", exclude='" + include + '\'' +
                 ", locale=" + locale +
                 ", isReadFromStdin=" + isReadFromStdin +
                 ", isEnvironmentExposed=" + isEnvironmentExposed +
@@ -274,6 +284,7 @@ public class Settings {
         private boolean verbose;
         private String outputFile;
         private String include;
+        private String exclude;
         private String locale;
         private boolean isReadFromStdin;
         private boolean isEnvironmentExposed;
@@ -349,6 +360,11 @@ public class Settings {
             return this;
         }
 
+        public SettingsBuilder setExclude(String exclude) {
+            this.exclude = exclude;
+            return this;
+        }
+
         public SettingsBuilder setLocale(String locale) {
             this.locale = locale;
             return this;
@@ -412,6 +428,7 @@ public class Settings {
                     verbose,
                     currOutputFile,
                     include,
+                    exclude,
                     LocaleUtils.parseLocale(currLocale),
                     isReadFromStdin,
                     isEnvironmentExposed,

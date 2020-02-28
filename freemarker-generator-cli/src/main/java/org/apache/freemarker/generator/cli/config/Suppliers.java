@@ -34,7 +34,10 @@ public class Suppliers {
     }
 
     public static DocumentsSupplier documentsSupplier(Settings settings) {
-        return new DocumentsSupplier(settings.getSources(), settings.getInclude(), settings.getInputEncoding());
+        return new DocumentsSupplier(settings.getSources(),
+                settings.getInclude(),
+                settings.getExclude(),
+                settings.getInputEncoding());
     }
 
     public static PropertiesSupplier propertiesSupplier(String fileName) {

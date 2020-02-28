@@ -88,6 +88,9 @@ public class Main implements Callable<Integer> {
     @Option(names = { "--include" }, description = "File pattern for document input directory")
     private String include;
 
+    @Option(names = { "--exclude" }, description = "File pattern for document input directory")
+    private String exclude;
+
     @Option(names = { "--output-encoding" }, description = "Encoding of output, e.g. UTF-8", defaultValue = "UTF-8")
     private String outputEncoding;
 
@@ -168,6 +171,7 @@ public class Main implements Callable<Integer> {
                 .setArgs(args)
                 .setConfiguration(configuration)
                 .setInclude(include)
+                .setExclude(exclude)
                 .setInputEncoding(inputEncoding)
                 .setInteractiveTemplate(templateSourceOptions.interactiveTemplate)
                 .setLocale(locale)

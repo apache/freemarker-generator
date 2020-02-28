@@ -193,10 +193,11 @@ Please note that generated PDF files are very likely not found since they requir
 
 Usage: freemarker-cli (-t=<template> | -i=<interactiveTemplate>) [-EhV]
                       [--stdin] [-b=<baseDir>] [--config=<configFile>]
-                      [-e=<inputEncoding>] [--include=<include>] [-l=<locale>]
-                      [-o=<outputFile>] [--output-encoding=<outputEncoding>]
-                      [--times=<times>] [-D=<String=String>]...
-                      [-P=<String=String>]... [<sources>...]
+                      [-e=<inputEncoding>] [--exclude=<exclude>]
+                      [--include=<include>] [-l=<locale>] [-o=<outputFile>]
+                      [--output-encoding=<outputEncoding>] [--times=<times>]
+                      [-D=<String=String>]... [-P=<String=String>]...
+                      [<sources>...]
 Apache FreeMarker CLI
       [<sources>...]        List of input files and/or input directories
   -b, --basedir=<baseDir>   Optional template base directory
@@ -204,17 +205,18 @@ Apache FreeMarker CLI
   -D, --system-property=<String=String>
                             Set system property
   -e, --input-encoding=<inputEncoding>
-                            Encoding of input file
+                            Encoding of input documents
   -E, --expose-env          Expose environment variables and user-supplied
                               properties globally
+      --exclude=<exclude>   File pattern for document input directory
   -h, --help                Show this help message and exit.
   -i, --interactive=<interactiveTemplate>
                             Interactive FreeMarker template
-      --include=<include>   File pattern for input directory
-  -l, --locale=<locale>     Locale being used for output file, e.g. 'en_US'
+      --include=<include>   File pattern for document input directory
+  -l, --locale=<locale>     Locale being used for the output, e.g. 'en_US'
   -o, --output=<outputFile> Output file
       --output-encoding=<outputEncoding>
-                            Encoding of output file, e.g. UTF-8
+                            Encoding of output, e.g. UTF-8
   -P, --param=<String=String>
                             Set parameter
       --stdin               Read input document from stdin

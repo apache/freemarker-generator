@@ -18,6 +18,8 @@ package org.apache.freemarker.generator.base.file;
 
 import org.apache.commons.io.filefilter.AndFileFilter;
 import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.NotFileFilter;
+import org.apache.commons.io.filefilter.OrFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 import java.io.File;
@@ -28,31 +30,44 @@ import java.util.function.Supplier;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
-import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.io.FileUtils.listFiles;
+import static org.apache.commons.io.filefilter.HiddenFileFilter.HIDDEN;
 import static org.apache.commons.io.filefilter.HiddenFileFilter.VISIBLE;
+import static org.apache.freemarker.generator.base.util.StringUtils.isEmpty;
 
 /**
- * Resolve a list of files or directories recursively and
- * skip hidden files &amp; directories.
+ * Resolve a list of files or directories recursively.
+ *
+ * <ul>
+ *     <li>Matching a list of include patterns</li>
+ *     <li>Matching a list of exclude patterns</li>
+ *     <li>Ignoring invisible files and directories</li>
+ * </ul>
  */
 public class RecursiveFileSupplier implements Supplier<List<File>> {
 
-    public static final String MATCH_ALL = "*";
-
+    /** List of sources containing files and directories */
     private final Collection<String> sources;
+
+    /** File filter to apply */
     private final IOFileFilter fileFilter;
+
+    /** Diectory filter to apply */
     private final IOFileFilter directoryFilter;
 
-    public RecursiveFileSupplier(Collection<String> sources, String includes) {
-        this.sources = requireNonNull(sources);
-        this.fileFilter = fileFilter(includes);
+    public RecursiveFileSupplier(Collection<String> sources, Collection<String> includes, Collection<String> excludes) {
+        this.sources = sources;
+        this.fileFilter = fileFilter(includes, excludes);
         this.directoryFilter = directoryFilter();
     }
 
     @Override
     public List<File> get() {
+        if (sources == null || sources.isEmpty()) {
+            return emptyList();
+        }
+
         return sources.stream()
                 .map(this::resolve)
                 .flatMap(Collection::stream)
@@ -79,12 +94,37 @@ public class RecursiveFileSupplier implements Supplier<List<File>> {
         return new ArrayList<>(listFiles(directory, fileFilter, directoryFilter));
     }
 
-    private static IOFileFilter fileFilter(String includes) {
-        if (includes == null || includes.trim().isEmpty()) {
-            return new AndFileFilter(new WildcardFileFilter(MATCH_ALL), VISIBLE);
-        } else {
-            return new AndFileFilter(new WildcardFileFilter(includes), VISIBLE);
+    private static IOFileFilter fileFilter(Collection<String> includes, Collection<String> excludes) {
+        final List<IOFileFilter> fileFilters = new ArrayList<>();
+        fileFilters.addAll(includeFilters(includes));
+        fileFilters.addAll(excludeFilters(excludes));
+        return new AndFileFilter(fileFilters);
+    }
+
+    private static List<IOFileFilter> includeFilters(Collection<String> includes) {
+        if (includes == null || includes.isEmpty()) {
+            return emptyList();
         }
+
+        return includes.stream().map(RecursiveFileSupplier::includeFilter).collect(toList());
+    }
+
+    private static IOFileFilter includeFilter(String include) {
+        return isEmpty(include) ? VISIBLE : new AndFileFilter(new WildcardFileFilter(include), VISIBLE);
+    }
+
+    private static List<IOFileFilter> excludeFilters(Collection<String> excludes) {
+        if (excludes == null || excludes.isEmpty()) {
+            return emptyList();
+        }
+
+        return excludes.stream().map(RecursiveFileSupplier::exludeFilter).collect(toList());
+    }
+
+    private static IOFileFilter exludeFilter(String exclude) {
+        return isEmpty(exclude) ?
+                VISIBLE :
+                new NotFileFilter(new OrFileFilter(new WildcardFileFilter(exclude), HIDDEN));
     }
 
     private static IOFileFilter directoryFilter() {
