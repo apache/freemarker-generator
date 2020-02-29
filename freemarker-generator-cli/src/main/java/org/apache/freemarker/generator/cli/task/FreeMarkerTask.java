@@ -37,6 +37,7 @@ import java.util.function.Supplier;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
+import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.Location.STDIN;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model.DATASOURCES;
 import static org.apache.freemarker.generator.cli.config.Suppliers.configurationSupplier;
@@ -89,7 +90,7 @@ public class FreeMarkerTask implements Callable<Integer> {
         // Add optional datasource from STDIN at the start of the list since
         // this allows easy sequence slicing in FreeMarker.
         if (settings.isReadFromStdin()) {
-            datasources.add(0, DatasourceFactory.create(STDIN, System.in, STDIN, UTF_8));
+            datasources.add(0, DatasourceFactory.create(STDIN, DEFAULT_GROUP, System.in, STDIN, UTF_8));
         }
 
         return new Datasources(datasources);

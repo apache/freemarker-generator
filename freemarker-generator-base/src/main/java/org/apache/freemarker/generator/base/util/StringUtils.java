@@ -21,4 +21,17 @@ public class StringUtils {
     public static boolean isEmpty(String value) {
         return value == null || value.trim().isEmpty();
     }
+
+    public static boolean isNotEmpty(String value) {
+        return !isEmpty(value);
+    }
+
+    public static String emptyToNull(String value) {
+        return value != null && value.trim().isEmpty() ? null : value;
+    }
+
+    public static String nullToEmpty(String value) {
+        return value == null ? "" : value;
+    }
+
 }

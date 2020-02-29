@@ -24,6 +24,7 @@ import static junit.framework.TestCase.assertEquals;
 
 public class PropertiesToolTest {
 
+    private static final String ANY_GROUP = "group";
     private static final String ANY_PROPERTIES_STRING = "foo=bar";
 
     @Test
@@ -43,6 +44,6 @@ public class PropertiesToolTest {
     }
 
     private Datasource datasource(String value) {
-        return DatasourceFactory.create("test.properties", value);
+        return DatasourceFactory.create("test.properties", ANY_GROUP, value);
     }
 }

@@ -16,7 +16,7 @@
   under the License.
 -->
 FreeMarker CLI Information
----------------------------------------------------------------------------
+------------------------------------------------------------------------------
 FreeMarker version     : ${.version}
 Template name          : ${.current_template_name}
 Language               : ${.lang}
@@ -26,13 +26,13 @@ Output encoding        : ${.output_encoding}
 Output format          : ${.output_format}
 
 FreeMarker CLI Template Directories
----------------------------------------------------------------------------
+------------------------------------------------------------------------------
 <#list SystemTool.getTemplateDirectories() as directory>
-[${directory?counter}] ${directory}
+[#${directory?counter}] ${directory}
 </#list>
 
 FreeMarker CLI Tools
----------------------------------------------------------------------------
+------------------------------------------------------------------------------
 <#list .data_model?keys?sort as key>
 <#if key?ends_with("Tool")>
 - ${key?right_pad(20)} : ${.data_model[key]}
@@ -40,25 +40,26 @@ FreeMarker CLI Tools
 </#list>
 
 FreeMarker CLI Datasources
----------------------------------------------------------------------------
+------------------------------------------------------------------------------
 <#list Datasources.list as datasource>
-[${datasource?counter}] ${datasource.name}, ${datasource.location}, ${datasource.length} Bytes
+[#${datasource?counter}], name=${datasource.name}, group=${datasource.group}, charset=${datasource.charset}, length= ${datasource.length} Bytes
+Location : ${datasource.location}
 </#list>
 
 User Supplied Parameters
----------------------------------------------------------------------------
+------------------------------------------------------------------------------
 <#list SystemTool.parameters as name,value>
 - ${name} ==> ${value}
 </#list>
 
 User Supplied System Properties
----------------------------------------------------------------------------
+------------------------------------------------------------------------------
 <#list SystemTool.userSystemProperties as name,value>
 - ${name} ==> ${value}
 </#list>
 
 SystemTool
----------------------------------------------------------------------------
+------------------------------------------------------------------------------
 Command line         : ${SystemTool.getCommandLineArgs()?join(", ")}
 Host Name            : ${SystemTool.getHostName()}
 Java Home            : ${SystemTool.getEnv("JAVA_HOME", "N.A.")}

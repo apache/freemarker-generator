@@ -34,7 +34,7 @@ public class Suppliers {
     }
 
     public static DatasourcesSupplier datasourcesSupplier(Settings settings) {
-        return new DatasourcesSupplier(settings.getSources(),
+        return new DatasourcesSupplier(settings.getDatasources(),
                 settings.getInclude(),
                 settings.getExclude(),
                 settings.getInputEncoding());

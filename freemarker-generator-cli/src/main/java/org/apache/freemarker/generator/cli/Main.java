@@ -16,6 +16,7 @@
  */
 package org.apache.freemarker.generator.cli;
 
+import org.apache.freemarker.generator.base.FreeMarkerConstants.GeneratorMode;
 import org.apache.freemarker.generator.base.util.ClosableUtils;
 import org.apache.freemarker.generator.base.util.StringUtils;
 import org.apache.freemarker.generator.cli.config.Settings;
@@ -33,13 +34,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 import static org.apache.freemarker.generator.cli.config.Suppliers.propertiesSupplier;
@@ -51,9 +55,9 @@ public class Main implements Callable<Integer> {
     private static final String FREEMARKER_CLI_PROPERTY_FILE = "freemarker-cli.properties";
 
     @ArgGroup(multiplicity = "1")
-    private TemplateSourceOptions templateSourceOptions;
+    TemplateSourceOptions templateSourceOptions;
 
-    private static final class TemplateSourceOptions {
+    static final class TemplateSourceOptions {
         @Option(names = { "-t", "--template" }, description = "FreeMarker template to render")
         private String template;
 
@@ -62,52 +66,62 @@ public class Main implements Callable<Integer> {
     }
 
     @Option(names = { "-b", "--basedir" }, description = "Optional template base directory")
-    private String baseDir;
+    String baseDir;
+
+    @Option(names = { "-d", "--datasource" }, description = "Datasource used for rendering")
+    List<String> datasources;
 
     @Option(names = { "-D", "--system-property" }, description = "Set system property")
-    private Properties systemProperties;
+    Properties systemProperties;
 
     @Option(names = { "-e", "--input-encoding" }, description = "Encoding of datasource", defaultValue = "UTF-8")
-    private String inputEncoding;
+    String inputEncoding;
 
     @Option(names = { "-E", "--expose-env" }, description = "Expose environment variables and user-supplied properties globally")
-    private boolean isEnvironmentExposed;
+    boolean isEnvironmentExposed;
 
     @Option(names = { "-l", "--locale" }, description = "Locale being used for the output, e.g. 'en_US'")
-    private String locale;
+    String locale;
+
+    @Option(names = { "-m", "--mode" }, description = "[template|datasource]", defaultValue = "TEMPLATE")
+    GeneratorMode mode;
 
     @Option(names = { "-o", "--output" }, description = "Output file")
-    private String outputFile;
+    String outputFile;
 
     @Option(names = { "-P", "--param" }, description = "Set parameter")
-    private Map<String, String> parameters;
+    Map<String, String> parameters;
 
     @Option(names = { "--config" }, defaultValue = FREEMARKER_CLI_PROPERTY_FILE, description = "FreeMarker CLI configuration file")
-    private String configFile;
+    String configFile;
 
     @Option(names = { "--include" }, description = "File pattern for datasource input directory")
-    private String include;
+    String include;
 
     @Option(names = { "--exclude" }, description = "File pattern for datasource input directory")
-    private String exclude;
+    String exclude;
 
     @Option(names = { "--output-encoding" }, description = "Encoding of output, e.g. UTF-8", defaultValue = "UTF-8")
-    private String outputEncoding;
+    String outputEncoding;
 
     @Option(names = { "--stdin" }, description = "Read datasource from stdin")
-    private boolean readFromStdin;
+    boolean readFromStdin;
 
     @Option(names = { "--times" }, defaultValue = "1", description = "Re-run X times for profiling")
-    private int times;
+    int times;
 
     @Parameters(description = "List of input files and/or input directories")
-    private List<String> sources;
+    List<String> sources;
 
     /** User-supplied command line parameters */
-    private final String[] args;
+    final String[] args;
 
     /** User-supplied writer (used mainly for unit testing) */
-    private Writer userSuppliedWriter;
+    Writer userSuppliedWriter;
+
+    Main() {
+        this.args = new String[0];
+    }
 
     private Main(String[] args) {
         this.args = requireNonNull(args);
@@ -178,7 +192,7 @@ public class Main implements Callable<Integer> {
                 .setOutputEncoding(outputEncoding)
                 .setOutputFile(outputFile)
                 .setParameters(parameters != null ? parameters : new HashMap<>())
-                .setSources(sources != null ? sources : new ArrayList<>())
+                .setDatasources(getCombindedDatasources())
                 .setSystemProperties(systemProperties != null ? systemProperties : new Properties())
                 .setTemplateDirectories(templateDirectories)
                 .setTemplateName(templateSourceOptions.template)
@@ -204,6 +218,27 @@ public class Main implements Callable<Integer> {
         if (systemProperties != null && !systemProperties.isEmpty()) {
             System.getProperties().putAll(systemProperties);
         }
+    }
+
+    /**
+     * Datasources can be passed via command line option and/or
+     * positional parameter so we need to merge them.
+     *
+     * @return List of datasources
+     */
+    private List<String> getCombindedDatasources() {
+        if (isTemplateDrivenGeneration()) {
+            return Stream.of(datasources, sources)
+                    .filter(Objects::nonNull)
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toList());
+        } else {
+            throw new IllegalArgumentException("Not implemented yet");
+        }
+    }
+
+    private boolean isTemplateDrivenGeneration() {
+        return mode == GeneratorMode.TEMPLATE;
     }
 
     private static List<File> getTemplateDirectories(String baseDir) {

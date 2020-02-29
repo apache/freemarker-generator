@@ -14,21 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.base.util;
+package org.apache.freemarker.generator.base.uri;
 
-import java.util.Locale;
+import java.util.Arrays;
+import java.util.Map;
 
+import static java.util.Collections.emptyMap;
+import static java.util.stream.Collectors.toMap;
 import static org.apache.freemarker.generator.base.util.StringUtils.isEmpty;
 
-public class LocaleUtils {
+/**
+ * Parses the URI fragment as list of name/value pairs seperated by an ampersand.
+ */
+public class NamedUriFragmentParser {
 
-    public static Locale parseLocale(String value) {
-        // "JVM default" is a special value defined by FreeMarker
-        if (isEmpty(value) || value.equalsIgnoreCase("JVM default") || value.equalsIgnoreCase("default")) {
-            return Locale.getDefault();
+    public static Map<String, String> parse(String fragment) {
+        if (isEmpty(fragment)) {
+            return emptyMap();
         }
 
-        final String[] parts = value.split("_");
-        return parts.length == 1 ? new Locale(parts[0]) : new Locale(parts[0], parts[1]);
+        try {
+            final String[] nameValuePairs = fragment.split("&");
+            return Arrays.stream(nameValuePairs)
+                    .map(s -> s.split("="))
+                    .collect(toMap(parts -> parts[0], parts -> parts[1]));
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Unable to parse URI fragment: " + fragment, e);
+        }
     }
 }

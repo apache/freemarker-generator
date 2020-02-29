@@ -17,6 +17,7 @@
 package org.apache.freemarker.generator.base.datasource;
 
 import org.apache.freemarker.generator.base.util.ClosableUtils;
+import org.apache.freemarker.generator.base.util.StringUtils;
 
 import java.io.Closeable;
 import java.util.ArrayList;
@@ -46,6 +47,21 @@ public class Datasources implements Closeable {
     public List<String> getNames() {
         return datasources.stream()
                 .map(Datasource::getName)
+                .filter(StringUtils::isNotEmpty)
+                .collect(toList());
+    }
+
+    /**
+     * Get the groups of all datasources.
+     *
+     * @return datasource names
+     */
+    public List<String> getGroups() {
+        return datasources.stream()
+                .map(Datasource::getGroup)
+                .filter(StringUtils::isNotEmpty)
+                .sorted()
+                .distinct()
                 .collect(toList());
     }
 
@@ -67,14 +83,6 @@ public class Datasources implements Closeable {
 
     public Datasource get(int index) {
         return datasources.get(index);
-    }
-
-    public boolean add(Datasource datasource) {
-        return datasources.add(datasource);
-    }
-
-    public Datasource remove(int index) {
-        return datasources.remove(index);
     }
 
     /**
@@ -107,6 +115,18 @@ public class Datasources implements Closeable {
     public List<Datasource> find(String wildcard) {
         return datasources.stream()
                 .filter(d -> wildcardMatch(d.getName(), wildcard))
+                .collect(toList());
+    }
+
+    /**
+     * Find datasources based on their group and and globbing pattern.
+     *
+     * @param wildcard globbing pattern
+     * @return list of mathching datasources
+     */
+    public List<Datasource> findByGroup(String wildcard) {
+        return datasources.stream()
+                .filter(d -> wildcardMatch(d.getGroup(), wildcard))
                 .collect(toList());
     }
 

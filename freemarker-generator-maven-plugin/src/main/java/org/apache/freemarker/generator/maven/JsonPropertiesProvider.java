@@ -54,6 +54,7 @@ public class JsonPropertiesProvider implements OutputGeneratorPropertiesProvider
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void providePropertiesFromFile(Path path, OutputGenerator.OutputGeneratorBuilder builder) {
         final File jsonDataFile = path.toFile();
         final Map<String, Object> data = parseJson(jsonDataFile);
