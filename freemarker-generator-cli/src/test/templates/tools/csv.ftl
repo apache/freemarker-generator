@@ -15,7 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign records = CSVTool.parse(Documents.get(0), CSVFormat.DEFAULT.withHeader()).records>
+<#assign records = CSVTool.parse(Datasources.get(0), CSVFormat.DEFAULT.withHeader()).records>
 
 CSVTool.toMap(name)
 =============================================================================

@@ -14,10 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.document;
+package org.apache.freemarker.generator.datasource;
 
-import org.apache.freemarker.generator.base.document.Document;
-import org.apache.freemarker.generator.base.document.DocumentsSupplier;
+import org.apache.freemarker.generator.base.datasource.Datasource;
+import org.apache.freemarker.generator.base.datasource.DatasourcesSupplier;
 import org.junit.Test;
 
 import java.nio.charset.Charset;
@@ -28,7 +28,7 @@ import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-public class DocumentsSupplierTest {
+public class DatasourcesSupplierTest {
 
     private static final String NO_EXCLUDE = null;
     private static final String ANY_FILE = "./pom.xml";
@@ -85,8 +85,8 @@ public class DocumentsSupplierTest {
 
     @Test
     public void shouldResolveLargeDirectory() {
-        final List<Document> documents = supplier(".", null, null).get();
-        assertFalse(documents.isEmpty());
+        final List<Datasource> datasources = supplier(".", null, null).get();
+        assertFalse(datasources.isEmpty());
     }
 
     @Test(expected = RuntimeException.class)
@@ -100,11 +100,11 @@ public class DocumentsSupplierTest {
         assertEquals(2, supplier(sources, "*.xml", null).get().size());
     }
 
-    private static DocumentsSupplier supplier(String directory, String include, String exclude) {
-        return new DocumentsSupplier(singletonList(directory), include, exclude, Charset.defaultCharset());
+    private static DatasourcesSupplier supplier(String directory, String include, String exclude) {
+        return new DatasourcesSupplier(singletonList(directory), include, exclude, Charset.defaultCharset());
     }
 
-    private static DocumentsSupplier supplier(List<String> files, String include, String exclude) {
-        return new DocumentsSupplier(files, include, exclude, Charset.defaultCharset());
+    private static DatasourcesSupplier supplier(List<String> files, String include, String exclude) {
+        return new DatasourcesSupplier(files, include, exclude, Charset.defaultCharset());
     }
 }

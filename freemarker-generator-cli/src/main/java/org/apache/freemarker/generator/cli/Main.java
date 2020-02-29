@@ -67,7 +67,7 @@ public class Main implements Callable<Integer> {
     @Option(names = { "-D", "--system-property" }, description = "Set system property")
     private Properties systemProperties;
 
-    @Option(names = { "-e", "--input-encoding" }, description = "Encoding of input documents", defaultValue = "UTF-8")
+    @Option(names = { "-e", "--input-encoding" }, description = "Encoding of datasource", defaultValue = "UTF-8")
     private String inputEncoding;
 
     @Option(names = { "-E", "--expose-env" }, description = "Expose environment variables and user-supplied properties globally")
@@ -85,16 +85,16 @@ public class Main implements Callable<Integer> {
     @Option(names = { "--config" }, defaultValue = FREEMARKER_CLI_PROPERTY_FILE, description = "FreeMarker CLI configuration file")
     private String configFile;
 
-    @Option(names = { "--include" }, description = "File pattern for document input directory")
+    @Option(names = { "--include" }, description = "File pattern for datasource input directory")
     private String include;
 
-    @Option(names = { "--exclude" }, description = "File pattern for document input directory")
+    @Option(names = { "--exclude" }, description = "File pattern for datasource input directory")
     private String exclude;
 
     @Option(names = { "--output-encoding" }, description = "Encoding of output, e.g. UTF-8", defaultValue = "UTF-8")
     private String outputEncoding;
 
-    @Option(names = { "--stdin" }, description = "Read input document from stdin")
+    @Option(names = { "--stdin" }, description = "Read datasource from stdin")
     private boolean readFromStdin;
 
     @Option(names = { "--times" }, defaultValue = "1", description = "Re-run X times for profiling")

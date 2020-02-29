@@ -16,7 +16,7 @@
  */
 package org.apache.freemarker.generator.tools.snakeyaml;
 
-import org.apache.freemarker.generator.base.document.Document;
+import org.apache.freemarker.generator.base.datasource.Datasource;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -25,11 +25,11 @@ import java.util.Map;
 
 public class SnakeYamlTool {
 
-    public Map<String, Object> parse(Document document) {
-        try (InputStream is = document.getUnsafeInputStream()) {
+    public Map<String, Object> parse(Datasource datasource) {
+        try (InputStream is = datasource.getUnsafeInputStream()) {
             return new Yaml().load(is);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load YAML document: " + document, e);
+            throw new RuntimeException("Failed to load YAML datasource: " + datasource, e);
         }
     }
 

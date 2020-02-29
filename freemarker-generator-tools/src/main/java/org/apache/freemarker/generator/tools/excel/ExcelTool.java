@@ -16,7 +16,7 @@
  */
 package org.apache.freemarker.generator.tools.excel;
 
-import org.apache.freemarker.generator.base.document.Document;
+import org.apache.freemarker.generator.base.datasource.Datasource;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.DataFormatter;
@@ -47,13 +47,13 @@ public class ExcelTool {
     private static final SimpleDateFormat TIME_DATE_FORMAT = new SimpleDateFormat("HH:mm:ss");
     private static final SimpleDateFormat YEAR_TIME_FORMAT = new SimpleDateFormat("yyyy");
 
-    public Workbook parse(Document document) {
-        try (InputStream is = document.getUnsafeInputStream()) {
+    public Workbook parse(Datasource datasource) {
+        try (InputStream is = datasource.getUnsafeInputStream()) {
             final Workbook workbook = WorkbookFactory.create(is);
-            // make sure that the workbook is closed together with the document
-            return document.addClosable(workbook);
+            // make sure that the workbook is closed together with the datasource
+            return datasource.addClosable(workbook);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to parse Ecxel document: " + document, e);
+            throw new RuntimeException("Failed to parse Ecxel datasource: " + datasource, e);
         }
     }
 

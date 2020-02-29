@@ -20,8 +20,8 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
-import org.apache.freemarker.generator.base.document.Document;
-import org.apache.freemarker.generator.base.document.DocumentFactory;
+import org.apache.freemarker.generator.base.datasource.Datasource;
+import org.apache.freemarker.generator.base.datasource.DatasourceFactory;
 import org.junit.Test;
 
 import java.io.File;
@@ -48,7 +48,7 @@ public class CommonsCSVToolTest {
 
     @Test
     public void shallParseCvsFile() throws IOException {
-        try (CSVParser parser = commonsCsvTool().parse(document(), DEFAULT.withHeader())) {
+        try (CSVParser parser = commonsCsvTool().parse(datasource(), DEFAULT.withHeader())) {
             assertNotNull(parser);
             assertEquals(32, parser.getHeaderMap().size());
             assertEquals(22, parser.getRecords().size());
@@ -57,7 +57,7 @@ public class CommonsCSVToolTest {
 
     @Test
     public void shallParseCvsString() throws IOException {
-        try (CSVParser parser = commonsCsvTool().parse(document().getText(), DEFAULT.withHeader())) {
+        try (CSVParser parser = commonsCsvTool().parse(datasource().getText(), DEFAULT.withHeader())) {
             assertNotNull(parser);
             assertEquals(32, parser.getHeaderMap().size());
             assertEquals(22, parser.getRecords().size());
@@ -69,7 +69,7 @@ public class CommonsCSVToolTest {
         final CommonsCSVTool commonsCsvTool = commonsCsvTool();
         final List<String> keys;
 
-        try (CSVParser parser = commonsCsvTool.parse(document(), DEFAULT.withHeader())) {
+        try (CSVParser parser = commonsCsvTool.parse(datasource(), DEFAULT.withHeader())) {
             keys = commonsCsvTool.toKeys(parser.getRecords(), CONTRACT_ID);
         }
 
@@ -89,7 +89,7 @@ public class CommonsCSVToolTest {
         final CommonsCSVTool commonsCsvTool = commonsCsvTool();
         final Map<String, CSVRecord> map;
 
-        try (CSVParser parser = commonsCsvTool.parse(document(), DEFAULT.withHeader())) {
+        try (CSVParser parser = commonsCsvTool.parse(datasource(), DEFAULT.withHeader())) {
             map = commonsCsvTool.toMap(parser.getRecords(), CONTRACT_ID);
         }
 
@@ -102,7 +102,7 @@ public class CommonsCSVToolTest {
         final CommonsCSVTool commonsCsvTool = commonsCsvTool();
         final Map<String, List<CSVRecord>> map;
 
-        try (CSVParser parser = commonsCsvTool.parse(document(), DEFAULT.withHeader())) {
+        try (CSVParser parser = commonsCsvTool.parse(datasource(), DEFAULT.withHeader())) {
             map = commonsCsvTool.toMultiMap(parser.getRecords(), CONTRACT_ID);
         }
 
@@ -116,7 +116,7 @@ public class CommonsCSVToolTest {
         final CSVFormat cvsFormat = DEFAULT.withHeader();
         final Writer writer = new StringWriter();
 
-        try (CSVParser parser = commonsCsvTool.parse(document(), cvsFormat)) {
+        try (CSVParser parser = commonsCsvTool.parse(datasource(), cvsFormat)) {
             try (CSVPrinter printer = commonsCsvTool.printer(cvsFormat, writer)) {
                 printer.printRecord(parser.getHeaderMap());
             }
@@ -127,7 +127,7 @@ public class CommonsCSVToolTest {
 
     @Test
     public void shallStripBomFromCsvFile() throws IOException {
-        try (CSVParser parser = commonsCsvTool().parse(document(BOM_CSV), EXCEL.withHeader().withDelimiter(';'))) {
+        try (CSVParser parser = commonsCsvTool().parse(datasource(BOM_CSV), EXCEL.withHeader().withDelimiter(';'))) {
             assertEquals("Text", parser.getHeaderNames().get(0));
         }
     }
@@ -139,12 +139,12 @@ public class CommonsCSVToolTest {
         assertEquals('^', commonsCsvTool().toDelimiter("^"));
     }
 
-    private Document document() {
-        return document(TEST_CSV);
+    private Datasource datasource() {
+        return datasource(TEST_CSV);
     }
 
-    private Document document(File file) {
-        return DocumentFactory.create(file, UTF_8);
+    private Datasource datasource(File file) {
+        return DatasourceFactory.create(file, UTF_8);
     }
 
     private CommonsCSVTool commonsCsvTool() {

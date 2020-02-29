@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.base.document;
+package org.apache.freemarker.generator.base.datasource;
 
 import org.apache.freemarker.generator.base.file.RecursiveFileSupplier;
 
@@ -31,10 +31,10 @@ import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 
 /**
- * Create a list of <code>Document</code> based on a list of sources consisting of
+ * Create a list of <code>Datasource</code> based on a list of sources consisting of
  * URLs, directories and files.
  */
-public class DocumentsSupplier implements Supplier<List<Document>> {
+public class DatasourcesSupplier implements Supplier<List<Datasource>> {
 
     /** List of source files and/or directories */
     private final Collection<String> sources;
@@ -55,7 +55,7 @@ public class DocumentsSupplier implements Supplier<List<Document>> {
      * @param include Optional include pattern for resolving source files or directory
      * @param charset The charset for loading text files
      */
-    public DocumentsSupplier(Collection<String> sources, String include, String exclude, Charset charset) {
+    public DatasourcesSupplier(Collection<String> sources, String include, String exclude, Charset charset) {
         this.sources = new ArrayList<>(sources);
         this.include = include;
         this.exclude = exclude;
@@ -63,14 +63,14 @@ public class DocumentsSupplier implements Supplier<List<Document>> {
     }
 
     @Override
-    public List<Document> get() {
+    public List<Datasource> get() {
         return sources.stream()
                 .map(this::get)
                 .flatMap(Collection::stream)
                 .collect(toList());
     }
 
-    private List<Document> get(String source) {
+    private List<Datasource> get(String source) {
         if (isHttpUrl(source)) {
             return singletonList(resolveHttpUrl(source));
         } else {
@@ -78,13 +78,13 @@ public class DocumentsSupplier implements Supplier<List<Document>> {
         }
     }
 
-    private static Document resolveHttpUrl(String url) {
-        return DocumentFactory.create(toUrl(url));
+    private static Datasource resolveHttpUrl(String url) {
+        return DatasourceFactory.create(toUrl(url));
     }
 
-    private static List<Document> resolveFile(String source, String include, String exclude, Charset charset) {
+    private static List<Datasource> resolveFile(String source, String include, String exclude, Charset charset) {
         return fileResolver(source, include, exclude).get().stream()
-                .map(file -> DocumentFactory.create(file, charset))
+                .map(file -> DatasourceFactory.create(file, charset))
                 .collect(toList());
     }
 

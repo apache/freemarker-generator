@@ -21,7 +21,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.input.BOMInputStream;
-import org.apache.freemarker.generator.base.document.Document;
+import org.apache.freemarker.generator.base.datasource.Datasource;
 import org.apache.freemarker.generator.base.util.StringUtils;
 
 import java.io.IOException;
@@ -44,23 +44,23 @@ import static org.apache.commons.io.IOUtils.toInputStream;
 
 public class CommonsCSVTool {
 
-    public CSVParser parse(Document document) {
-        return parse(document, CSVFormat.DEFAULT);
+    public CSVParser parse(Datasource da) {
+        return parse(da, CSVFormat.DEFAULT);
     }
 
-    public CSVParser parse(Document document, CSVFormat format) {
-        if (document == null) {
-            throw new IllegalArgumentException("No document was provided");
+    public CSVParser parse(Datasource datasource, CSVFormat format) {
+        if (datasource == null) {
+            throw new IllegalArgumentException("No datasource was provided");
         }
 
         try {
             // As stated in the documentation : "If you do not read all records from the given {@code reader},
             // you should call {@link #close()} on the parser, unless you close the {@code reader}."
-            // The underlying input stream is closed by the document by its "CloseableReaper".
-            final InputStream is = new BOMInputStream(document.getInputStream(), false);
-            return parse(is, document.getCharset(), format);
+            // The underlying input stream is closed by the datasource by its "CloseableReaper".
+            final InputStream is = new BOMInputStream(datasource.getInputStream(), false);
+            return parse(is, datasource.getCharset(), format);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to parse CSV: " + document, e);
+            throw new RuntimeException("Failed to parse CSV: " + datasource, e);
         }
     }
 

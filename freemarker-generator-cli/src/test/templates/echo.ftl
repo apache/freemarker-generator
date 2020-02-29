@@ -15,8 +15,8 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#list Documents.list as document>
-${document.name}, ${document.location}
+<#list Datasources.list as datasource>
+${datasource.name}, ${datasource.location}
 =============================================================================
-${document.text}
+${datasource.text}
 </#list>

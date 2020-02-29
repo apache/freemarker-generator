@@ -27,7 +27,7 @@
 
     <artifactId>freemarker-generator-tools</artifactId>
     <name>Apache FreeMarker Generator: Tools</name>
-    <description>Document processing tools for Apache FreeMarker Generator</description>
+    <description>Datasource processing tools for Apache FreeMarker Generator</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

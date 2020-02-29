@@ -16,8 +16,8 @@
  */
 package org.apache.freemarker.generator.tools.properties;
 
-import org.apache.freemarker.generator.base.document.Document;
-import org.apache.freemarker.generator.base.document.DocumentFactory;
+import org.apache.freemarker.generator.base.datasource.Datasource;
+import org.apache.freemarker.generator.base.datasource.DatasourceFactory;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
@@ -27,9 +27,9 @@ public class PropertiesToolTest {
     private static final String ANY_PROPERTIES_STRING = "foo=bar";
 
     @Test
-    public void shallParsePropertiesDocument() {
-        try (Document document = document(ANY_PROPERTIES_STRING)) {
-            assertEquals("bar", propertiesTool().parse(document).getProperty("foo"));
+    public void shallParsePropertiesDatasource() {
+        try (Datasource datasource = datasource(ANY_PROPERTIES_STRING)) {
+            assertEquals("bar", propertiesTool().parse(datasource).getProperty("foo"));
         }
     }
 
@@ -42,7 +42,7 @@ public class PropertiesToolTest {
         return new PropertiesTool();
     }
 
-    private Document document(String value) {
-        return DocumentFactory.create("test.properties", value);
+    private Datasource datasource(String value) {
+        return DatasourceFactory.create("test.properties", value);
     }
 }

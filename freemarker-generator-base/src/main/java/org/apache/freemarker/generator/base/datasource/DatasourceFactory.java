@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.base.document;
+package org.apache.freemarker.generator.base.datasource;
 
 import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.activation.ByteArrayDataSource;
@@ -32,45 +32,45 @@ import java.nio.charset.Charset;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
- * Creates a document from various sources.
+ * Creates a Datasource from various sources.
  */
-public class DocumentFactory {
+public class DatasourceFactory {
 
-    private DocumentFactory() {
+    private DatasourceFactory() {
     }
 
-    public static Document create(URL url) {
+    public static Datasource create(URL url) {
         final String location = url.getProtocol() + "://" + url.getHost();
         final URLDataSource dataSource = new URLDataSource(url);
         return create(url.getHost(), dataSource, location, UTF_8);
     }
 
-    public static Document create(String name, String content) {
+    public static Datasource create(String name, String content) {
         final StringDataSource dataSource = new StringDataSource(name, content, UTF_8);
         return create(name, dataSource, Location.STRING, UTF_8);
     }
 
-    public static Document create(File file, Charset charset) {
+    public static Datasource create(File file, Charset charset) {
         final FileDataSource dataSource = new FileDataSource(file);
         return create(file.getName(), dataSource, file.getAbsolutePath(), charset);
     }
 
-    public static Document create(String name, byte[] content) {
+    public static Datasource create(String name, byte[] content) {
         final ByteArrayDataSource dataSource = new ByteArrayDataSource(name, content);
         return create(name, dataSource, Location.BYTES, UTF_8);
     }
 
-    public static Document create(String name, InputStream is, Charset charset) {
+    public static Datasource create(String name, InputStream is, Charset charset) {
         final InputStreamDataSource dataSource = new InputStreamDataSource(name, is);
         return create(name, dataSource, Location.INPUTSTREAM, charset);
     }
 
-    public static Document create(String name, InputStream is, String location, Charset charset) {
+    public static Datasource create(String name, InputStream is, String location, Charset charset) {
         final InputStreamDataSource dataSource = new InputStreamDataSource(name, is);
         return create(name, dataSource, location, charset);
     }
 
-    public static Document create(String name, DataSource dataSource, String location, Charset charset) {
-        return new Document(name, dataSource, location, charset);
+    public static Datasource create(String name, DataSource dataSource, String location, Charset charset) {
+        return new Datasource(name, dataSource, location, charset);
     }
 }
