@@ -5,13 +5,14 @@ All notable changes to this project will be documented in this file. We try to a
 ## 0.1.0-SNAPSHOT
 
 ### Added
-* [FREEMARKER-129] Support document exclude pattern in addition to include pattern
+* [FREEMARKER-135] Support user-supplied names for `Datasource` on the command line
+* [FREEMARKER-129] Support `Datasource` exclude pattern in addition to include pattern
 * [FREEMARKER-129] User-defined parameters are passed as `-Pkey=value` instead of using system properties
-* [FREEMARKER-129] Add `freemarker-generator-maven-plugin-sample`
+* [FREEMARKER-129] Add `freemarker-generator-maven-plugin-sample` for better testing
 * [FREEMARKER-129] Migrate `freemarker-cli` into `freemarker-generator` project (see [https://github.com/sgoeschl/freemarker-cli](https://github.com/sgoeschl/freemarker-cli))
 
 ### Changed
-* [FREEMARKER-134] Rename `Document` to `Datasource
+* [FREEMARKER-134] Rename `Document` to `Datasource` which also changes `--document` to `--datasource`
 * [FREEMARKER-129] Use `freemarker.configuration.setting` in `freemarker-cli.properties` to configure FreeMarker
 * [FREEMARKER-129] Provide a `toString()` metheod for all tools
 * [FREEMARKER-129] Use version "0.X.Y" to cater for API changes according to [Semantic Versioning](https://semver.org)
@@ -26,4 +27,5 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-127]: https://issues.apache.org/jira/browse/FREEMARKER-127
 [FREEMARKER-128]: https://issues.apache.org/jira/browse/FREEMARKER-128
 [FREEMARKER-129]: https://issues.apache.org/jira/browse/FREEMARKER-129
-[FREEMARKER-`134`]: https://issues.apache.org/jira/browse/FREEMARKER-134
+[FREEMARKER-134]: https://issues.apache.org/jira/browse/FREEMARKER-134
+[FREEMARKER-135]: https://issues.apache.org/jira/browse/FREEMARKER-135
