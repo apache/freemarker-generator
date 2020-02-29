@@ -15,13 +15,13 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign document = Documents.get(0)>
-<#assign documentName = document.name>
-<#assign workbook = ExcelTool.parse(document)>
+<#assign datasource = Datasources.get(0)>
+<#assign name = datasource.name>
+<#assign workbook = ExcelTool.parse(datasource)>
 <#assign date = .now?iso_utc>
 
 <#compress>
-    # ${documentName}
+    # ${name}
     <@writeSheets workbook/>
 </#compress>
 ${'\n'}

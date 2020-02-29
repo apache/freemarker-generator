@@ -16,8 +16,8 @@
  */
 package org.apache.freemarker.generator.tools.snakeyaml;
 
-import org.apache.freemarker.generator.base.document.Document;
-import org.apache.freemarker.generator.base.document.DocumentFactory;
+import org.apache.freemarker.generator.base.datasource.Datasource;
+import org.apache.freemarker.generator.base.datasource.DatasourceFactory;
 import org.junit.Test;
 
 import java.util.List;
@@ -34,9 +34,9 @@ public class SnakeYamlToolTest {
             "    - image: postgres:9.4.1";
 
     @Test
-    public void shallParseYamlDocument() {
-        try (Document document = document(ANY_YAML_STRING)) {
-            final Map<String, Object> map = snakeYamlTool().parse(document);
+    public void shallParseYamlDatasource() {
+        try (Datasource datasource = datasource(ANY_YAML_STRING)) {
+            final Map<String, Object> map = snakeYamlTool().parse(datasource);
 
             assertEquals(1, map.size());
             assertEquals(3, ((List<?>) map.get("docker")).size());
@@ -55,7 +55,7 @@ public class SnakeYamlToolTest {
         return new SnakeYamlTool();
     }
 
-    private Document document(String value) {
-        return DocumentFactory.create("test.yml", value);
+    private Datasource datasource(String value) {
+        return DatasourceFactory.create("test.yml", value);
     }
 }

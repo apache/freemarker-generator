@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.base.document;
+package org.apache.freemarker.generator.base.datasource;
 
 import org.apache.freemarker.generator.base.util.ClosableUtils;
 
@@ -27,98 +27,98 @@ import static java.util.stream.Collectors.toList;
 import static org.apache.commons.io.FilenameUtils.wildcardMatch;
 
 /**
- * Container for documents with a couple of convenience functions to select
- * a subset of documents.
+ * Container for datasources with a couple of convenience functions to select
+ * a subset of datasources.
  */
-public class Documents implements Closeable {
+public class Datasources implements Closeable {
 
-    private final List<Document> documents;
+    private final List<Datasource> datasources;
 
-    public Documents(Collection<Document> documents) {
-        this.documents = new ArrayList<>(documents);
+    public Datasources(Collection<Datasource> datasources) {
+        this.datasources = new ArrayList<>(datasources);
     }
 
     /**
-     * Get the names of all documents.
+     * Get the names of all datasources.
      *
-     * @return document names
+     * @return datasource names
      */
     public List<String> getNames() {
-        return documents.stream()
-                .map(Document::getName)
+        return datasources.stream()
+                .map(Datasource::getName)
                 .collect(toList());
     }
 
     public int size() {
-        return documents.size();
+        return datasources.size();
     }
 
     public boolean isEmpty() {
-        return documents.isEmpty();
+        return datasources.isEmpty();
     }
 
-    public Document getFirst() {
-        return documents.get(0);
+    public Datasource getFirst() {
+        return datasources.get(0);
     }
 
-    public List<Document> getList() {
-        return new ArrayList<>(documents);
+    public List<Datasource> getList() {
+        return new ArrayList<>(datasources);
     }
 
-    public Document get(int index) {
-        return documents.get(index);
+    public Datasource get(int index) {
+        return datasources.get(index);
     }
 
-    public boolean add(Document document) {
-        return documents.add(document);
+    public boolean add(Datasource datasource) {
+        return datasources.add(datasource);
     }
 
-    public Document remove(int index) {
-        return documents.remove(index);
+    public Datasource remove(int index) {
+        return datasources.remove(index);
     }
 
     /**
-     * Get exactly one document. If not exactly one document
+     * Get exactly one datasource. If not exactly one datasource
      * is found an exception is thrown.
      *
-     * @param name name of the document
-     * @return document
+     * @param name name of the datasource
+     * @return datasource
      */
-    public Document get(String name) {
-        final List<Document> list = find(name);
+    public Datasource get(String name) {
+        final List<Datasource> list = find(name);
 
         if (list.isEmpty()) {
-            throw new IllegalArgumentException("Document not found : " + name);
+            throw new IllegalArgumentException("Datasource not found : " + name);
         }
 
         if (list.size() > 1) {
-            throw new IllegalArgumentException("More than one document found : " + name);
+            throw new IllegalArgumentException("More than one datasource found : " + name);
         }
 
         return list.get(0);
     }
 
     /**
-     * Find document based on theit name and globbing pattern.
+     * Find datasources based on their name and globbing pattern.
      *
      * @param wildcard globbing pattern
-     * @return list of mathching documents
+     * @return list of mathching datasources
      */
-    public List<Document> find(String wildcard) {
-        return documents.stream()
+    public List<Datasource> find(String wildcard) {
+        return datasources.stream()
                 .filter(d -> wildcardMatch(d.getName(), wildcard))
                 .collect(toList());
     }
 
     @Override
     public void close() {
-        documents.forEach(ClosableUtils::closeQuietly);
+        datasources.forEach(ClosableUtils::closeQuietly);
     }
 
     @Override
     public String toString() {
-        return "Documents{" +
-                "documents=" + documents +
+        return "Datasources{" +
+                "datasources=" + datasources +
                 '}';
     }
 }

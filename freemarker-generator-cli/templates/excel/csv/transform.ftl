@@ -16,8 +16,8 @@
   under the License.
 -->
 <#assign format = SystemTool.parameters["csv.format"]!"DEFAULT">
-<#-- Parse the first document & sheet of the Excel document -->
-<#assign workbook = ExcelTool.parse(Documents.get(0))>
+<#-- Parse the first datasource & sheet of the Excel document -->
+<#assign workbook = ExcelTool.parse(Datasources.get(0))>
 <#assign sheet = ExcelTool.getSheets(workbook)[0]>
 <#assign records = ExcelTool.toTable(sheet)>
 <#-- Setup CSVPrinter  -->

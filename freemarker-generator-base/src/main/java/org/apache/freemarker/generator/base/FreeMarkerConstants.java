@@ -17,8 +17,8 @@ public class FreeMarkerConstants {
     /** Content type for binary data */
     public static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
 
-    /** Unknown length for a <code>Document </code> */
-    public static final int DOCUMENT_UNKNOWN_LENGTH = -1;
+    /** Unknown length for a <code>Datasource</code> */
+    public static final int DATASOURCE_UNKNOWN_LENGTH = -1;
 
     /** Default locale for rendering templates */
     public static final Locale DEFAULT_LOCALE = US;
@@ -59,7 +59,7 @@ public class FreeMarkerConstants {
         private Model() {
         }
 
-        public static final String DOCUMENTS = "Documents";
+        public static final String DATASOURCES = "Datasources";
 
         public static final String FREEMARKER_CLI_ARGS = "freemarker.cli.args";
         public static final String FREEMARKER_LOCALE = "freemarker.locale";

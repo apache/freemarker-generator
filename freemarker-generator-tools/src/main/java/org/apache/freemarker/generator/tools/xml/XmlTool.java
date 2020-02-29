@@ -17,7 +17,7 @@
 package org.apache.freemarker.generator.tools.xml;
 
 import freemarker.ext.dom.NodeModel;
-import org.apache.freemarker.generator.base.document.Document;
+import org.apache.freemarker.generator.base.datasource.Datasource;
 import org.xml.sax.InputSource;
 
 import java.io.InputStream;
@@ -25,11 +25,11 @@ import java.io.StringReader;
 
 public class XmlTool {
 
-    public NodeModel parse(Document document) {
-        try (InputStream is = document.getUnsafeInputStream()) {
+    public NodeModel parse(Datasource datasource) {
+        try (InputStream is = datasource.getUnsafeInputStream()) {
             return NodeModel.parse(new InputSource(is));
         } catch (Exception e) {
-            throw new RuntimeException("Failed to parse XML document: " + document, e);
+            throw new RuntimeException("Failed to parse XML datasource: " + datasource, e);
         }
     }
 
@@ -37,7 +37,7 @@ public class XmlTool {
         try (StringReader reader = new StringReader(value)) {
             return NodeModel.parse(new InputSource(reader));
         } catch (Exception e) {
-            throw new RuntimeException("Failed to parse XML document: " + value, e);
+            throw new RuntimeException("Failed to parse XML string: " + value, e);
         }
     }
 

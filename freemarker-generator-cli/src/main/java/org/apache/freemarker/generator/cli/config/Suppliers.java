@@ -1,7 +1,7 @@
 package org.apache.freemarker.generator.cli.config;
 
 import freemarker.cache.TemplateLoader;
-import org.apache.freemarker.generator.base.document.DocumentsSupplier;
+import org.apache.freemarker.generator.base.datasource.DatasourcesSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesClassPathSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesFileSystemSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesSupplier;
@@ -33,8 +33,8 @@ public class Suppliers {
         return new ToolsSupplier(settings.getConfiguration(), settings.toMap());
     }
 
-    public static DocumentsSupplier documentsSupplier(Settings settings) {
-        return new DocumentsSupplier(settings.getSources(),
+    public static DatasourcesSupplier datasourcesSupplier(Settings settings) {
+        return new DatasourcesSupplier(settings.getSources(),
                 settings.getInclude(),
                 settings.getExclude(),
                 settings.getInputEncoding());

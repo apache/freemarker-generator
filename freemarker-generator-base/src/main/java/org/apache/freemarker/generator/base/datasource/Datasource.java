@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.base.document;
+package org.apache.freemarker.generator.base.datasource;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -35,31 +35,31 @@ import java.util.List;
 import static java.nio.charset.Charset.forName;
 import static java.util.Objects.requireNonNull;
 import static org.apache.commons.io.IOUtils.lineIterator;
-import static org.apache.freemarker.generator.base.FreeMarkerConstants.DOCUMENT_UNKNOWN_LENGTH;
+import static org.apache.freemarker.generator.base.FreeMarkerConstants.DATASOURCE_UNKNOWN_LENGTH;
 
 /**
- * Source document which encapsulates a data source. When accessing
- * content it is loaded on demand on not kept in memory to allow
- * processing of large volumes of data.
+ * Datasource which encapsulates data to be used for rendering
+ * a template. When accessing content it is loaded on demand on not
+ * kept in memory to allow processing of large volumes of data.
  */
-public class Document implements Closeable {
+public class Datasource implements Closeable {
 
-    /** Human-readable name of the document */
+    /** Human-readable name of the datasource */
     private final String name;
 
     /** Charset for directly accessing text-based content */
     private final Charset charset;
 
-    /** The data source */
+    /** The underlying "javax.activation.DataSource" */
     private final DataSource dataSource;
 
     /** The location of the content, e.g. file name */
     private final String location;
 
-    /** Collect all closables handed out to the caller to be closed when the document is closed itself */
+    /** Collect all closables handed out to the caller to be closed when the datasource is closed itself */
     private final CloseableReaper closables;
 
-    public Document(String name, DataSource dataSource, String location, Charset charset) {
+    public Datasource(String name, DataSource dataSource, String location, Charset charset) {
         this.name = requireNonNull(name);
         this.dataSource = requireNonNull(dataSource);
         this.location = requireNonNull(location);
@@ -90,7 +90,7 @@ public class Document implements Closeable {
     /**
      * Try to get the length lazily, efficient and without consuming the input stream.
      *
-     * @return Length of document or UNKNOWN_LENGTH
+     * @return Length of datasource or UNKNOWN_LENGTH
      */
     public long getLength() {
         if (dataSource instanceof FileDataSource) {
@@ -100,12 +100,12 @@ public class Document implements Closeable {
         } else if (dataSource instanceof ByteArrayDataSource) {
             return ((ByteArrayDataSource) dataSource).length();
         } else {
-            return DOCUMENT_UNKNOWN_LENGTH;
+            return DATASOURCE_UNKNOWN_LENGTH;
         }
     }
 
     /**
-     * Get an input stream which is closed together with this document.
+     * Get an input stream which is closed together with this datasource.
      *
      * @return InputStream
      * @throws IOException Operation failed
@@ -193,8 +193,8 @@ public class Document implements Closeable {
 
     /**
      * Some tools create a {@link java.io.Closeable} which can bound to the
-     * lifecycle of the document. When the document is closed all the bound
-     * {@link java.io.Closeable} are closed as well.
+     * lifecycle of the datasource. When the datasource is closed all the
+     * associated {@link java.io.Closeable} are closed as well.
      *
      * @param closeable Closable
      * @param <T>       Type of closable
@@ -211,7 +211,7 @@ public class Document implements Closeable {
 
     @Override
     public String toString() {
-        return "Document{" +
+        return "Datasource{" +
                 "name='" + name + '\'' +
                 ", location=" + location +
                 ", charset='" + charset + '\'' +

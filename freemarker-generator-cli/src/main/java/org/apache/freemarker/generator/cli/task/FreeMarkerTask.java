@@ -20,9 +20,9 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.apache.commons.io.FileUtils;
 import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
-import org.apache.freemarker.generator.base.document.Document;
-import org.apache.freemarker.generator.base.document.DocumentFactory;
-import org.apache.freemarker.generator.base.document.Documents;
+import org.apache.freemarker.generator.base.datasource.Datasource;
+import org.apache.freemarker.generator.base.datasource.DatasourceFactory;
+import org.apache.freemarker.generator.base.datasource.Datasources;
 import org.apache.freemarker.generator.cli.config.Settings;
 
 import java.io.File;
@@ -38,9 +38,9 @@ import java.util.function.Supplier;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.Location.STDIN;
-import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model.DOCUMENTS;
+import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model.DATASOURCES;
 import static org.apache.freemarker.generator.cli.config.Suppliers.configurationSupplier;
-import static org.apache.freemarker.generator.cli.config.Suppliers.documentsSupplier;
+import static org.apache.freemarker.generator.cli.config.Suppliers.datasourcesSupplier;
 import static org.apache.freemarker.generator.cli.config.Suppliers.toolsSupplier;
 
 /**
@@ -52,28 +52,28 @@ public class FreeMarkerTask implements Callable<Integer> {
 
     private final Settings settings;
     private final Supplier<Map<String, Object>> toolsSupplier;
-    private final Supplier<List<Document>> documentsSupplier;
+    private final Supplier<List<Datasource>> datasourcesSupplier;
     private final Supplier<Configuration> configurationSupplier;
 
     public FreeMarkerTask(Settings settings) {
-        this(settings, toolsSupplier(settings), documentsSupplier(settings), configurationSupplier(settings));
+        this(settings, toolsSupplier(settings), datasourcesSupplier(settings), configurationSupplier(settings));
     }
 
     public FreeMarkerTask(Settings settings,
                           Supplier<Map<String, Object>> toolsSupplier,
-                          Supplier<List<Document>> documentsSupplier,
+                          Supplier<List<Datasource>> datasourcesSupplier,
                           Supplier<Configuration> configurationSupplier) {
         this.settings = requireNonNull(settings);
         this.toolsSupplier = requireNonNull(toolsSupplier);
-        this.documentsSupplier = requireNonNull(documentsSupplier);
+        this.datasourcesSupplier = requireNonNull(datasourcesSupplier);
         this.configurationSupplier = requireNonNull(configurationSupplier);
     }
 
     @Override
     public Integer call() {
         final Template template = template(settings, configurationSupplier);
-        try (Writer writer = settings.getWriter(); Documents documents = documents(settings, documentsSupplier)) {
-            final Map<String, Object> dataModel = dataModel(settings, documents, toolsSupplier);
+        try (Writer writer = settings.getWriter(); Datasources datasources = datasources(settings, datasourcesSupplier)) {
+            final Map<String, Object> dataModel = dataModel(settings, datasources, toolsSupplier);
             template.process(dataModel, writer);
             return SUCCESS;
         } catch (RuntimeException e) {
@@ -83,16 +83,16 @@ public class FreeMarkerTask implements Callable<Integer> {
         }
     }
 
-    private static Documents documents(Settings settings, Supplier<List<Document>> documentsSupplier) {
-        final List<Document> documents = new ArrayList<>(documentsSupplier.get());
+    private static Datasources datasources(Settings settings, Supplier<List<Datasource>> datasourcesSupplier) {
+        final List<Datasource> datasources = new ArrayList<>(datasourcesSupplier.get());
 
-        // Add optional document from STDIN at the start of the list since
+        // Add optional datasource from STDIN at the start of the list since
         // this allows easy sequence slicing in FreeMarker.
         if (settings.isReadFromStdin()) {
-            documents.add(0, DocumentFactory.create(STDIN, System.in, STDIN, UTF_8));
+            datasources.add(0, DatasourceFactory.create(STDIN, System.in, STDIN, UTF_8));
         }
 
-        return new Documents(documents);
+        return new Datasources(datasources);
     }
 
     /**
@@ -122,10 +122,10 @@ public class FreeMarkerTask implements Callable<Integer> {
         }
     }
 
-    private static Map<String, Object> dataModel(Settings settings, Documents documents, Supplier<Map<String, Object>> tools) {
+    private static Map<String, Object> dataModel(Settings settings, Datasources datasources, Supplier<Map<String, Object>> tools) {
         final Map<String, Object> dataModel = new HashMap<>();
 
-        dataModel.put(DOCUMENTS, documents);
+        dataModel.put(DATASOURCES, datasources);
 
         if (settings.isEnvironmentExposed()) {
             // add all system & user-supplied properties as top-level entries

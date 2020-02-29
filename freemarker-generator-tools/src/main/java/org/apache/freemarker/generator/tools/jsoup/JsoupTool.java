@@ -16,7 +16,7 @@
  */
 package org.apache.freemarker.generator.tools.jsoup;
 
-import org.apache.freemarker.generator.base.document.Document;
+import org.apache.freemarker.generator.base.datasource.Datasource;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
@@ -24,11 +24,11 @@ import java.io.InputStream;
 
 public class JsoupTool {
 
-    public org.jsoup.nodes.Document parse(Document document) {
-        try (InputStream is = document.getUnsafeInputStream()) {
-            return Jsoup.parse(is, document.getCharset().name(), "");
+    public org.jsoup.nodes.Document parse(Datasource datasource) {
+        try (InputStream is = datasource.getUnsafeInputStream()) {
+            return Jsoup.parse(is, datasource.getCharset().name(), "");
         } catch (IOException e) {
-            throw new RuntimeException("Failed to parse HTML document: " + document, e);
+            throw new RuntimeException("Failed to parse HTML datasource: " + datasource, e);
         }
     }
 

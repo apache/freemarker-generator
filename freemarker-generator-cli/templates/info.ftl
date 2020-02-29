@@ -39,10 +39,10 @@ FreeMarker CLI Tools
 </#if>
 </#list>
 
-FreeMarker CLI Documents
+FreeMarker CLI Datasources
 ---------------------------------------------------------------------------
-<#list Documents.list as document>
-[${document?counter}] ${document.name}, ${document.location}, ${document.length} Bytes
+<#list Datasources.list as datasource>
+[${datasource?counter}] ${datasource.name}, ${datasource.location}, ${datasource.length} Bytes
 </#list>
 
 User Supplied Parameters

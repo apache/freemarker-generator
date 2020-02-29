@@ -102,9 +102,9 @@ public class ExamplesTest extends AbstractMainTest {
 
     @Test
     public void shouldRunInteractiveTemplateExamples() throws IOException {
-        assertValid(execute("-i ${JsonPathTool.parse(Documents.first).read(\"$.info.title\")} site/sample/json/swagger-spec.json"));
-        assertValid(execute("-i ${XmlTool.parse(Documents.first)[\"recipients/person[1]/name\"]} site/sample/xml/recipients.xml"));
-        assertValid(execute("-i ${JsoupTool.parse(Documents.first).select(\"a\")[0]} site/sample/html/dependencies.html"));
+        assertValid(execute("-i ${JsonPathTool.parse(Datasources.first).read(\"$.info.title\")} site/sample/json/swagger-spec.json"));
+        assertValid(execute("-i ${XmlTool.parse(Datasources.first)[\"recipients/person[1]/name\"]} site/sample/xml/recipients.xml"));
+        assertValid(execute("-i ${JsoupTool.parse(Datasources.first).select(\"a\")[0]} site/sample/html/dependencies.html"));
     }
 
     @Test

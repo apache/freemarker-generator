@@ -15,15 +15,15 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign document = Documents.get(0)>
-<#assign documentName = document.name>
-<#assign workbook = ExcelTool.parse(document)>
+<#assign datasource = Datasources.get(0)>
+<#assign name = datasource.name>
+<#assign workbook = ExcelTool.parse(datasource)>
 <#assign date = .now?iso_utc>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>${documentName}</title>
+    <title>${name}</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
@@ -31,7 +31,7 @@
 <body>
 <div class="container-fluid">
     <h1>Excel Test
-        <small>${documentName}, ${date}</small>
+        <small>${name}, ${date}</small>
     </h1>
     <@writeSheets workbook/>
 </div>

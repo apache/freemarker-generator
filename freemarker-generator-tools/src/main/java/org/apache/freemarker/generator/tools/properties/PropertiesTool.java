@@ -16,7 +16,7 @@
  */
 package org.apache.freemarker.generator.tools.properties;
 
-import org.apache.freemarker.generator.base.document.Document;
+import org.apache.freemarker.generator.base.datasource.Datasource;
 import org.apache.freemarker.generator.base.util.PropertiesFactory;
 
 import java.io.IOException;
@@ -25,11 +25,11 @@ import java.util.Properties;
 
 public class PropertiesTool {
 
-    public Properties parse(Document document) {
-        try (InputStream is = document.getUnsafeInputStream()) {
+    public Properties parse(Datasource datasource) {
+        try (InputStream is = datasource.getUnsafeInputStream()) {
             return PropertiesFactory.create(is);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to parse properties: " + document, e);
+            throw new RuntimeException("Failed to parse properties: " + datasource, e);
         }
     }
 
