@@ -19,6 +19,7 @@ package org.apache.freemarker.generator.base.datasource;
 import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.activation.ByteArrayDataSource;
 import org.apache.freemarker.generator.base.activation.InputStreamDataSource;
+import org.apache.freemarker.generator.base.activation.MimetypesFileTypeMapFactory;
 import org.apache.freemarker.generator.base.activation.StringDataSource;
 
 import javax.activation.DataSource;
@@ -30,6 +31,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
 
 /**
  * Creates a Datasource from various sources.
@@ -40,37 +42,48 @@ public class DatasourceFactory {
     }
 
     public static Datasource create(URL url) {
-        final String location = url.getProtocol() + "://" + url.getHost();
+        final String location = url.toString();
         final URLDataSource dataSource = new URLDataSource(url);
-        return create(url.getHost(), dataSource, location, UTF_8);
+        return create(url.getHost(), DEFAULT_GROUP, dataSource, location, UTF_8);
     }
 
-    public static Datasource create(String name, String content) {
+    public static Datasource create(String name, String group, URL url, Charset charset) {
+        final String location = url.toString();
+        final URLDataSource dataSource = new URLDataSource(url);
+        return create(name, group, dataSource, location, charset);
+    }
+
+    public static Datasource create(String name, String group, String content) {
         final StringDataSource dataSource = new StringDataSource(name, content, UTF_8);
-        return create(name, dataSource, Location.STRING, UTF_8);
+        return create(name, group, dataSource, Location.STRING, UTF_8);
     }
 
     public static Datasource create(File file, Charset charset) {
+        return create(file.getName(), DEFAULT_GROUP, file, charset);
+    }
+
+    public static Datasource create(String name, String group, File file, Charset charset) {
         final FileDataSource dataSource = new FileDataSource(file);
-        return create(file.getName(), dataSource, file.getAbsolutePath(), charset);
+        dataSource.setFileTypeMap(MimetypesFileTypeMapFactory.create());
+        return create(name, group, dataSource, file.getAbsolutePath(), charset);
     }
 
-    public static Datasource create(String name, byte[] content) {
+    public static Datasource create(String name, String group, byte[] content) {
         final ByteArrayDataSource dataSource = new ByteArrayDataSource(name, content);
-        return create(name, dataSource, Location.BYTES, UTF_8);
+        return create(name, group, dataSource, Location.BYTES, UTF_8);
     }
 
-    public static Datasource create(String name, InputStream is, Charset charset) {
+    public static Datasource create(String name, String group, InputStream is, Charset charset) {
         final InputStreamDataSource dataSource = new InputStreamDataSource(name, is);
-        return create(name, dataSource, Location.INPUTSTREAM, charset);
+        return create(name, group, dataSource, Location.INPUTSTREAM, charset);
     }
 
-    public static Datasource create(String name, InputStream is, String location, Charset charset) {
+    public static Datasource create(String name, String group, InputStream is, String location, Charset charset) {
         final InputStreamDataSource dataSource = new InputStreamDataSource(name, is);
-        return create(name, dataSource, location, charset);
+        return create(name, group, dataSource, location, charset);
     }
 
-    public static Datasource create(String name, DataSource dataSource, String location, Charset charset) {
-        return new Datasource(name, dataSource, location, charset);
+    public static Datasource create(String name, String group, DataSource dataSource, String location, Charset charset) {
+        return new Datasource(name, group, dataSource, location, charset);
     }
 }

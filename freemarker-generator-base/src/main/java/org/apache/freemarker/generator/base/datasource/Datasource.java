@@ -36,6 +36,7 @@ import static java.nio.charset.Charset.forName;
 import static java.util.Objects.requireNonNull;
 import static org.apache.commons.io.IOUtils.lineIterator;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DATASOURCE_UNKNOWN_LENGTH;
+import static org.apache.freemarker.generator.base.util.StringUtils.emptyToNull;
 
 /**
  * Datasource which encapsulates data to be used for rendering
@@ -46,6 +47,9 @@ public class Datasource implements Closeable {
 
     /** Human-readable name of the datasource */
     private final String name;
+
+    /** Optional group of datasource */
+    private final String group;
 
     /** Charset for directly accessing text-based content */
     private final Charset charset;
@@ -59,8 +63,9 @@ public class Datasource implements Closeable {
     /** Collect all closables handed out to the caller to be closed when the datasource is closed itself */
     private final CloseableReaper closables;
 
-    public Datasource(String name, DataSource dataSource, String location, Charset charset) {
+    public Datasource(String name, String group, DataSource dataSource, String location, Charset charset) {
         this.name = requireNonNull(name);
+        this.group = emptyToNull(group);
         this.dataSource = requireNonNull(dataSource);
         this.location = requireNonNull(location);
         this.charset = requireNonNull(charset);
@@ -69,6 +74,10 @@ public class Datasource implements Closeable {
 
     public String getName() {
         return name;
+    }
+
+    public String getGroup() {
+        return group;
     }
 
     public String getBaseName() {
@@ -81,6 +90,10 @@ public class Datasource implements Closeable {
 
     public Charset getCharset() {
         return charset;
+    }
+
+    public String getContentType() {
+        return dataSource.getContentType();
     }
 
     public String getLocation() {
@@ -213,6 +226,7 @@ public class Datasource implements Closeable {
     public String toString() {
         return "Datasource{" +
                 "name='" + name + '\'' +
+                "group='" + group + '\'' +
                 ", location=" + location +
                 ", charset='" + charset + '\'' +
                 '}';

@@ -27,6 +27,8 @@ import static junit.framework.TestCase.assertEquals;
 
 public class SnakeYamlToolTest {
 
+    private static final String ANY_GROUP = "group";
+
     private static final String ANY_YAML_STRING = "docker:\n" +
             "    - image: ubuntu:14.04\n" +
             "    - image: mongo:2.6.8\n" +
@@ -56,6 +58,6 @@ public class SnakeYamlToolTest {
     }
 
     private Datasource datasource(String value) {
-        return DatasourceFactory.create("test.yml", value);
+        return DatasourceFactory.create("test.yml", ANY_GROUP, value);
     }
 }

@@ -26,6 +26,14 @@ public class FreeMarkerConstants {
     /* Default encoding for textual content */
     public static final Charset DEFAULT_CHARSET = UTF_8;
 
+    /* Default group name for datasources */
+    public static final String DEFAULT_GROUP = "default";
+
+    public enum GeneratorMode {
+        DATASOURCE,
+        TEMPLATE
+    }
+
     public static class Configuration {
 
         private Configuration() {

@@ -52,7 +52,7 @@ public class Settings {
     /** List of FreeMarker template directories */
     private final List<File> templateDirectories;
 
-    /** Name of the template to be loaded and rendered  */
+    /** Name of the template to be loaded and rendered */
     private final String templateName;
 
     /** Template provided by the user interactivly */
@@ -86,7 +86,7 @@ public class Settings {
     private final boolean isEnvironmentExposed;
 
     /** User-supplied list of source files or directories */
-    private final List<String> sources;
+    private final List<String> datasources;
 
     /** User-supplied parameters */
     private final Map<String, String> parameters;
@@ -112,7 +112,7 @@ public class Settings {
             Locale locale,
             boolean isReadFromStdin,
             boolean isEnvironmentExposed,
-            List<String> sources,
+            List<String> datasources,
             Map<String, String> parameters,
             Properties sytemProperties,
             Writer writer) {
@@ -133,7 +133,7 @@ public class Settings {
         this.locale = requireNonNull(locale);
         this.isReadFromStdin = isReadFromStdin;
         this.isEnvironmentExposed = isEnvironmentExposed;
-        this.sources = requireNonNull(sources);
+        this.datasources = requireNonNull(datasources);
         this.parameters = requireNonNull(parameters);
         this.sytemProperties = requireNonNull(sytemProperties);
         this.configuration = requireNonNull(configuration);
@@ -204,8 +204,8 @@ public class Settings {
         return isEnvironmentExposed;
     }
 
-    public List<String> getSources() {
-        return sources;
+    public List<String> getDatasources() {
+        return datasources;
     }
 
     public Map<String, String> getParameters() {
@@ -262,7 +262,7 @@ public class Settings {
                 ", locale=" + locale +
                 ", isReadFromStdin=" + isReadFromStdin +
                 ", isEnvironmentExposed=" + isEnvironmentExposed +
-                ", sources=" + sources +
+                ", datasources=" + datasources +
                 ", properties=" + parameters +
                 ", sytemProperties=" + sytemProperties +
                 ", writer=" + writer +
@@ -288,7 +288,7 @@ public class Settings {
         private String locale;
         private boolean isReadFromStdin;
         private boolean isEnvironmentExposed;
-        private List<String> sources;
+        private List<String> datasources;
         private Map<String, String> parameters;
         private Properties systemProperties;
         private Properties configuration;
@@ -302,7 +302,7 @@ public class Settings {
             this.systemProperties = new Properties();
             this.setInputEncoding(DEFAULT_CHARSET.name());
             this.setOutputEncoding(DEFAULT_CHARSET.name());
-            this.sources = emptyList();
+            this.datasources = emptyList();
             this.templateDirectories = emptyList();
         }
 
@@ -380,8 +380,8 @@ public class Settings {
             return this;
         }
 
-        public SettingsBuilder setSources(List<String> sources) {
-            this.sources = sources;
+        public SettingsBuilder setDatasources(List<String> datasources) {
+            this.datasources = datasources;
             return this;
         }
 
@@ -393,7 +393,7 @@ public class Settings {
         }
 
         public SettingsBuilder setSystemProperties(Properties systemProperties) {
-            if(systemProperties != null) {
+            if (systemProperties != null) {
                 this.systemProperties = systemProperties;
             }
             return this;
@@ -432,7 +432,7 @@ public class Settings {
                     LocaleUtils.parseLocale(currLocale),
                     isReadFromStdin,
                     isEnvironmentExposed,
-                    sources,
+                    datasources,
                     parameters,
                     systemProperties,
                     writer

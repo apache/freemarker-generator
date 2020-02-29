@@ -26,6 +26,8 @@ import static junit.framework.TestCase.assertNotNull;
 
 public class XmlToolTest {
 
+    private static final String ANY_GROUP = "group";
+
     private static final String ANY_XML_STRING = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
             "<note>\n" +
             "  <to>Tove</to>\n" +
@@ -57,6 +59,6 @@ public class XmlToolTest {
     }
 
     private Datasource datasource(String value) {
-        return DatasourceFactory.create("test.xml", value);
+        return DatasourceFactory.create("test.xml", ANY_GROUP, value);
     }
 }

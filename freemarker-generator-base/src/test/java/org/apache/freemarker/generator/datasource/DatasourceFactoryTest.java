@@ -49,9 +49,10 @@ public class DatasourceFactoryTest {
 
     @Test
     public void shouldCreateStringBasedDatasource() throws IOException {
-        final Datasource datasource = DatasourceFactory.create("test.txt", ANY_TEXT);
+        final Datasource datasource = DatasourceFactory.create("test.txt", "default", ANY_TEXT);
 
         assertEquals("test.txt", datasource.getName());
+        assertEquals("default", datasource.getGroup());
         assertEquals(UTF_8, datasource.getCharset());
         assertEquals("string", datasource.getLocation());
         assertEquals(ANY_TEXT, datasource.getText());
@@ -60,9 +61,10 @@ public class DatasourceFactoryTest {
 
     @Test
     public void shouldCreateByteArrayBasedDatasource() throws IOException {
-        final Datasource datasource = DatasourceFactory.create("test.txt", ANY_TEXT.getBytes(UTF_8));
+        final Datasource datasource = DatasourceFactory.create("test.txt", "default", ANY_TEXT.getBytes(UTF_8));
 
         assertEquals("test.txt", datasource.getName());
+        assertEquals("default", datasource.getGroup());
         assertEquals(UTF_8, datasource.getCharset());
         assertEquals("bytes", datasource.getLocation());
         assertEquals(ANY_TEXT, datasource.getText());
@@ -72,7 +74,7 @@ public class DatasourceFactoryTest {
     @Test
     public void shouldCreateInputStreamBasedDatasource() throws IOException {
         final InputStream is = new ByteArrayInputStream(ANY_TEXT.getBytes(UTF_8));
-        final Datasource datasource = DatasourceFactory.create("test.txt", is, UTF_8);
+        final Datasource datasource = DatasourceFactory.create("test.txt", "default", is, UTF_8);
 
         assertEquals("test.txt", datasource.getName());
         assertEquals(UTF_8, datasource.getCharset());

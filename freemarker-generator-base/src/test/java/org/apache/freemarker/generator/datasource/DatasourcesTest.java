@@ -27,6 +27,8 @@ import java.net.URL;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -41,7 +43,7 @@ public class DatasourcesTest {
     private static final String ANY_URL = "https://server.invalid?foo=bar";
 
     @Test
-    public void shouldFindByWildcard() {
+    public void shouldFindByName() {
         final Datasources datasources = datasources();
 
         assertEquals(0, datasources.find(null).size());
@@ -60,6 +62,22 @@ public class DatasourcesTest {
         assertEquals(1, datasources.find(ANY_FILE_NAME.charAt(0) + "*").size());
 
         assertEquals(3, datasources.find("*").size());
+    }
+
+    @Test
+    public void shouldFindByGroup() {
+        final Datasources datasources = datasources();
+
+        assertEquals(0, datasources.findByGroup(null).size());
+        assertEquals(0, datasources.findByGroup("").size());
+
+        assertEquals(0, datasources.findByGroup("unknown").size());
+
+        assertEquals(3, datasources.findByGroup("*").size());
+        assertEquals(3, datasources.findByGroup("default").size());
+        assertEquals(3, datasources.findByGroup("d*").size());
+        assertEquals(3, datasources.findByGroup("d??????").size());
+
     }
 
     @Test
@@ -85,6 +103,11 @@ public class DatasourcesTest {
         assertEquals(asList("unknown", "pom.xml", "server.invalid"), datasources().getNames());
     }
 
+    @Test
+    public void shouldGetGroups() {
+        assertEquals(singletonList(DEFAULT_GROUP), datasources().getGroups());
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionWhenGetDoesNotFindDatasource() {
         datasources().get("file-does-not-exist");
@@ -100,7 +123,7 @@ public class DatasourcesTest {
     }
 
     private static Datasource textDatasource() {
-        return DatasourceFactory.create(UNKNOWN, ANY_TEXT);
+        return DatasourceFactory.create(UNKNOWN, DEFAULT_GROUP, ANY_TEXT);
     }
 
     private static Datasource fileDatasource() {

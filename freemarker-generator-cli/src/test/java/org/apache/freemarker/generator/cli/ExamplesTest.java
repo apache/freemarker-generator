@@ -26,7 +26,7 @@ import static org.junit.Assert.assertTrue;
 
 public class ExamplesTest extends AbstractMainTest {
 
-    private static final int MIN_OUTPUT_SIZE = 1;
+    private static final int MIN_OUTPUT_SIZE = 5;
 
     @Test
     public void shouldRunInfo() throws IOException {
@@ -102,6 +102,7 @@ public class ExamplesTest extends AbstractMainTest {
 
     @Test
     public void shouldRunInteractiveTemplateExamples() throws IOException {
+        // @TODO We should check the generated output directly
         assertValid(execute("-i ${JsonPathTool.parse(Datasources.first).read(\"$.info.title\")} site/sample/json/swagger-spec.json"));
         assertValid(execute("-i ${XmlTool.parse(Datasources.first)[\"recipients/person[1]/name\"]} site/sample/xml/recipients.xml"));
         assertValid(execute("-i ${JsoupTool.parse(Datasources.first).select(\"a\")[0]} site/sample/html/dependencies.html"));
@@ -129,5 +130,6 @@ public class ExamplesTest extends AbstractMainTest {
     private static void assertValid(String output) {
         assertTrue(output.length() > MIN_OUTPUT_SIZE);
         assertFalse(output.contains("Exception"));
+        assertFalse(output.contains("Error"));
     }
 }
