@@ -15,17 +15,17 @@
 # specific language governing permissions and limitations
 # under the License.
 
-/.ivy/
-/.bin/
-/build/
-/build.properties
-/archive/
-/ide-dependencies/
-/META-INF
+.ivy/
+.bin/
+build/
+build.properties
+archive/
+ide-dependencies/
+META-INF
 
-/out/
-/bin/
-/target/
+out/
+bin/
+target/
 
 .classpath
 .project

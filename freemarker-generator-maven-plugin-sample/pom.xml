@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.apache.freemarker.generator</groupId>
+        <artifactId>freemarker-generator</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>freemarker-generator-maven-plugin-sample</artifactId>
+    <name>Apache FreeMarker Generator: Maven Plugin Sample</name>
+    <description>Sample project for Apache FreeMarker Generator Plugin</description>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.freemarker.generator</groupId>
+                <artifactId>freemarker-generator-maven-plugin</artifactId>
+                <version>${project.version}</version>
+                <configuration>
+                    <!-- Required. Specifies the compatibility version for template processing -->
+                    <freeMarkerVersion>${freemarker.version}</freeMarkerVersion>
+                </configuration>
+                <executions>
+                    <!-- 
+                        If you want to generate files during other phases, just add more execution
+                        tags and specify appropriate phase, sourceDirectory and outputDirectory values.
+                    -->
+                    <execution>
+                        <id>freemarker-generator</id>
+                        <!-- Optional, defaults to generate-sources -->
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <!-- Required, must be generate -->
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Optional, defaults to src/main/freemarker/generator -->
+                            <sourceDirectory>src/main/freemarker/generator</sourceDirectory>
+                            <!-- Optional, defaults to src/main/freemarker/generator/templatee -->
+                            <templateDirectory>src/main/freemarker/generator/template</templateDirectory>
+                            <!-- Optional, defaults to src/main/freemarker/generator/generatorr -->
+                            <generatorDirectory>src/main/freemarker/generator/generator</generatorDirectory>
+                            <!-- Optional, defaults to target/generated-sources/freemarker/generator -->
+                            <outputDirectory>target/generated-sources/freemarker/generator</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.rat</groupId>
+                <artifactId>apache-rat-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>*.md</exclude>
+                        <excludde>**/*.json</excludde>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+</project>
