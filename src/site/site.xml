@@ -16,6 +16,10 @@
 -->
 <project name="FreeMarker Generator">
 
+    <bannerLeft>
+        <src>data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D</src>
+    </bannerLeft>
+
     <bannerRight>
         <name>Apache FreeMarker</name>
         <src>https://freemarker.apache.org/logo.png</src>
