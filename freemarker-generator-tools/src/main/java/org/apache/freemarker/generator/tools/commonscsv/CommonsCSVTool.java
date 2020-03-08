@@ -44,8 +44,8 @@ import static org.apache.commons.io.IOUtils.toInputStream;
 
 public class CommonsCSVTool {
 
-    public CSVParser parse(Datasource da) {
-        return parse(da, CSVFormat.DEFAULT);
+    public CSVParser parse(Datasource datasource) {
+        return parse(datasource, CSVFormat.DEFAULT);
     }
 
     public CSVParser parse(Datasource datasource, CSVFormat format) {
@@ -62,6 +62,10 @@ public class CommonsCSVTool {
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse CSV: " + datasource, e);
         }
+    }
+
+    public CSVParser parse(String csv) {
+        return parse(csv, CSVFormat.DEFAULT);
     }
 
     public CSVParser parse(String csv, CSVFormat format) {

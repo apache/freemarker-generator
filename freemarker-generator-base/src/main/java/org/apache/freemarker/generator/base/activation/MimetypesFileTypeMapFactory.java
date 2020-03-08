@@ -31,10 +31,13 @@ public class MimetypesFileTypeMapFactory {
             mimeTypes.addMimeTypes("application/vnd.ms-excel xls XLS");
             mimeTypes.addMimeTypes("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet xlsx XLSX");
             mimeTypes.addMimeTypes("application/xml xml XML");
+            mimeTypes.addMimeTypes("application/xhtml+xml xhtml XHTML");
             mimeTypes.addMimeTypes("text/csv csv CSV");
-            mimeTypes.addMimeTypes("text/plain txt TXT log LOG ini INI properties md MD");
-            mimeTypes.addMimeTypes("text/yaml yml YML yaml YAML");
+            mimeTypes.addMimeTypes("text/plain env txt TXT log LOG ini INI properties");
+            mimeTypes.addMimeTypes("text/html htm HTML HTM HTML");
+            mimeTypes.addMimeTypes("text/markdown md MD");
             mimeTypes.addMimeTypes("text/tab-separated-values tsv TSV");
+            mimeTypes.addMimeTypes("text/yaml yml YML yaml YAML");
         }
 
         return mimeTypes;

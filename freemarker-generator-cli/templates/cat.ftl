@@ -15,9 +15,8 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign lines = Datasources.get(0).getLineIterator()>
-<#compress>
-    <#list lines as line>
-        ${line}
-    </#list>
-</#compress>
+<#list Datasources.list as datasource>
+<#list datasource.lineIterator as line>
+${line}
+</#list>
+</#list>

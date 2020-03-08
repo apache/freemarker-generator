@@ -983,6 +983,9 @@ Hello sgoeschl
 > bin/freemarker-cli -i '${JsonPathTool.parse(Datasources.first).read("$.info.title")}' site/sample/json/swagger-spec.json; echo
 Swagger Petstore
 
+> bin/freemarker-cli -i 'Post Title : ${JsonPathTool.parse(Datasources.first).read("$.title")}' https://jsonplaceholder.typicode.com/posts/2
+Post Title : qui est esse
+
 > bin/freemarker-cli -i '${XmlTool.parse(Datasources.first)["recipients/person[1]/name"]}' site/sample/xml/recipients.xml; echo
 John Smith
 
