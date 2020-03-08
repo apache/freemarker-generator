@@ -14,7 +14,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 -->
-<project name="FreeMarker Generator">
+<project name="CLI">
     <body>
         <menu name="Overview">
             <item name="Introduction" href="index.html" />
