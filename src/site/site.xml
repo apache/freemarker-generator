@@ -1,0 +1,43 @@
+<!--
+   Licensed to the Apache Software Foundation (ASF) under one or more
+   contributor license agreements.  See the NOTICE file distributed with
+   this work for additional information regarding copyright ownership.
+   The ASF licenses this file to You under the Apache License, Version 2.0
+   (the "License"); you may not use this file except in compliance with
+   the License.  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<project name="FreeMarker Generator">
+
+    <bannerRight>
+        <name>Apache FreeMarker</name>
+        <src>https://freemarker.apache.org/logo.png</src>
+        <href>https://freemarker.apache.org/</href>
+    </bannerRight>
+
+    <skin>
+        <groupId>org.apache.maven.skins</groupId>
+        <artifactId>maven-fluido-skin</artifactId>
+        <version>1.8</version>
+    </skin>
+
+    <body>
+        <breadcrumbs>
+            <item name="Apache" href="https://www.apache.org"/>
+            <item name="FreeMarker" href="https://freemarker.apache.org"/>
+            <item name="Generator" href="https://freemarker-generator.apache.org/index.html"/>
+        </breadcrumbs>
+        <menu name="Overview">
+            <item name="Introduction" href="index.html" />
+        </menu>
+        <menu ref="modules" />
+        <menu ref="reports" inherit="bottom" />
+    </body>
+</project>

@@ -26,7 +26,7 @@
     </parent>
 
     <artifactId>freemarker-generator-tools</artifactId>
-    <name>Apache FreeMarker Generator: Tools</name>
+    <name>Tools</name>
     <description>Datasource processing tools for Apache FreeMarker Generator</description>
 
     <properties>
@@ -117,11 +117,16 @@
     <reporting>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>*.md</exclude>
+                        <exclude>README.md</exclude>
+                        <exclude>src/site/markdown/**/*.md</exclude>
                         <exclude>**/*.csv</exclude>
                         <exclude>src/main/resources/patterns/*</exclude>
                     </excludes>
