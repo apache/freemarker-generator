@@ -42,7 +42,7 @@ public class FreeMarkerConstants {
     /* Default encoding for textual content */
     public static final Charset DEFAULT_CHARSET = UTF_8;
 
-    /* Default group name for datasources */
+    /* Default group name for data sources */
     public static final String DEFAULT_GROUP = "default";
 
     public enum GeneratorMode {
@@ -83,7 +83,7 @@ public class FreeMarkerConstants {
         private Model() {
         }
 
-        public static final String DATASOURCES = "Datasources";
+        public static final String DATASOURCES = "DataSources";
 
         public static final String FREEMARKER_CLI_ARGS = "freemarker.cli.args";
         public static final String FREEMARKER_LOCALE = "freemarker.locale";

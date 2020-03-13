@@ -22,7 +22,6 @@ import org.apache.freemarker.generator.base.activation.InputStreamDataSource;
 import org.apache.freemarker.generator.base.activation.MimetypesFileTypeMapFactory;
 import org.apache.freemarker.generator.base.activation.StringDataSource;
 
-import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.activation.URLDataSource;
 import java.io.File;
@@ -36,54 +35,54 @@ import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_G
 /**
  * Creates a Datasource from various sources.
  */
-public class DatasourceFactory {
+public class DataSourceFactory {
 
-    private DatasourceFactory() {
+    private DataSourceFactory() {
     }
 
-    public static Datasource create(URL url) {
+    public static DataSource create(URL url) {
         final String location = url.toString();
         final URLDataSource dataSource = new URLDataSource(url);
         return create(url.getHost(), DEFAULT_GROUP, dataSource, location, UTF_8);
     }
 
-    public static Datasource create(String name, String group, URL url, Charset charset) {
+    public static DataSource create(String name, String group, URL url, Charset charset) {
         final String location = url.toString();
         final URLDataSource dataSource = new URLDataSource(url);
         return create(name, group, dataSource, location, charset);
     }
 
-    public static Datasource create(String name, String group, String content) {
+    public static DataSource create(String name, String group, String content) {
         final StringDataSource dataSource = new StringDataSource(name, content, UTF_8);
         return create(name, group, dataSource, Location.STRING, UTF_8);
     }
 
-    public static Datasource create(File file, Charset charset) {
+    public static DataSource create(File file, Charset charset) {
         return create(file.getName(), DEFAULT_GROUP, file, charset);
     }
 
-    public static Datasource create(String name, String group, File file, Charset charset) {
+    public static DataSource create(String name, String group, File file, Charset charset) {
         final FileDataSource dataSource = new FileDataSource(file);
         dataSource.setFileTypeMap(MimetypesFileTypeMapFactory.create());
         return create(name, group, dataSource, file.getAbsolutePath(), charset);
     }
 
-    public static Datasource create(String name, String group, byte[] content) {
+    public static DataSource create(String name, String group, byte[] content) {
         final ByteArrayDataSource dataSource = new ByteArrayDataSource(name, content);
         return create(name, group, dataSource, Location.BYTES, UTF_8);
     }
 
-    public static Datasource create(String name, String group, InputStream is, Charset charset) {
+    public static DataSource create(String name, String group, InputStream is, Charset charset) {
         final InputStreamDataSource dataSource = new InputStreamDataSource(name, is);
         return create(name, group, dataSource, Location.INPUTSTREAM, charset);
     }
 
-    public static Datasource create(String name, String group, InputStream is, String location, Charset charset) {
+    public static DataSource create(String name, String group, InputStream is, String location, Charset charset) {
         final InputStreamDataSource dataSource = new InputStreamDataSource(name, is);
         return create(name, group, dataSource, location, charset);
     }
 
-    public static Datasource create(String name, String group, DataSource dataSource, String location, Charset charset) {
-        return new Datasource(name, group, dataSource, location, charset);
+    public static DataSource create(String name, String group, javax.activation.DataSource dataSource, String location, Charset charset) {
+        return new DataSource(name, group, dataSource, location, charset);
     }
 }

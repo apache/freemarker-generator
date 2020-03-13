@@ -23,7 +23,6 @@ import org.apache.freemarker.generator.base.activation.ByteArrayDataSource;
 import org.apache.freemarker.generator.base.activation.StringDataSource;
 import org.apache.freemarker.generator.base.util.CloseableReaper;
 
-import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import java.io.Closeable;
 import java.io.IOException;
@@ -43,27 +42,27 @@ import static org.apache.freemarker.generator.base.util.StringUtils.emptyToNull;
  * a template. When accessing content it is loaded on demand on not
  * kept in memory to allow processing of large volumes of data.
  */
-public class Datasource implements Closeable {
+public class DataSource implements Closeable {
 
-    /** Human-readable name of the datasource */
+    /** Human-readable name of the data source */
     private final String name;
 
-    /** Optional group of datasource */
+    /** Optional group of data source */
     private final String group;
 
     /** Charset for directly accessing text-based content */
     private final Charset charset;
 
     /** The underlying "javax.activation.DataSource" */
-    private final DataSource dataSource;
+    private final javax.activation.DataSource dataSource;
 
     /** The location of the content, e.g. file name */
     private final String location;
 
-    /** Collect all closables handed out to the caller to be closed when the datasource is closed itself */
+    /** Collect all closables handed out to the caller to be closed when the data source is closed itself */
     private final CloseableReaper closables;
 
-    public Datasource(String name, String group, DataSource dataSource, String location, Charset charset) {
+    public DataSource(String name, String group, javax.activation.DataSource dataSource, String location, Charset charset) {
         this.name = requireNonNull(name);
         this.group = emptyToNull(group);
         this.dataSource = requireNonNull(dataSource);
@@ -103,7 +102,7 @@ public class Datasource implements Closeable {
     /**
      * Try to get the length lazily, efficient and without consuming the input stream.
      *
-     * @return Length of datasource or UNKNOWN_LENGTH
+     * @return Length of data source or UNKNOWN_LENGTH
      */
     public long getLength() {
         if (dataSource instanceof FileDataSource) {
@@ -118,7 +117,7 @@ public class Datasource implements Closeable {
     }
 
     /**
-     * Get an input stream which is closed together with this datasource.
+     * Get an input stream which is closed together with this data source.
      *
      * @return InputStream
      * @throws IOException Operation failed
@@ -206,7 +205,7 @@ public class Datasource implements Closeable {
 
     /**
      * Some tools create a {@link java.io.Closeable} which can bound to the
-     * lifecycle of the datasource. When the datasource is closed all the
+     * lifecycle of the data source. When the data source is closed all the
      * associated {@link java.io.Closeable} are closed as well.
      *
      * @param closeable Closable

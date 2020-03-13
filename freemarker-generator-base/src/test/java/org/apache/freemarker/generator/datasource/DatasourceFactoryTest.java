@@ -16,8 +16,8 @@
  */
 package org.apache.freemarker.generator.datasource;
 
-import org.apache.freemarker.generator.base.datasource.Datasource;
-import org.apache.freemarker.generator.base.datasource.DatasourceFactory;
+import org.apache.freemarker.generator.base.datasource.DataSource;
+import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -39,47 +39,47 @@ public class DatasourceFactoryTest {
 
     @Test
     public void shouldCreateFileBasedDatasource() throws IOException {
-        final Datasource datasource = DatasourceFactory.create(ANY_FILE, ANY_CHAR_SET);
+        final DataSource dataSource = DataSourceFactory.create(ANY_FILE, ANY_CHAR_SET);
 
-        assertEquals(ANY_FILE_NAME, datasource.getName());
-        assertEquals(UTF_8, datasource.getCharset());
-        assertEquals(ANY_FILE.getAbsolutePath(), datasource.getLocation());
-        assertTrue(!datasource.getLines().isEmpty());
+        assertEquals(ANY_FILE_NAME, dataSource.getName());
+        assertEquals(UTF_8, dataSource.getCharset());
+        assertEquals(ANY_FILE.getAbsolutePath(), dataSource.getLocation());
+        assertTrue(!dataSource.getLines().isEmpty());
     }
 
     @Test
     public void shouldCreateStringBasedDatasource() throws IOException {
-        final Datasource datasource = DatasourceFactory.create("test.txt", "default", ANY_TEXT);
+        final DataSource dataSource = DataSourceFactory.create("test.txt", "default", ANY_TEXT);
 
-        assertEquals("test.txt", datasource.getName());
-        assertEquals("default", datasource.getGroup());
-        assertEquals(UTF_8, datasource.getCharset());
-        assertEquals("string", datasource.getLocation());
-        assertEquals(ANY_TEXT, datasource.getText());
-        assertEquals(1, datasource.getLines().size());
+        assertEquals("test.txt", dataSource.getName());
+        assertEquals("default", dataSource.getGroup());
+        assertEquals(UTF_8, dataSource.getCharset());
+        assertEquals("string", dataSource.getLocation());
+        assertEquals(ANY_TEXT, dataSource.getText());
+        assertEquals(1, dataSource.getLines().size());
     }
 
     @Test
     public void shouldCreateByteArrayBasedDatasource() throws IOException {
-        final Datasource datasource = DatasourceFactory.create("test.txt", "default", ANY_TEXT.getBytes(UTF_8));
+        final DataSource dataSource = DataSourceFactory.create("test.txt", "default", ANY_TEXT.getBytes(UTF_8));
 
-        assertEquals("test.txt", datasource.getName());
-        assertEquals("default", datasource.getGroup());
-        assertEquals(UTF_8, datasource.getCharset());
-        assertEquals("bytes", datasource.getLocation());
-        assertEquals(ANY_TEXT, datasource.getText());
-        assertEquals(1, datasource.getLines().size());
+        assertEquals("test.txt", dataSource.getName());
+        assertEquals("default", dataSource.getGroup());
+        assertEquals(UTF_8, dataSource.getCharset());
+        assertEquals("bytes", dataSource.getLocation());
+        assertEquals(ANY_TEXT, dataSource.getText());
+        assertEquals(1, dataSource.getLines().size());
     }
 
     @Test
     public void shouldCreateInputStreamBasedDatasource() throws IOException {
         final InputStream is = new ByteArrayInputStream(ANY_TEXT.getBytes(UTF_8));
-        final Datasource datasource = DatasourceFactory.create("test.txt", "default", is, UTF_8);
+        final DataSource dataSource = DataSourceFactory.create("test.txt", "default", is, UTF_8);
 
-        assertEquals("test.txt", datasource.getName());
-        assertEquals(UTF_8, datasource.getCharset());
-        assertEquals("inputstream", datasource.getLocation());
-        assertEquals(ANY_TEXT, datasource.getText());
+        assertEquals("test.txt", dataSource.getName());
+        assertEquals(UTF_8, dataSource.getCharset());
+        assertEquals("inputstream", dataSource.getLocation());
+        assertEquals(ANY_TEXT, dataSource.getText());
     }
 
 }

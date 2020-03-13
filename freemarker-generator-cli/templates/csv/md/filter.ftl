@@ -15,14 +15,14 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign datasource = Datasources.get(0)>
-<#assign parser = parser(datasource)>
+<#assign dataSource = DataSources.get(0)>
+<#assign parser = parser(dataSource)>
 <#assign headers = parser.getHeaderNames()>
 <#assign column = SystemTool.getParameter("column")>
 <#assign values = SystemTool.getParameter("values")?split(",")>
 
 <#compress>
-    <@writePageHeader datasource/>
+    <@writePageHeader dataSource/>
     <#-- Process each line without materializing the whole file in memory -->
     <#list parser.iterator() as record>
         <#if filter(record)>
@@ -31,18 +31,18 @@
     </#list>
 </#compress>
 
-<#function parser datasource>
+<#function parser dataSource>
     <#assign format = CSVTool.formats[SystemTool.getParameter("format", "DEFAULT")]>
     <#assign delimiter = CSVTool.toDelimiter(SystemTool.getParameter("delimiter", format.getDelimiter()))>
-    <#return CSVTool.parse(datasource, format.withFirstRecordAsHeader().withDelimiter(delimiter))>
+    <#return CSVTool.parse(dataSource, format.withFirstRecordAsHeader().withDelimiter(delimiter))>
 </#function>
 
 <#function filter record>
     <#return values?seq_contains(record.get(column))>
 </#function>
 
-<#macro writePageHeader datasource>
-    # ${datasource.name}
+<#macro writePageHeader dataSource>
+    # ${dataSource.name}
 </#macro>
 
 <#macro writeCsvRecord headers record>

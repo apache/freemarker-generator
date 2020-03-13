@@ -45,11 +45,11 @@ java.math.RoundingMode#UP: ${FreeMarkerTool.enums["java.math.RoundingMode"].UP}
 - java.math.RoundingMode.${roundingMode}<#lt>
 </#list>
 
-6) Display list of datasources
+6) Display list of data sources
 ---------------------------------------------------------------------------
-List all datasources:
-<#list Datasources.list as datasource>
-- Document: name=${datasource.name} location=${datasource.location} length=${datasource.length} encoding=${datasource.encoding!""}
+List all data sources:
+<#list DataSources.list as dataSource>
+- Document: name=${dataSource.name} location=${dataSource.location} length=${dataSource.length} encoding=${dataSource.encoding!""}
 </#list>
 
 7) SystemTool
@@ -83,25 +83,25 @@ user.home    : ${SystemTool.systemProperties["user.home"]!""}
 - ${name} ==> ${value}<#lt>
 </#list>
 
-11) Access Datasources
+11) Access DataSources
 ---------------------------------------------------------------------------
 Get the number of documents:
-- ${Datasources.size()}
-<#if !Datasources.isEmpty()>
+- ${DataSources.size()}
+<#if !DataSources.isEmpty()>
 Get the first document
-- ${Datasources.get(0)!"NA"}
+- ${DataSources.get(0)!"NA"}
 </#if>
 List all files containing "README" in the name
-<#list Datasources.find("*README*") as datasource>
-- ${datasource.name}
+<#list DataSources.find("*README*") as dataSource>
+- ${dataSource.name}
 </#list>
 List all files having "md" extension
-<#list Datasources.find("*.md") as datasource>
-- ${datasource.name}
+<#list DataSources.find("*.md") as dataSource>
+- ${dataSource.name}
 </#list>
 Get all documents
-<#list Datasources.list as datasource>
-- ${datasource.name} => ${datasource.location}
+<#list DataSources.list as dataSource>
+- ${dataSource.name} => ${dataSource.location}
 </#list>
 
 12) FreeMarker CLI Tools

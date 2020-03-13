@@ -20,9 +20,9 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.apache.commons.io.FileUtils;
 import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
-import org.apache.freemarker.generator.base.datasource.Datasource;
-import org.apache.freemarker.generator.base.datasource.DatasourceFactory;
-import org.apache.freemarker.generator.base.datasource.Datasources;
+import org.apache.freemarker.generator.base.datasource.DataSource;
+import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
+import org.apache.freemarker.generator.base.datasource.DataSources;
 import org.apache.freemarker.generator.cli.config.Settings;
 
 import java.io.File;
@@ -41,7 +41,7 @@ import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_G
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.Location.STDIN;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model.DATASOURCES;
 import static org.apache.freemarker.generator.cli.config.Suppliers.configurationSupplier;
-import static org.apache.freemarker.generator.cli.config.Suppliers.datasourcesSupplier;
+import static org.apache.freemarker.generator.cli.config.Suppliers.dataSourcesSupplier;
 import static org.apache.freemarker.generator.cli.config.Suppliers.toolsSupplier;
 
 /**
@@ -53,28 +53,28 @@ public class FreeMarkerTask implements Callable<Integer> {
 
     private final Settings settings;
     private final Supplier<Map<String, Object>> toolsSupplier;
-    private final Supplier<List<Datasource>> datasourcesSupplier;
+    private final Supplier<List<DataSource>> dataSourcesSupplier;
     private final Supplier<Configuration> configurationSupplier;
 
     public FreeMarkerTask(Settings settings) {
-        this(settings, toolsSupplier(settings), datasourcesSupplier(settings), configurationSupplier(settings));
+        this(settings, toolsSupplier(settings), dataSourcesSupplier(settings), configurationSupplier(settings));
     }
 
     public FreeMarkerTask(Settings settings,
                           Supplier<Map<String, Object>> toolsSupplier,
-                          Supplier<List<Datasource>> datasourcesSupplier,
+                          Supplier<List<DataSource>> dataSourcesSupplier,
                           Supplier<Configuration> configurationSupplier) {
         this.settings = requireNonNull(settings);
         this.toolsSupplier = requireNonNull(toolsSupplier);
-        this.datasourcesSupplier = requireNonNull(datasourcesSupplier);
+        this.dataSourcesSupplier = requireNonNull(dataSourcesSupplier);
         this.configurationSupplier = requireNonNull(configurationSupplier);
     }
 
     @Override
     public Integer call() {
         final Template template = template(settings, configurationSupplier);
-        try (Writer writer = settings.getWriter(); Datasources datasources = datasources(settings, datasourcesSupplier)) {
-            final Map<String, Object> dataModel = dataModel(settings, datasources, toolsSupplier);
+        try (Writer writer = settings.getWriter(); DataSources dataSources = dataSources(settings, dataSourcesSupplier)) {
+            final Map<String, Object> dataModel = dataModel(settings, dataSources, toolsSupplier);
             template.process(dataModel, writer);
             return SUCCESS;
         } catch (RuntimeException e) {
@@ -84,16 +84,16 @@ public class FreeMarkerTask implements Callable<Integer> {
         }
     }
 
-    private static Datasources datasources(Settings settings, Supplier<List<Datasource>> datasourcesSupplier) {
-        final List<Datasource> datasources = new ArrayList<>(datasourcesSupplier.get());
+    private static DataSources dataSources(Settings settings, Supplier<List<DataSource>> dataSourcesSupplier) {
+        final List<DataSource> dataSources = new ArrayList<>(dataSourcesSupplier.get());
 
-        // Add optional datasource from STDIN at the start of the list since
+        // Add optional data source from STDIN at the start of the list since
         // this allows easy sequence slicing in FreeMarker.
         if (settings.isReadFromStdin()) {
-            datasources.add(0, DatasourceFactory.create(STDIN, DEFAULT_GROUP, System.in, STDIN, UTF_8));
+            dataSources.add(0, DataSourceFactory.create(STDIN, DEFAULT_GROUP, System.in, STDIN, UTF_8));
         }
 
-        return new Datasources(datasources);
+        return new DataSources(dataSources);
     }
 
     /**
@@ -123,10 +123,10 @@ public class FreeMarkerTask implements Callable<Integer> {
         }
     }
 
-    private static Map<String, Object> dataModel(Settings settings, Datasources datasources, Supplier<Map<String, Object>> tools) {
+    private static Map<String, Object> dataModel(Settings settings, DataSources dataSources, Supplier<Map<String, Object>> tools) {
         final Map<String, Object> dataModel = new HashMap<>();
 
-        dataModel.put(DATASOURCES, datasources);
+        dataModel.put(DATASOURCES, dataSources);
 
         if (settings.isEnvironmentExposed()) {
             // add all system & user-supplied properties as top-level entries

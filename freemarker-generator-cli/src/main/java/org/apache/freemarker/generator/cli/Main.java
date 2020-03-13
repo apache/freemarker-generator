@@ -68,13 +68,13 @@ public class Main implements Callable<Integer> {
     @Option(names = { "-b", "--basedir" }, description = "Optional template base directory")
     String baseDir;
 
-    @Option(names = { "-d", "--datasource" }, description = "Datasource used for rendering")
-    List<String> datasources;
+    @Option(names = { "-d", "--data-source" }, description = "Datasource used for rendering")
+    List<String> dataSources;
 
     @Option(names = { "-D", "--system-property" }, description = "Set system property")
     Properties systemProperties;
 
-    @Option(names = { "-e", "--input-encoding" }, description = "Encoding of datasource", defaultValue = "UTF-8")
+    @Option(names = { "-e", "--input-encoding" }, description = "Encoding of data source", defaultValue = "UTF-8")
     String inputEncoding;
 
     @Option(names = { "-E", "--expose-env" }, description = "Expose environment variables and user-supplied properties globally")
@@ -95,16 +95,16 @@ public class Main implements Callable<Integer> {
     @Option(names = { "--config" }, defaultValue = FREEMARKER_CLI_PROPERTY_FILE, description = "FreeMarker CLI configuration file")
     String configFile;
 
-    @Option(names = { "--include" }, description = "File pattern for datasource input directory")
+    @Option(names = { "--include" }, description = "File pattern for data source input directory")
     String include;
 
-    @Option(names = { "--exclude" }, description = "File pattern for datasource input directory")
+    @Option(names = { "--exclude" }, description = "File pattern for data source input directory")
     String exclude;
 
     @Option(names = { "--output-encoding" }, description = "Encoding of output, e.g. UTF-8", defaultValue = "UTF-8")
     String outputEncoding;
 
-    @Option(names = { "--stdin" }, description = "Read datasource from stdin")
+    @Option(names = { "--stdin" }, description = "Read data  source from stdin")
     boolean readFromStdin;
 
     @Option(names = { "--times" }, defaultValue = "1", description = "Re-run X times for profiling")
@@ -192,7 +192,7 @@ public class Main implements Callable<Integer> {
                 .setOutputEncoding(outputEncoding)
                 .setOutputFile(outputFile)
                 .setParameters(parameters != null ? parameters : new HashMap<>())
-                .setDatasources(getCombindedDatasources())
+                .setDataSources(getCombindedDatasources())
                 .setSystemProperties(systemProperties != null ? systemProperties : new Properties())
                 .setTemplateDirectories(templateDirectories)
                 .setTemplateName(templateSourceOptions.template)
@@ -224,11 +224,11 @@ public class Main implements Callable<Integer> {
      * Datasources can be passed via command line option and/or
      * positional parameter so we need to merge them.
      *
-     * @return List of datasources
+     * @return List of data sources
      */
     private List<String> getCombindedDatasources() {
         if (isTemplateDrivenGeneration()) {
-            return Stream.of(datasources, sources)
+            return Stream.of(dataSources, sources)
                     .filter(Objects::nonNull)
                     .flatMap(Collection::stream)
                     .collect(Collectors.toList());

@@ -16,8 +16,8 @@
  */
 package org.apache.freemarker.generator.tools.excel;
 
-import org.apache.freemarker.generator.base.datasource.Datasource;
-import org.apache.freemarker.generator.base.datasource.DatasourceFactory;
+import org.apache.freemarker.generator.base.datasource.DataSource;
+import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.Test;
@@ -102,14 +102,14 @@ public class ExcelToolTest {
     }
 
     private Workbook workbook(File file) {
-        return excelTool().parse(datasource(file));
+        return excelTool().parse(dataSource(file));
     }
 
     private ExcelTool excelTool() {
         return new ExcelTool();
     }
 
-    private Datasource datasource(File file) {
-        return DatasourceFactory.create(file, UTF_8);
+    private DataSource dataSource(File file) {
+        return DataSourceFactory.create(file, UTF_8);
     }
 }

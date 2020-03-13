@@ -56,7 +56,7 @@ public class SettingsTest {
         assertEquals(ANY_OUTPUT_ENCODING, settings.getOutputEncoding().name());
         assertEquals(ANY_OUTPUT_FILE, settings.getOutputFile().getName());
         assertEquals(ANY_TEMPLATE_NAME, settings.getTemplateName());
-        assertNotNull(settings.getDatasources());
+        assertNotNull(settings.getDataSources());
         assertNotNull(settings.getParameters());
         assertNotNull(settings.getSytemProperties());
         assertTrue(settings.isReadFromStdin());
@@ -78,7 +78,7 @@ public class SettingsTest {
                 .setOutputEncoding(ANY_OUTPUT_ENCODING)
                 .setOutputFile(ANY_OUTPUT_FILE)
                 .setParameters(ANY_USER_PARAMETERS)
-                .setDatasources(ANY_SOURCES)
+                .setDataSources(ANY_SOURCES)
                 .setSystemProperties(ANY_SYSTEM_PROPERTIES)
                 .setTemplateName(ANY_TEMPLATE_NAME)
                 .setWriter(new StringWriter())

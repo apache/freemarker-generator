@@ -15,9 +15,9 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign datasource = Datasources.get(0)>
-<#assign name = datasource.name>
-<#assign workbook = ExcelTool.parse(datasource)>
+<#assign dataSource = DataSources.get(0)>
+<#assign name = dataSource.name>
+<#assign workbook = ExcelTool.parse(dataSource)>
 <#assign date = .now?iso_utc>
 
 <#compress>
