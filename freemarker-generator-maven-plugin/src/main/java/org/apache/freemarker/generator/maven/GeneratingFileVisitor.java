@@ -51,6 +51,11 @@ public class GeneratingFileVisitor extends SimpleFileVisitor<Path> {
 
     /**
      * Factory method that calls constructor, added to facilitate testing with jmockit.
+     *
+     * @param config FreeMarker configuration
+     * @param session Maven session
+     * @param extensionToBuilder builder extension
+     * @return GeneratingFileVisitor instance
      */
     public static GeneratingFileVisitor create(Configuration config, MavenSession session, Map<String, OutputGeneratorPropertiesProvider> extensionToBuilder) {
         return new GeneratingFileVisitor(config, session, extensionToBuilder);

@@ -28,7 +28,7 @@
     <artifactId>freemarker-generator-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
 
-    <name>Apache FreeMarker Generator: Maven Plugin</name>
+    <name>Maven Plugin</name>
     <description>Maven plugin for Apache FreeMarker</description>
 
     <properties>
@@ -180,11 +180,18 @@
     <reporting>
         <plugins>
             <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jxr-plugin</artifactId>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>*.md</exclude>
+                        <exclude>README.md</exclude>
+                        <exclude>src/site/markdown/**/*.md</exclude>
                         <excludde>**/*.json</excludde>
                         <excludde>src/test/data/generating-file-visitor/data/mydir/bad-extension-test.txt</excludde>
                     </excludes>

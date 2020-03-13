@@ -26,8 +26,8 @@
     </parent>
 
     <artifactId>freemarker-generator-base</artifactId>
-    <name>Apache FreeMarker Generator: Base</name>
-    <description>Common functionality</description>
+    <name>Base</name>
+    <description>Common functionality independent from Apache FreeMarker</description>
 
     <dependencies>
         <dependency>
@@ -49,14 +49,21 @@
     <reporting>
         <plugins>
             <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jxr-plugin</artifactId>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.rat</groupId>
                 <artifactId>apache-rat-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>*.md</exclude>
+                        <exclude>README.md</exclude>
+                        <exclude>src/site/markdown/**/*.md</exclude>
                         <exclude>**/*.csv</exclude>
                         <exclude>src/test/data/txt/file_01.txt</exclude>
-                      </excludes>
+                    </excludes>
                 </configuration>
             </plugin>
         </plugins>

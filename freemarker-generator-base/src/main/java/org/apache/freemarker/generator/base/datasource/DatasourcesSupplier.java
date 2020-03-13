@@ -58,6 +58,7 @@ public class DatasourcesSupplier implements Supplier<List<Datasource>> {
      *
      * @param sources List of source files and/or directories
      * @param include Optional include pattern for resolving source files or directory
+     * @param exclude Optional exclude pattern for resolving source files or directory
      * @param charset The charset for loading text files
      */
     public DatasourcesSupplier(Collection<String> sources, String include, String exclude, Charset charset) {

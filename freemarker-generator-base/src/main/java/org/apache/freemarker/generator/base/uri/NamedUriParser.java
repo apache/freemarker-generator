@@ -33,7 +33,7 @@ import static java.util.regex.Pattern.compile;
  *     <li>file:///users.csv</li>
  *     <li>users=file:///users.csv</li>
  *     <li>users:admin=file:///users.csv</li>
- *     <li>users=file:///users.csv#charset=UTF-16&mimetype=text/csv</li>
+ *     <li>users=file:///users.csv#charset=UTF-16&amp;mimetype=text/csv</li>
  * </ul>
  */
 public class NamedUriParser {
