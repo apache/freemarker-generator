@@ -15,7 +15,7 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#assign json = JsonPathTool.parse(Datasources.get(0))>
+<#assign json = JsonPathTool.parse(DataSources.get(0))>
 <#assign users = json.read("$[*]")>
 <#--------------------------------------------------------------------------->
 # GitHub Users

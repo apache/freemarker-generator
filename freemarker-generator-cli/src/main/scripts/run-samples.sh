@@ -46,9 +46,9 @@ $FREEMARKER_CMD -t templates/demo.ftl README.md > target/out/demo.txt || { echo 
 # Interactive Mode
 #############################################################################
 
-$FREEMARKER_CMD -i '${JsonPathTool.parse(Datasources.first).read("$.info.title")}' site/sample/json/swagger-spec.json > target/out/interactive-json.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
-$FREEMARKER_CMD -i '${XmlTool.parse(Datasources.first)["recipients/person[1]/name"]}' site/sample/xml/recipients.xml > target/out/interactive-xml.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
-$FREEMARKER_CMD -i '${JsoupTool.parse(Datasources.first).select("a")[0]}' site/sample/html/dependencies.html > target/out/interactive-html.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -i '${JsonPathTool.parse(DataSources.first).read("$.info.title")}' site/sample/json/swagger-spec.json > target/out/interactive-json.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -i '${XmlTool.parse(DataSources.first)["recipients/person[1]/name"]}' site/sample/xml/recipients.xml > target/out/interactive-xml.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -i '${JsoupTool.parse(DataSources.first).select("a")[0]}' site/sample/html/dependencies.html > target/out/interactive-html.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
 # CSV

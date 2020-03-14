@@ -21,7 +21,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.input.BOMInputStream;
-import org.apache.freemarker.generator.base.datasource.Datasource;
+import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.util.StringUtils;
 
 import java.io.IOException;
@@ -44,23 +44,23 @@ import static org.apache.commons.io.IOUtils.toInputStream;
 
 public class CommonsCSVTool {
 
-    public CSVParser parse(Datasource datasource) {
-        return parse(datasource, CSVFormat.DEFAULT);
+    public CSVParser parse(DataSource dataSource) {
+        return parse(dataSource, CSVFormat.DEFAULT);
     }
 
-    public CSVParser parse(Datasource datasource, CSVFormat format) {
-        if (datasource == null) {
-            throw new IllegalArgumentException("No datasource was provided");
+    public CSVParser parse(DataSource dataSource, CSVFormat format) {
+        if (dataSource == null) {
+            throw new IllegalArgumentException("No data source was provided");
         }
 
         try {
             // As stated in the documentation : "If you do not read all records from the given {@code reader},
             // you should call {@link #close()} on the parser, unless you close the {@code reader}."
-            // The underlying input stream is closed by the datasource by its "CloseableReaper".
-            final InputStream is = new BOMInputStream(datasource.getInputStream(), false);
-            return parse(is, datasource.getCharset(), format);
+            // The underlying input stream is closed by the data source by its "CloseableReaper".
+            final InputStream is = new BOMInputStream(dataSource.getInputStream(), false);
+            return parse(is, dataSource.getCharset(), format);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to parse CSV: " + datasource, e);
+            throw new RuntimeException("Failed to parse CSV: " + dataSource, e);
         }
     }
 

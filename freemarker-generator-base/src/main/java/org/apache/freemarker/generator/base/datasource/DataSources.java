@@ -28,37 +28,37 @@ import static java.util.stream.Collectors.toList;
 import static org.apache.commons.io.FilenameUtils.wildcardMatch;
 
 /**
- * Container for datasources with a couple of convenience functions to select
- * a subset of datasources.
+ * Container for data sources with a couple of convenience functions to select
+ * a subset of data sources.
  */
-public class Datasources implements Closeable {
+public class DataSources implements Closeable {
 
-    private final List<Datasource> datasources;
+    private final List<DataSource> dataSources;
 
-    public Datasources(Collection<Datasource> datasources) {
-        this.datasources = new ArrayList<>(datasources);
+    public DataSources(Collection<DataSource> dataSources) {
+        this.dataSources = new ArrayList<>(dataSources);
     }
 
     /**
-     * Get the names of all datasources.
+     * Get the names of all data sources.
      *
-     * @return datasource names
+     * @return datas ource names
      */
     public List<String> getNames() {
-        return datasources.stream()
-                .map(Datasource::getName)
+        return dataSources.stream()
+                .map(DataSource::getName)
                 .filter(StringUtils::isNotEmpty)
                 .collect(toList());
     }
 
     /**
-     * Get the groups of all datasources.
+     * Get the groups of all data sources.
      *
-     * @return datasource names
+     * @return data source names
      */
     public List<String> getGroups() {
-        return datasources.stream()
-                .map(Datasource::getGroup)
+        return dataSources.stream()
+                .map(DataSource::getGroup)
                 .filter(StringUtils::isNotEmpty)
                 .sorted()
                 .distinct()
@@ -66,79 +66,82 @@ public class Datasources implements Closeable {
     }
 
     public int size() {
-        return datasources.size();
+        return dataSources.size();
     }
 
     public boolean isEmpty() {
-        return datasources.isEmpty();
+        return dataSources.isEmpty();
     }
 
-    public Datasource getFirst() {
-        return datasources.get(0);
+    public DataSource getFirst() {
+        return dataSources.get(0);
     }
 
-    public List<Datasource> getList() {
-        return new ArrayList<>(datasources);
+    public List<DataSource> getList() {
+        return new ArrayList<>(dataSources);
     }
 
-    public Datasource get(int index) {
-        return datasources.get(index);
+    public DataSource get(int index) {
+        return dataSources.get(index);
     }
 
     /**
-     * Get exactly one datasource. If not exactly one datasource
+     * Get exactly one data source. If not exactly one data source
      * is found an exception is thrown.
      *
-     * @param name name of the datasource
-     * @return datasource
+     * @param name name of the data source
+     * @return data source
      */
-    public Datasource get(String name) {
-        final List<Datasource> list = find(name);
+    public DataSource get(String name) {
+        final List<DataSource> list = find(name);
 
         if (list.isEmpty()) {
-            throw new IllegalArgumentException("Datasource not found : " + name);
+            throw new IllegalArgumentException("Data source not found : " + name);
         }
 
         if (list.size() > 1) {
-            throw new IllegalArgumentException("More than one datasource found : " + name);
+            throw new IllegalArgumentException("More than one data source found : " + name);
         }
 
         return list.get(0);
     }
 
     /**
-     * Find datasources based on their name and globbing pattern.
+     * Find data sources based on their name and globbing pattern.
      *
      * @param wildcard globbing pattern
-     * @return list of mathching datasources
+     * @return list of matching data sources
      */
-    public List<Datasource> find(String wildcard) {
-        return datasources.stream()
+    public List<DataSource> find(String wildcard) {
+        return dataSources.stream()
                 .filter(d -> wildcardMatch(d.getName(), wildcard))
                 .collect(toList());
     }
 
     /**
-     * Find datasources based on their group and and globbing pattern.
+     * Find data sources based on their group and and globbing pattern.
      *
      * @param wildcard globbing pattern
-     * @return list of mathching datasources
+     * @return list of mathching data sources
      */
-    public List<Datasource> findByGroup(String wildcard) {
-        return datasources.stream()
+    public List<DataSource> findByGroup(String wildcard) {
+        return dataSources.stream()
                 .filter(d -> wildcardMatch(d.getGroup(), wildcard))
                 .collect(toList());
     }
 
     @Override
     public void close() {
-        datasources.forEach(ClosableUtils::closeQuietly);
+        dataSources.forEach(ClosableUtils::closeQuietly);
     }
 
     @Override
     public String toString() {
         return "Datasources{" +
-                "datasources=" + datasources +
+                "dataSources=" + dataSources +
+                ", names=" + getNames() +
+                ", groups=" + getGroups() +
+                ", size=" + size() +
                 '}';
     }
 }

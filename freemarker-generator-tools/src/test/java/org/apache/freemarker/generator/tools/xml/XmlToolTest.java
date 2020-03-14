@@ -17,8 +17,8 @@
 package org.apache.freemarker.generator.tools.xml;
 
 import freemarker.ext.dom.NodeModel;
-import org.apache.freemarker.generator.base.datasource.Datasource;
-import org.apache.freemarker.generator.base.datasource.DatasourceFactory;
+import org.apache.freemarker.generator.base.datasource.DataSource;
+import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
@@ -38,8 +38,8 @@ public class XmlToolTest {
 
     @Test
     public void shallParseXmlDatasource() throws Exception {
-        try (Datasource datasource = datasource(ANY_XML_STRING)) {
-            final NodeModel model = xmlTool().parse(datasource);
+        try (DataSource dataSource = dataSource(ANY_XML_STRING)) {
+            final NodeModel model = xmlTool().parse(dataSource);
 
             assertNotNull(model);
             assertEquals(1, model.getChildNodes().size());
@@ -58,7 +58,7 @@ public class XmlToolTest {
         return new XmlTool();
     }
 
-    private Datasource datasource(String value) {
-        return DatasourceFactory.create("test.xml", ANY_GROUP, value);
+    private DataSource dataSource(String value) {
+        return DataSourceFactory.create("test.xml", ANY_GROUP, value);
     }
 }

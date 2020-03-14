@@ -34,7 +34,7 @@ public class PicocliTest {
     @Test
     public void testSinglePositionalParameter() {
         assertEquals(ANY_FILE_URI, parse("-t", TEMPLATE, ANY_FILE_URI).sources.get(0));
-        assertNull(ANY_FILE, parse("-t", TEMPLATE, ANY_FILE_URI).datasources);
+        assertNull(ANY_FILE, parse("-t", TEMPLATE, ANY_FILE_URI).dataSources);
     }
 
     @Test
@@ -52,17 +52,17 @@ public class PicocliTest {
     @Test
     public void testSingleNamedDatasource() {
         assertEquals(ANY_FILE, parse("-t", TEMPLATE, ANY_FILE).sources.get(0));
-        assertEquals(ANY_FILE, parse("-t", TEMPLATE, "-d", ANY_FILE).datasources.get(0));
-        assertEquals(ANY_FILE, parse("-t", TEMPLATE, "--datasource", ANY_FILE).datasources.get(0));
-        assertEquals(ANY_FILE_URI, parse("-t", TEMPLATE, "--datasource", ANY_FILE_URI).datasources.get(0));
+        assertEquals(ANY_FILE, parse("-t", TEMPLATE, "-d", ANY_FILE).dataSources.get(0));
+        assertEquals(ANY_FILE, parse("-t", TEMPLATE, "--data-source", ANY_FILE).dataSources.get(0));
+        assertEquals(ANY_FILE_URI, parse("-t", TEMPLATE, "--data-source", ANY_FILE_URI).dataSources.get(0));
     }
 
     @Test
     public void testMultipleNamedDatasource() {
-        final Main main = parse("-t", TEMPLATE, "-d", ANY_FILE, "--datasource", OTHER_FILE_URI);
+        final Main main = parse("-t", TEMPLATE, "-d", ANY_FILE, "--data-source", OTHER_FILE_URI);
 
-        assertEquals(ANY_FILE, main.datasources.get(0));
-        assertEquals(OTHER_FILE_URI, main.datasources.get(1));
+        assertEquals(ANY_FILE, main.dataSources.get(0));
+        assertEquals(OTHER_FILE_URI, main.dataSources.get(1));
         assertNull(main.sources);
     }
 

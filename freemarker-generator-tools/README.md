@@ -7,9 +7,9 @@ Design Considerations
 ------------------------------------------------------------------------------
 
 * A tool shall expose a default constructor and/or a constructor taking a `Map<String, Object> settings`
-* A tool processing datasources shall provide a `parse(Datasource)` method
+* A tool processing data sources shall provide a `parse(Datasource)` method
 * A tool shall be stateless, multi-thread safe and potentially long-lived to enable usage in a different context
-* A tool shall support arbitrary large source datasources and process them efficiently
+* A tool shall support arbitrary large source data sources and process them efficiently
 * A tool shall expose a `toString()` method for documentation purposes
 
 Available Tools

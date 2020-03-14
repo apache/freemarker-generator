@@ -20,15 +20,15 @@ import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.Option;
-import org.apache.freemarker.generator.base.datasource.Datasource;
+import org.apache.freemarker.generator.base.datasource.DataSource;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 public class JsonPathTool {
 
-    public DocumentContext parse(Datasource datasource) throws IOException {
-        try (InputStream is = datasource.getUnsafeInputStream()) {
+    public DocumentContext parse(DataSource dataSource) throws IOException {
+        try (InputStream is = dataSource.getUnsafeInputStream()) {
             return JsonPath.using(configuration()).parse(is);
         }
     }

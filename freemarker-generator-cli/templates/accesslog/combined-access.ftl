@@ -16,8 +16,8 @@
   under the License.
 -->
 <#assign grok = GrokTool.compile("%{COMBINEDAPACHELOG}")>
-<#assign datasource = Datasources.get(0)>
-<#assign lines = datasource.getLineIterator()>
+<#assign dataSource = DataSources.get(0)>
+<#assign lines = dataSource.getLineIterator()>
 
 <#compress>
     TIMESTAMP;VERB;REQUEST;HTTPVERSION

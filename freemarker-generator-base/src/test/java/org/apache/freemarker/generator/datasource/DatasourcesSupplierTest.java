@@ -16,8 +16,8 @@
  */
 package org.apache.freemarker.generator.datasource;
 
-import org.apache.freemarker.generator.base.datasource.Datasource;
-import org.apache.freemarker.generator.base.datasource.DatasourcesSupplier;
+import org.apache.freemarker.generator.base.datasource.DataSource;
+import org.apache.freemarker.generator.base.datasource.DataSourcesSupplier;
 import org.junit.Test;
 
 import java.nio.charset.Charset;
@@ -85,8 +85,8 @@ public class DatasourcesSupplierTest {
 
     @Test
     public void shouldResolveLargeDirectory() {
-        final List<Datasource> datasources = supplier(".", null, null).get();
-        assertFalse(datasources.isEmpty());
+        final List<DataSource> dataSources = supplier(".", null, null).get();
+        assertFalse(dataSources.isEmpty());
     }
 
     @Test(expected = RuntimeException.class)
@@ -100,11 +100,11 @@ public class DatasourcesSupplierTest {
         assertEquals(2, supplier(sources, "*.xml", null).get().size());
     }
 
-    private static DatasourcesSupplier supplier(String directory, String include, String exclude) {
-        return new DatasourcesSupplier(singletonList(directory), include, exclude, Charset.defaultCharset());
+    private static DataSourcesSupplier supplier(String directory, String include, String exclude) {
+        return new DataSourcesSupplier(singletonList(directory), include, exclude, Charset.defaultCharset());
     }
 
-    private static DatasourcesSupplier supplier(List<String> files, String include, String exclude) {
-        return new DatasourcesSupplier(files, include, exclude, Charset.defaultCharset());
+    private static DataSourcesSupplier supplier(List<String> files, String include, String exclude) {
+        return new DataSourcesSupplier(files, include, exclude, Charset.defaultCharset());
     }
 }

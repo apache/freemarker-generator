@@ -58,7 +58,7 @@ Some years later the not-so-small-any-longer-and-not-having-tests Groovy script 
 * Support transformation of HTML using [JSoup](https://jsoup.org)
 * Support transformation of structured logfiles using [Grok](https://github.com/thekrakken/java-grok)
 * XML & XPath is supported by FreeMarker [out-of-the-box](http://freemarker.org/docs/xgui.html)
-* Support for reading a datasource content from STDIN to integrate with command line tools
+* Support for reading a data source content from STDIN to integrate with command line tools
 * Support execution of arbitrary commands using [Apache Commons Exec](https://commons.apache.org/proper/commons-exec/)
 * Add some commonly useful information such as `System Properties`, `Enviroment Variables`
 * Support embedding the code in existing applications
@@ -106,7 +106,7 @@ FreeMarker CLI Tools
 - XmlTool              : Process XML files using Apache FreeMarker (see https://freemarker.apache.org/docs/xgui.html)
 - YamlTool             : Process YAML files using SnakeYAML(see https://bitbucket.org/asomov/snakeyaml/wiki/Home)
 
-FreeMarker CLI Datasources
+FreeMarker CLI DataSources
 ---------------------------------------------------------------------------
 
 User Supplied Parameters
@@ -204,21 +204,21 @@ Apache FreeMarker CLI
   -D, --system-property=<String=String>
                             Set system property
   -e, --input-encoding=<inputEncoding>
-                            Encoding of datasource
+                            Encoding of data source
   -E, --expose-env          Expose environment variables and user-supplied
                               properties globally
-      --exclude=<exclude>   File pattern for datasource input directory
+      --exclude=<exclude>   File pattern for data source input directory
   -h, --help                Show this help message and exit.
   -i, --interactive=<interactiveTemplate>
                             Interactive FreeMarker template
-      --include=<include>   File pattern for datasource input directory
+      --include=<include>   File pattern for data source input directory
   -l, --locale=<locale>     Locale being used for the output, e.g. 'en_US'
   -o, --output=<outputFile> Output file
       --output-encoding=<outputEncoding>
                             Encoding of output, e.g. UTF-8
   -P, --param=<String=String>
                             Set parameter
-      --stdin               Read datasource from stdin
+      --stdin               Read data source from stdin
   -t, --template=<template> FreeMarker template to render
       --times=<times>       Re-run X times for profiling
   -V, --version             Print version information and exit.
@@ -255,7 +255,7 @@ or pipe a cURL response
 
 ```text
 <#ftl output_format="plainText" >
-<#assign json = JsonPathTool.parse(Datasources.get(0))>
+<#assign json = JsonPathTool.parse(DataSources.get(0))>
 <#assign users = json.read("$[*]")>
 <#--------------------------------------------------------------------------->
 # GitHub Users
@@ -293,7 +293,7 @@ The FreeMarker template is shown below
 ```text
 <#ftl output_format="plainText">
 <#assign cvsFormat = CSVTool.formats["DEFAULT"].withHeader()>
-<#assign csvParser = CSVTool.parse(Datasources.get(0), cvsFormat)>
+<#assign csvParser = CSVTool.parse(DataSources.get(0), cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderMap()?keys>
 <#assign csvRecords = csvParser.records>
 <#--------------------------------------------------------------------------->
@@ -330,7 +330,7 @@ using the following template
 
 ```text
 <#ftl output_format="plainText" >
-<#assign xml = XmlTool.parse(Datasources.get(0))>
+<#assign xml = XmlTool.parse(DataSources.get(0))>
 <#list xml.recipients.person as recipient>
 To: ${recipient.name}
 ${recipient.address}
@@ -377,7 +377,7 @@ One day I was asked a to prepare a CSV files containing REST endpoints described
 
 ```text
 <#ftl output_format="plainText" strip_text="true">
-<#assign json = JsonPathTool.parse(Datasources.get(0))>
+<#assign json = JsonPathTool.parse(DataSources.get(0))>
 <#assign basePath = json.read("$.basePath")>
 <#assign paths = json.read("$.paths")>
 
@@ -439,9 +439,9 @@ The provided FTL transforms an Excel into a HTML document supporting multiple Ex
 
 ```text
 <#ftl output_format="HTML" >
-<#assign datasource = Datasources.get(0)>
-<#assign name = datasource.name>
-<#assign workbook = ExcelTool.parse(datasource)>
+<#assign dataSource = DataSources.get(0)>
+<#assign name = dataSource.name>
+<#assign workbook = ExcelTool.parse(dataSource)>
 <#assign date = .now?iso_utc>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>
@@ -535,8 +535,8 @@ The FTL uses a couple of interesting features
 <#ftl output_format="plainText" strip_text="true">
 <#compress>
     TENANT,SITE,USER_ID,DISPOSER_ID,PASSWORD,SMS_OTP,NAME,DESCRIPTION
-    <#list Datasources.list as datasource>
-        <#assign properties = PropertiesTool.parse(datasource)>
+    <#list DataSources.list as dataSource>
+        <#assign properties = PropertiesTool.parse(dataSource)>
         <#assign environments = properties["ENVIRONMENTS"]!"">
         <#assign tenant = extractTenant(environments)>
         <#assign site = extractSite(environments)>
@@ -565,10 +565,10 @@ For a POC (proof of concept) I created a sample transformation from CSV to XML-F
 
 ```text
 <#ftl output_format="XML" >
-<#assign datasource = Datasources.get(0)>
-<#assign name = datasource.name>
+<#assign dataSource = DataSources.get(0)>
+<#assign name = dataSource.name>
 <#assign cvsFormat = CSVTool.formats.DEFAULT.withDelimiter('\t').withHeader()>
-<#assign csvParser = CSVTool.parse(datasource, cvsFormat)>
+<#assign csvParser = CSVTool.parse(dataSource, cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderMap()?keys>
 <#assign csvRecords = csvParser.records>
 <#--------------------------------------------------------------------------->
@@ -686,8 +686,8 @@ Recently I got the rather unusual question how to determine the list of dependen
 
 ```text
 <#ftl output_format="plainText" strip_text="true">
-<#assign datasource = Datasources.get(0)>
-<#assign html = JsoupTool.parse(datasource)>
+<#assign dataSource = DataSources.get(0)>
+<#assign html = JsoupTool.parse(dataSource)>
 
 <#compress>
     <@writeHeader/>
@@ -761,7 +761,7 @@ and the final FTL is found below
 ```text
 <#ftl output_format="plainText">
 <#assign cvsFormat = CSVTool.formats["DEFAULT"].withHeader()>
-<#assign csvParser = CSVTool.parse(Datasources.get(0), cvsFormat)>
+<#assign csvParser = CSVTool.parse(DataSources.get(0), cvsFormat)>
 <#assign records = csvParser.records>
 <#assign csvMap = CSVTool.toMap(records, "disposer")>
 <#--------------------------------------------------------------------------->
@@ -845,8 +845,8 @@ using the following FreeMarker template
 ```text
 <#ftl output_format="plainText" strip_whitespace=true>
 <#assign grok = GrokTool.compile("%{COMBINEDAPACHELOG}")>
-<#assign datasource = Datasources.get(0)>
-<#assign lines = datasource.getLineIterator()>
+<#assign dataSource = DataSources.get(0)>
+<#assign lines = dataSource.getLineIterator()>
 
 <#compress>
     TIMESTAMP;VERB;REQUEST;HTTPVERSION
@@ -864,7 +864,7 @@ using the following FreeMarker template
 While this looks small and tidy there are some nifty features
 
 * `GrokTool.compile("%{COMBINEDAPACHELOG}")` builds the `Grok` instance to parse access logs in `Combined Format`
-* The datasource is streamed line by line and not loaded into memory in one piece
+* The data source is streamed line by line and not loaded into memory in one piece
 * This also works for using `stdin` so are able to parse GB of access log or other files
 
 ## 6.11 CSV Transformation
@@ -877,7 +877,7 @@ renders the following template
 
 ```text
 <#ftl output_format="plainText" strip_text="true">
-<#assign csvParser = createCsvParser(Datasources.get(0))>
+<#assign csvParser = createCsvParser(DataSources.get(0))>
 <#assign csvPrinter = createCsvPrinter()>
 <#-- Print each line without materializing the CSV in memory -->
 <#compress>
@@ -886,11 +886,11 @@ renders the following template
     </#list>
 </#compress>
 
-<#function createCsvParser datasource>
+<#function createCsvParser dataSource>
     <#assign initialCvsInFormat = CSVTool.formats[SystemTool.getParameter("csv.in.format", "DEFAULT")]>
     <#assign csvInDelimiter = CSVTool.toDelimiter(SystemTool.getParameter("csv.in.delimiter", initialCvsInFormat.getDelimiter()))>
     <#assign cvsInFormat = initialCvsInFormat.withDelimiter(csvInDelimiter)>
-    <#return CSVTool.parse(datasource, cvsInFormat)>
+    <#return CSVTool.parse(dataSource, cvsInFormat)>
 </#function>
 
 <#function createCsvPrinter>
@@ -980,16 +980,16 @@ Sometime you need to apply a CSS, JSON or XPath query in ad ad-hoc way without i
 > bin/freemarker-cli -i 'Hello ${SystemTool.envs["USER"]}'; echo
 Hello sgoeschl
 
-> bin/freemarker-cli -i '${JsonPathTool.parse(Datasources.first).read("$.info.title")}' site/sample/json/swagger-spec.json; echo
+> bin/freemarker-cli -i '${JsonPathTool.parse(DataSources.first).read("$.info.title")}' site/sample/json/swagger-spec.json; echo
 Swagger Petstore
 
-> bin/freemarker-cli -i 'Post Title : ${JsonPathTool.parse(Datasources.first).read("$.title")}' https://jsonplaceholder.typicode.com/posts/2
+> bin/freemarker-cli -i 'Post Title : ${JsonPathTool.parse(DataSources.first).read("$.title")}' https://jsonplaceholder.typicode.com/posts/2
 Post Title : qui est esse
 
-> bin/freemarker-cli -i '${XmlTool.parse(Datasources.first)["recipients/person[1]/name"]}' site/sample/xml/recipients.xml; echo
+> bin/freemarker-cli -i '${XmlTool.parse(DataSources.first)["recipients/person[1]/name"]}' site/sample/xml/recipients.xml; echo
 John Smith
 
-> bin/freemarker-cli -i '${JsoupTool.parse(Datasources.first).select("a")[0]}' site/sample/html/dependencies.html; echo
+> bin/freemarker-cli -i '${JsoupTool.parse(DataSources.first).select("a")[0]}' site/sample/html/dependencies.html; echo
 <a href="${project.url}" title="FreeMarker CLI">FreeMarker CLI</a>
 
 > ./bin/freemarker-cli -i '<#list SystemTool.envs as name,value>${name} ==> ${value}${"\n"}</#list>'
@@ -1018,8 +1018,8 @@ and Apache FreeMarker template
 
 ```text
 <#ftl output_format="plainText" strip_text="true">
-<#assign datasource = Datasources.get(0)>
-<#assign parser = parser(datasource)>
+<#assign dataSource = DataSources.get(0)>
+<#assign parser = parser(dataSource)>
 <#assign headers = parser.getHeaderNames()>
 <#assign column = SystemTool.getProperty("column")>
 <#assign values = SystemTool.getProperty("values")?split(",")>
@@ -1027,7 +1027,7 @@ and Apache FreeMarker template
 <#-- Process each line without materializing the whole file in memory -->
 
 <#compress>
-    <@writePageHeader datasource/>
+    <@writePageHeader dataSource/>
     <#list parser.iterator() as record>
         <#if filter(record)>
             <@writeCsvRecord headers record/>
@@ -1035,18 +1035,18 @@ and Apache FreeMarker template
     </#list>
 </#compress>
 
-<#function parser datasource>
+<#function parser dataSource>
     <#assign format = CSVTool.formats[SystemTool.getProperty("format", "DEFAULT")]>
     <#assign delimiter = CSVTool.toDelimiter(SystemTool.getProperty("delimiter", format.getDelimiter()))>
-    <#return CSVTool.parse(datasource, format.withFirstRecordAsHeader().withDelimiter(delimiter))>
+    <#return CSVTool.parse(dataSource, format.withFirstRecordAsHeader().withDelimiter(delimiter))>
 </#function>
 
 <#function filter record>
     <#return values?seq_contains(record.get(column))>
 </#function>
 
-<#macro writePageHeader datasource>
-    # ${datasource.name}
+<#macro writePageHeader dataSource>
+    # ${dataSource.name}
 </#macro>
 
 <#macro writeCsvRecord headers record>
@@ -1191,13 +1191,13 @@ user.home    : /Users/sgoeschl
 - java.vendor.url ==> http://java.oracle.com/
 - java.vm.name ==> Java HotSpot(TM) 64-Bit Server VM
 
-11) Access Datasources
+11) Access DataSources
 ---------------------------------------------------------------------------
-Get the number of datasources:
+Get the number of data sources:
 - 0
 List all files containing "README" in the name
 List all files having "md" extension
-Get all datasources
+Get all data sources
 
 12) FreeMarker CLI Tools
 ---------------------------------------------------------------------------
@@ -1217,7 +1217,7 @@ Get all datasources
 13) Document Data Model
 ---------------------------------------------------------------------------
 - CSVTool
-- Datasources
+- DataSources
 - ExcelTool
 - ExecTool
 - FreeMarkerTool
@@ -1257,19 +1257,19 @@ Sat Feb 22 16:54:20 CET 2020
 ## 7.1 How It Works
 
 * The user-supplied files are loaded or input is read from `stdin`
-* The FreeMarker data model containing the datasources and tools is created and passed to the template
+* The FreeMarker data model containing the data sources and tools is created and passed to the template
 * The generated output is written to the user-supplied file or to `stdout`
 
 ## 7.2 FreeMarker Data Model
 
-Within the script a FreeMarker data model is set up and passed to the template - it contains the datasources to be processed and the following tools
+Within the script a FreeMarker data model is set up and passed to the template - it contains the data sources to be processed and the following tools
 
 | Entry                 | Description                                                                                               |
 |-----------------------|-----------------------------------------------------------------------------------------------------------|
 | CSVTool               | Process CSV files using [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/)              |
 | ExecTool              | Execute command line tools using [Apache Commons Exec](https://commons.apache.org/proper/commons-exec/)   |
 | ExcelTool             | Process Excels files (XLS, XLSX) using [Apache POI](https://poi.apache.org)                               |
-| Datasources           | Helper class to find datasources, e.g. by name, extension or index                                          |
+| DataSources           | Helper class to find data sources, e.g. by name, extension or index                                          |
 | FreeMarkerTool        | Expose useful FreeMarker classes                                                                          |
 | GrokTool              | Process text files using [Grok](https://github.com/thekrakken/java-grok) instead of regular expressions   |
 | JsonPathTool          | Process JSON file using [Java JSON Path](https://github.com/json-path/JsonPath)                           |

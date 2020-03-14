@@ -15,7 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign csvParser = createCsvParser(Datasources.get(0))>
+<#assign csvParser = createCsvParser(DataSources.get(0))>
 <#assign csvPrinter = createCsvPrinter()>
 <#-- Print each line without materializing the CSV in memory -->
 <#compress>
@@ -24,11 +24,11 @@
     </#list>
 </#compress>
 
-<#function createCsvParser datasource>
+<#function createCsvParser dataSource>
     <#assign initialCvsInFormat = CSVTool.formats[SystemTool.getParameter("csv.in.format", "DEFAULT")]>
     <#assign csvInDelimiter = CSVTool.toDelimiter(SystemTool.getParameter("csv.in.delimiter", initialCvsInFormat.getDelimiter()))>
     <#assign cvsInFormat = initialCvsInFormat.withDelimiter(csvInDelimiter)>
-    <#return CSVTool.parse(datasource, cvsInFormat)>
+    <#return CSVTool.parse(dataSource, cvsInFormat)>
 </#function>
 
 <#function createCsvPrinter>

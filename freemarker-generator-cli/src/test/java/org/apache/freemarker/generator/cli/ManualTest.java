@@ -30,9 +30,9 @@ public class ManualTest {
     // private static final String CMD = "-b ./src/test -DFOO=foo -PBAR=bar -t templates/demo.ftl site/sample/csv/transactions.csv";
     // private static final String CMD = "-b ./src/test -Dcsv.out.format=TDF -t templates/csv/transform.ftl site/sample/csv/contract.csv";
     // private static final String CMD = "-t templates/excel/csv/transform.ftl -l de_AT site/sample/excel/test.xlsx";
-    // private static final String CMD = "-i ${JsonPathTool.parse(Datasources.first).read('$.info.title')} site/sample/json/swagger-spec.json";
-    // private static final String CMD = "-i ${XmlTool.parse(Datasources.first)['recipients/person[1]/name']} site/sample/xml/recipients.xml";
-    // private static final String CMD = "-i ${JsoupTool.parse(Datasources.first).select('a')[0]} site/sample/html/dependencies.html";
+    // private static final String CMD = "-i ${JsonPathTool.parse(DataSources.first).read('$.info.title')} site/sample/json/swagger-spec.json";
+    // private static final String CMD = "-i ${XmlTool.parse(DataSources.first)['recipients/person[1]/name']} site/sample/xml/recipients.xml";
+    // private static final String CMD = "-i ${JsoupTool.parse(DataSources.first).select('a')[0]} site/sample/html/dependencies.html";
     // private static final String CMD = "-b ./src/test -t templates/properties/csv/locker-test-users.ftl site/sample/properties";
     // private static final String CMD = "-b ./src/test -e UTF-8 -l de_AT -Dcolumn=Order%20ID -Dvalues=226939189,957081544 -Dformat=DEFAULT -Ddelimiter=COMMA -t templates/csv/md/filter.ftl site/sample/csv/sales-records.csv";
     // private static final String CMD = "-E -b ./src/test -t templates/environment.ftl";

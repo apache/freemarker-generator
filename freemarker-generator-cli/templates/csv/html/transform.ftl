@@ -15,10 +15,10 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign datasource = Datasources.get(0)>
-<#assign name = datasource.name>
+<#assign dataSource = DataSources.get(0)>
+<#assign name = dataSource.name>
 <#assign cvsFormat = CSVTool.formats["DEFAULT"].withHeader()>
-<#assign csvParser = CSVTool.parse(datasource, cvsFormat)>
+<#assign csvParser = CSVTool.parse(dataSource, cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderNames()>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>

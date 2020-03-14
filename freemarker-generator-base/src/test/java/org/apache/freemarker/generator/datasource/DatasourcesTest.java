@@ -16,9 +16,9 @@
  */
 package org.apache.freemarker.generator.datasource;
 
-import org.apache.freemarker.generator.base.datasource.Datasource;
-import org.apache.freemarker.generator.base.datasource.DatasourceFactory;
-import org.apache.freemarker.generator.base.datasource.Datasources;
+import org.apache.freemarker.generator.base.datasource.DataSource;
+import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
+import org.apache.freemarker.generator.base.datasource.DataSources;
 import org.junit.Test;
 
 import java.io.File;
@@ -44,95 +44,95 @@ public class DatasourcesTest {
 
     @Test
     public void shouldFindByName() {
-        final Datasources datasources = datasources();
+        final DataSources dataSources = dataSources();
 
-        assertEquals(0, datasources.find(null).size());
-        assertEquals(0, datasources.find("").size());
-        assertEquals(0, datasources.find("*.bar").size());
-        assertEquals(0, datasources.find("foo.*").size());
-        assertEquals(0, datasources.find("foo.bar").size());
+        assertEquals(0, dataSources.find(null).size());
+        assertEquals(0, dataSources.find("").size());
+        assertEquals(0, dataSources.find("*.bar").size());
+        assertEquals(0, dataSources.find("foo.*").size());
+        assertEquals(0, dataSources.find("foo.bar").size());
 
-        assertEquals(2, datasources.find("*.*").size());
-        assertEquals(1, datasources.find("*." + ANY_FILE_EXTENSION).size());
-        assertEquals(1, datasources.find("*.???").size());
-        assertEquals(1, datasources.find("*om*").size());
-        assertEquals(1, datasources.find("*o*.xml").size());
+        assertEquals(2, dataSources.find("*.*").size());
+        assertEquals(1, dataSources.find("*." + ANY_FILE_EXTENSION).size());
+        assertEquals(1, dataSources.find("*.???").size());
+        assertEquals(1, dataSources.find("*om*").size());
+        assertEquals(1, dataSources.find("*o*.xml").size());
 
-        assertEquals(1, datasources.find(ANY_FILE_NAME).size());
-        assertEquals(1, datasources.find(ANY_FILE_NAME.charAt(0) + "*").size());
+        assertEquals(1, dataSources.find(ANY_FILE_NAME).size());
+        assertEquals(1, dataSources.find(ANY_FILE_NAME.charAt(0) + "*").size());
 
-        assertEquals(3, datasources.find("*").size());
+        assertEquals(3, dataSources.find("*").size());
     }
 
     @Test
     public void shouldFindByGroup() {
-        final Datasources datasources = datasources();
+        final DataSources dataSources = dataSources();
 
-        assertEquals(0, datasources.findByGroup(null).size());
-        assertEquals(0, datasources.findByGroup("").size());
+        assertEquals(0, dataSources.findByGroup(null).size());
+        assertEquals(0, dataSources.findByGroup("").size());
 
-        assertEquals(0, datasources.findByGroup("unknown").size());
+        assertEquals(0, dataSources.findByGroup("unknown").size());
 
-        assertEquals(3, datasources.findByGroup("*").size());
-        assertEquals(3, datasources.findByGroup("default").size());
-        assertEquals(3, datasources.findByGroup("d*").size());
-        assertEquals(3, datasources.findByGroup("d??????").size());
+        assertEquals(3, dataSources.findByGroup("*").size());
+        assertEquals(3, dataSources.findByGroup("default").size());
+        assertEquals(3, dataSources.findByGroup("d*").size());
+        assertEquals(3, dataSources.findByGroup("d??????").size());
 
     }
 
     @Test
     public void shouldGetDatasource() {
-        assertNotNull(datasources().get(ANY_FILE_NAME));
+        assertNotNull(dataSources().get(ANY_FILE_NAME));
     }
 
     @Test
     public void shouldGetAllDatasources() {
-        final Datasources datasources = datasources();
+        final DataSources dataSources = dataSources();
 
-        assertEquals("unknown", datasources().get(0).getName());
-        assertEquals("pom.xml", datasources().get(1).getName());
-        assertEquals("server.invalid", datasources().get(2).getName());
-        assertEquals("unknown", datasources().getFirst().getName());
-        assertEquals(3, datasources.getList().size());
-        assertEquals(3, datasources.size());
-        assertFalse(datasources.isEmpty());
+        assertEquals("unknown", dataSources().get(0).getName());
+        assertEquals("pom.xml", dataSources().get(1).getName());
+        assertEquals("server.invalid", dataSources().get(2).getName());
+        assertEquals("unknown", dataSources().getFirst().getName());
+        assertEquals(3, dataSources.getList().size());
+        assertEquals(3, dataSources.size());
+        assertFalse(dataSources.isEmpty());
     }
 
     @Test
     public void shouldGetNames() {
-        assertEquals(asList("unknown", "pom.xml", "server.invalid"), datasources().getNames());
+        assertEquals(asList("unknown", "pom.xml", "server.invalid"), dataSources().getNames());
     }
 
     @Test
     public void shouldGetGroups() {
-        assertEquals(singletonList(DEFAULT_GROUP), datasources().getGroups());
+        assertEquals(singletonList(DEFAULT_GROUP), dataSources().getGroups());
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionWhenGetDoesNotFindDatasource() {
-        datasources().get("file-does-not-exist");
+        dataSources().get("file-does-not-exist");
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionWhenGetFindsMultipleDatasources() {
-        datasources().get("*");
+        dataSources().get("*");
     }
 
-    private static Datasources datasources() {
-        return new Datasources(asList(textDatasource(), fileDatasource(), urlDatasource()));
+    private static DataSources dataSources() {
+        return new DataSources(asList(textDatasource(), fileDatasource(), urlDatasource()));
     }
 
-    private static Datasource textDatasource() {
-        return DatasourceFactory.create(UNKNOWN, DEFAULT_GROUP, ANY_TEXT);
+    private static DataSource textDatasource() {
+        return DataSourceFactory.create(UNKNOWN, DEFAULT_GROUP, ANY_TEXT);
     }
 
-    private static Datasource fileDatasource() {
-        return DatasourceFactory.create(ANY_FILE, UTF_8);
+    private static DataSource fileDatasource() {
+        return DataSourceFactory.create(ANY_FILE, UTF_8);
     }
 
-    private static Datasource urlDatasource() {
+    private static DataSource urlDatasource() {
         try {
-            return DatasourceFactory.create(new URL(ANY_URL));
+            return DataSourceFactory.create(new URL(ANY_URL));
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }

@@ -39,11 +39,11 @@ FreeMarker CLI Tools
 </#if>
 </#list>
 
-FreeMarker CLI Datasources
+FreeMarker CLI DataSources
 ------------------------------------------------------------------------------
-<#list Datasources.list as datasource>
-[#${datasource?counter}], name=${datasource.name}, group=${datasource.group}, charset=${datasource.charset}, length= ${datasource.length} Bytes
-Location : ${datasource.location}
+<#list DataSources.list as dataSource>
+[#${dataSource?counter}], name=${dataSource.name}, group=${dataSource.group}, charset=${dataSource.charset}, length= ${dataSource.length} Bytes
+Location : ${dataSource.location}
 </#list>
 
 User Supplied Parameters
