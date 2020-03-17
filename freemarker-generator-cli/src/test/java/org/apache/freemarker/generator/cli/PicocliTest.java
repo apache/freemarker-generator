@@ -50,7 +50,7 @@ public class PicocliTest {
     }
 
     @Test
-    public void testSingleNamedDatasource() {
+    public void testSingleNamedDataSource() {
         assertEquals(ANY_FILE, parse("-t", TEMPLATE, ANY_FILE).sources.get(0));
         assertEquals(ANY_FILE, parse("-t", TEMPLATE, "-d", ANY_FILE).dataSources.get(0));
         assertEquals(ANY_FILE, parse("-t", TEMPLATE, "--data-source", ANY_FILE).dataSources.get(0));
@@ -58,7 +58,7 @@ public class PicocliTest {
     }
 
     @Test
-    public void testMultipleNamedDatasource() {
+    public void testMultipleNamedDataSource() {
         final Main main = parse("-t", TEMPLATE, "-d", ANY_FILE, "--data-source", OTHER_FILE_URI);
 
         assertEquals(ANY_FILE, main.dataSources.get(0));

@@ -89,7 +89,7 @@ public class ToolsFactory {
                 return Class.forName(className, true, contextClassLoader);
             }
         } catch (ClassNotFoundException | SecurityException e) {
-            ;// Intentionally ignored
+            // Intentionally ignored
         }
 
         // Fall back to the defining class loader of the FreeMarker classes

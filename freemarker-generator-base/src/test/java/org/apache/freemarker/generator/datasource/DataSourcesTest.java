@@ -22,8 +22,6 @@ import org.apache.freemarker.generator.base.datasource.DataSources;
 import org.junit.Test;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
@@ -33,7 +31,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-public class DatasourcesTest {
+public class DataSourcesTest {
 
     private static final String UNKNOWN = "unknown";
     private static final String ANY_TEXT = "Hello World";
@@ -81,12 +79,12 @@ public class DatasourcesTest {
     }
 
     @Test
-    public void shouldGetDatasource() {
+    public void shouldGetDataSource() {
         assertNotNull(dataSources().get(ANY_FILE_NAME));
     }
 
     @Test
-    public void shouldGetAllDatasources() {
+    public void shouldGetAllDataSource() {
         final DataSources dataSources = dataSources();
 
         assertEquals("unknown", dataSources().get(0).getName());
@@ -109,32 +107,28 @@ public class DatasourcesTest {
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowExceptionWhenGetDoesNotFindDatasource() {
+    public void shouldThrowExceptionWhenGetDoesNotFindDataSource() {
         dataSources().get("file-does-not-exist");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void shouldThrowExceptionWhenGetFindsMultipleDatasources() {
+    public void shouldThrowExceptionWhenGetFindsMultipleDataSources() {
         dataSources().get("*");
     }
 
     private static DataSources dataSources() {
-        return new DataSources(asList(textDatasource(), fileDatasource(), urlDatasource()));
+        return new DataSources(asList(textDataSource(), fileDataSource(), urlDataSource()));
     }
 
-    private static DataSource textDatasource() {
-        return DataSourceFactory.create(UNKNOWN, DEFAULT_GROUP, ANY_TEXT);
+    private static DataSource textDataSource() {
+        return DataSourceFactory.fromString(UNKNOWN, DEFAULT_GROUP, ANY_TEXT, "text/plain");
     }
 
-    private static DataSource fileDatasource() {
-        return DataSourceFactory.create(ANY_FILE, UTF_8);
+    private static DataSource fileDataSource() {
+        return DataSourceFactory.fromFile(ANY_FILE, UTF_8);
     }
 
-    private static DataSource urlDatasource() {
-        try {
-            return DataSourceFactory.create(new URL(ANY_URL));
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
+    private static DataSource urlDataSource() {
+        return DataSourceFactory.create(ANY_URL);
     }
 }

@@ -137,7 +137,7 @@ public class DataSources implements Closeable {
 
     @Override
     public String toString() {
-        return "Datasources{" +
+        return "DataSource{" +
                 "dataSources=" + dataSources +
                 ", names=" + getNames() +
                 ", groups=" + getGroups() +

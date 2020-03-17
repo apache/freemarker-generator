@@ -23,7 +23,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import static java.util.Objects.requireNonNull;
-import static org.apache.freemarker.generator.base.FreeMarkerConstants.APPLICATION_OCTET_STREAM;
+import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_APPLICATION_OCTET_STREAM;
 
 public class ByteArrayDataSource implements DataSource {
 
@@ -32,7 +32,7 @@ public class ByteArrayDataSource implements DataSource {
     private final String contentType;
 
     public ByteArrayDataSource(String name, byte[] content) {
-        this(name, content, APPLICATION_OCTET_STREAM);
+        this(name, content, MIME_APPLICATION_OCTET_STREAM);
     }
 
     public ByteArrayDataSource(String name, byte[] content, String contentType) {

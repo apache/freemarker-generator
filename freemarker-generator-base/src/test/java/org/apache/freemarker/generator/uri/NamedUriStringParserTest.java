@@ -17,13 +17,15 @@
 package org.apache.freemarker.generator.uri;
 
 import org.apache.freemarker.generator.base.uri.NamedUri;
-import org.apache.freemarker.generator.base.uri.NamedUriParser;
+import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
-public class NamedUriParserTest {
+public class NamedUriStringParserTest {
 
     @Test
     public void shouldParseRelativeFileName() {
@@ -32,6 +34,7 @@ public class NamedUriParserTest {
         assertNull(namedURI.getName());
         assertNull(namedURI.getGroup());
         assertEquals("users.csv", namedURI.getUri().toString());
+        assertEquals("users.csv", namedURI.getFile().getName());
         assertEquals(0, namedURI.getParameters().size());
     }
 
@@ -42,6 +45,7 @@ public class NamedUriParserTest {
         assertNull(namedURI.getName());
         assertNull(namedURI.getGroup());
         assertEquals("/data/users.csv", namedURI.getUri().toString());
+        assertEquals("users.csv", namedURI.getFile().getName());
         assertEquals(0, namedURI.getParameters().size());
     }
 
@@ -52,6 +56,7 @@ public class NamedUriParserTest {
         assertNull(namedURI.getName());
         assertNull(namedURI.getGroup());
         assertEquals("users/", namedURI.getUri().toString());
+        assertEquals("users", namedURI.getFile().getName());
         assertEquals(0, namedURI.getParameters().size());
     }
 
@@ -62,7 +67,21 @@ public class NamedUriParserTest {
         assertNull(namedURI.getName());
         assertNull(namedURI.getGroup());
         assertEquals("file:///users.csv", namedURI.getUri().toString());
+        assertEquals("users.csv", namedURI.getFile().getName());
         assertEquals(0, namedURI.getParameters().size());
+    }
+
+    @Test
+    public void shouldParseNamedFileName() {
+        final NamedUri namedURI = parse("users=users.csv");
+
+        assertEquals("users", namedURI.getName());
+        assertNull(namedURI.getGroup());
+        assertEquals("file:///users.csv", namedURI.getUri().toString());
+        assertEquals("users.csv", namedURI.getFile().getName());
+        assertEquals(0, namedURI.getParameters().size());
+        assertTrue(namedURI.hasName());
+        assertFalse(namedURI.hasGroup());
     }
 
     @Test
@@ -72,6 +91,7 @@ public class NamedUriParserTest {
         assertEquals("users", namedURI.getName());
         assertNull(namedURI.getGroup());
         assertEquals("file:///users.csv", namedURI.getUri().toString());
+        assertEquals("users.csv", namedURI.getFile().getName());
         assertEquals(0, namedURI.getParameters().size());
     }
 
@@ -82,7 +102,10 @@ public class NamedUriParserTest {
         assertEquals("users", namedURI.getName());
         assertEquals("admin", namedURI.getGroup());
         assertEquals("file:///some-admin-users.csv", namedURI.getUri().toString());
+        assertEquals("some-admin-users.csv", namedURI.getFile().getName());
         assertEquals(0, namedURI.getParameters().size());
+        assertTrue(namedURI.hasName());
+        assertTrue(namedURI.hasGroup());
     }
 
     @Test
@@ -92,6 +115,7 @@ public class NamedUriParserTest {
         assertEquals("users", namedURI.getName());
         assertNull(namedURI.getGroup());
         assertEquals("file:///some-admin-users.csv", namedURI.getUri().toString());
+        assertEquals("some-admin-users.csv", namedURI.getFile().getName());
         assertEquals(0, namedURI.getParameters().size());
     }
 
@@ -102,6 +126,7 @@ public class NamedUriParserTest {
         assertNull(namedURI.getName());
         assertEquals("admin", namedURI.getGroup());
         assertEquals("file:///some-admin-users.csv", namedURI.getUri().toString());
+        assertEquals("some-admin-users.csv", namedURI.getFile().getName());
         assertEquals(0, namedURI.getParameters().size());
     }
 
@@ -187,6 +212,6 @@ public class NamedUriParserTest {
     }
 
     private static NamedUri parse(String value) {
-        return NamedUriParser.parse(value);
+        return NamedUriStringParser.parse(value);
     }
 }

@@ -21,6 +21,7 @@ import org.junit.Test;
 import java.net.URI;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class UriTest {
 
@@ -50,6 +51,24 @@ public class UriTest {
     }
 
     @Test
+    public void shouldParseSystemInUri() throws Exception {
+        final URI uri = new URI("system:///in");
+
+        assertEquals("system", uri.getScheme());
+        assertEquals("/in", uri.getPath());
+        assertEquals("system:///in", uri.toASCIIString());
+    }
+
+    @Test
+    public void shouldParseInputStreamUri() throws Exception {
+        final URI uri = new URI("inputstream:///1234");
+
+        assertEquals("inputstream", uri.getScheme());
+        assertEquals("/1234", uri.getPath());
+        assertEquals("inputstream:///1234", uri.toASCIIString());
+    }
+
+    @Test
     public void shouldParseFileUri() throws Exception {
         final URI uri = new URI("file:///tmp/my/file.json");
 
@@ -62,6 +81,7 @@ public class UriTest {
     public void shouldParseFileNameOnlyUri() throws Exception {
         final URI uri = new URI("file.json");
 
+        assertNull(uri.getScheme());
         assertEquals("file.json", uri.getPath());
         assertEquals("file.json", uri.toASCIIString());
     }

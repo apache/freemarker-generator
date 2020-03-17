@@ -16,10 +16,10 @@
  */
 package org.apache.freemarker.generator.base.uri;
 
+import org.apache.freemarker.generator.base.util.UriUtils;
 import org.apache.freemarker.generator.base.util.Validate;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,7 +36,7 @@ import static java.util.regex.Pattern.compile;
  *     <li>users=file:///users.csv#charset=UTF-16&amp;mimetype=text/csv</li>
  * </ul>
  */
-public class NamedUriParser {
+public class NamedUriStringParser {
 
     private static final String NAME = "name";
     private static final String GROUP = "group";
@@ -55,20 +55,20 @@ public class NamedUriParser {
             final URI uri = uri(matcher.group(URI));
             return new NamedUri(name, group, uri, parameters(uri));
         } else {
-            final URI uri = uri(value);
+            final URI uri = UriUtils.toURI(value);
             return new NamedUri(uri, parameters(uri));
         }
     }
 
-    private static URI uri(String value) {
-        try {
-            return new URI(value);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Failed to parse URI: " + value, e);
-        }
+    private static Map<String, String> parameters(URI uri) {
+        return UriFragmentParser.parse(uri.getFragment());
     }
 
-    private static Map<String, String> parameters(URI uri) {
-        return NamedUriFragmentParser.parse(uri.getFragment());
+    private static URI uri(String str) {
+        if (!str.contains("://")) {
+            return UriUtils.toURI("file:///" + str);
+        } else {
+            return UriUtils.toURI(str);
+        }
     }
 }

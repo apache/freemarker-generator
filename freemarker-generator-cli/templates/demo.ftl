@@ -49,7 +49,7 @@ java.math.RoundingMode#UP: ${FreeMarkerTool.enums["java.math.RoundingMode"].UP}
 ---------------------------------------------------------------------------
 List all data sources:
 <#list DataSources.list as dataSource>
-- Document: name=${dataSource.name} location=${dataSource.location} length=${dataSource.length} encoding=${dataSource.encoding!""}
+- Document: name=${dataSource.name} uri=${dataSource.uri} length=${dataSource.length} encoding=${dataSource.encoding!""}
 </#list>
 
 7) SystemTool
@@ -101,7 +101,7 @@ List all files having "md" extension
 </#list>
 Get all documents
 <#list DataSources.list as dataSource>
-- ${dataSource.name} => ${dataSource.location}
+- ${dataSource.name} => ${dataSource.uri}
 </#list>
 
 12) FreeMarker CLI Tools

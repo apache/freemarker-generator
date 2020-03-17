@@ -28,15 +28,21 @@ import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-public class DatasourcesSupplierTest {
+public class DataSourcesSupplierTest {
 
     private static final String NO_EXCLUDE = null;
-    private static final String ANY_FILE = "./pom.xml";
     private static final String ANY_DIRECTORY = "./src/test/data";
+    private static final String ANY_ENVIRONMENT_VARIABLE = "PATH";
 
     @Test
     public void shouldResolveSingleFile() {
-        assertEquals(1, supplier(ANY_FILE, "*", NO_EXCLUDE).get().size());
+        assertEquals(1, supplier("pom.xml", "*", NO_EXCLUDE).get().size());
+        assertEquals(1, supplier("./pom.xml", "*", NO_EXCLUDE).get().size());
+        assertEquals(1, supplier("file://./pom.xml", "*", NO_EXCLUDE).get().size());
+        assertEquals(1, supplier("pom=pom.xml", "*", NO_EXCLUDE).get().size());
+        assertEquals(1, supplier("pom=./pom.xml", "*", NO_EXCLUDE).get().size());
+        assertEquals(1, supplier("pom=file://./pom.xml", "*", NO_EXCLUDE).get().size());
+        assertEquals(1, supplier("pom=file://./pom.xml?mimetype=application/xml", "*", NO_EXCLUDE).get().size());
     }
 
     @Test
@@ -84,6 +90,12 @@ public class DatasourcesSupplierTest {
     }
 
     @Test
+    public void shouldResolveEnvironmentVariable() {
+        assertEquals(1, supplier("env:///PATH", "*", NO_EXCLUDE).get().size());
+        assertEquals(1, supplier("path=env:///PATH", "*", NO_EXCLUDE).get().size());
+    }
+
+    @Test
     public void shouldResolveLargeDirectory() {
         final List<DataSource> dataSources = supplier(".", null, null).get();
         assertFalse(dataSources.isEmpty());
@@ -98,6 +110,15 @@ public class DatasourcesSupplierTest {
     public void shouldAllowDuplicateFiles() {
         final List<String> sources = Arrays.asList("pom.xml", "pom.xml");
         assertEquals(2, supplier(sources, "*.xml", null).get().size());
+    }
+
+    @Test
+    public void shouldNormalizeDataSourceNameBasedOnFilePath() {
+        assertEquals("pom.xml", supplier("pom.xml", "*", NO_EXCLUDE).get().get(0).getName());
+        assertEquals("pom.xml", supplier("./pom.xml", "*", NO_EXCLUDE).get().get(0).getName());
+        assertEquals("pom.xml", supplier("file://./pom.xml", "*", NO_EXCLUDE).get().get(0).getName());
+        assertEquals("pom.xml", supplier("file:///pom.xml", "*", NO_EXCLUDE).get().get(0).getName());
+        assertEquals("pom.xml", supplier("file://tmp/pom.xml", "*", NO_EXCLUDE).get().get(0).getName());
     }
 
     private static DataSourcesSupplier supplier(String directory, String include, String exclude) {

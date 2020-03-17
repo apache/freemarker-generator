@@ -18,18 +18,15 @@ package org.apache.freemarker.generator.base.datasource;
 
 import org.apache.freemarker.generator.base.file.RecursiveFileSupplier;
 import org.apache.freemarker.generator.base.uri.NamedUri;
-import org.apache.freemarker.generator.base.uri.NamedUriParser;
+import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
+import org.apache.freemarker.generator.base.util.Validate;
 
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Supplier;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.singletonList;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
@@ -37,7 +34,7 @@ import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_G
 
 /**
  * Create a list of <code>DataSource</code> based on a list of sources consisting of
- * URLs, directories and files.
+ * URIs, directories and files.
  */
 public class DataSourcesSupplier implements Supplier<List<DataSource>> {
 
@@ -76,10 +73,20 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
                 .collect(toList());
     }
 
-    private List<DataSource> get(String source) {
+    /**
+     * Resolve a <code>source</code> to a <code>DataSource</code>.
+     *
+     * @param source the source being a file name, an URI or <code>NamedUri</code>
+     * @return list of <code>DataSource</code>
+     */
+    protected List<DataSource> get(String source) {
+        Validate.notEmpty(source, "source is empty");
+
         try {
-            if (isHttpUrl(source)) {
+            if (isHttpUri(source)) {
                 return singletonList(resolveHttpUrl(source));
+            } else if (isEnvUri(source)) {
+                return singletonList(resolveEnvironment(source));
             } else {
                 return resolveFile(source, include, exclude, charset);
             }
@@ -89,51 +96,46 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
     }
 
     private static DataSource resolveHttpUrl(String source) {
-        final NamedUri namedUri = NamedUriParser.parse(source);
-        final URI uri = namedUri.getUri();
-        final String name = getNameOrElse(namedUri, uri.toString());
-        final String group = getGroupOrElse(namedUri, DEFAULT_GROUP);
-        final Charset currCharset = getCharsetOrElse(namedUri, UTF_8);
-        return DataSourceFactory.create(name, group, toUrl(uri), currCharset);
+        return DataSourceFactory.create(source);
     }
 
     private static List<DataSource> resolveFile(String source, String include, String exclude, Charset charset) {
-        final NamedUri namedUri = NamedUriParser.parse(source);
-        final String path = namedUri.getUri().getPath();
-        final String name = getNameOrElse(namedUri, path);
-        final String group = getGroupOrElse(namedUri, DEFAULT_GROUP);
+        final NamedUri namedUri = NamedUriStringParser.parse(source);
+        final String path = namedUri.getFile().getPath();
+        final String name = getDataSourceName(namedUri);
+        final String group = namedUri.getGroupOrElse(DEFAULT_GROUP);
         final Charset currCharset = getCharsetOrElse(namedUri, charset);
         return fileResolver(path, include, exclude).get().stream()
-                .map(file -> DataSourceFactory.create(name, group, file, currCharset))
+                .map(file -> DataSourceFactory.fromFile(name, group, file, currCharset))
                 .collect(toList());
+    }
+
+    private static DataSource resolveEnvironment(String source) {
+        final NamedUri namedUri = NamedUriStringParser.parse(source);
+        return DataSourceFactory.fromNamedUri(namedUri);
     }
 
     private static RecursiveFileSupplier fileResolver(String source, String include, String exclude) {
         return new RecursiveFileSupplier(singletonList(source), singletonList(include), singletonList(exclude));
     }
 
-    private static boolean isHttpUrl(String value) {
+    private static Charset getCharsetOrElse(NamedUri namedUri, Charset def) {
+        return Charset.forName(namedUri.getParameter(NamedUri.CHARSET, def.name()));
+    }
+
+    private static boolean isHttpUri(String value) {
         return value.contains("http://") || value.contains("https://");
     }
 
-    private static URL toUrl(URI uri) {
-        try {
-            return uri.toURL();
-        } catch (MalformedURLException e) {
-            throw new IllegalArgumentException(uri.toString(), e);
+    private static boolean isEnvUri(String value) {
+        return value.contains("env:///");
+    }
+
+    private static String getDataSourceName(NamedUri namedUri) {
+        if (namedUri.hasName()) {
+            return namedUri.getName();
+        } else {
+            return namedUri.getFile().getName();
         }
     }
-
-    private static Charset getCharsetOrElse(NamedUri namedUri, Charset def) {
-        return Charset.forName(namedUri.getParameters().getOrDefault("charset", def.name()));
-    }
-
-    private static String getNameOrElse(NamedUri namedUri, String def) {
-        return namedUri.hasName() ? namedUri.getName() : def;
-    }
-
-    private static String getGroupOrElse(NamedUri namedUri, String def) {
-        return namedUri.hasGroup() ? namedUri.getGroup() : def;
-    }
-
 }

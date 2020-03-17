@@ -110,6 +110,6 @@ public class ExcelToolTest {
     }
 
     private DataSource dataSource(File file) {
-        return DataSourceFactory.create(file, UTF_8);
+        return DataSourceFactory.fromFile(file, UTF_8);
     }
 }

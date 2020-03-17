@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. We try to a
 ## 0.1.0-SNAPSHOT
 
 ### Added
+* An environment variable can bes passed as `DataSource`
 * [FREEMARKER-135] Support user-supplied names for `DataSource` on the command line
 * [FREEMARKER-129] Support `DataSource` exclude pattern in addition to include pattern
 * [FREEMARKER-129] User-defined parameters are passed as `-Pkey=value` instead of using system properties
@@ -12,6 +13,7 @@ All notable changes to this project will be documented in this file. We try to a
 * [FREEMARKER-129] Migrate `freemarker-cli` into `freemarker-generator` project (see [https://github.com/sgoeschl/freemarker-cli](https://github.com/sgoeschl/freemarker-cli))
 
 ### Changed
+* `DataSource` use `uri` instead of `location`
 * [FREEMARKER-138] freemarker-generator: Rename `Datasource` to `DataSource`
 * [FREEMARKER-136] Fix broken `site:stage` build
 * [FREEMARKER-134] Rename `Document` to `Datasource` which also changes `--document` to `--datasource`

@@ -42,8 +42,8 @@ FreeMarker CLI Tools
 FreeMarker CLI DataSources
 ------------------------------------------------------------------------------
 <#list DataSources.list as dataSource>
-[#${dataSource?counter}], name=${dataSource.name}, group=${dataSource.group}, charset=${dataSource.charset}, length= ${dataSource.length} Bytes
-Location : ${dataSource.location}
+[#${dataSource?counter}], name=${dataSource.name}, group=${dataSource.group}, contentType=${dataSource.contentType}, charset=${dataSource.charset}, length=${dataSource.length} Bytes
+URI : ${dataSource.uri}
 </#list>
 
 User Supplied Parameters

@@ -14,35 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.base.util;
+package org.apache.freemarker.generator.base.transformation;
 
-public class StringUtils {
+import org.apache.freemarker.generator.base.datasource.DataSource;
+import org.apache.freemarker.generator.base.template.TemplateSource;
 
-    public static boolean isEmpty(String value) {
-        return value == null || value.trim().isEmpty();
+import java.io.Writer;
+import java.util.List;
+
+/**
+ *
+ */
+public class Transformation {
+
+    private final TemplateSource templateSource;
+
+    private final List<DataSource> dataSources;
+
+    private final Writer writer;
+
+    public Transformation(TemplateSource templateSource, List<DataSource> dataSources, Writer writer) {
+        this.templateSource = templateSource;
+        this.dataSources = dataSources;
+        this.writer = writer;
     }
-
-    public static boolean isNotEmpty(String value) {
-        return !isEmpty(value);
-    }
-
-    public static String emptyToNull(String value) {
-        return value != null && value.trim().isEmpty() ? null : value;
-    }
-
-    public static String nullToEmpty(String value) {
-        return value == null ? "" : value;
-    }
-
-    public static String firstNonEmpty(final String... values) {
-        if (values != null) {
-            for (final String value : values) {
-                if (isNotEmpty(value)) {
-                    return value;
-                }
-            }
-        }
-        return null;
-    }
-
 }

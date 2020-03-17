@@ -16,6 +16,7 @@
  */
 package org.apache.freemarker.generator.tools.snakeyaml;
 
+import org.apache.freemarker.generator.base.activation.Mimetypes;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.junit.Test;
@@ -36,7 +37,7 @@ public class SnakeYamlToolTest {
             "    - image: postgres:9.4.1";
 
     @Test
-    public void shallParseYamlDatasource() {
+    public void shallParseYamlDataSource() {
         try (DataSource dataSource = dataSource(ANY_YAML_STRING)) {
             final Map<String, Object> map = snakeYamlTool().parse(dataSource);
 
@@ -58,6 +59,6 @@ public class SnakeYamlToolTest {
     }
 
     private DataSource dataSource(String value) {
-        return DataSourceFactory.create("test.yml", ANY_GROUP, value);
+        return DataSourceFactory.fromString("test.yml", ANY_GROUP, value, Mimetypes.MIME_TEXT_YAML);
     }
 }

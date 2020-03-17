@@ -16,7 +16,7 @@
   under the License.
 -->
 <#list DataSources.list as dataSource>
-${dataSource.name}, ${dataSource.location}
+${dataSource.name}, ${dataSource.uri}
 =============================================================================
 ${dataSource.text}
 </#list>

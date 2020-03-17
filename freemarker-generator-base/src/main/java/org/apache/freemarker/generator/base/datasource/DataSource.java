@@ -28,6 +28,7 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.List;
 
@@ -38,7 +39,7 @@ import static org.apache.freemarker.generator.base.FreeMarkerConstants.DATASOURC
 import static org.apache.freemarker.generator.base.util.StringUtils.emptyToNull;
 
 /**
- * Datasource which encapsulates data to be used for rendering
+ * Data source which encapsulates data to be used for rendering
  * a template. When accessing content it is loaded on demand on not
  * kept in memory to allow processing of large volumes of data.
  */
@@ -50,23 +51,33 @@ public class DataSource implements Closeable {
     /** Optional group of data source */
     private final String group;
 
-    /** Charset for directly accessing text-based content */
-    private final Charset charset;
+    /** The URI for loading the content of the data source */
+    private final URI uri;
 
     /** The underlying "javax.activation.DataSource" */
     private final javax.activation.DataSource dataSource;
 
-    /** The location of the content, e.g. file name */
-    private final String location;
+    /** Optional user-supplied content type */
+    private final String contentType;
+
+    /** Charset for directly accessing text-based content */
+    private final Charset charset;
 
     /** Collect all closables handed out to the caller to be closed when the data source is closed itself */
     private final CloseableReaper closables;
 
-    public DataSource(String name, String group, javax.activation.DataSource dataSource, String location, Charset charset) {
+    public DataSource(
+            String name,
+            String group,
+            URI uri,
+            javax.activation.DataSource dataSource,
+            String contentType,
+            Charset charset) {
         this.name = requireNonNull(name);
         this.group = emptyToNull(group);
+        this.uri = requireNonNull(uri);
         this.dataSource = requireNonNull(dataSource);
-        this.location = requireNonNull(location);
+        this.contentType = requireNonNull(contentType);
         this.charset = requireNonNull(charset);
         this.closables = new CloseableReaper();
     }
@@ -92,11 +103,11 @@ public class DataSource implements Closeable {
     }
 
     public String getContentType() {
-        return dataSource.getContentType();
+        return contentType;
     }
 
-    public String getLocation() {
-        return location;
+    public URI getUri() {
+        return uri;
     }
 
     /**
@@ -223,11 +234,12 @@ public class DataSource implements Closeable {
 
     @Override
     public String toString() {
-        return "Datasource{" +
+        return "DataSource{" +
                 "name='" + name + '\'' +
-                "group='" + group + '\'' +
-                ", location=" + location +
-                ", charset='" + charset + '\'' +
+                ", group='" + group + '\'' +
+                ", uri=" + uri +
+                ", contentType='" + contentType + '\'' +
+                ", charset=" + charset +
                 '}';
     }
 }

@@ -16,6 +16,7 @@
  */
 package org.apache.freemarker.generator.datasource;
 
+import org.apache.freemarker.generator.base.activation.Mimetypes;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.junit.Test;
@@ -27,59 +28,73 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
+import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_APPLICATION_XML;
 import static org.junit.Assert.assertEquals;
 
-public class DatasourceFactoryTest {
+public class DataSourceFactoryTest {
 
     private static final String ANY_TEXT = "Hello World";
     private static final String ANY_FILE_NAME = "pom.xml";
+    private static final String ANY_FILE_URI = "file:///pom.xml";
     private static final Charset ANY_CHAR_SET = UTF_8;
     private static final File ANY_FILE = new File(ANY_FILE_NAME);
 
     @Test
-    public void shouldCreateFileBasedDatasource() throws IOException {
-        final DataSource dataSource = DataSourceFactory.create(ANY_FILE, ANY_CHAR_SET);
+    public void shouldCreateDataSourceFromFile() throws IOException {
+        final DataSource dataSource = DataSourceFactory.fromFile(ANY_FILE, ANY_CHAR_SET);
 
         assertEquals(ANY_FILE_NAME, dataSource.getName());
         assertEquals(UTF_8, dataSource.getCharset());
-        assertEquals(ANY_FILE.getAbsolutePath(), dataSource.getLocation());
+        assertEquals(MIME_APPLICATION_XML, dataSource.getContentType());
+        assertEquals(ANY_FILE.toURI(), dataSource.getUri());
+        assertFalse(dataSource.getLines().isEmpty());
+    }
+
+    @Test
+    public void shouldCreateDataSourceFromFileUri() throws IOException {
+        final DataSource dataSource = DataSourceFactory.create(ANY_FILE_URI);
+
+        assertEquals(ANY_FILE_NAME, dataSource.getName());
+        assertEquals(UTF_8, dataSource.getCharset());
+        assertEquals(MIME_APPLICATION_XML, dataSource.getContentType());
+        assertEquals(ANY_FILE.toURI(), dataSource.getUri());
         assertTrue(!dataSource.getLines().isEmpty());
     }
 
     @Test
-    public void shouldCreateStringBasedDatasource() throws IOException {
-        final DataSource dataSource = DataSourceFactory.create("test.txt", "default", ANY_TEXT);
+    public void shouldCreateDataSourceFromString() throws IOException {
+        final DataSource dataSource = DataSourceFactory.fromString("test.txt", "default", ANY_TEXT, "text/plain");
 
         assertEquals("test.txt", dataSource.getName());
         assertEquals("default", dataSource.getGroup());
         assertEquals(UTF_8, dataSource.getCharset());
-        assertEquals("string", dataSource.getLocation());
+        assertTrue(dataSource.getUri().toString().startsWith("string:///"));
         assertEquals(ANY_TEXT, dataSource.getText());
         assertEquals(1, dataSource.getLines().size());
     }
 
     @Test
-    public void shouldCreateByteArrayBasedDatasource() throws IOException {
-        final DataSource dataSource = DataSourceFactory.create("test.txt", "default", ANY_TEXT.getBytes(UTF_8));
+    public void shouldCreateDataSourceFromBytes() throws IOException {
+        final DataSource dataSource = DataSourceFactory.fromBytes("test.txt", "default", ANY_TEXT.getBytes(UTF_8), "text/plain");
 
         assertEquals("test.txt", dataSource.getName());
         assertEquals("default", dataSource.getGroup());
         assertEquals(UTF_8, dataSource.getCharset());
-        assertEquals("bytes", dataSource.getLocation());
+        assertTrue(dataSource.getUri().toString().startsWith("bytes:///"));
         assertEquals(ANY_TEXT, dataSource.getText());
         assertEquals(1, dataSource.getLines().size());
     }
 
     @Test
-    public void shouldCreateInputStreamBasedDatasource() throws IOException {
+    public void shouldCreateDataSourceFromInputStream() throws IOException {
         final InputStream is = new ByteArrayInputStream(ANY_TEXT.getBytes(UTF_8));
-        final DataSource dataSource = DataSourceFactory.create("test.txt", "default", is, UTF_8);
+        final DataSource dataSource = DataSourceFactory.fromInputStream("test.txt", "default", is, "text/plain", UTF_8);
 
         assertEquals("test.txt", dataSource.getName());
         assertEquals(UTF_8, dataSource.getCharset());
-        assertEquals("inputstream", dataSource.getLocation());
+        assertTrue(dataSource.getUri().toString().startsWith("inputstream:///"));
         assertEquals(ANY_TEXT, dataSource.getText());
     }
-
 }

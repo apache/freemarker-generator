@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
+import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_APPLICATION_XML;
 
 public class XmlToolTest {
 
@@ -37,7 +38,7 @@ public class XmlToolTest {
             "</note>";
 
     @Test
-    public void shallParseXmlDatasource() throws Exception {
+    public void shallParseXmlDataSource() throws Exception {
         try (DataSource dataSource = dataSource(ANY_XML_STRING)) {
             final NodeModel model = xmlTool().parse(dataSource);
 
@@ -59,6 +60,6 @@ public class XmlToolTest {
     }
 
     private DataSource dataSource(String value) {
-        return DataSourceFactory.create("test.xml", ANY_GROUP, value);
+        return DataSourceFactory.fromString("test.xml", ANY_GROUP, value, MIME_APPLICATION_XML);
     }
 }

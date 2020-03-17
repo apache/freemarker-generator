@@ -26,7 +26,7 @@ import static org.apache.freemarker.generator.base.util.StringUtils.isEmpty;
 /**
  * Parses the URI fragment as list of name/value pairs seperated by an ampersand.
  */
-public class NamedUriFragmentParser {
+public class UriFragmentParser {
 
     public static Map<String, String> parse(String fragment) {
         if (isEmpty(fragment)) {

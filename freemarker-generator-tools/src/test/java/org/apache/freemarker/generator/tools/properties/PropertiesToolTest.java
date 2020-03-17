@@ -28,7 +28,7 @@ public class PropertiesToolTest {
     private static final String ANY_PROPERTIES_STRING = "foo=bar";
 
     @Test
-    public void shallParsePropertiesDatasource() {
+    public void shallParsePropertiesDataSource() {
         try (DataSource dataSource = dataSource(ANY_PROPERTIES_STRING)) {
             assertEquals("bar", propertiesTool().parse(dataSource).getProperty("foo"));
         }
@@ -44,6 +44,6 @@ public class PropertiesToolTest {
     }
 
     private DataSource dataSource(String value) {
-        return DataSourceFactory.create("test.properties", ANY_GROUP, value);
+        return DataSourceFactory.fromString("test.properties", ANY_GROUP, value, "text/plain");
     }
 }

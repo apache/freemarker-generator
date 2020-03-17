@@ -24,20 +24,23 @@ import java.nio.charset.Charset;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
+import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_TEXT_PLAIN;
 
 public class StringDataSource implements DataSource {
 
     private final String name;
     private final String content;
+    private final String contentType;
     private final Charset charset;
 
     public StringDataSource(String name, String content) {
-        this(name, content, UTF_8);
+        this(name, content, MIME_TEXT_PLAIN, UTF_8);
     }
 
-    public StringDataSource(String name, String content, Charset charset) {
+    public StringDataSource(String name, String content, String contentType, Charset charset) {
         this.name = requireNonNull(name);
         this.content = requireNonNull(content);
+        this.contentType = requireNonNull(contentType);
         this.charset = requireNonNull(charset);
     }
 
@@ -53,7 +56,7 @@ public class StringDataSource implements DataSource {
 
     @Override
     public String getContentType() {
-        return "plain/text";
+        return contentType;
     }
 
     @Override

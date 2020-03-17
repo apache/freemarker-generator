@@ -16,16 +16,24 @@
  */
 package org.apache.freemarker.generator.base.uri;
 
+import org.apache.freemarker.generator.base.util.StringUtils;
+import org.apache.freemarker.generator.base.util.UriUtils;
+
+import java.io.File;
 import java.net.URI;
 import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
+import static org.apache.freemarker.generator.base.util.StringUtils.emptyToNull;
 import static org.apache.freemarker.generator.base.util.StringUtils.isEmpty;
 
 /**
  * Caputeres the information of a user-supplied "named URI".
  */
 public class NamedUri {
+
+    public static final String CHARSET = "charset";
+    public static final String MIMETYPE = "mimetype";
 
     /** User-supplied name */
     private final String name;
@@ -57,8 +65,16 @@ public class NamedUri {
         return name;
     }
 
+    public String getNameOrElse(String def) {
+        return isEmpty(name) ? def : name;
+    }
+
     public String getGroup() {
         return group;
+    }
+
+    public String getGroupOrElse(String def) {
+        return isEmpty(group) ? def : group;
     }
 
     public URI getUri() {
@@ -69,12 +85,29 @@ public class NamedUri {
         return parameters;
     }
 
+    public String getParameter(String key) {
+        return parameters.get(key);
+    }
+
+    public String getParameter(String key, String defaultValue) {
+        return parameters.getOrDefault(key, defaultValue);
+    }
+
     public boolean hasName() {
         return !isEmpty(this.name);
     }
 
     public boolean hasGroup() {
         return !isEmpty(this.group);
+    }
+
+    public File getFile() {
+        if (UriUtils.isFileUri(uri)) {
+            return new File(uri.getPath().substring(1));
+        }
+        else {
+            return new File(uri.getPath());
+        }
     }
 
     @Override
@@ -85,9 +118,5 @@ public class NamedUri {
                 ", uri=" + uri +
                 ", parameters=" + parameters +
                 '}';
-    }
-
-    private static String emptyToNull(String value) {
-        return value != null && value.trim().isEmpty() ? null : value;
     }
 }

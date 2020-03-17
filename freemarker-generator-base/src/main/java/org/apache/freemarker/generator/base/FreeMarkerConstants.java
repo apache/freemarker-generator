@@ -30,10 +30,7 @@ public class FreeMarkerConstants {
     private FreeMarkerConstants() {
     }
 
-    /** Content type for binary data */
-    public static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
-
-    /** Unknown length for a <code>Datasource</code> */
+    /** Unknown length for a <code>DataSource</code> */
     public static final int DATASOURCE_UNKNOWN_LENGTH = -1;
 
     /** Default locale for rendering templates */
@@ -71,9 +68,11 @@ public class FreeMarkerConstants {
         }
 
         public static final String BYTES = "bytes";
+        public static final String ENVIRONMENT = "env";
         public static final String INTERACTIVE = "interactive";
         public static final String INPUTSTREAM = "inputstream";
         public static final String STDIN = "stdin";
+        public static final String SYSTEM = "system";
         public static final String STRING = "string";
         public static final String URL = "url";
     }

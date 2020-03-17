@@ -23,11 +23,13 @@ import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.freemarker.generator.base.datasource.DataSources;
+import org.apache.freemarker.generator.base.util.UriUtils;
 import org.apache.freemarker.generator.cli.config.Settings;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Writer;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -90,7 +92,8 @@ public class FreeMarkerTask implements Callable<Integer> {
         // Add optional data source from STDIN at the start of the list since
         // this allows easy sequence slicing in FreeMarker.
         if (settings.isReadFromStdin()) {
-            dataSources.add(0, DataSourceFactory.create(STDIN, DEFAULT_GROUP, System.in, STDIN, UTF_8));
+            final URI uri = UriUtils.toURI(Location.SYSTEM, "in");
+            dataSources.add(0, DataSourceFactory.fromInputStream(STDIN, DEFAULT_GROUP, uri, System.in, "text/plain", UTF_8));
         }
 
         return new DataSources(dataSources);

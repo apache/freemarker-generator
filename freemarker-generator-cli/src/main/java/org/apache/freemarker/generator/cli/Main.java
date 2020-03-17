@@ -25,8 +25,11 @@ import org.apache.freemarker.generator.cli.task.FreeMarkerTask;
 import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
+import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
+import picocli.CommandLine.ParameterException;
 import picocli.CommandLine.Parameters;
+import picocli.CommandLine.Spec;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -68,7 +71,7 @@ public class Main implements Callable<Integer> {
     @Option(names = { "-b", "--basedir" }, description = "Optional template base directory")
     String baseDir;
 
-    @Option(names = { "-d", "--data-source" }, description = "Datasource used for rendering")
+    @Option(names = { "-d", "--data-source" }, description = "Data source used for rendering")
     List<String> dataSources;
 
     @Option(names = { "-D", "--system-property" }, description = "Set system property")
@@ -119,6 +122,9 @@ public class Main implements Callable<Integer> {
     /** User-supplied writer (used mainly for unit testing) */
     Writer userSuppliedWriter;
 
+    /** Injected by Picolci */
+    @Spec private CommandSpec spec;
+
     Main() {
         this.args = new String[0];
     }
@@ -158,6 +164,7 @@ public class Main implements Callable<Integer> {
 
     @Override
     public Integer call() {
+        validate();
         return IntStream.range(0, times).map(i -> onCall()).max().orElse(0);
     }
 
@@ -178,6 +185,25 @@ public class Main implements Callable<Integer> {
         }
     }
 
+    private void validate() {
+        // "-d" or "--data-source" parameter shall not contain wildcard characters
+        if (dataSources != null) {
+            for (String source : dataSources) {
+                if (isFileSource(source) && (source.contains("*") || source.contains("?"))) {
+                    throw new ParameterException(spec.commandLine(), "No wildcards supported for data source: " + source);
+                }
+            }
+        }
+
+        // "-t" or "--template" parameter shall not contain wildcard characters
+        if (StringUtils.isNotEmpty(templateSourceOptions.template)) {
+            final String source = templateSourceOptions.template;
+            if (isFileSource(source) && (source.contains("*") || source.contains("?"))) {
+                throw new ParameterException(spec.commandLine(), "No wildcards supported for template: " + source);
+            }
+        }
+    }
+
     private Settings settings(Properties configuration, List<File> templateDirectories) {
         return Settings.builder()
                 .isEnvironmentExposed(isEnvironmentExposed)
@@ -192,7 +218,7 @@ public class Main implements Callable<Integer> {
                 .setOutputEncoding(outputEncoding)
                 .setOutputFile(outputFile)
                 .setParameters(parameters != null ? parameters : new HashMap<>())
-                .setDataSources(getCombindedDatasources())
+                .setDataSources(getCombindedDataSources())
                 .setSystemProperties(systemProperties != null ? systemProperties : new Properties())
                 .setTemplateDirectories(templateDirectories)
                 .setTemplateName(templateSourceOptions.template)
@@ -221,12 +247,12 @@ public class Main implements Callable<Integer> {
     }
 
     /**
-     * Datasources can be passed via command line option and/or
+     * Data sources can be passed via command line option and/or
      * positional parameter so we need to merge them.
      *
      * @return List of data sources
      */
-    private List<String> getCombindedDatasources() {
+    private List<String> getCombindedDataSources() {
         if (isTemplateDrivenGeneration()) {
             return Stream.of(dataSources, sources)
                     .filter(Objects::nonNull)
@@ -251,6 +277,16 @@ public class Main implements Callable<Integer> {
             return properties;
         } else {
             throw new RuntimeException("FreeMarker CLI configuration file not found: " + fileName);
+        }
+    }
+
+    private static boolean isFileSource(String source) {
+        if (source.contains("file://")) {
+            return true;
+        } else if (source.contains("://")) {
+            return false;
+        } else {
+            return true;
         }
     }
 }
