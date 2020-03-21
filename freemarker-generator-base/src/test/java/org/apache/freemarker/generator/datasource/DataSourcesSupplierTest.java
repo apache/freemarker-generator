@@ -27,12 +27,12 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class DataSourcesSupplierTest {
 
     private static final String NO_EXCLUDE = null;
-    private static final String ANY_DIRECTORY = "./src/test/data";
-    private static final String ANY_ENVIRONMENT_VARIABLE = "PATH";
+    private static final String DATA_DIRECTORY = "./src/test/data";
 
     @Test
     public void shouldResolveSingleFile() {
@@ -60,18 +60,18 @@ public class DataSourcesSupplierTest {
 
     @Test
     public void shouldResolveDirectory() {
-        assertEquals(4, supplier(ANY_DIRECTORY, null, null).get().size());
-        assertEquals(4, supplier(ANY_DIRECTORY, "", null).get().size());
-        assertEquals(4, supplier(ANY_DIRECTORY, "*", null).get().size());
-        assertEquals(4, supplier(ANY_DIRECTORY, "*.*", null).get().size());
-        assertEquals(2, supplier(ANY_DIRECTORY, "*.csv", null).get().size());
-        assertEquals(1, supplier(ANY_DIRECTORY, "*.t*", null).get().size());
-        assertEquals(0, supplier(ANY_DIRECTORY, "*.bin", null).get().size());
+        assertEquals(4, supplier(DATA_DIRECTORY, null, null).get().size());
+        assertEquals(4, supplier(DATA_DIRECTORY, "", null).get().size());
+        assertEquals(4, supplier(DATA_DIRECTORY, "*", null).get().size());
+        assertEquals(4, supplier(DATA_DIRECTORY, "*.*", null).get().size());
+        assertEquals(2, supplier(DATA_DIRECTORY, "*.csv", null).get().size());
+        assertEquals(1, supplier(DATA_DIRECTORY, "*.t*", null).get().size());
+        assertEquals(0, supplier(DATA_DIRECTORY, "*.bin", null).get().size());
     }
 
     @Test
     public void shouldResolveFilesAndDirectory() {
-        final List<String> sources = Arrays.asList("pom.xml", "README.md", ANY_DIRECTORY);
+        final List<String> sources = Arrays.asList("pom.xml", "README.md", DATA_DIRECTORY);
 
         assertEquals(6, supplier(sources, null, null).get().size());
         assertEquals(6, supplier(sources, "", null).get().size());
@@ -87,6 +87,17 @@ public class DataSourcesSupplierTest {
         assertEquals(0, supplier(sources, "*", "*").get().size());
         assertEquals(5, supplier(sources, "*", "*.md").get().size());
         assertEquals(3, supplier(sources, "*", "file*.*").get().size());
+    }
+
+    @Test
+    public void shouldUseFileNameForDataSourceWhenResolvingDirectory() {
+        final List<DataSource> dataSources = supplier(DATA_DIRECTORY, "*.properties", NO_EXCLUDE).get();
+
+        final DataSource dataSource = dataSources.get(0);
+
+        assertEquals(1, dataSources.size());
+        assertEquals("test.properties", dataSource.getName());
+        assertTrue(dataSource.getUri().getPath().contains("src/test/data/properties/test.properties"));
     }
 
     @Test

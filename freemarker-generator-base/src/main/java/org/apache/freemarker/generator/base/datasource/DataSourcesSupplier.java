@@ -21,6 +21,7 @@ import org.apache.freemarker.generator.base.uri.NamedUri;
 import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
 import org.apache.freemarker.generator.base.util.Validate;
 
+import java.io.File;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -88,7 +89,7 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
             } else if (isEnvUri(source)) {
                 return singletonList(resolveEnvironment(source));
             } else {
-                return resolveFile(source, include, exclude, charset);
+                return resolveFileOrDirectory(source, include, exclude, charset);
             }
         } catch (RuntimeException e) {
             throw new RuntimeException("Unable to create the data source: " + source, e);
@@ -99,14 +100,13 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
         return DataSourceFactory.create(source);
     }
 
-    private static List<DataSource> resolveFile(String source, String include, String exclude, Charset charset) {
+    private static List<DataSource> resolveFileOrDirectory(String source, String include, String exclude, Charset charset) {
         final NamedUri namedUri = NamedUriStringParser.parse(source);
         final String path = namedUri.getFile().getPath();
-        final String name = getDataSourceName(namedUri);
         final String group = namedUri.getGroupOrElse(DEFAULT_GROUP);
         final Charset currCharset = getCharsetOrElse(namedUri, charset);
         return fileResolver(path, include, exclude).get().stream()
-                .map(file -> DataSourceFactory.fromFile(name, group, file, currCharset))
+                .map(file -> DataSourceFactory.fromFile(getDataSourceName(namedUri, file), group, file, currCharset))
                 .collect(toList());
     }
 
@@ -131,11 +131,11 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
         return value.contains("env:///");
     }
 
-    private static String getDataSourceName(NamedUri namedUri) {
+    private static String getDataSourceName(NamedUri namedUri, File file) {
         if (namedUri.hasName()) {
             return namedUri.getName();
         } else {
-            return namedUri.getFile().getName();
+            return file.getName();
         }
     }
 }

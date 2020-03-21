@@ -59,10 +59,12 @@ public class DataSourceFactory {
 
         if (UriUtils.isHttpURI(uri)) {
             final URL url = toURL(uri);
-            return fromUrl(url.getHost(), group, url, charset);
+            final String name = namedUri.getNameOrElse(url.getHost());
+            return fromUrl(name, group, url, charset);
         } else if (UriUtils.isFileUri(uri)) {
             final File file = namedUri.getFile();
-            return fromFile(file.getName(), group, file, charset);
+            final String name = namedUri.getNameOrElse(file.getName());
+            return fromFile(name, group, file, charset);
         } else if (UriUtils.isEnvUri(uri)) {
             final String key = uri.getPath().substring(1);
             final String name = StringUtils.firstNonEmpty(namedUri.getName(), key, "env");

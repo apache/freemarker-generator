@@ -16,9 +16,10 @@
  */
 package org.apache.freemarker.generator.datasource;
 
-import org.apache.freemarker.generator.base.activation.Mimetypes;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
+import org.apache.freemarker.generator.base.uri.NamedUri;
+import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -40,6 +41,8 @@ public class DataSourceFactoryTest {
     private static final String ANY_FILE_URI = "file:///pom.xml";
     private static final Charset ANY_CHAR_SET = UTF_8;
     private static final File ANY_FILE = new File(ANY_FILE_NAME);
+    private static final String ANY_NAMED_URL_STRING = "content:www=https://www.google.com?foo=bar#contenttype=application/json";
+
 
     @Test
     public void shouldCreateDataSourceFromFile() throws IOException {
@@ -97,4 +100,16 @@ public class DataSourceFactoryTest {
         assertTrue(dataSource.getUri().toString().startsWith("inputstream:///"));
         assertEquals(ANY_TEXT, dataSource.getText());
     }
+
+    @Test
+    public void shouldCreateDataSourceFromURL() throws IOException {
+        final NamedUri namedUri = NamedUriStringParser.parse(ANY_NAMED_URL_STRING);
+        final DataSource dataSource = DataSourceFactory.fromNamedUri(ANY_NAMED_URL_STRING);
+
+        assertEquals(namedUri.getName(), dataSource.getName());
+        assertEquals(namedUri.getGroup(), dataSource.getGroup());
+        assertEquals(UTF_8, dataSource.getCharset());
+        assertEquals(namedUri.getUri().toString(), dataSource.getUri().toString());
+    }
+
 }

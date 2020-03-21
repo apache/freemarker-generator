@@ -37,7 +37,9 @@ public class ManualTest {
     // private static final String CMD = "-b ./src/test -e UTF-8 -l de_AT -Dcolumn=Order%20ID -Dvalues=226939189,957081544 -Dformat=DEFAULT -Ddelimiter=COMMA -t templates/csv/md/filter.ftl site/sample/csv/sales-records.csv";
     // private static final String CMD = "-E -b ./src/test -t templates/environment.ftl";
     // private static final String CMD = "-b ./src/test -l de_AT -DFOO=foo -DBAR=bar -t templates/info.ftl -d user:admin=site/sample/csv/contract.csv#charset=UTF-16 google:www=https://www.google.com?foo=bar#contenttype=application/json";
-    private static final String CMD = "-b ./src/test -t templates/info.ftl -d env:///";
+    // private static final String CMD = "-b ./src/test -t templates/info.ftl -d :user=site/sample/properties -d contract=site/sample/csv/contract.csv";
+    // private static final String CMD = "-b ./src/test -t site/sample/ftl/nginx/nginx.conf.ftl -d env=site/sample/ftl/nginx/nginx.env";
+    private static final String CMD = "-b ./src/test -t templates/info.ftl -d env=site/sample/ftl/nginx/nginx.env";
 
     public static void main(String[] args) {
         Main.execute(toArgs(CMD));

@@ -16,7 +16,6 @@
  */
 package org.apache.freemarker.generator.base.uri;
 
-import org.apache.freemarker.generator.base.util.StringUtils;
 import org.apache.freemarker.generator.base.util.UriUtils;
 
 import java.io.File;
