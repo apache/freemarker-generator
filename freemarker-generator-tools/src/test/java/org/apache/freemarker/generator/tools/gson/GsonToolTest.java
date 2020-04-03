@@ -14,15 +14,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.tools.jsonpath;
+package org.apache.freemarker.generator.tools.gson;
 
-import com.jayway.jsonpath.DocumentContext;
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNull;
+import java.util.List;
+import java.util.Map;
 
-public class JsonPathToolTest {
+import static junit.framework.TestCase.assertEquals;
+
+public class GsonToolTest {
 
     private static final String JSON_OBJECT_STRING = "{\n" +
             "\"id\": 110,\n" +
@@ -56,38 +57,36 @@ public class JsonPathToolTest {
 
     @Test
     public void shallParseJsonObject() {
-        final DocumentContext json = parse(JSON_OBJECT_STRING);
+        final Map<String, Object> map = parse(JSON_OBJECT_STRING);
 
-        assertEquals(json.read("$.language"), "Python");
-        assertEquals(json.read("$['language']"), "Python");
+        assertEquals(3, map.size());
+        assertEquals("110.0", map.get("id").toString());
+        assertEquals("Python", map.get("language"));
+        assertEquals("1900.0", map.get("price").toString());
     }
 
     @Test
     public void shallParseJsonArray() {
-        final DocumentContext json = parse(JSON_ARRAY_STRING);
+        final Map<String, Object> map = parse(JSON_ARRAY_STRING);
 
-        assertEquals(json.read("$.eBooks[0].language"), "Pascal");
-        assertEquals(json.read("$['eBooks'][0]['language']"), "Pascal");
+        assertEquals(1, map.size());
+        assertEquals(3, ((List) map.get("eBooks")).size());
+
+        return;
     }
 
     @Test
     public void failsToParseJsonComments() {
-        final DocumentContext json = parse(JSON_WITH_COMMENTS);
+        final Map<String, Object> map = parse(JSON_WITH_COMMENTS);
 
-        assertNull(json.read("$.fruit"));
-        assertEquals("Large", json.read("$.size"));
+        assertEquals("Apple", map.get("fruit"));
     }
 
-    @Test
-    public void shallSuppressExceptionForUnknonwPath() {
-        assertNull(parse(JSON_OBJECT_STRING).read("$.unknown"));
+    private Map<String, Object> parse(String json) {
+        return gsonTool().parse(json);
     }
 
-    private DocumentContext parse(String json) {
-        return jsonPathTool().parse(json);
-    }
-
-    private JsonPathTool jsonPathTool() {
-        return new JsonPathTool();
+    private GsonTool gsonTool() {
+        return new GsonTool();
     }
 }

@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. We try to a
 ## 0.1.0-SNAPSHOT
 
 ### Added
+* [FREEMARKER-139] freemarker-cli: Provide GsonTool to align with Maven plugin
 * An environment variable can bes passed as `DataSource`
 * [FREEMARKER-135] Support user-supplied names for `DataSource` on the command line
 * [FREEMARKER-129] Support `DataSource` exclude pattern in addition to include pattern
@@ -34,4 +35,5 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-134]: https://issues.apache.org/jira/browse/FREEMARKER-134
 [FREEMARKER-135]: https://issues.apache.org/jira/browse/FREEMARKER-135
 [FREEMARKER-136]: https://issues.apache.org/jira/browse/FREEMARKER-136
-[FREEMARKER-138]: https://issues.apache.org/jira/browse/FREEMARKER-1386
+[FREEMARKER-138]: https://issues.apache.org/jira/browse/FREEMARKER-138
+[FREEMARKER-139]: https://issues.apache.org/jira/browse/FREEMARKER-139

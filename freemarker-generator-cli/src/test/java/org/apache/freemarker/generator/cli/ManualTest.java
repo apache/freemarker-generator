@@ -39,7 +39,8 @@ public class ManualTest {
     // private static final String CMD = "-b ./src/test -l de_AT -DFOO=foo -DBAR=bar -t templates/info.ftl -d user:admin=site/sample/csv/contract.csv#charset=UTF-16 google:www=https://www.google.com?foo=bar#contenttype=application/json";
     // private static final String CMD = "-b ./src/test -t templates/info.ftl -d :user=site/sample/properties -d contract=site/sample/csv/contract.csv";
     // private static final String CMD = "-b ./src/test -t site/sample/ftl/nginx/nginx.conf.ftl -d env=site/sample/ftl/nginx/nginx.env";
-    private static final String CMD = "-b ./src/test -t templates/info.ftl -d env=site/sample/ftl/nginx/nginx.env";
+    // private static final String CMD = "-b ./src/test -t templates/info.ftl -d env=site/sample/ftl/nginx/nginx.env";
+    private static final String CMD = "-b ./src/test -t templates/json/csv/swagger-endpoints.ftl site/sample/json/swagger-spec.json";
 
     public static void main(String[] args) {
         Main.execute(toArgs(CMD));
