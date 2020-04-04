@@ -52,7 +52,7 @@ Some years later the not-so-small-any-longer-and-not-having-tests Groovy script 
 * Support multiple source files/directories for a single transformation
 * Support transformation of Property files using plain-vanilla JDK
 * Support transformation of CSV files using [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/)
-* Support transformation of JSON using [Jayway's JSONPath](https://github.com/jayway/JsonPath)
+* Support transformation of JSON using [Jayway's JSONPath](https://github.com/jayway/JsonPath) and [GSON](https://github.com/google/gson)
 * Support transformation of Excel using [Apache POI](https://poi.apache.org)
 * Support transformation of YAML using [SnakeYAML](https://bitbucket.org/asomov/snakeyaml/wiki/Home)
 * Support transformation of HTML using [JSoup](https://jsoup.org)
@@ -149,40 +149,44 @@ templates/excel/csv/transform.ftl
 templates/excel/csv/custom.ftl
 templates/html/csv/dependencies.ftl
 templates/json/csv/swagger-endpoints.ftl
+templates/json/yaml/transform.ftl
 templates/json/md/github-users.ftl
 templates/properties/csv/locker-test-users.ftl
 templates/yaml/txt/transform.ftl
+templates/yaml/json/transform.ftl
 templates/xml/txt/recipients.ftl
 Created the following sample files in ./target/out
-total 1344
--rw-r--r--  1 sgoeschl  staff     646 Feb 22 16:43 combined-access.log.txt
--rw-r--r--  1 sgoeschl  staff   22548 Feb 22 16:43 contract.html
--rw-r--r--  1 sgoeschl  staff    7933 Feb 22 16:43 contract.md
--rw-r--r--  1 sgoeschl  staff     784 Feb 22 16:43 curl.sh
--rw-r--r--  1 sgoeschl  staff     232 Feb 22 16:43 customer.txt
--rw-r--r--  1 sgoeschl  staff   15084 Feb 22 16:43 demo.txt
--rw-r--r--  1 sgoeschl  staff    1310 Feb 22 16:43 dependencies.csv
--rw-r--r--  1 sgoeschl  staff    2029 Feb 22 16:43 github-users-curl.md
--rw-r--r--  1 sgoeschl  staff    2668 Feb 22 16:43 info.txt
--rw-r--r--  1 sgoeschl  staff      66 Feb 22 16:43 interactive-html.txt
--rw-r--r--  1 sgoeschl  staff      16 Feb 22 16:43 interactive-json.txt
--rw-r--r--  1 sgoeschl  staff      10 Feb 22 16:43 interactive-xml.txt
--rw-r--r--  1 sgoeschl  staff     285 Feb 22 16:43 locker-test-users.csv
--rw-r--r--  1 sgoeschl  staff    6341 Feb 22 16:43 locker-test-users.fo
--rw-r--r--  1 sgoeschl  staff    5526 Feb 22 16:43 locker-test-users.pdf
--rw-r--r--  1 sgoeschl  staff     921 Feb 22 16:43 recipients.txt
--rw-r--r--  1 sgoeschl  staff     910 Feb 22 16:43 sales-records.md
--rw-r--r--  1 sgoeschl  staff     379 Feb 22 16:43 swagger-spec.csv
--rw-r--r--  1 sgoeschl  staff     156 Feb 22 16:43 test-multiple-sheets.xlsx.csv
--rw-r--r--  1 sgoeschl  staff    1917 Feb 22 16:43 test-multiple-sheets.xlsx.html
--rw-r--r--  1 sgoeschl  staff     389 Feb 22 16:43 test-multiple-sheets.xlsx.md
--rw-r--r--  1 sgoeschl  staff     150 Feb 22 16:43 test-transform-xls.csv
--rw-r--r--  1 sgoeschl  staff    1556 Feb 22 16:43 test.xls.html
--rw-r--r--  1 sgoeschl  staff    1558 Feb 22 16:43 test.xslx.html
--rw-r--r--  1 sgoeschl  staff   25756 Feb 22 16:43 transactions-fo.pdf
--rw-r--r--  1 sgoeschl  staff   66016 Feb 22 16:43 transactions-html.pdf
--rw-r--r--  1 sgoeschl  staff  330128 Feb 22 16:43 transactions.fo
--rw-r--r--  1 sgoeschl  staff   51008 Feb 22 16:43 transactions.html
+total 1440
+-rw-r--r--  1 sgoeschl  staff     646 Apr  4 13:03 combined-access.log.txt
+-rw-r--r--  1 sgoeschl  staff   22548 Apr  4 13:03 contract.html
+-rw-r--r--  1 sgoeschl  staff    7933 Apr  4 13:03 contract.md
+-rw-r--r--  1 sgoeschl  staff     784 Apr  4 13:03 curl.sh
+-rw-r--r--  1 sgoeschl  staff     232 Apr  4 13:03 customer.txt
+-rw-r--r--  1 sgoeschl  staff   15268 Apr  4 13:03 demo.txt
+-rw-r--r--  1 sgoeschl  staff    1310 Apr  4 13:03 dependencies.csv
+-rw-r--r--  1 sgoeschl  staff    2029 Apr  4 13:03 github-users-curl.md
+-rw-r--r--  1 sgoeschl  staff    2901 Apr  4 13:03 info.txt
+-rw-r--r--  1 sgoeschl  staff      66 Apr  4 13:03 interactive-html.txt
+-rw-r--r--  1 sgoeschl  staff      16 Apr  4 13:03 interactive-json.txt
+-rw-r--r--  1 sgoeschl  staff      10 Apr  4 13:03 interactive-xml.txt
+-rw-r--r--  1 sgoeschl  staff     285 Apr  4 13:03 locker-test-users.csv
+-rw-r--r--  1 sgoeschl  staff    6341 Apr  4 13:03 locker-test-users.fo
+-rw-r--r--  1 sgoeschl  staff    5526 Apr  4 13:03 locker-test-users.pdf
+-rw-r--r--  1 sgoeschl  staff     921 Apr  4 13:03 recipients.txt
+-rw-r--r--  1 sgoeschl  staff     910 Apr  4 13:03 sales-records.md
+-rw-r--r--  1 sgoeschl  staff    2453 Apr  4 13:03 swagger-spec.csv
+-rw-r--r--  1 sgoeschl  staff   25090 Apr  4 13:03 swagger-spec.json
+-rw-r--r--  1 sgoeschl  staff   16870 Apr  4 13:03 swagger-spec.yaml
+-rw-r--r--  1 sgoeschl  staff     156 Apr  4 13:03 test-multiple-sheets.xlsx.csv
+-rw-r--r--  1 sgoeschl  staff    1917 Apr  4 13:03 test-multiple-sheets.xlsx.html
+-rw-r--r--  1 sgoeschl  staff     389 Apr  4 13:03 test-multiple-sheets.xlsx.md
+-rw-r--r--  1 sgoeschl  staff     150 Apr  4 13:03 test-transform-xls.csv
+-rw-r--r--  1 sgoeschl  staff    1556 Apr  4 13:03 test.xls.html
+-rw-r--r--  1 sgoeschl  staff    1558 Apr  4 13:03 test.xslx.html
+-rw-r--r--  1 sgoeschl  staff   25756 Apr  4 13:03 transactions-fo.pdf
+-rw-r--r--  1 sgoeschl  staff   66016 Apr  4 13:03 transactions-html.pdf
+-rw-r--r--  1 sgoeschl  staff  330127 Apr  4 13:03 transactions.fo
+-rw-r--r--  1 sgoeschl  staff   51008 Apr  4 13:03 transactions.html
 ```
 
 Please note that generated PDF files are very likely not found since they require `wkhtmltopdf` and `Apache FOP` installation.
