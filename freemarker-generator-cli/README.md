@@ -76,28 +76,29 @@ You can test the installation by executing
 
 ```text
 > ./bin/freemarker-cli -t templates/info.ftl 
-
 FreeMarker CLI Information
----------------------------------------------------------------------------
+------------------------------------------------------------------------------
 FreeMarker version     : 2.3.29
 Template name          : templates/info.ftl
 Language               : en
 Locale                 : en_US
-Timestamp              : Feb 22, 2020 4:42:01 PM
+Timestamp              : Apr 4, 2020 12:39:28 PM
 Output encoding        : UTF-8
 Output format          : plainText
 
 FreeMarker CLI Template Directories
----------------------------------------------------------------------------
-[1] /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler
+------------------------------------------------------------------------------
+[#1] /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler
+[#2] /Users/sgoeschl/.freemarker-cli
 
 FreeMarker CLI Tools
----------------------------------------------------------------------------
+------------------------------------------------------------------------------
 - CSVTool              : Process CSV files using Apache Commons CSV (see https://commons.apache.org/proper/commons-csv/)
 - ExcelTool            : Process Excels files (XLS, XLSX) using Apache POI (see https://poi.apache.org)
 - ExecTool             : Execute command line tools using Apache Commons Exec (see https://commons.apache.org/proper/commons-exec/)
 - FreeMarkerTool       : Expose useful Apache FreeMarker classes
 - GrokTool             : Process text files using Grok expressions (see https://github.com/thekrakken/java-grok)
+- GsonTool             : Process JSON files using GSON (see https://github.com/google/gson)
 - JsonPathTool         : Process JSON files using Java JSON Path (see https://github.com/json-path/JsonPath)
 - JsoupTool            : Process  HTML files using Jsoup (see https://jsoup.org)
 - PropertiesTool       : Process JDK properties files
@@ -107,21 +108,21 @@ FreeMarker CLI Tools
 - YamlTool             : Process YAML files using SnakeYAML(see https://bitbucket.org/asomov/snakeyaml/wiki/Home)
 
 FreeMarker CLI DataSources
----------------------------------------------------------------------------
+------------------------------------------------------------------------------
 
 User Supplied Parameters
----------------------------------------------------------------------------
+------------------------------------------------------------------------------
 
 User Supplied System Properties
----------------------------------------------------------------------------
+------------------------------------------------------------------------------
 
 SystemTool
----------------------------------------------------------------------------
+------------------------------------------------------------------------------
 Command line         : -t, templates/info.ftl
 Host Name            : W0GL5179.local
 Java Home            : /Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home
 User Name            : sgoeschl
-Timestamp            : 1,582,386,121,793
+Timestamp            : 1,585,996,768,896
 Writer               : org.apache.freemarker.generator.base.util.NonClosableWriterWrapper
 ```
 
@@ -1220,6 +1221,7 @@ Get all data sources
 - ExecTool             : Execute command line tools using Apache Commons Exec (see https://commons.apache.org/proper/commons-exec/)
 - FreeMarkerTool       : Expose useful Apache FreeMarker classes
 - GrokTool             : Process text files using Grok expressions (see https://github.com/thekrakken/java-grok)
+- GsonTool             : Process JSON files using GSON (see https://github.com/google/gson)
 - JsonPathTool         : Process JSON files using Java JSON Path (see https://github.com/json-path/JsonPath)
 - JsoupTool            : Process  HTML files using Jsoup (see https://jsoup.org)
 - PropertiesTool       : Process JDK properties files
@@ -1236,6 +1238,7 @@ Get all data sources
 - ExecTool
 - FreeMarkerTool
 - GrokTool
+- GsonTool
 - JsonPathTool
 - JsoupTool
 - PropertiesTool
@@ -1283,9 +1286,10 @@ Within the script a FreeMarker data model is set up and passed to the template -
 | CSVTool               | Process CSV files using [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/)              |
 | ExecTool              | Execute command line tools using [Apache Commons Exec](https://commons.apache.org/proper/commons-exec/)   |
 | ExcelTool             | Process Excels files (XLS, XLSX) using [Apache POI](https://poi.apache.org)                               |
-| DataSources           | Helper class to find data sources, e.g. by name, extension or index                                          |
+| DataSources           | Helper class to find data sources, e.g. by name, extension or index                                       |
 | FreeMarkerTool        | Expose useful FreeMarker classes                                                                          |
 | GrokTool              | Process text files using [Grok](https://github.com/thekrakken/java-grok) instead of regular expressions   |
+| GsonTool              | Process JSON files using [GSON](https://github.com/google/gson)                                           |
 | JsonPathTool          | Process JSON file using [Java JSON Path](https://github.com/json-path/JsonPath)                           |
 | JsoupTool             | Processing HTML files using [Jsoup](https://jsoup.org)                                                    |
 | PropertiesTool        | Process JDK properties files                                                                              |
