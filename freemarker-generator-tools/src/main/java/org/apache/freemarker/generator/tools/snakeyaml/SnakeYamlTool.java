@@ -18,7 +18,6 @@ package org.apache.freemarker.generator.tools.snakeyaml;
 
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.DumperOptions.ScalarStyle;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
@@ -54,13 +53,17 @@ public class SnakeYamlTool {
 
     private synchronized Yaml yaml() {
         if (yaml == null) {
-            final DumperOptions options = new DumperOptions();
-            options.setDefaultFlowStyle(BLOCK);
-            options.setPrettyFlow(true);
-            options.setSplitLines(false);
-            options.setIndent(2);
-            yaml = new Yaml(options);
+            yaml = new Yaml(options());
         }
         return yaml;
+    }
+
+    private static DumperOptions options() {
+        final DumperOptions options = new DumperOptions();
+        options.setDefaultFlowStyle(BLOCK);
+        options.setPrettyFlow(true);
+        options.setSplitLines(false);
+        options.setIndent(2);
+        return options;
     }
 }

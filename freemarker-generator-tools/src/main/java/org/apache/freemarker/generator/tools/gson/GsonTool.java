@@ -53,11 +53,7 @@ public class GsonTool {
 
     private synchronized Gson gson() {
         if (gson == null) {
-            gson = new GsonBuilder()
-                    .setLenient()
-                    .setPrettyPrinting()
-                    .disableHtmlEscaping()
-                    .create();
+            gson = new GsonBuilder().setLenient().setPrettyPrinting().disableHtmlEscaping().create();
         }
         return gson;
     }
