@@ -17,28 +17,50 @@
 package org.apache.freemarker.generator.tools.snakeyaml;
 
 import org.apache.freemarker.generator.base.datasource.DataSource;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.DumperOptions.ScalarStyle;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
+import static org.yaml.snakeyaml.DumperOptions.FlowStyle.BLOCK;
+
 public class SnakeYamlTool {
+
+    private Yaml yaml;
 
     public Map<String, Object> parse(DataSource dataSource) {
         try (InputStream is = dataSource.getUnsafeInputStream()) {
-            return new Yaml().load(is);
+            return yaml().load(is);
         } catch (IOException e) {
             throw new RuntimeException("Failed to load YAML data source: " + dataSource, e);
         }
     }
 
     public Map<String, Object> parse(String value) {
-        return new Yaml().load(value);
+        return yaml().load(value);
+    }
+
+    public String toYaml(Object data) {
+        return yaml().dump(data);
     }
 
     @Override
     public String toString() {
         return "Process YAML files using SnakeYAML(see https://bitbucket.org/asomov/snakeyaml/wiki/Home)";
+    }
+
+    private synchronized Yaml yaml() {
+        if (yaml == null) {
+            final DumperOptions options = new DumperOptions();
+            options.setDefaultFlowStyle(BLOCK);
+            options.setPrettyFlow(true);
+            options.setSplitLines(false);
+            options.setIndent(2);
+            yaml = new Yaml(options);
+        }
+        return yaml;
     }
 }

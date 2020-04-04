@@ -42,6 +42,10 @@ public class GsonTool {
         return gson().fromJson(json, type());
     }
 
+    public String toJson(Object src) {
+        return gson().toJson(src);
+    }
+
     @Override
     public String toString() {
         return "Process JSON files using GSON (see https://github.com/google/gson)";
@@ -49,7 +53,11 @@ public class GsonTool {
 
     private synchronized Gson gson() {
         if (gson == null) {
-            gson = new GsonBuilder().setLenient().create();
+            gson = new GsonBuilder()
+                    .setLenient()
+                    .setPrettyPrinting()
+                    .disableHtmlEscaping()
+                    .create();
         }
         return gson;
     }
