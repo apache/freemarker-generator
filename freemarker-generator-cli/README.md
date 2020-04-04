@@ -1101,7 +1101,21 @@ yields
 | Total Profit | 498855.44 |
 ```
 
-## 6.15 Using Advanced FreeMarker Features
+## 6.15 Converting Between JSON And YAML
+
+Sometimes we simply need to transform a JSON into an equivalent YAML or the other way around
+
+```
+> ./bin/freemarker-cli -t templates/yaml/json/transform.ftl site/sample/yaml/swagger-spec.yaml 
+> ./bin/freemarker-cli -i '${GsonTool.toJson(YamlTool.parse(DataSources.get(0)))}' site/sample/yaml/swagger-spec.yaml
+
+> ./bin/freemarker-cli -t templates/json/yaml/transform.ftl site/sample/json/swagger-spec.json
+> ./bin/freemarker-cli -i '${YamlTool.toYaml(GsonTool.parse(DataSources.get(0)))}' site/sample/json/swagger-spec.json
+```
+
+
+
+## 6.16 Using Advanced FreeMarker Features
 
 There is a `demo.ftl` which shows some advanced FreeMarker functionality
 
