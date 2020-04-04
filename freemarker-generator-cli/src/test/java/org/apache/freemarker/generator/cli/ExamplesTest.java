@@ -73,6 +73,7 @@ public class ExamplesTest extends AbstractMainTest {
     public void shouldRunJsonExamples() throws IOException {
         assertValid(execute("-t templates/json/csv/swagger-endpoints.ftl site/sample/json/swagger-spec.json"));
         assertValid(execute("-t templates/json/md/github-users.ftl site/sample/json/github-users.json"));
+        assertValid(execute("-t templates/json/yaml/transform.ftl site/sample/json/swagger-spec.json"));
     }
 
     @Test
@@ -83,6 +84,7 @@ public class ExamplesTest extends AbstractMainTest {
     @Test
     public void shouldRunYamlExamples() throws IOException {
         assertValid(execute("-t templates/yaml/txt/transform.ftl site/sample/yaml/customer.yaml"));
+        assertValid(execute("-t templates/yaml/json/transform.ftl site/sample/yaml/swagger-spec.yaml"));
     }
 
     @Test
@@ -130,6 +132,7 @@ public class ExamplesTest extends AbstractMainTest {
     private static void assertValid(String output) {
         assertTrue(output.length() > MIN_OUTPUT_SIZE);
         assertFalse(output.contains("Exception"));
-        assertFalse(output.contains("Error"));
+        assertFalse(output.contains("FreeMarker template error"));
+        assertFalse(output.contains("FTL stack trace"));
     }
 }

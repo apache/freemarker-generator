@@ -137,6 +137,9 @@ $FREEMARKER_CMD -t templates/html/csv/dependencies.ftl site/sample/html/dependen
 echo "templates/json/csv/swagger-endpoints.ftl"
 $FREEMARKER_CMD -t templates/json/csv/swagger-endpoints.ftl site/sample/json/swagger-spec.json > target/out/swagger-spec.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
+echo "templates/json/yaml/transform.ftl"
+$FREEMARKER_CMD -t templates/json/yaml/transform.ftl site/sample/json/swagger-spec.json > target/out/swagger-spec.yaml || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
 if hash curl 2>/dev/null; then
 echo "templates/json/md/github-users.ftl"
 $FREEMARKER_CMD -t templates/json/md/github-users.ftl site/sample/json/github-users.json > target/out/github-users-curl.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
@@ -154,7 +157,10 @@ $FREEMARKER_CMD -t templates/properties/csv/locker-test-users.ftl site/sample/pr
 #############################################################################
 
 echo "templates/yaml/txt/transform.ftl"
-$FREEMARKER_CMD -t ./templates/yaml/txt/transform.ftl ./site/sample/yaml/customer.yaml > target/out/customer.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -t templates/yaml/txt/transform.ftl site/sample/yaml/customer.yaml > target/out/customer.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
+echo "templates/yaml/json/transform.ftl"
+$FREEMARKER_CMD -t templates/yaml/json/transform.ftl site/sample/yaml/swagger-spec.yaml > target/out/swagger-spec.json || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
 # XML
@@ -165,4 +171,3 @@ $FREEMARKER_CMD -t ./templates/xml/txt/recipients.ftl site/sample/xml/recipients
 
 echo "Created the following sample files in ./target/out"
 ls -l ./target/out
-
