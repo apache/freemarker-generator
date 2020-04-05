@@ -17,7 +17,6 @@
 package org.apache.freemarker.generator.cli.config;
 
 import freemarker.cache.TemplateLoader;
-import org.apache.freemarker.generator.base.datamodel.DataModelsSupplier;
 import org.apache.freemarker.generator.base.datasource.DataSourcesSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesClassPathSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesFileSystemSupplier;

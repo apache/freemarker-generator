@@ -14,9 +14,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.datamodel;
+package org.apache.freemarker.generator.cli.config;
 
-import org.apache.freemarker.generator.base.datamodel.DataModelsSupplier;
 import org.junit.Test;
 
 import java.util.Map;
@@ -88,6 +87,17 @@ public class DataModelsSupplierTest {
 
         assertEquals(1, model.size());
         assertEquals("bar", toMap(model, "props").get("foo"));
+    }
+
+    @Test
+    public void shouldResolveJsonFileToTopLevelDataModel() {
+        final DataModelsSupplier supplier = supplier("./src/test/data/json/environments.json");
+
+        final Map<String, Object> model = supplier.get();
+
+        assertEquals(2, model.size());
+        assertEquals("scott", model.get("db_default_user"));
+        assertEquals("tiger", model.get("db_default_password"));
     }
 
     private static DataModelsSupplier supplier(String source) {

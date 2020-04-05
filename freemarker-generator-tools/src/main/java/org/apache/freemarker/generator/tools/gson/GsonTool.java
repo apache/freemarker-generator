@@ -32,9 +32,11 @@ public class GsonTool {
     private Gson gson;
     private Type type;
 
-    public Map<String, Object> parse(DataSource dataSource) throws IOException {
+    public Map<String, Object> parse(DataSource dataSource) {
         try (JsonReader reader = new JsonReader(new InputStreamReader(dataSource.getUnsafeInputStream()))) {
             return gson().fromJson(reader, type());
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to parse data source:" + dataSource, e);
         }
     }
 

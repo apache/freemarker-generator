@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.base.datamodel;
+package org.apache.freemarker.generator.cli.config;
 
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
@@ -22,6 +22,7 @@ import org.apache.freemarker.generator.base.uri.NamedUri;
 import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
 import org.apache.freemarker.generator.base.util.PropertiesFactory;
 import org.apache.freemarker.generator.base.util.UriUtils;
+import org.apache.freemarker.generator.tools.gson.GsonTool;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -34,6 +35,7 @@ import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toMap;
+import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_APPLICATION_JSON;
 import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_TEXT_PLAIN;
 
 /**
@@ -70,9 +72,25 @@ public class DataModelsSupplier implements Supplier<Map<String, Object>> {
         switch (contentType) {
             case MIME_TEXT_PLAIN:
                 return fromProperties(dataSource, isExplodedDataModel);
+            case MIME_APPLICATION_JSON:
+                return fromJson(dataSource, isExplodedDataModel);
             default:
                 throw new IllegalArgumentException("Don't know how to handle :" + contentType);
         }
+    }
+
+    protected Map<String, Object> fromJson(DataSource dataSource, boolean isExplodedDataModel) {
+        final Map<String, Object> result = new HashMap<>();
+        final GsonTool gsonTool = new GsonTool();
+        final Map<String, Object> map = gsonTool.parse(dataSource);
+
+        if (isExplodedDataModel) {
+            map.forEach((key, value) -> result.put(key.toString(), value));
+        } else {
+            result.put(dataSource.getName(), map);
+        }
+
+        return result;
     }
 
     protected Map<String, Object> fromProperties(DataSource dataSource, boolean isExplodedDataModel) {
