@@ -23,6 +23,7 @@ import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
 import org.apache.freemarker.generator.base.util.PropertiesFactory;
 import org.apache.freemarker.generator.base.util.UriUtils;
 import org.apache.freemarker.generator.tools.gson.GsonTool;
+import org.apache.freemarker.generator.tools.snakeyaml.SnakeYamlTool;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -37,6 +38,7 @@ import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toMap;
 import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_APPLICATION_JSON;
 import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_TEXT_PLAIN;
+import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_TEXT_YAML;
 
 /**
  * Create a list of <code>DataSource</code> based on a list of sources consisting of
@@ -74,6 +76,8 @@ public class DataModelsSupplier implements Supplier<Map<String, Object>> {
                 return fromProperties(dataSource, isExplodedDataModel);
             case MIME_APPLICATION_JSON:
                 return fromJson(dataSource, isExplodedDataModel);
+            case MIME_TEXT_YAML:
+                return fromYaml(dataSource, isExplodedDataModel);
             default:
                 throw new IllegalArgumentException("Don't know how to handle :" + contentType);
         }
@@ -83,6 +87,20 @@ public class DataModelsSupplier implements Supplier<Map<String, Object>> {
         final Map<String, Object> result = new HashMap<>();
         final GsonTool gsonTool = new GsonTool();
         final Map<String, Object> map = gsonTool.parse(dataSource);
+
+        if (isExplodedDataModel) {
+            map.forEach((key, value) -> result.put(key.toString(), value));
+        } else {
+            result.put(dataSource.getName(), map);
+        }
+
+        return result;
+    }
+
+    protected Map<String, Object> fromYaml(DataSource dataSource, boolean isExplodedDataModel) {
+        final Map<String, Object> result = new HashMap<>();
+        final SnakeYamlTool snakeYamlTool = new SnakeYamlTool();
+        final Map<String, Object> map = snakeYamlTool.parse(dataSource);
 
         if (isExplodedDataModel) {
             map.forEach((key, value) -> result.put(key.toString(), value));

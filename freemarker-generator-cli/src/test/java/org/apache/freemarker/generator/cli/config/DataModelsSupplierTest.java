@@ -100,6 +100,17 @@ public class DataModelsSupplierTest {
         assertEquals("tiger", model.get("db_default_password"));
     }
 
+    @Test
+    public void shouldResolveYamlFileToTopLevelDataModel() {
+        final DataModelsSupplier supplier = supplier("./src/test/data/yaml/environments.yaml");
+
+        final Map<String, Object> model = supplier.get();
+
+        assertEquals(2, model.size());
+        assertEquals("scott", model.get("db_default_user"));
+        assertEquals("tiger", model.get("db_default_password"));
+    }
+
     private static DataModelsSupplier supplier(String source) {
         return new DataModelsSupplier(singletonList(source));
     }
