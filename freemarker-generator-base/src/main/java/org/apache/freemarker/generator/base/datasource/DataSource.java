@@ -131,9 +131,8 @@ public class DataSource implements Closeable {
      * Get an input stream which is closed together with this data source.
      *
      * @return InputStream
-     * @throws IOException Operation failed
      */
-    public InputStream getInputStream() throws IOException {
+    public InputStream getInputStream() {
         return closables.add(getUnsafeInputStream());
     }
 
@@ -141,21 +140,26 @@ public class DataSource implements Closeable {
      * Get an input stream which needs to be closed by the caller.
      *
      * @return InputStream
-     * @throws IOException Operation failed
      */
-    public InputStream getUnsafeInputStream() throws IOException {
-        return dataSource.getInputStream();
+    public InputStream getUnsafeInputStream() {
+        try {
+            return dataSource.getInputStream();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to get input stream: " + toString(), e);
+        }
     }
 
-    public String getText() throws IOException {
+    public String getText() {
         return getText(getCharset().name());
     }
 
-    public String getText(String charsetName) throws IOException {
+    public String getText(String charsetName) {
         final StringWriter writer = new StringWriter();
         try (InputStream is = getUnsafeInputStream()) {
             IOUtils.copy(is, writer, forName(charsetName));
             return writer.toString();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to get text: " + toString(), e);
         }
     }
 
@@ -164,9 +168,8 @@ public class DataSource implements Closeable {
      * one entry per line, using the specified character encoding.
      *
      * @return the list of Strings, never null
-     * @throws IOException if an I/O error occurs
      */
-    public List<String> getLines() throws IOException {
+    public List<String> getLines() {
         return getLines(getCharset().name());
     }
 
@@ -176,11 +179,12 @@ public class DataSource implements Closeable {
      *
      * @param charsetName The name of the requested charset
      * @return the list of Strings, never null
-     * @throws IOException if an I/O error occurs
      */
-    public List<String> getLines(String charsetName) throws IOException {
+    public List<String> getLines(String charsetName) {
         try (InputStream inputStream = getUnsafeInputStream()) {
             return IOUtils.readLines(inputStream, charsetName);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to get lines: " + toString(), e);
         }
     }
 
@@ -190,9 +194,8 @@ public class DataSource implements Closeable {
      * the line iterator.
      *
      * @return line iterator
-     * @throws IOException if an I/O error occurs
      */
-    public LineIterator getLineIterator() throws IOException {
+    public LineIterator getLineIterator() {
         return getLineIterator(getCharset().name());
     }
 
@@ -202,15 +205,20 @@ public class DataSource implements Closeable {
      *
      * @param charsetName The name of the requested charset
      * @return line iterator
-     * @throws IOException if an I/O error occurs
      */
-    public LineIterator getLineIterator(String charsetName) throws IOException {
-        return closables.add(lineIterator(getUnsafeInputStream(), forName(charsetName)));
+    public LineIterator getLineIterator(String charsetName) {
+        try {
+            return closables.add(lineIterator(getUnsafeInputStream(), forName(charsetName)));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create line iterator: " + toString(), e);
+        }
     }
 
-    public byte[] getBytes() throws IOException {
+    public byte[] getBytes() {
         try (InputStream inputStream = getUnsafeInputStream()) {
             return IOUtils.toByteArray(inputStream);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to get bytes: " + toString(), e);
         }
     }
 
