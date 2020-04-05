@@ -86,7 +86,7 @@ public class Main implements Callable<Integer> {
     @Option(names = { "-l", "--locale" }, description = "Locale being used for the output, e.g. 'en_US'")
     String locale;
 
-    @Option(names = { "-m", "--mode" }, description = "[template|datasource]", defaultValue = "TEMPLATE")
+    @Option(names = { "--mode" }, description = "[template|datasource]", defaultValue = "TEMPLATE")
     GeneratorMode mode;
 
     @Option(names = { "-o", "--output" }, description = "Output file")
@@ -94,6 +94,9 @@ public class Main implements Callable<Integer> {
 
     @Option(names = { "-P", "--param" }, description = "Set parameter")
     Map<String, String> parameters;
+
+    @Option(names = { "-m", "--data-model" }, description = "Data model used for rendering")
+    List<String> dataModels;
 
     @Option(names = { "--config" }, defaultValue = FREEMARKER_CLI_PROPERTY_FILE, description = "FreeMarker CLI configuration file")
     String configFile;
@@ -219,6 +222,7 @@ public class Main implements Callable<Integer> {
                 .setOutputFile(outputFile)
                 .setParameters(parameters != null ? parameters : new HashMap<>())
                 .setDataSources(getCombindedDataSources())
+                .setDataModels(dataModels)
                 .setSystemProperties(systemProperties != null ? systemProperties : new Properties())
                 .setTemplateDirectories(templateDirectories)
                 .setTemplateName(templateSourceOptions.template)
