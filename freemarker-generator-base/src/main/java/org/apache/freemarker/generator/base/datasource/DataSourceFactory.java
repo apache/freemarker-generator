@@ -81,7 +81,10 @@ public class DataSourceFactory {
                 return fromEnvironment(name, group, key, contentType);
             }
         } else {
-            throw new IllegalArgumentException("Don't knowm how to handle: " + namedUri);
+            // handle things such as "foo=some.file"
+            final File file = namedUri.getFile();
+            final String name = namedUri.getNameOrElse(file.getName());
+            return fromFile(name, group, file, charset);
         }
     }
 
@@ -151,7 +154,7 @@ public class DataSourceFactory {
             final StringWriter writer = new StringWriter();
             properties.store(writer, null);
             final StringDataSource dataSource = new StringDataSource(name, writer.toString(), contentType, UTF_8);
-            final URI uri = UriUtils.toURI(Location.ENVIRONMENT);
+            final URI uri = UriUtils.toURI(Location.ENVIRONMENT, "");
             return create(name, group, uri, dataSource, contentType, UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);

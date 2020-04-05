@@ -18,15 +18,23 @@ package org.apache.freemarker.generator.base.datamodel;
 
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
+import org.apache.freemarker.generator.base.uri.NamedUri;
+import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
+import org.apache.freemarker.generator.base.util.PropertiesFactory;
+import org.apache.freemarker.generator.base.util.UriUtils;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.function.Supplier;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.toMap;
+import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_TEXT_PLAIN;
 
 /**
  * Create a list of <code>DataSource</code> based on a list of sources consisting of
@@ -34,7 +42,6 @@ import static java.util.stream.Collectors.toList;
  */
 public class DataModelsSupplier implements Supplier<Map<String, Object>> {
 
-    /** List of source files, named URIs and URIs */
     private final Collection<String> sources;
 
     /**
@@ -43,22 +50,46 @@ public class DataModelsSupplier implements Supplier<Map<String, Object>> {
      * @param sources List of sources
      */
     public DataModelsSupplier(Collection<String> sources) {
-        this.sources = new ArrayList<>(sources);
+        this.sources = new ArrayList<>(requireNonNull(sources));
     }
 
     @Override
     public Map<String, Object> get() {
-        final List<DataSource> dataModels = sources.stream().map(this::resolve).collect(toList());
-        return Collections.emptyMap();
+        return sources.stream()
+                .map(this::toDataModel)
+                .flatMap(map -> map.entrySet().stream())
+                .collect(toMap(Entry::getKey, Entry::getValue));
     }
 
-    /**
-     * Resolve a <code>source</code> to a <code>DataSource</code>.
-     *
-     * @param source the source being a file name, an <code>URI</code> or <code>NamedUri</code>
-     * @return list of <code>DataSource</code>
-     */
-    protected DataSource resolve(String source) {
-        return DataSourceFactory.create(source);
+    protected Map<String, Object> toDataModel(String source) {
+        final NamedUri namedUri = NamedUriStringParser.parse(source);
+        final DataSource dataSource = DataSourceFactory.fromNamedUri(namedUri);
+        final boolean isExplodedDataModel = !namedUri.hasName();
+        final String contentType = dataSource.getContentType();
+
+        switch (contentType) {
+            case MIME_TEXT_PLAIN:
+                return fromProperties(dataSource, isExplodedDataModel);
+            default:
+                throw new IllegalArgumentException("Don't know how to handle :" + contentType);
+        }
+    }
+
+    protected Map<String, Object> fromProperties(DataSource dataSource, boolean isExplodedDataModel) {
+        final Map<String, Object> result = new HashMap<>();
+        final URI uri = dataSource.getUri();
+
+        if (UriUtils.isEnvUri(uri) && !"env:///".equals(uri.toString())) {
+            result.put(dataSource.getName(), dataSource.getText());
+        } else {
+            final Properties properties = PropertiesFactory.create(dataSource.getText());
+            if (isExplodedDataModel) {
+                properties.forEach((key, value) -> result.put(key.toString(), value));
+            } else {
+                result.put(dataSource.getName(), properties);
+            }
+        }
+
+        return result;
     }
 }

@@ -45,14 +45,4 @@ public class StringUtils {
         return null;
     }
 
-    public static String firstNonNull(final String... values) {
-        if (values != null) {
-            for (final String value : values) {
-                if (value != null) {
-                    return value;
-                }
-            }
-        }
-        return null;
-    }
 }
