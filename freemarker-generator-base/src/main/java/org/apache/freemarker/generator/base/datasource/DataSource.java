@@ -77,7 +77,7 @@ public class DataSource implements Closeable {
         this.group = emptyToNull(group);
         this.uri = requireNonNull(uri);
         this.dataSource = requireNonNull(dataSource);
-        this.contentType = requireNonNull(contentType);
+        this.contentType = contentType;
         this.charset = requireNonNull(charset);
         this.closables = new CloseableReaper();
     }
@@ -103,7 +103,7 @@ public class DataSource implements Closeable {
     }
 
     public String getContentType() {
-        return contentType;
+        return contentType != null ? contentType : dataSource.getContentType();
     }
 
     public URI getUri() {

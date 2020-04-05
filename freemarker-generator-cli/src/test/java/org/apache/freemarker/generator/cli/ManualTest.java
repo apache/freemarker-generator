@@ -43,10 +43,10 @@ public class ManualTest {
     // private static final String CMD = "-b ./src/test -t templates/json/yaml/transform.ftl site/sample/json/swagger-spec.json";
     // private static final String CMD = "-b ./src/test -t templates/yaml/json/transform.ftl site/sample/yaml/swagger-spec.yaml";
     // private static final String CMD = "-b ./src/test -t templates/demo.ftl -m env=env:///";
-    private static final String CMD = "-b ./src/test -t templates/demo.ftl -m env:///";
+    // private static final String CMD = "-b ./src/test -t templates/demo.ftl -m api=https://httpbin.org/get";
     // private static final String CMD = "-b ./src/test -t templates/demo.ftl -m env:///HOME";
     // private static final String CMD = "-b ./src/test -t templates/demo.ftl -m env=./site/sample/properties/user_0001/user.properties";
-    // private static final String CMD = "-b ./src/test -t templates/demo.ftl -m ./site/sample/properties/user_0001/user.properties";
+    private static final String CMD = "-b ./src/test -t templates/demo.ftl -m ./site/sample/properties/user_0001/user.properties";
 
     public static void main(String[] args) {
         Main.execute(toArgs(CMD));

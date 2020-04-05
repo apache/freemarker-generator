@@ -41,7 +41,7 @@ import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_TEX
 import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_TEXT_YAML;
 
 /**
- * Create a list of <code>DataSource</code> based on a list of sources consisting of
+ * Create a list of <code>DataModel</code> based on a list of sources consisting of
  * URIs, named URIs or files.
  */
 public class DataModelsSupplier implements Supplier<Map<String, Object>> {
@@ -72,10 +72,10 @@ public class DataModelsSupplier implements Supplier<Map<String, Object>> {
         final String contentType = dataSource.getContentType();
 
         switch (contentType) {
-            case MIME_TEXT_PLAIN:
-                return fromProperties(dataSource, isExplodedDataModel);
             case MIME_APPLICATION_JSON:
                 return fromJson(dataSource, isExplodedDataModel);
+            case MIME_TEXT_PLAIN:
+                return fromProperties(dataSource, isExplodedDataModel);
             case MIME_TEXT_YAML:
                 return fromYaml(dataSource, isExplodedDataModel);
             default:
@@ -84,31 +84,15 @@ public class DataModelsSupplier implements Supplier<Map<String, Object>> {
     }
 
     protected Map<String, Object> fromJson(DataSource dataSource, boolean isExplodedDataModel) {
-        final Map<String, Object> result = new HashMap<>();
         final GsonTool gsonTool = new GsonTool();
         final Map<String, Object> map = gsonTool.parse(dataSource);
-
-        if (isExplodedDataModel) {
-            map.forEach((key, value) -> result.put(key.toString(), value));
-        } else {
-            result.put(dataSource.getName(), map);
-        }
-
-        return result;
+        return fromMap(dataSource.getName(), map, isExplodedDataModel);
     }
 
     protected Map<String, Object> fromYaml(DataSource dataSource, boolean isExplodedDataModel) {
-        final Map<String, Object> result = new HashMap<>();
         final SnakeYamlTool snakeYamlTool = new SnakeYamlTool();
         final Map<String, Object> map = snakeYamlTool.parse(dataSource);
-
-        if (isExplodedDataModel) {
-            map.forEach((key, value) -> result.put(key.toString(), value));
-        } else {
-            result.put(dataSource.getName(), map);
-        }
-
-        return result;
+        return fromMap(dataSource.getName(), map, isExplodedDataModel);
     }
 
     protected Map<String, Object> fromProperties(DataSource dataSource, boolean isExplodedDataModel) {
@@ -124,6 +108,18 @@ public class DataModelsSupplier implements Supplier<Map<String, Object>> {
             } else {
                 result.put(dataSource.getName(), properties);
             }
+        }
+
+        return result;
+    }
+
+    private Map<String, Object> fromMap(String name, Map<String, Object> map, boolean isExplodedDataModel) {
+        final Map<String, Object> result = new HashMap<>();
+
+        if (isExplodedDataModel) {
+            map.forEach(result::put);
+        } else {
+            result.put(name, map);
         }
 
         return result;

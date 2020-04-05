@@ -62,11 +62,12 @@ public class DataSourceFactory {
         final URI uri = namedUri.getUri();
         final String group = namedUri.getGroupOrElse(DEFAULT_GROUP);
         final Charset charset = getCharsetOrElse(namedUri, UTF_8);
+        final String mimeType = getMimeTypeOrElse(namedUri, null);
 
         if (UriUtils.isHttpURI(uri)) {
             final URL url = toURL(uri);
             final String name = namedUri.getNameOrElse(url.getHost());
-            return fromUrl(name, group, url, charset);
+            return fromUrl(name, group, url, mimeType, charset);
         } else if (UriUtils.isFileUri(uri)) {
             final File file = namedUri.getFile();
             final String name = namedUri.getNameOrElse(file.getName());
@@ -91,7 +92,7 @@ public class DataSourceFactory {
     // == URL ===============================================================
 
     public static DataSource fromUrl(String name, String group, URL url, Charset charset) {
-        return fromUrl(name, group, url, "application/octet-stream", charset);
+        return fromUrl(name, group, url, null, charset);
     }
 
     public static DataSource fromUrl(String name, String group, URL url, String contentType, Charset charset) {
