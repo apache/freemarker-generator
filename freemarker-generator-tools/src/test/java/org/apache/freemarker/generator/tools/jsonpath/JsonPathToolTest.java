@@ -27,7 +27,7 @@ public class JsonPathToolTest {
     private static final String JSON_OBJECT_STRING = "{\n" +
             "\"id\": 110,\n" +
             "\"language\": \"Python\",\n" +
-            "\"price\": 1900,\n" +
+            "\"price\": 1900\n" +
             "}";
 
     private static final String JSON_ARRAY_STRING = "{\n" +

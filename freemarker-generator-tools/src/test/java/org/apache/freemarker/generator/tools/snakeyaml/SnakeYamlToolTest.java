@@ -21,10 +21,15 @@ import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertEquals;
+import static org.apache.commons.io.FileUtils.readFileToString;
 
 public class SnakeYamlToolTest {
 
@@ -52,6 +57,22 @@ public class SnakeYamlToolTest {
 
         assertEquals(1, map.size());
         assertEquals(3, ((List<?>) map.get("docker")).size());
+    }
+
+    @Test
+    public void shallConvertToYamlString() {
+        final Map<String, Object> map = snakeYamlTool().parse(ANY_YAML_STRING);
+
+        assertEquals(114, snakeYamlTool().toYaml(map).length());
+    }
+
+    @Test
+    public void shouldParseComplexYaml() throws IOException {
+        final String yaml = readFileToString(new File("./src/test/data/yaml/swagger.yaml"), UTF_8);
+        final Map<String, Object> map = snakeYamlTool().parse(yaml);
+
+        assertEquals("2.0", map.get("swagger"));
+        assertEquals(16956, snakeYamlTool().toYaml(map).length());
     }
 
     private SnakeYamlTool snakeYamlTool() {

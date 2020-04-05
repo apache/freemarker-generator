@@ -52,7 +52,7 @@ Some years later the not-so-small-any-longer-and-not-having-tests Groovy script 
 * Support multiple source files/directories for a single transformation
 * Support transformation of Property files using plain-vanilla JDK
 * Support transformation of CSV files using [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/)
-* Support transformation of JSON using [Jayway's JSONPath](https://github.com/jayway/JsonPath)
+* Support transformation of JSON using [Jayway's JSONPath](https://github.com/jayway/JsonPath) and [GSON](https://github.com/google/gson)
 * Support transformation of Excel using [Apache POI](https://poi.apache.org)
 * Support transformation of YAML using [SnakeYAML](https://bitbucket.org/asomov/snakeyaml/wiki/Home)
 * Support transformation of HTML using [JSoup](https://jsoup.org)
@@ -76,28 +76,29 @@ You can test the installation by executing
 
 ```text
 > ./bin/freemarker-cli -t templates/info.ftl 
-
 FreeMarker CLI Information
----------------------------------------------------------------------------
+------------------------------------------------------------------------------
 FreeMarker version     : 2.3.29
 Template name          : templates/info.ftl
 Language               : en
 Locale                 : en_US
-Timestamp              : Feb 22, 2020 4:42:01 PM
+Timestamp              : Apr 4, 2020 12:39:28 PM
 Output encoding        : UTF-8
 Output format          : plainText
 
 FreeMarker CLI Template Directories
----------------------------------------------------------------------------
-[1] /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler
+------------------------------------------------------------------------------
+[#1] /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler
+[#2] /Users/sgoeschl/.freemarker-cli
 
 FreeMarker CLI Tools
----------------------------------------------------------------------------
+------------------------------------------------------------------------------
 - CSVTool              : Process CSV files using Apache Commons CSV (see https://commons.apache.org/proper/commons-csv/)
 - ExcelTool            : Process Excels files (XLS, XLSX) using Apache POI (see https://poi.apache.org)
 - ExecTool             : Execute command line tools using Apache Commons Exec (see https://commons.apache.org/proper/commons-exec/)
 - FreeMarkerTool       : Expose useful Apache FreeMarker classes
 - GrokTool             : Process text files using Grok expressions (see https://github.com/thekrakken/java-grok)
+- GsonTool             : Process JSON files using GSON (see https://github.com/google/gson)
 - JsonPathTool         : Process JSON files using Java JSON Path (see https://github.com/json-path/JsonPath)
 - JsoupTool            : Process  HTML files using Jsoup (see https://jsoup.org)
 - PropertiesTool       : Process JDK properties files
@@ -107,21 +108,21 @@ FreeMarker CLI Tools
 - YamlTool             : Process YAML files using SnakeYAML(see https://bitbucket.org/asomov/snakeyaml/wiki/Home)
 
 FreeMarker CLI DataSources
----------------------------------------------------------------------------
+------------------------------------------------------------------------------
 
 User Supplied Parameters
----------------------------------------------------------------------------
+------------------------------------------------------------------------------
 
 User Supplied System Properties
----------------------------------------------------------------------------
+------------------------------------------------------------------------------
 
 SystemTool
----------------------------------------------------------------------------
+------------------------------------------------------------------------------
 Command line         : -t, templates/info.ftl
 Host Name            : W0GL5179.local
 Java Home            : /Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home
 User Name            : sgoeschl
-Timestamp            : 1,582,386,121,793
+Timestamp            : 1,585,996,768,896
 Writer               : org.apache.freemarker.generator.base.util.NonClosableWriterWrapper
 ```
 
@@ -148,40 +149,44 @@ templates/excel/csv/transform.ftl
 templates/excel/csv/custom.ftl
 templates/html/csv/dependencies.ftl
 templates/json/csv/swagger-endpoints.ftl
+templates/json/yaml/transform.ftl
 templates/json/md/github-users.ftl
 templates/properties/csv/locker-test-users.ftl
 templates/yaml/txt/transform.ftl
+templates/yaml/json/transform.ftl
 templates/xml/txt/recipients.ftl
 Created the following sample files in ./target/out
-total 1344
--rw-r--r--  1 sgoeschl  staff     646 Feb 22 16:43 combined-access.log.txt
--rw-r--r--  1 sgoeschl  staff   22548 Feb 22 16:43 contract.html
--rw-r--r--  1 sgoeschl  staff    7933 Feb 22 16:43 contract.md
--rw-r--r--  1 sgoeschl  staff     784 Feb 22 16:43 curl.sh
--rw-r--r--  1 sgoeschl  staff     232 Feb 22 16:43 customer.txt
--rw-r--r--  1 sgoeschl  staff   15084 Feb 22 16:43 demo.txt
--rw-r--r--  1 sgoeschl  staff    1310 Feb 22 16:43 dependencies.csv
--rw-r--r--  1 sgoeschl  staff    2029 Feb 22 16:43 github-users-curl.md
--rw-r--r--  1 sgoeschl  staff    2668 Feb 22 16:43 info.txt
--rw-r--r--  1 sgoeschl  staff      66 Feb 22 16:43 interactive-html.txt
--rw-r--r--  1 sgoeschl  staff      16 Feb 22 16:43 interactive-json.txt
--rw-r--r--  1 sgoeschl  staff      10 Feb 22 16:43 interactive-xml.txt
--rw-r--r--  1 sgoeschl  staff     285 Feb 22 16:43 locker-test-users.csv
--rw-r--r--  1 sgoeschl  staff    6341 Feb 22 16:43 locker-test-users.fo
--rw-r--r--  1 sgoeschl  staff    5526 Feb 22 16:43 locker-test-users.pdf
--rw-r--r--  1 sgoeschl  staff     921 Feb 22 16:43 recipients.txt
--rw-r--r--  1 sgoeschl  staff     910 Feb 22 16:43 sales-records.md
--rw-r--r--  1 sgoeschl  staff     379 Feb 22 16:43 swagger-spec.csv
--rw-r--r--  1 sgoeschl  staff     156 Feb 22 16:43 test-multiple-sheets.xlsx.csv
--rw-r--r--  1 sgoeschl  staff    1917 Feb 22 16:43 test-multiple-sheets.xlsx.html
--rw-r--r--  1 sgoeschl  staff     389 Feb 22 16:43 test-multiple-sheets.xlsx.md
--rw-r--r--  1 sgoeschl  staff     150 Feb 22 16:43 test-transform-xls.csv
--rw-r--r--  1 sgoeschl  staff    1556 Feb 22 16:43 test.xls.html
--rw-r--r--  1 sgoeschl  staff    1558 Feb 22 16:43 test.xslx.html
--rw-r--r--  1 sgoeschl  staff   25756 Feb 22 16:43 transactions-fo.pdf
--rw-r--r--  1 sgoeschl  staff   66016 Feb 22 16:43 transactions-html.pdf
--rw-r--r--  1 sgoeschl  staff  330128 Feb 22 16:43 transactions.fo
--rw-r--r--  1 sgoeschl  staff   51008 Feb 22 16:43 transactions.html
+total 1440
+-rw-r--r--  1 sgoeschl  staff     646 Apr  4 13:03 combined-access.log.txt
+-rw-r--r--  1 sgoeschl  staff   22548 Apr  4 13:03 contract.html
+-rw-r--r--  1 sgoeschl  staff    7933 Apr  4 13:03 contract.md
+-rw-r--r--  1 sgoeschl  staff     784 Apr  4 13:03 curl.sh
+-rw-r--r--  1 sgoeschl  staff     232 Apr  4 13:03 customer.txt
+-rw-r--r--  1 sgoeschl  staff   15268 Apr  4 13:03 demo.txt
+-rw-r--r--  1 sgoeschl  staff    1310 Apr  4 13:03 dependencies.csv
+-rw-r--r--  1 sgoeschl  staff    2029 Apr  4 13:03 github-users-curl.md
+-rw-r--r--  1 sgoeschl  staff    2901 Apr  4 13:03 info.txt
+-rw-r--r--  1 sgoeschl  staff      66 Apr  4 13:03 interactive-html.txt
+-rw-r--r--  1 sgoeschl  staff      16 Apr  4 13:03 interactive-json.txt
+-rw-r--r--  1 sgoeschl  staff      10 Apr  4 13:03 interactive-xml.txt
+-rw-r--r--  1 sgoeschl  staff     285 Apr  4 13:03 locker-test-users.csv
+-rw-r--r--  1 sgoeschl  staff    6341 Apr  4 13:03 locker-test-users.fo
+-rw-r--r--  1 sgoeschl  staff    5526 Apr  4 13:03 locker-test-users.pdf
+-rw-r--r--  1 sgoeschl  staff     921 Apr  4 13:03 recipients.txt
+-rw-r--r--  1 sgoeschl  staff     910 Apr  4 13:03 sales-records.md
+-rw-r--r--  1 sgoeschl  staff    2453 Apr  4 13:03 swagger-spec.csv
+-rw-r--r--  1 sgoeschl  staff   25090 Apr  4 13:03 swagger-spec.json
+-rw-r--r--  1 sgoeschl  staff   16870 Apr  4 13:03 swagger-spec.yaml
+-rw-r--r--  1 sgoeschl  staff     156 Apr  4 13:03 test-multiple-sheets.xlsx.csv
+-rw-r--r--  1 sgoeschl  staff    1917 Apr  4 13:03 test-multiple-sheets.xlsx.html
+-rw-r--r--  1 sgoeschl  staff     389 Apr  4 13:03 test-multiple-sheets.xlsx.md
+-rw-r--r--  1 sgoeschl  staff     150 Apr  4 13:03 test-transform-xls.csv
+-rw-r--r--  1 sgoeschl  staff    1556 Apr  4 13:03 test.xls.html
+-rw-r--r--  1 sgoeschl  staff    1558 Apr  4 13:03 test.xslx.html
+-rw-r--r--  1 sgoeschl  staff   25756 Apr  4 13:03 transactions-fo.pdf
+-rw-r--r--  1 sgoeschl  staff   66016 Apr  4 13:03 transactions-html.pdf
+-rw-r--r--  1 sgoeschl  staff  330127 Apr  4 13:03 transactions.fo
+-rw-r--r--  1 sgoeschl  staff   51008 Apr  4 13:03 transactions.html
 ```
 
 Please note that generated PDF files are very likely not found since they require `wkhtmltopdf` and `Apache FOP` installation.
@@ -1101,7 +1106,21 @@ yields
 | Total Profit | 498855.44 |
 ```
 
-## 6.15 Using Advanced FreeMarker Features
+## 6.15 Converting Between JSON And YAML
+
+Sometimes we simply need to transform a JSON into an equivalent YAML or the other way around
+
+```
+> ./bin/freemarker-cli -t templates/yaml/json/transform.ftl site/sample/yaml/swagger-spec.yaml 
+> ./bin/freemarker-cli -i '${GsonTool.toJson(YamlTool.parse(DataSources.get(0)))}' site/sample/yaml/swagger-spec.yaml
+
+> ./bin/freemarker-cli -t templates/json/yaml/transform.ftl site/sample/json/swagger-spec.json
+> ./bin/freemarker-cli -i '${YamlTool.toYaml(GsonTool.parse(DataSources.get(0)))}' site/sample/json/swagger-spec.json
+```
+
+
+
+## 6.16 Using Advanced FreeMarker Features
 
 There is a `demo.ftl` which shows some advanced FreeMarker functionality
 
@@ -1206,6 +1225,7 @@ Get all data sources
 - ExecTool             : Execute command line tools using Apache Commons Exec (see https://commons.apache.org/proper/commons-exec/)
 - FreeMarkerTool       : Expose useful Apache FreeMarker classes
 - GrokTool             : Process text files using Grok expressions (see https://github.com/thekrakken/java-grok)
+- GsonTool             : Process JSON files using GSON (see https://github.com/google/gson)
 - JsonPathTool         : Process JSON files using Java JSON Path (see https://github.com/json-path/JsonPath)
 - JsoupTool            : Process  HTML files using Jsoup (see https://jsoup.org)
 - PropertiesTool       : Process JDK properties files
@@ -1222,6 +1242,7 @@ Get all data sources
 - ExecTool
 - FreeMarkerTool
 - GrokTool
+- GsonTool
 - JsonPathTool
 - JsoupTool
 - PropertiesTool
@@ -1269,9 +1290,10 @@ Within the script a FreeMarker data model is set up and passed to the template -
 | CSVTool               | Process CSV files using [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/)              |
 | ExecTool              | Execute command line tools using [Apache Commons Exec](https://commons.apache.org/proper/commons-exec/)   |
 | ExcelTool             | Process Excels files (XLS, XLSX) using [Apache POI](https://poi.apache.org)                               |
-| DataSources           | Helper class to find data sources, e.g. by name, extension or index                                          |
+| DataSources           | Helper class to find data sources, e.g. by name, extension or index                                       |
 | FreeMarkerTool        | Expose useful FreeMarker classes                                                                          |
 | GrokTool              | Process text files using [Grok](https://github.com/thekrakken/java-grok) instead of regular expressions   |
+| GsonTool              | Process JSON files using [GSON](https://github.com/google/gson)                                           |
 | JsonPathTool          | Process JSON file using [Java JSON Path](https://github.com/json-path/JsonPath)                           |
 | JsoupTool             | Processing HTML files using [Jsoup](https://jsoup.org)                                                    |
 | PropertiesTool        | Process JDK properties files                                                                              |

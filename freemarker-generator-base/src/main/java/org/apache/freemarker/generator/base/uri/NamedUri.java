@@ -103,8 +103,7 @@ public class NamedUri {
     public File getFile() {
         if (UriUtils.isFileUri(uri)) {
             return new File(uri.getPath().substring(1));
-        }
-        else {
+        } else {
             return new File(uri.getPath());
         }
     }

@@ -15,21 +15,23 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign json = JsonPathTool.parse(DataSources.get(0))>
-<#assign basePath = json.read("$.basePath")>
-<#assign paths = json.read("$.paths")>
+<#assign map = GsonTool.parse(DataSources.get(0))>
+<#assign basePath = map.basePath!"/">
+<#assign paths = map.paths!{}>
 
 <#compress>
-    ENDPOINT;METHOD;CONSUMES;PRODUCES;SUMMARY;DESCRIPTION
+    ENDPOINT;METHOD;CONSUMES;PRODUCES;PARAMETERS;SUMMARY;DESCRIPTION
     <#list paths as endpoint,metadata>
-        <#assign relative_url = basePath + endpoint>
-        <#assign methods = metadata?keys>
-        <#list methods as method>
-            <#assign summary = sanitize(paths[endpoint][method]["summary"]!"")>
-            <#assign description = sanitize(paths[endpoint][method]["description"]!"")>
-            <#assign consumes = join(paths[endpoint][method]["consumes"]![])>
-            <#assign produces = join(paths[endpoint][method]["produces"]![])>
-            ${relative_url};${method?upper_case};${consumes};${produces};${summary};${description}
+        <#assign url = basePath + endpoint>
+        <#assign names = metadata?keys?sort>
+        <#list names as name>
+            <#assign method = paths[endpoint][name]>
+            <#assign summary = sanitize(method["summary"]!"")>
+            <#assign description = sanitize(method["description"]!"")>
+            <#assign consumes = join(method["consumes"]![])>
+            <#assign produces = join(method["produces"]![])>
+            <#assign parameters = method["parameters"]>
+            ${url};${name?upper_case};${consumes};${produces};${parameters?size};${summary};${description}
         </#list>
     </#list>
 </#compress>
