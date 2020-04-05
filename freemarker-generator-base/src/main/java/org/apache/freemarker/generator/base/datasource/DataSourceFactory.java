@@ -23,20 +23,26 @@ import org.apache.freemarker.generator.base.activation.MimetypesFileTypeMapFacto
 import org.apache.freemarker.generator.base.activation.StringDataSource;
 import org.apache.freemarker.generator.base.uri.NamedUri;
 import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
+import org.apache.freemarker.generator.base.util.PropertiesFactory;
 import org.apache.freemarker.generator.base.util.StringUtils;
 import org.apache.freemarker.generator.base.util.UriUtils;
 
 import javax.activation.FileDataSource;
 import javax.activation.URLDataSource;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Properties;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
+import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_TEXT_PLAIN;
+import static org.apache.freemarker.generator.base.util.StringUtils.firstNonEmpty;
 
 /**
  * Creates a FreeMarker data source from various sources.
@@ -67,9 +73,13 @@ public class DataSourceFactory {
             return fromFile(name, group, file, charset);
         } else if (UriUtils.isEnvUri(uri)) {
             final String key = uri.getPath().substring(1);
-            final String name = StringUtils.firstNonEmpty(namedUri.getName(), key, "env");
-            final String contentType = getMimeTypeOrElse(namedUri, "text/plain");
-            return fromEnvironment(name, group, key, contentType);
+            final String contentType = getMimeTypeOrElse(namedUri, MIME_TEXT_PLAIN);
+            final String name = firstNonEmpty(namedUri.getName(), key, Location.ENVIRONMENT);
+            if (StringUtils.isEmpty(key)) {
+                return fromEnvironment(name, group, contentType);
+            } else {
+                return fromEnvironment(name, group, key, contentType);
+            }
         } else {
             throw new IllegalArgumentException("Don't knowm how to handle: " + namedUri);
         }
@@ -134,6 +144,19 @@ public class DataSourceFactory {
     }
 
     // == Environment =======================================================
+
+    public static DataSource fromEnvironment(String name, String group, String contentType) {
+        try {
+            final Properties properties = PropertiesFactory.create(System.getenv());
+            final StringWriter writer = new StringWriter();
+            properties.store(writer, null);
+            final StringDataSource dataSource = new StringDataSource(name, writer.toString(), contentType, UTF_8);
+            final URI uri = UriUtils.toURI(Location.ENVIRONMENT);
+            return create(name, group, uri, dataSource, contentType, UTF_8);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public static DataSource fromEnvironment(String name, String group, String key, String contentType) {
         final String value = System.getenv(key);
