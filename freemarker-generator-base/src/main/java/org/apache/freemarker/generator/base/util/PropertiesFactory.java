@@ -19,6 +19,7 @@ package org.apache.freemarker.generator.base.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.util.Map;
 import java.util.Properties;
 
 public class PropertiesFactory {
@@ -41,5 +42,11 @@ public class PropertiesFactory {
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse properties: " + value, e);
         }
+    }
+
+    public static Properties create(Map<?, ?> map) {
+        final Properties properties = new Properties();
+        map.forEach((key, value) -> properties.setProperty(key.toString(), value.toString()));
+        return properties;
     }
 }
