@@ -71,15 +71,14 @@ public class DataModelsSupplier implements Supplier<Map<String, Object>> {
         final boolean isExplodedDataModel = !namedUri.hasName();
         final String contentType = dataSource.getContentType();
 
-        switch (contentType) {
-            case MIME_APPLICATION_JSON:
-                return fromJson(dataSource, isExplodedDataModel);
-            case MIME_TEXT_PLAIN:
-                return fromProperties(dataSource, isExplodedDataModel);
-            case MIME_TEXT_YAML:
-                return fromYaml(dataSource, isExplodedDataModel);
-            default:
-                throw new IllegalArgumentException("Don't know how to handle :" + contentType);
+        if (contentType.startsWith(MIME_APPLICATION_JSON)) {
+            return fromJson(dataSource, isExplodedDataModel);
+        } else if (contentType.startsWith(MIME_TEXT_PLAIN)) {
+            return fromProperties(dataSource, isExplodedDataModel);
+        } else if (contentType.startsWith(MIME_TEXT_YAML)) {
+            return fromYaml(dataSource, isExplodedDataModel);
+        } else {
+            throw new IllegalArgumentException("Don't know how to handle :" + contentType);
         }
     }
 

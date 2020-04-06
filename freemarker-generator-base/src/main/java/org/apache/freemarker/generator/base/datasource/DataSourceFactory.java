@@ -18,6 +18,7 @@ package org.apache.freemarker.generator.base.datasource;
 
 import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.activation.ByteArrayDataSource;
+import org.apache.freemarker.generator.base.activation.CachingUrlDataSource;
 import org.apache.freemarker.generator.base.activation.InputStreamDataSource;
 import org.apache.freemarker.generator.base.activation.MimetypesFileTypeMapFactory;
 import org.apache.freemarker.generator.base.activation.StringDataSource;
@@ -96,7 +97,7 @@ public class DataSourceFactory {
     }
 
     public static DataSource fromUrl(String name, String group, URL url, String contentType, Charset charset) {
-        final URLDataSource dataSource = new URLDataSource(url);
+        final URLDataSource dataSource = new CachingUrlDataSource(url);
         final URI uri = UriUtils.toURI(url);
         return create(name, group, uri, dataSource, contentType, charset);
     }

@@ -26,6 +26,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.nio.charset.Charset;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -79,7 +80,7 @@ public class DataSourceFactoryTest {
     }
 
     @Test
-    public void shouldCreateDataSourceFromBytes() throws IOException {
+    public void shouldCreateDataSourceFromBytes() {
         final DataSource dataSource = DataSourceFactory.fromBytes("test.txt", "default", ANY_TEXT.getBytes(UTF_8), "text/plain");
 
         assertEquals("test.txt", dataSource.getName());
@@ -91,7 +92,7 @@ public class DataSourceFactoryTest {
     }
 
     @Test
-    public void shouldCreateDataSourceFromInputStream() throws IOException {
+    public void shouldCreateDataSourceFromInputStream() {
         final InputStream is = new ByteArrayInputStream(ANY_TEXT.getBytes(UTF_8));
         final DataSource dataSource = DataSourceFactory.fromInputStream("test.txt", "default", is, "text/plain", UTF_8);
 
@@ -103,13 +104,22 @@ public class DataSourceFactoryTest {
 
     @Test
     public void shouldCreateDataSourceFromURL() throws IOException {
+        final URL url = new URL("https://jsonplaceholder.typicode.com/posts/2");
+        final DataSource dataSource = DataSourceFactory.fromUrl("jsonplaceholder.typicode.com", "default", url, null, null);
+
+        assertEquals("jsonplaceholder.typicode.com", dataSource.getName());
+        assertEquals("application/json; charset=utf-8", dataSource.getContentType());
+        assertEquals(UTF_8, dataSource.getCharset());
+    }
+
+    @Test
+    public void shouldCreateDataSourceFromNamedURL() {
         final NamedUri namedUri = NamedUriStringParser.parse(ANY_NAMED_URL_STRING);
-        final DataSource dataSource = DataSourceFactory.fromNamedUri(ANY_NAMED_URL_STRING);
+        final DataSource dataSource = DataSourceFactory.fromNamedUri(namedUri);
 
         assertEquals(namedUri.getName(), dataSource.getName());
         assertEquals(namedUri.getGroup(), dataSource.getGroup());
         assertEquals(UTF_8, dataSource.getCharset());
         assertEquals(namedUri.getUri().toString(), dataSource.getUri().toString());
     }
-
 }

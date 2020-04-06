@@ -31,12 +31,18 @@ import java.io.StringWriter;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 import static java.nio.charset.Charset.forName;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 import static org.apache.commons.io.IOUtils.lineIterator;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DATASOURCE_UNKNOWN_LENGTH;
 import static org.apache.freemarker.generator.base.util.StringUtils.emptyToNull;
+import static org.apache.freemarker.generator.base.util.StringUtils.firstNonEmpty;
 
 /**
  * Data source which encapsulates data to be used for rendering
@@ -44,6 +50,9 @@ import static org.apache.freemarker.generator.base.util.StringUtils.emptyToNull;
  * kept in memory to allow processing of large volumes of data.
  */
 public class DataSource implements Closeable {
+
+    /** Parse something like "application/json; charset=utf-8" */
+    private static final Pattern CHARSET_PATTERN = Pattern.compile("(?i)\\bcharset=\\s*\"?([^\\s;\"]*)");
 
     /** Human-readable name of the data source */
     private final String name;
@@ -60,7 +69,7 @@ public class DataSource implements Closeable {
     /** Optional user-supplied content type */
     private final String contentType;
 
-    /** Charset for directly accessing text-based content */
+    /** Optional charset for directly accessing text-based content */
     private final Charset charset;
 
     /** Collect all closables handed out to the caller to be closed when the data source is closed itself */
@@ -78,7 +87,7 @@ public class DataSource implements Closeable {
         this.uri = requireNonNull(uri);
         this.dataSource = requireNonNull(dataSource);
         this.contentType = contentType;
-        this.charset = requireNonNull(charset);
+        this.charset = charset;
         this.closables = new CloseableReaper();
     }
 
@@ -99,11 +108,14 @@ public class DataSource implements Closeable {
     }
 
     public Charset getCharset() {
-        return charset;
+        return Stream.of(charset, parseCharsetFromContentType(getContentType()))
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(UTF_8);
     }
 
     public String getContentType() {
-        return contentType != null ? contentType : dataSource.getContentType();
+        return firstNonEmpty(contentType, dataSource.getContentType());
     }
 
     public URI getUri() {
@@ -249,5 +261,14 @@ public class DataSource implements Closeable {
                 ", contentType='" + contentType + '\'' +
                 ", charset=" + charset +
                 '}';
+    }
+
+    private Charset parseCharsetFromContentType(String contentType) {
+        final Matcher matcher = CHARSET_PATTERN.matcher(contentType);
+        if (matcher.find()) {
+            final String name = matcher.group(1).trim().toUpperCase();
+            return Charset.forName(name);
+        }
+        return null;
     }
 }

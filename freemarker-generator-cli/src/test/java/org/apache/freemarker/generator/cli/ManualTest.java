@@ -45,8 +45,9 @@ public class ManualTest {
     // private static final String CMD = "-b ./src/test -t templates/demo.ftl -m env=env:///";
     // private static final String CMD = "-b ./src/test -t templates/demo.ftl -m api=https://httpbin.org/get";
     // private static final String CMD = "-b ./src/test -t templates/demo.ftl -m env:///HOME";
-    // private static final String CMD = "-b ./src/test -t templates/demo.ftl -m env=./site/sample/properties/user_0001/user.properties";
-    private static final String CMD = "-b ./src/test -t templates/demo.ftl -m ./site/sample/properties/user_0001/user.properties";
+    private static final String CMD = "-b ./src/test -t templates/demo.ftl -m env=./site/sample/properties/user_0001/user.properties";
+    // private static final String CMD = "-b ./src/test -t templates/demo.ftl -m ./site/sample/properties/user_0001/user.properties";
+    // private static final String CMD = "-b ./src/test --data-model post=https://jsonplaceholder.typicode.com/posts/2 -t templates/info.ftl";
 
     public static void main(String[] args) {
         Main.execute(toArgs(CMD));
