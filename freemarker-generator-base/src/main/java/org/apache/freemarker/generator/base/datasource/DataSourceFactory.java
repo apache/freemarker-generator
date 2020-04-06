@@ -50,6 +50,9 @@ import static org.apache.freemarker.generator.base.util.StringUtils.firstNonEmpt
  */
 public class DataSourceFactory {
 
+    private static final String NO_MIME_TYPE = null;
+    private static final Charset NO_CHARSET = null;
+
     private DataSourceFactory() {
     }
 
@@ -62,8 +65,8 @@ public class DataSourceFactory {
     public static DataSource fromNamedUri(NamedUri namedUri) {
         final URI uri = namedUri.getUri();
         final String group = namedUri.getGroupOrElse(DEFAULT_GROUP);
-        final Charset charset = getCharsetOrElse(namedUri, null);
-        final String mimeType = getMimeTypeOrElse(namedUri, null);
+        final Charset charset = getCharsetOrElse(namedUri, NO_CHARSET);
+        final String mimeType = getMimeTypeOrElse(namedUri, NO_MIME_TYPE);
 
         if (UriUtils.isHttpURI(uri)) {
             final URL url = toURL(uri);
@@ -93,7 +96,7 @@ public class DataSourceFactory {
     // == URL ===============================================================
 
     public static DataSource fromUrl(String name, String group, URL url, Charset charset) {
-        return fromUrl(name, group, url, null, charset);
+        return fromUrl(name, group, url, NO_MIME_TYPE, charset);
     }
 
     public static DataSource fromUrl(String name, String group, URL url, String contentType, Charset charset) {

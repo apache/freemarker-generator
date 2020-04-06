@@ -280,6 +280,6 @@ public class DataSource implements Closeable {
 
     private String stripExtraParameterFronContentType(String contentType) {
         final int end = contentType.indexOf(";");
-        return end > 0 ? contentType.substring(0, end) : contentType;
+        return end > 0 ? contentType.substring(0, end).trim() : contentType;
     }
 }

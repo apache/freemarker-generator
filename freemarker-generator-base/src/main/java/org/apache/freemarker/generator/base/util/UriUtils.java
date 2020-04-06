@@ -48,7 +48,7 @@ public class UriUtils {
         if (uri == null) {
             return false;
         }
-        return "http".equals(uri.getScheme()) || "https".equals(uri.getScheme());
+        return "http".equalsIgnoreCase(uri.getScheme()) || "https".equalsIgnoreCase(uri.getScheme());
     }
 
     public static boolean isFileUri(URI uri) {
