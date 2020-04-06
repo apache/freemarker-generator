@@ -43,7 +43,7 @@ import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_G
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.Location.STDIN;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model.DATASOURCES;
 import static org.apache.freemarker.generator.cli.config.Suppliers.configurationSupplier;
-import static org.apache.freemarker.generator.cli.config.Suppliers.dataModelsSupplier;
+import static org.apache.freemarker.generator.cli.config.Suppliers.dataModelSupplier;
 import static org.apache.freemarker.generator.cli.config.Suppliers.dataSourcesSupplier;
 import static org.apache.freemarker.generator.cli.config.Suppliers.toolsSupplier;
 
@@ -61,7 +61,7 @@ public class FreeMarkerTask implements Callable<Integer> {
     private final Supplier<Configuration> configurationSupplier;
 
     public FreeMarkerTask(Settings settings) {
-        this(settings, toolsSupplier(settings), dataSourcesSupplier(settings), dataModelsSupplier(settings), configurationSupplier(settings));
+        this(settings, toolsSupplier(settings), dataSourcesSupplier(settings), dataModelSupplier(settings), configurationSupplier(settings));
     }
 
     public FreeMarkerTask(Settings settings,
@@ -175,5 +175,4 @@ public class FreeMarkerTask implements Callable<Integer> {
             throw new RuntimeException("Failed to load interactive template", e);
         }
     }
-
 }

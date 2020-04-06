@@ -56,8 +56,8 @@ public class Suppliers {
                 settings.getInputEncoding());
     }
 
-    public static DataModelsSupplier dataModelsSupplier(Settings settings) {
-        return new DataModelsSupplier(settings.getDataModels());
+    public static DataModelSupplier dataModelSupplier(Settings settings) {
+        return new DataModelSupplier(settings.getDataModels());
     }
 
     public static PropertiesSupplier propertiesSupplier(String fileName) {

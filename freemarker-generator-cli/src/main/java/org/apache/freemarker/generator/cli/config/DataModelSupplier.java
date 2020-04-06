@@ -41,10 +41,10 @@ import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_TEX
 import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_TEXT_YAML;
 
 /**
- * Create a list of <code>DataModel</code> based on a list of sources consisting of
+ * Create a map representing a data model based on a list of sources consisting of
  * URIs, named URIs or files.
  */
-public class DataModelsSupplier implements Supplier<Map<String, Object>> {
+public class DataModelSupplier implements Supplier<Map<String, Object>> {
 
     private final Collection<String> sources;
 
@@ -53,7 +53,7 @@ public class DataModelsSupplier implements Supplier<Map<String, Object>> {
      *
      * @param sources List of sources
      */
-    public DataModelsSupplier(Collection<String> sources) {
+    public DataModelSupplier(Collection<String> sources) {
         this.sources = new ArrayList<>(requireNonNull(sources));
     }
 
@@ -82,19 +82,19 @@ public class DataModelsSupplier implements Supplier<Map<String, Object>> {
         }
     }
 
-    protected Map<String, Object> fromJson(DataSource dataSource, boolean isExplodedDataModel) {
+    private Map<String, Object> fromJson(DataSource dataSource, boolean isExplodedDataModel) {
         final GsonTool gsonTool = new GsonTool();
         final Map<String, Object> map = gsonTool.parse(dataSource);
         return fromMap(dataSource.getName(), map, isExplodedDataModel);
     }
 
-    protected Map<String, Object> fromYaml(DataSource dataSource, boolean isExplodedDataModel) {
+    private Map<String, Object> fromYaml(DataSource dataSource, boolean isExplodedDataModel) {
         final SnakeYamlTool snakeYamlTool = new SnakeYamlTool();
         final Map<String, Object> map = snakeYamlTool.parse(dataSource);
         return fromMap(dataSource.getName(), map, isExplodedDataModel);
     }
 
-    protected Map<String, Object> fromProperties(DataSource dataSource, boolean isExplodedDataModel) {
+    private Map<String, Object> fromProperties(DataSource dataSource, boolean isExplodedDataModel) {
         final Map<String, Object> result = new HashMap<>();
         final URI uri = dataSource.getUri();
 

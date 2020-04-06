@@ -23,14 +23,14 @@ import java.util.Map;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 
-public class DataModelsSupplierTest {
+public class DataModelSupplierTest {
 
     private static final String PWD_VALUE = System.getenv("PWD");
     private static final int NR_OF_ENVS = System.getenv().size();
 
     @Test
     public void shouldResolveAllEnvironmentVariablesToTopLevelDataModel() {
-        final DataModelsSupplier supplier = supplier("env:///");
+        final DataModelSupplier supplier = supplier("env:///");
 
         final Map<String, Object> model = supplier.get();
 
@@ -40,7 +40,7 @@ public class DataModelsSupplierTest {
 
     @Test
     public void shouldResolveAllEnvironmentVariablesToDataModelVariable() {
-        final DataModelsSupplier supplier = supplier("env=env:///");
+        final DataModelSupplier supplier = supplier("env=env:///");
 
         final Map<String, Object> model = supplier.get();
 
@@ -51,7 +51,7 @@ public class DataModelsSupplierTest {
 
     @Test
     public void shouldResolveEnvironmentVariableToDataModelVariable() {
-        final DataModelsSupplier supplier = supplier("foo=env:///PWD");
+        final DataModelSupplier supplier = supplier("foo=env:///PWD");
 
         final Map<String, Object> model = supplier.get();
 
@@ -61,7 +61,7 @@ public class DataModelsSupplierTest {
 
     @Test
     public void shouldResolvePropertiesFileToTopLevelDataModel() {
-        final DataModelsSupplier supplier = supplier("./src/test/data/properties/test.properties");
+        final DataModelSupplier supplier = supplier("./src/test/data/properties/test.properties");
 
         final Map<String, Object> model = supplier.get();
 
@@ -71,7 +71,7 @@ public class DataModelsSupplierTest {
 
     @Test
     public void shouldResolvePropertiesFileToDataModelVariable() {
-        final DataModelsSupplier supplier = supplier("props=./src/test/data/properties/test.properties");
+        final DataModelSupplier supplier = supplier("props=./src/test/data/properties/test.properties");
 
         final Map<String, Object> model = supplier.get();
 
@@ -81,7 +81,7 @@ public class DataModelsSupplierTest {
 
     @Test
     public void shouldResolvePropertiesUriToDataModelVariable() {
-        final DataModelsSupplier supplier = supplier("props=file://./src/test/data/properties/test.properties");
+        final DataModelSupplier supplier = supplier("props=file://./src/test/data/properties/test.properties");
 
         final Map<String, Object> model = supplier.get();
 
@@ -91,7 +91,7 @@ public class DataModelsSupplierTest {
 
     @Test
     public void shouldResolveJsonFileToTopLevelDataModel() {
-        final DataModelsSupplier supplier = supplier("./src/test/data/json/environments.json");
+        final DataModelSupplier supplier = supplier("./src/test/data/json/environments.json");
 
         final Map<String, Object> model = supplier.get();
 
@@ -102,7 +102,7 @@ public class DataModelsSupplierTest {
 
     @Test
     public void shouldResolveYamlFileToTopLevelDataModel() {
-        final DataModelsSupplier supplier = supplier("./src/test/data/yaml/environments.yaml");
+        final DataModelSupplier supplier = supplier("./src/test/data/yaml/environments.yaml");
 
         final Map<String, Object> model = supplier.get();
 
@@ -111,8 +111,8 @@ public class DataModelsSupplierTest {
         assertEquals("tiger", model.get("db_default_password"));
     }
 
-    private static DataModelsSupplier supplier(String source) {
-        return new DataModelsSupplier(singletonList(source));
+    private static DataModelSupplier supplier(String source) {
+        return new DataModelSupplier(singletonList(source));
     }
 
     @SuppressWarnings("unchecked")
