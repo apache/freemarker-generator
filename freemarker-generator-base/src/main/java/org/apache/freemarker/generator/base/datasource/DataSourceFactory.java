@@ -62,7 +62,7 @@ public class DataSourceFactory {
     public static DataSource fromNamedUri(NamedUri namedUri) {
         final URI uri = namedUri.getUri();
         final String group = namedUri.getGroupOrElse(DEFAULT_GROUP);
-        final Charset charset = getCharsetOrElse(namedUri, UTF_8);
+        final Charset charset = getCharsetOrElse(namedUri, null);
         final String mimeType = getMimeTypeOrElse(namedUri, null);
 
         if (UriUtils.isHttpURI(uri)) {
@@ -196,7 +196,8 @@ public class DataSourceFactory {
     }
 
     private static Charset getCharsetOrElse(NamedUri namedUri, Charset def) {
-        return Charset.forName(namedUri.getParameter(NamedUri.CHARSET, def.name()));
+        final String charsetName = namedUri.getParameter(NamedUri.CHARSET);
+        return StringUtils.isEmpty(charsetName) ? def : Charset.forName(charsetName);
     }
 
     private static URL toURL(URI uri) {

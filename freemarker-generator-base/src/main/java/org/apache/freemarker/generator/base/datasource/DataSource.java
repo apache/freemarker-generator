@@ -31,10 +31,8 @@ import java.io.StringWriter;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 import static java.nio.charset.Charset.forName;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -42,12 +40,16 @@ import static java.util.Objects.requireNonNull;
 import static org.apache.commons.io.IOUtils.lineIterator;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DATASOURCE_UNKNOWN_LENGTH;
 import static org.apache.freemarker.generator.base.util.StringUtils.emptyToNull;
-import static org.apache.freemarker.generator.base.util.StringUtils.firstNonEmpty;
+import static org.apache.freemarker.generator.base.util.StringUtils.isNotEmpty;
 
 /**
  * Data source which encapsulates data to be used for rendering
  * a template. When accessing content it is loaded on demand on not
  * kept in memory to allow processing of large volumes of data.
+ * <b/>
+ * There is also special support of <code>UrlDataSource</code> since
+ * the content type &amp; charset might be determined using a network
+ * call.
  */
 public class DataSource implements Closeable {
 
@@ -108,14 +110,16 @@ public class DataSource implements Closeable {
     }
 
     public Charset getCharset() {
-        return Stream.of(charset, parseCharsetFromContentType(getContentType()))
-                .filter(Objects::nonNull)
-                .findFirst()
-                .orElse(UTF_8);
+        return charset != null ? charset : getCharsetFromContentType(contentType(), UTF_8);
     }
 
+    /**
+     * Get the content type without additional parameters, e.g. "charset".
+     *
+     * @return content type
+     */
     public String getContentType() {
-        return firstNonEmpty(contentType, dataSource.getContentType());
+        return stripExtraParameterFronContentType(contentType());
     }
 
     public URI getUri() {
@@ -258,17 +262,24 @@ public class DataSource implements Closeable {
                 "name='" + name + '\'' +
                 ", group='" + group + '\'' +
                 ", uri=" + uri +
-                ", contentType='" + contentType + '\'' +
-                ", charset=" + charset +
                 '}';
     }
 
-    private Charset parseCharsetFromContentType(String contentType) {
+    private Charset getCharsetFromContentType(String contentType, Charset def) {
         final Matcher matcher = CHARSET_PATTERN.matcher(contentType);
         if (matcher.find()) {
             final String name = matcher.group(1).trim().toUpperCase();
             return Charset.forName(name);
         }
-        return null;
+        return def;
+    }
+
+    private String contentType() {
+        return isNotEmpty(contentType) ? contentType : dataSource.getContentType();
+    }
+
+    private String stripExtraParameterFronContentType(String contentType) {
+        final int end = contentType.indexOf(";");
+        return end > 0 ? contentType.substring(0, end) : contentType;
     }
 }

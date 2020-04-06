@@ -108,7 +108,7 @@ public class DataSourceFactoryTest {
         final DataSource dataSource = DataSourceFactory.fromUrl("jsonplaceholder.typicode.com", "default", url, null, null);
 
         assertEquals("jsonplaceholder.typicode.com", dataSource.getName());
-        assertEquals("application/json; charset=utf-8", dataSource.getContentType());
+        assertEquals("application/json", dataSource.getContentType());
         assertEquals(UTF_8, dataSource.getCharset());
     }
 
@@ -119,7 +119,7 @@ public class DataSourceFactoryTest {
 
         assertEquals(namedUri.getName(), dataSource.getName());
         assertEquals(namedUri.getGroup(), dataSource.getGroup());
-        assertEquals(UTF_8, dataSource.getCharset());
+        assertEquals("ISO-8859-1", dataSource.getCharset().toString());
         assertEquals(namedUri.getUri().toString(), dataSource.getUri().toString());
     }
 }

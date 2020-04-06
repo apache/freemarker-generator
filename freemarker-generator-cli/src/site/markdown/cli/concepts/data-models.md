@@ -1,4 +1,4 @@
-## Working With DataModels
+## DataModels
 
 A `DataModel` is an eagerly loaded `DataSource` available in Apache FreeMarker's model (context) when rendering a template.
 
