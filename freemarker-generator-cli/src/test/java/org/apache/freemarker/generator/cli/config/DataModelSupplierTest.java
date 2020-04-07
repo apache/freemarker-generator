@@ -22,11 +22,15 @@ import java.util.Map;
 
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class DataModelSupplierTest {
 
     private static final String PWD_VALUE = System.getenv("PWD");
     private static final int NR_OF_ALL_ENV_VARIABLES = System.getenv().size();
+
+    // === Environment Variables ===
 
     @Test
     public void shouldResolveAllEnvironmentVariablesToTopLevelDataModel() {
@@ -69,6 +73,13 @@ public class DataModelSupplierTest {
         assertEquals(PWD_VALUE, model.get("mypwd"));
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentExceptionForNonExistingEnvironmentVariable() {
+        supplier("env:///KEY_DOES_NOT_EXIST").get();
+    }
+
+    // === Properties ===
+
     @Test
     public void shouldResolvePropertiesFileToTopLevelDataModel() {
         final DataModelSupplier supplier = supplier("./src/test/data/properties/test.properties");
@@ -102,6 +113,8 @@ public class DataModelSupplierTest {
         assertEquals("bar", toMap(model, "props").get("BAR"));
     }
 
+    // === JSON ===
+
     @Test
     public void shouldResolveJsonFileToTopLevelDataModel() {
         final DataModelSupplier supplier = supplier("./src/test/data/json/environments.json");
@@ -124,11 +137,44 @@ public class DataModelSupplierTest {
         assertEquals("tiger", model.get("db_default_password"));
     }
 
+    // == URL ===
+
+    @Test
+    public void shouldResolveUrlToTopLevelDataModel() {
+        final DataModelSupplier supplier = supplier("post=https://jsonplaceholder.typicode.com/posts/2");
+
+        final Map<String, Object> model = supplier.get();
+
+        assertEquals(1, model.size());
+        assertNotNull(model.get("post"));
+    }
+
+    @Test
+    public void shouldResolveUrlToDataModelVariable() {
+        final DataModelSupplier supplier = supplier("https://jsonplaceholder.typicode.com/posts/2");
+
+        final Map<String, Object> model = supplier.get();
+
+        assertTrue(model.size() == 4);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void shouldResolveUrlToDataModelVariables() {
+        supplier("https://jsonplaceholder.typicode.com/posts/does-not-exist").get();
+    }
+
+    // === Misc ===
+
     @Test
     public void shouldReturnEmptyDataModelOnMissingSource() {
         assertEquals(0, supplier(null).get().size());
         assertEquals(0, supplier("").get().size());
         assertEquals(0, supplier(" ").get().size());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentExceptionForNonExistingFile() {
+        supplier("file:///./FILE_DOES_NOT_EXIST.json").get();
     }
 
     private static DataModelSupplier supplier(String source) {

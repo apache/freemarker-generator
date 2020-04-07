@@ -27,6 +27,7 @@ import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
 import org.apache.freemarker.generator.base.util.PropertiesFactory;
 import org.apache.freemarker.generator.base.util.StringUtils;
 import org.apache.freemarker.generator.base.util.UriUtils;
+import org.apache.freemarker.generator.base.util.Validate;
 
 import javax.activation.FileDataSource;
 import javax.activation.URLDataSource;
@@ -59,10 +60,14 @@ public class DataSourceFactory {
     // == NamedUri ==========================================================
 
     public static DataSource fromNamedUri(String str) {
+        Validate.notNull(str, "namedUri is null");
+
         return fromNamedUri(NamedUriStringParser.parse(str));
     }
 
     public static DataSource fromNamedUri(NamedUri namedUri) {
+        Validate.notNull(namedUri, "namedUri is null");
+
         final URI uri = namedUri.getUri();
         final String group = namedUri.getGroupOrElse(DEFAULT_GROUP);
         final Charset charset = getCharsetOrElse(namedUri, NO_CHARSET);
@@ -124,6 +129,8 @@ public class DataSourceFactory {
     }
 
     public static DataSource fromFile(String name, String group, File file, Charset charset) {
+        Validate.isTrue(file.exists(), "File not found: " + file);
+
         final FileDataSource dataSource = new FileDataSource(file);
         dataSource.setFileTypeMap(MimetypesFileTypeMapFactory.create());
         final String contentType = dataSource.getContentType();
@@ -167,8 +174,9 @@ public class DataSourceFactory {
     }
 
     public static DataSource fromEnvironment(String name, String group, String key, String contentType) {
-        final String value = System.getenv(key);
-        final StringDataSource dataSource = new StringDataSource(name, value, contentType, UTF_8);
+        Validate.notEmpty(System.getenv(key), "Environment variable not found: " + key);
+
+        final StringDataSource dataSource = new StringDataSource(name, System.getenv(key), contentType, UTF_8);
         final URI uri = UriUtils.toURI(Location.ENVIRONMENT, key);
         return create(name, group, uri, dataSource, contentType, UTF_8);
     }
