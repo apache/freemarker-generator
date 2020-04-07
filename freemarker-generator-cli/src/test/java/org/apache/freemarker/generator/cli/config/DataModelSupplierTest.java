@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 public class DataModelSupplierTest {
 
     private static final String PWD_VALUE = System.getenv("PWD");
-    private static final int NR_OF_ENVS = System.getenv().size();
+    private static final int NR_OF_ALL_ENV_VARIABLES = System.getenv().size();
 
     @Test
     public void shouldResolveAllEnvironmentVariablesToTopLevelDataModel() {
@@ -34,29 +34,39 @@ public class DataModelSupplierTest {
 
         final Map<String, Object> model = supplier.get();
 
-        assertEquals(NR_OF_ENVS, model.size());
+        assertEquals(NR_OF_ALL_ENV_VARIABLES, model.size());
         assertEquals(PWD_VALUE, model.get("PWD"));
     }
 
     @Test
     public void shouldResolveAllEnvironmentVariablesToDataModelVariable() {
-        final DataModelSupplier supplier = supplier("env=env:///");
+        final DataModelSupplier supplier = supplier("myenv=env:///");
 
         final Map<String, Object> model = supplier.get();
 
         assertEquals(1, model.size());
-        assertEquals(NR_OF_ENVS, toMap(model, "env").size());
-        assertEquals(PWD_VALUE, toMap(model, "env").get("PWD"));
+        assertEquals(NR_OF_ALL_ENV_VARIABLES, toMap(model, "myenv").size());
+        assertEquals(PWD_VALUE, toMap(model, "myenv").get("PWD"));
     }
 
     @Test
-    public void shouldResolveEnvironmentVariableToDataModelVariable() {
-        final DataModelSupplier supplier = supplier("foo=env:///PWD");
+    public void shouldResolveSingleEnvironmentVariablesToTopLevelDataModel() {
+        final DataModelSupplier supplier = supplier("env:///PWD");
 
         final Map<String, Object> model = supplier.get();
 
         assertEquals(1, model.size());
-        assertEquals(PWD_VALUE, model.get("foo"));
+        assertEquals(PWD_VALUE, model.get("PWD"));
+    }
+
+    @Test
+    public void shouldResolveSingleEnvironmentVariableToDataModelVariable() {
+        final DataModelSupplier supplier = supplier("mypwd=env:///PWD");
+
+        final Map<String, Object> model = supplier.get();
+
+        assertEquals(1, model.size());
+        assertEquals(PWD_VALUE, model.get("mypwd"));
     }
 
     @Test
@@ -65,8 +75,9 @@ public class DataModelSupplierTest {
 
         final Map<String, Object> model = supplier.get();
 
-        assertEquals(1, model.size());
-        assertEquals("bar", model.get("foo"));
+        assertEquals(2, model.size());
+        assertEquals("foo", model.get("FOO"));
+        assertEquals("bar", model.get("BAR"));
     }
 
     @Test
@@ -76,7 +87,8 @@ public class DataModelSupplierTest {
         final Map<String, Object> model = supplier.get();
 
         assertEquals(1, model.size());
-        assertEquals("bar", toMap(model, "props").get("foo"));
+        assertEquals("foo", toMap(model, "props").get("FOO"));
+        assertEquals("bar", toMap(model, "props").get("BAR"));
     }
 
     @Test
@@ -86,7 +98,8 @@ public class DataModelSupplierTest {
         final Map<String, Object> model = supplier.get();
 
         assertEquals(1, model.size());
-        assertEquals("bar", toMap(model, "props").get("foo"));
+        assertEquals("foo", toMap(model, "props").get("FOO"));
+        assertEquals("bar", toMap(model, "props").get("BAR"));
     }
 
     @Test
@@ -109,6 +122,13 @@ public class DataModelSupplierTest {
         assertEquals(2, model.size());
         assertEquals("scott", model.get("db_default_user"));
         assertEquals("tiger", model.get("db_default_password"));
+    }
+
+    @Test
+    public void shouldReturnEmptyDataModelOnMissingSource() {
+        assertEquals(0, supplier(null).get().size());
+        assertEquals(0, supplier("").get().size());
+        assertEquals(0, supplier(" ").get().size());
     }
 
     private static DataModelSupplier supplier(String source) {

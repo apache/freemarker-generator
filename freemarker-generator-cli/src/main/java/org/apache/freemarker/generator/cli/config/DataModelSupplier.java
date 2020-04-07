@@ -21,6 +21,7 @@ import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.freemarker.generator.base.uri.NamedUri;
 import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
 import org.apache.freemarker.generator.base.util.PropertiesFactory;
+import org.apache.freemarker.generator.base.util.StringUtils;
 import org.apache.freemarker.generator.base.util.UriUtils;
 import org.apache.freemarker.generator.tools.gson.GsonTool;
 import org.apache.freemarker.generator.tools.snakeyaml.SnakeYamlTool;
@@ -31,6 +32,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.function.Supplier;
 
@@ -60,6 +62,7 @@ public class DataModelSupplier implements Supplier<Map<String, Object>> {
     @Override
     public Map<String, Object> get() {
         return sources.stream()
+                .filter(StringUtils::isNotEmpty)
                 .map(this::toDataModel)
                 .flatMap(map -> map.entrySet().stream())
                 .collect(toMap(Entry::getKey, Entry::getValue));
@@ -78,7 +81,7 @@ public class DataModelSupplier implements Supplier<Map<String, Object>> {
         } else if (contentType.startsWith(MIME_TEXT_YAML)) {
             return fromYaml(dataSource, isExplodedDataModel);
         } else {
-            throw new IllegalArgumentException("Don't know how to handle :" + contentType);
+            throw new IllegalArgumentException("Don't know how to handle content type: " + contentType);
         }
     }
 
