@@ -31,19 +31,30 @@ import java.io.StringWriter;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static java.nio.charset.Charset.forName;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 import static org.apache.commons.io.IOUtils.lineIterator;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DATASOURCE_UNKNOWN_LENGTH;
 import static org.apache.freemarker.generator.base.util.StringUtils.emptyToNull;
+import static org.apache.freemarker.generator.base.util.StringUtils.isNotEmpty;
 
 /**
  * Data source which encapsulates data to be used for rendering
  * a template. When accessing content it is loaded on demand on not
  * kept in memory to allow processing of large volumes of data.
+ * <br>
+ * There is also special support of <code>UrlDataSource</code> since
+ * the content type &amp; charset might be determined using a network
+ * call.
  */
 public class DataSource implements Closeable {
+
+    /** Parse something like "application/json; charset=utf-8" */
+    private static final Pattern CHARSET_PATTERN = Pattern.compile("(?i)\\bcharset=\\s*\"?([^\\s;\"]*)");
 
     /** Human-readable name of the data source */
     private final String name;
@@ -60,7 +71,7 @@ public class DataSource implements Closeable {
     /** Optional user-supplied content type */
     private final String contentType;
 
-    /** Charset for directly accessing text-based content */
+    /** Optional charset for directly accessing text-based content */
     private final Charset charset;
 
     /** Collect all closables handed out to the caller to be closed when the data source is closed itself */
@@ -77,8 +88,8 @@ public class DataSource implements Closeable {
         this.group = emptyToNull(group);
         this.uri = requireNonNull(uri);
         this.dataSource = requireNonNull(dataSource);
-        this.contentType = requireNonNull(contentType);
-        this.charset = requireNonNull(charset);
+        this.contentType = contentType;
+        this.charset = charset;
         this.closables = new CloseableReaper();
     }
 
@@ -99,11 +110,16 @@ public class DataSource implements Closeable {
     }
 
     public Charset getCharset() {
-        return charset;
+        return charset != null ? charset : getCharsetFromContentType(contentType(), UTF_8);
     }
 
+    /**
+     * Get the content type without additional parameters, e.g. "charset".
+     *
+     * @return content type
+     */
     public String getContentType() {
-        return contentType;
+        return stripExtraParameterFronContentType(contentType());
     }
 
     public URI getUri() {
@@ -131,9 +147,8 @@ public class DataSource implements Closeable {
      * Get an input stream which is closed together with this data source.
      *
      * @return InputStream
-     * @throws IOException Operation failed
      */
-    public InputStream getInputStream() throws IOException {
+    public InputStream getInputStream() {
         return closables.add(getUnsafeInputStream());
     }
 
@@ -141,21 +156,26 @@ public class DataSource implements Closeable {
      * Get an input stream which needs to be closed by the caller.
      *
      * @return InputStream
-     * @throws IOException Operation failed
      */
-    public InputStream getUnsafeInputStream() throws IOException {
-        return dataSource.getInputStream();
+    public InputStream getUnsafeInputStream() {
+        try {
+            return dataSource.getInputStream();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to get input stream: " + toString(), e);
+        }
     }
 
-    public String getText() throws IOException {
+    public String getText() {
         return getText(getCharset().name());
     }
 
-    public String getText(String charsetName) throws IOException {
+    public String getText(String charsetName) {
         final StringWriter writer = new StringWriter();
         try (InputStream is = getUnsafeInputStream()) {
             IOUtils.copy(is, writer, forName(charsetName));
             return writer.toString();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to get text: " + toString(), e);
         }
     }
 
@@ -164,9 +184,8 @@ public class DataSource implements Closeable {
      * one entry per line, using the specified character encoding.
      *
      * @return the list of Strings, never null
-     * @throws IOException if an I/O error occurs
      */
-    public List<String> getLines() throws IOException {
+    public List<String> getLines() {
         return getLines(getCharset().name());
     }
 
@@ -176,11 +195,12 @@ public class DataSource implements Closeable {
      *
      * @param charsetName The name of the requested charset
      * @return the list of Strings, never null
-     * @throws IOException if an I/O error occurs
      */
-    public List<String> getLines(String charsetName) throws IOException {
+    public List<String> getLines(String charsetName) {
         try (InputStream inputStream = getUnsafeInputStream()) {
             return IOUtils.readLines(inputStream, charsetName);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to get lines: " + toString(), e);
         }
     }
 
@@ -190,9 +210,8 @@ public class DataSource implements Closeable {
      * the line iterator.
      *
      * @return line iterator
-     * @throws IOException if an I/O error occurs
      */
-    public LineIterator getLineIterator() throws IOException {
+    public LineIterator getLineIterator() {
         return getLineIterator(getCharset().name());
     }
 
@@ -202,15 +221,20 @@ public class DataSource implements Closeable {
      *
      * @param charsetName The name of the requested charset
      * @return line iterator
-     * @throws IOException if an I/O error occurs
      */
-    public LineIterator getLineIterator(String charsetName) throws IOException {
-        return closables.add(lineIterator(getUnsafeInputStream(), forName(charsetName)));
+    public LineIterator getLineIterator(String charsetName) {
+        try {
+            return closables.add(lineIterator(getUnsafeInputStream(), forName(charsetName)));
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create line iterator: " + toString(), e);
+        }
     }
 
-    public byte[] getBytes() throws IOException {
+    public byte[] getBytes() {
         try (InputStream inputStream = getUnsafeInputStream()) {
             return IOUtils.toByteArray(inputStream);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to get bytes: " + toString(), e);
         }
     }
 
@@ -238,8 +262,24 @@ public class DataSource implements Closeable {
                 "name='" + name + '\'' +
                 ", group='" + group + '\'' +
                 ", uri=" + uri +
-                ", contentType='" + contentType + '\'' +
-                ", charset=" + charset +
                 '}';
+    }
+
+    private Charset getCharsetFromContentType(String contentType, Charset def) {
+        final Matcher matcher = CHARSET_PATTERN.matcher(contentType);
+        if (matcher.find()) {
+            final String name = matcher.group(1).trim().toUpperCase();
+            return Charset.forName(name);
+        }
+        return def;
+    }
+
+    private String contentType() {
+        return isNotEmpty(contentType) ? contentType : dataSource.getContentType();
+    }
+
+    private String stripExtraParameterFronContentType(String contentType) {
+        final int end = contentType.indexOf(";");
+        return end > 0 ? contentType.substring(0, end).trim() : contentType;
     }
 }

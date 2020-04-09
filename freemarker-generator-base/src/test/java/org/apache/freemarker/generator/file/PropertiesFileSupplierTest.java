@@ -38,7 +38,8 @@ public class PropertiesFileSupplierTest {
         final Properties properties = supplier(ANY_PROPERTIES_FILE).get();
 
         assertNotNull(properties);
-        assertEquals("bar", properties.getProperty("foo"));
+        assertEquals("foo", properties.getProperty("FOO"));
+        assertEquals("bar", properties.getProperty("BAR"));
     }
 
     @Test

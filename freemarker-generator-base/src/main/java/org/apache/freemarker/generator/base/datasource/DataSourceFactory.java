@@ -18,30 +18,41 @@ package org.apache.freemarker.generator.base.datasource;
 
 import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.activation.ByteArrayDataSource;
+import org.apache.freemarker.generator.base.activation.CachingUrlDataSource;
 import org.apache.freemarker.generator.base.activation.InputStreamDataSource;
 import org.apache.freemarker.generator.base.activation.MimetypesFileTypeMapFactory;
 import org.apache.freemarker.generator.base.activation.StringDataSource;
 import org.apache.freemarker.generator.base.uri.NamedUri;
 import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
+import org.apache.freemarker.generator.base.util.PropertiesFactory;
 import org.apache.freemarker.generator.base.util.StringUtils;
 import org.apache.freemarker.generator.base.util.UriUtils;
+import org.apache.freemarker.generator.base.util.Validate;
 
 import javax.activation.FileDataSource;
 import javax.activation.URLDataSource;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Properties;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
+import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_TEXT_PLAIN;
+import static org.apache.freemarker.generator.base.util.StringUtils.firstNonEmpty;
 
 /**
  * Creates a FreeMarker data source from various sources.
  */
 public class DataSourceFactory {
+
+    private static final String NO_MIME_TYPE = null;
+    private static final Charset NO_CHARSET = null;
 
     private DataSourceFactory() {
     }
@@ -49,40 +60,52 @@ public class DataSourceFactory {
     // == NamedUri ==========================================================
 
     public static DataSource fromNamedUri(String str) {
+        Validate.notNull(str, "namedUri is null");
+
         return fromNamedUri(NamedUriStringParser.parse(str));
     }
 
     public static DataSource fromNamedUri(NamedUri namedUri) {
+        Validate.notNull(namedUri, "namedUri is null");
+
         final URI uri = namedUri.getUri();
         final String group = namedUri.getGroupOrElse(DEFAULT_GROUP);
-        final Charset charset = getCharsetOrElse(namedUri, UTF_8);
+        final Charset charset = getCharsetOrElse(namedUri, NO_CHARSET);
+        final String mimeType = getMimeTypeOrElse(namedUri, NO_MIME_TYPE);
 
         if (UriUtils.isHttpURI(uri)) {
             final URL url = toURL(uri);
             final String name = namedUri.getNameOrElse(url.getHost());
-            return fromUrl(name, group, url, charset);
+            return fromUrl(name, group, url, mimeType, charset);
         } else if (UriUtils.isFileUri(uri)) {
             final File file = namedUri.getFile();
             final String name = namedUri.getNameOrElse(file.getName());
             return fromFile(name, group, file, charset);
         } else if (UriUtils.isEnvUri(uri)) {
             final String key = uri.getPath().substring(1);
-            final String name = StringUtils.firstNonEmpty(namedUri.getName(), key, "env");
-            final String contentType = getMimeTypeOrElse(namedUri, "text/plain");
-            return fromEnvironment(name, group, key, contentType);
+            final String contentType = getMimeTypeOrElse(namedUri, MIME_TEXT_PLAIN);
+            final String name = firstNonEmpty(namedUri.getName(), key, Location.ENVIRONMENT);
+            if (StringUtils.isEmpty(key)) {
+                return fromEnvironment(name, group, contentType);
+            } else {
+                return fromEnvironment(name, group, key, contentType);
+            }
         } else {
-            throw new IllegalArgumentException("Don't knowm how to handle: " + namedUri);
+            // handle things such as "foo=some.file"
+            final File file = namedUri.getFile();
+            final String name = namedUri.getNameOrElse(file.getName());
+            return fromFile(name, group, file, charset);
         }
     }
 
     // == URL ===============================================================
 
     public static DataSource fromUrl(String name, String group, URL url, Charset charset) {
-        return fromUrl(name, group, url, "application/octet-stream", charset);
+        return fromUrl(name, group, url, NO_MIME_TYPE, charset);
     }
 
     public static DataSource fromUrl(String name, String group, URL url, String contentType, Charset charset) {
-        final URLDataSource dataSource = new URLDataSource(url);
+        final URLDataSource dataSource = new CachingUrlDataSource(url);
         final URI uri = UriUtils.toURI(url);
         return create(name, group, uri, dataSource, contentType, charset);
     }
@@ -106,6 +129,8 @@ public class DataSourceFactory {
     }
 
     public static DataSource fromFile(String name, String group, File file, Charset charset) {
+        Validate.isTrue(file.exists(), "File not found: " + file);
+
         final FileDataSource dataSource = new FileDataSource(file);
         dataSource.setFileTypeMap(MimetypesFileTypeMapFactory.create());
         final String contentType = dataSource.getContentType();
@@ -135,9 +160,23 @@ public class DataSourceFactory {
 
     // == Environment =======================================================
 
+    public static DataSource fromEnvironment(String name, String group, String contentType) {
+        try {
+            final Properties properties = PropertiesFactory.create(System.getenv());
+            final StringWriter writer = new StringWriter();
+            properties.store(writer, null);
+            final StringDataSource dataSource = new StringDataSource(name, writer.toString(), contentType, UTF_8);
+            final URI uri = UriUtils.toURI(Location.ENVIRONMENT, "");
+            return create(name, group, uri, dataSource, contentType, UTF_8);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static DataSource fromEnvironment(String name, String group, String key, String contentType) {
-        final String value = System.getenv(key);
-        final StringDataSource dataSource = new StringDataSource(name, value, contentType, UTF_8);
+        Validate.notEmpty(System.getenv(key), "Environment variable not found: " + key);
+
+        final StringDataSource dataSource = new StringDataSource(name, System.getenv(key), contentType, UTF_8);
         final URI uri = UriUtils.toURI(Location.ENVIRONMENT, key);
         return create(name, group, uri, dataSource, contentType, UTF_8);
     }
@@ -168,7 +207,8 @@ public class DataSourceFactory {
     }
 
     private static Charset getCharsetOrElse(NamedUri namedUri, Charset def) {
-        return Charset.forName(namedUri.getParameter(NamedUri.CHARSET, def.name()));
+        final String charsetName = namedUri.getParameter(NamedUri.CHARSET);
+        return StringUtils.isEmpty(charsetName) ? def : Charset.forName(charsetName);
     }
 
     private static URL toURL(URI uri) {

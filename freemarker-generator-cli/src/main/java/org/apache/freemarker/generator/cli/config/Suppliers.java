@@ -56,6 +56,10 @@ public class Suppliers {
                 settings.getInputEncoding());
     }
 
+    public static DataModelSupplier dataModelSupplier(Settings settings) {
+        return new DataModelSupplier(settings.getDataModels());
+    }
+
     public static PropertiesSupplier propertiesSupplier(String fileName) {
         return new PropertiesSupplier(
                 new PropertiesFileSystemSupplier(fileName),

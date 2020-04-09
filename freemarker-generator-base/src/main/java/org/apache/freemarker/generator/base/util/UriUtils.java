@@ -20,6 +20,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import static org.apache.freemarker.generator.base.util.StringUtils.isNotEmpty;
+
 public class UriUtils {
 
     public static URI toURI(String str) {
@@ -39,18 +41,27 @@ public class UriUtils {
     }
 
     public static boolean isUri(String str) {
-        return str.contains("://");
+        return isNotEmpty(str) && str.contains("://");
     }
 
     public static boolean isHttpURI(URI uri) {
-        return uri.getScheme().equalsIgnoreCase("http") || uri.getScheme().equalsIgnoreCase("https");
+        if (uri == null) {
+            return false;
+        }
+        return "http".equalsIgnoreCase(uri.getScheme()) || "https".equalsIgnoreCase(uri.getScheme());
     }
 
     public static boolean isFileUri(URI uri) {
+        if (uri == null) {
+            return false;
+        }
         return "file".equalsIgnoreCase(uri.getScheme());
     }
 
     public static boolean isEnvUri(URI uri) {
+        if (uri == null) {
+            return false;
+        }
         return "env".equalsIgnoreCase(uri.getScheme());
     }
 }

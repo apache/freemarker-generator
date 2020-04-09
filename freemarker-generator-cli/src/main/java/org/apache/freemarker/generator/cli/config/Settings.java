@@ -85,8 +85,11 @@ public class Settings {
     /** Expose environment variables globally in the data model? */
     private final boolean isEnvironmentExposed;
 
-    /** User-supplied list of source files or directories */
+    /** User-supplied list of data sources or directories */
     private final List<String> dataSources;
+
+    /** User-supplied list of data sources directly exposed in the data model */
+    private List<String> dataModels;
 
     /** User-supplied parameters */
     private final Map<String, String> parameters;
@@ -113,6 +116,7 @@ public class Settings {
             boolean isReadFromStdin,
             boolean isEnvironmentExposed,
             List<String> dataSources,
+            List<String> dataModels,
             Map<String, String> parameters,
             Properties sytemProperties,
             Writer writer) {
@@ -134,6 +138,7 @@ public class Settings {
         this.isReadFromStdin = isReadFromStdin;
         this.isEnvironmentExposed = isEnvironmentExposed;
         this.dataSources = requireNonNull(dataSources);
+        this.dataModels = requireNonNull(dataModels);
         this.parameters = requireNonNull(parameters);
         this.sytemProperties = requireNonNull(sytemProperties);
         this.configuration = requireNonNull(configuration);
@@ -206,6 +211,10 @@ public class Settings {
 
     public List<String> getDataSources() {
         return dataSources;
+    }
+
+    public List<String> getDataModels() {
+        return dataModels;
     }
 
     public Map<String, String> getParameters() {
@@ -289,6 +298,7 @@ public class Settings {
         private boolean isReadFromStdin;
         private boolean isEnvironmentExposed;
         private List<String> dataSources;
+        private List<String> dataModels;
         private Map<String, String> parameters;
         private Properties systemProperties;
         private Properties configuration;
@@ -303,6 +313,7 @@ public class Settings {
             this.setInputEncoding(DEFAULT_CHARSET.name());
             this.setOutputEncoding(DEFAULT_CHARSET.name());
             this.dataSources = emptyList();
+            this.dataModels = emptyList();
             this.templateDirectories = emptyList();
         }
 
@@ -381,7 +392,16 @@ public class Settings {
         }
 
         public SettingsBuilder setDataSources(List<String> dataSources) {
-            this.dataSources = dataSources;
+            if (dataSources != null) {
+                this.dataSources = dataSources;
+            }
+            return this;
+        }
+
+        public SettingsBuilder setDataModels(List<String> dataModels) {
+            if (dataModels != null) {
+                this.dataModels = dataModels;
+            }
             return this;
         }
 
@@ -433,6 +453,7 @@ public class Settings {
                     isReadFromStdin,
                     isEnvironmentExposed,
                     dataSources,
+                    dataModels,
                     parameters,
                     systemProperties,
                     writer

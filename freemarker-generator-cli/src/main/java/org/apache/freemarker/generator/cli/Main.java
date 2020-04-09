@@ -71,9 +71,6 @@ public class Main implements Callable<Integer> {
     @Option(names = { "-b", "--basedir" }, description = "Optional template base directory")
     String baseDir;
 
-    @Option(names = { "-d", "--data-source" }, description = "Data source used for rendering")
-    List<String> dataSources;
-
     @Option(names = { "-D", "--system-property" }, description = "Set system property")
     Properties systemProperties;
 
@@ -86,14 +83,17 @@ public class Main implements Callable<Integer> {
     @Option(names = { "-l", "--locale" }, description = "Locale being used for the output, e.g. 'en_US'")
     String locale;
 
-    @Option(names = { "-m", "--mode" }, description = "[template|datasource]", defaultValue = "TEMPLATE")
-    GeneratorMode mode;
+    @Option(names = { "-m", "--data-model" }, description = "Data model used for rendering")
+    List<String> dataModels;
 
     @Option(names = { "-o", "--output" }, description = "Output file")
     String outputFile;
 
     @Option(names = { "-P", "--param" }, description = "Set parameter")
     Map<String, String> parameters;
+
+    @Option(names = { "-s", "--data-source" }, description = "Data source used for rendering")
+    List<String> dataSources;
 
     @Option(names = { "--config" }, defaultValue = FREEMARKER_CLI_PROPERTY_FILE, description = "FreeMarker CLI configuration file")
     String configFile;
@@ -106,6 +106,9 @@ public class Main implements Callable<Integer> {
 
     @Option(names = { "--output-encoding" }, description = "Encoding of output, e.g. UTF-8", defaultValue = "UTF-8")
     String outputEncoding;
+
+    @Option(names = { "--mode" }, description = "[template|datasource]", defaultValue = "TEMPLATE")
+    GeneratorMode mode;
 
     @Option(names = { "--stdin" }, description = "Read data  source from stdin")
     boolean readFromStdin;
@@ -219,6 +222,7 @@ public class Main implements Callable<Integer> {
                 .setOutputFile(outputFile)
                 .setParameters(parameters != null ? parameters : new HashMap<>())
                 .setDataSources(getCombindedDataSources())
+                .setDataModels(dataModels)
                 .setSystemProperties(systemProperties != null ? systemProperties : new Properties())
                 .setTemplateDirectories(templateDirectories)
                 .setTemplateName(templateSourceOptions.template)

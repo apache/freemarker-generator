@@ -40,8 +40,16 @@ public class ManualTest {
     // private static final String CMD = "-b ./src/test -t templates/info.ftl -d :user=site/sample/properties -d contract=site/sample/csv/contract.csv";
     // private static final String CMD = "-b ./src/test -t site/sample/ftl/nginx/nginx.conf.ftl -d env=site/sample/ftl/nginx/nginx.env";
     // private static final String CMD = "-b ./src/test -t templates/info.ftl -d env=site/sample/ftl/nginx/nginx.env";
-    private static final String CMD = "-b ./src/test -t templates/json/yaml/transform.ftl site/sample/json/swagger-spec.json";
+    // private static final String CMD = "-b ./src/test -t templates/json/yaml/transform.ftl site/sample/json/swagger-spec.json";
     // private static final String CMD = "-b ./src/test -t templates/yaml/json/transform.ftl site/sample/yaml/swagger-spec.yaml";
+    // private static final String CMD = "-b ./src/test -t templates/demo.ftl -m env=env:///";
+    // private static final String CMD = "-b ./src/test -t templates/demo.ftl -m api=https://httpbin.org/get";
+    // private static final String CMD = "-b ./src/test -t templates/demo.ftl -m env:///HOME";
+    // private static final String CMD = "-b ./src/test -t templates/demo.ftl -m env=./site/sample/properties/user_0001/user.properties";
+    // private static final String CMD = "-b ./src/test -t templates/demo.ftl -m ./site/sample/properties/user_0001/user.properties";
+    // private static final String CMD = "-b ./src/test --data-model post=https://jsonplaceholder.typicode.com/posts/2 -t templates/info.ftl";
+    private static final String CMD = "-b ./src/test -t templates/info.ftl google=https://www.google.com";
+
 
     public static void main(String[] args) {
         Main.execute(toArgs(CMD));
