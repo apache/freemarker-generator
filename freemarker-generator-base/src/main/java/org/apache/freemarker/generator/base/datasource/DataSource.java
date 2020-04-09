@@ -46,7 +46,7 @@ import static org.apache.freemarker.generator.base.util.StringUtils.isNotEmpty;
  * Data source which encapsulates data to be used for rendering
  * a template. When accessing content it is loaded on demand on not
  * kept in memory to allow processing of large volumes of data.
- * <b/>
+ * <br>
  * There is also special support of <code>UrlDataSource</code> since
  * the content type &amp; charset might be determined using a network
  * call.
