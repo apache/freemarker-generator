@@ -85,6 +85,17 @@ public class NamedUriStringParserTest {
     }
 
     @Test
+    public void shouldParseNamedGroupFileName() {
+        final NamedUri namedURI = parse("name:group=users.csv");
+
+        assertEquals("name", namedURI.getName());
+        assertEquals("group", namedURI.getGroup());
+        assertEquals("file:///users.csv", namedURI.getUri().toString());
+        assertEquals("users.csv", namedURI.getFile().getName());
+        assertEquals(0, namedURI.getParameters().size());
+    }
+
+    @Test
     public void shouldParseNamedFileUri() {
         final NamedUri namedURI = parse("users=file:///users.csv");
 
