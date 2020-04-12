@@ -34,11 +34,11 @@ import static java.util.stream.Collectors.toList;
  * to a map. The map contains either (key->String) or
  * (key->Map<String, Object>).
  */
-public class ParameterDataModelSupplier implements Supplier<Map<String, Object>> {
+public class ParameterModelSupplier implements Supplier<Map<String, Object>> {
 
     private final Collection<String> parameters;
 
-    public ParameterDataModelSupplier(Collection<String> parameters) {
+    public ParameterModelSupplier(Collection<String> parameters) {
         this.parameters = requireNonNull(parameters);
     }
 

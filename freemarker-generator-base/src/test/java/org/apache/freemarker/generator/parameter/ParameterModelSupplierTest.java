@@ -16,7 +16,7 @@
  */
 package org.apache.freemarker.generator.parameter;
 
-import org.apache.freemarker.generator.base.parameter.ParameterDataModelSupplier;
+import org.apache.freemarker.generator.base.parameter.ParameterModelSupplier;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
-public class ParameterDataModelSupplierTest {
+public class ParameterModelSupplierTest {
 
     @Test
     public void shouldConvertMissingParametersToMap() {
@@ -68,9 +68,9 @@ public class ParameterDataModelSupplierTest {
         assertEquals("value2", toMap(map, "group2").get("name2"));
     }
 
-    private static ParameterDataModelSupplier supplier(String... values) {
+    private static ParameterModelSupplier supplier(String... values) {
         final ArrayList<String> parameters = new ArrayList<>(Arrays.asList(values));
-        return new ParameterDataModelSupplier(parameters);
+        return new ParameterModelSupplier(parameters);
     }
 
     @SuppressWarnings("unchecked")
