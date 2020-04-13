@@ -20,6 +20,7 @@ import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.freemarker.generator.base.uri.NamedUri;
 import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -105,6 +106,7 @@ public class DataSourceFactoryTest {
     }
 
     @Test
+    @Ignore
     public void shouldCreateDataSourceFromURL() throws IOException {
         final URL url = new URL("https://jsonplaceholder.typicode.com/posts/2");
         final DataSource dataSource = DataSourceFactory.fromUrl("jsonplaceholder.typicode.com", "default", url, null, null);
@@ -115,6 +117,7 @@ public class DataSourceFactoryTest {
     }
 
     @Test
+    @Ignore
     public void shouldCreateDataSourceFromNamedURL() {
         final NamedUri namedUri = NamedUriStringParser.parse(ANY_NAMED_URL_STRING);
         final DataSource dataSource = DataSourceFactory.fromNamedUri(namedUri);
@@ -160,5 +163,4 @@ public class DataSourceFactoryTest {
         assertEquals("env:///PWD", dataSource.getUri().toString());
         assertEquals("text/plain", dataSource.getContentType());
     }
-
 }

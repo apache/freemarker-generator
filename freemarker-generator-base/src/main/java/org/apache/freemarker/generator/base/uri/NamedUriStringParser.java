@@ -42,7 +42,7 @@ public class NamedUriStringParser {
     private static final String GROUP = "group";
     private static final String URI = "uri";
 
-    private static final Pattern NAMED_URI_REGEXP = compile("^(?<name>[a-zA-Z0-9-_]*):?(?<group>[a-zA-Z0-9-_]*)=(?<uri>.*)");
+    private static final Pattern NAMED_URI_REGEXP = compile("^(?<name>[a-zA-Z0-9-_$@]*):?(?<group>[a-zA-Z0-9-_$@]*)=(?<uri>.*)");
 
     public static NamedUri parse(String value) {
         Validate.notEmpty(value, "Named URI is empty");

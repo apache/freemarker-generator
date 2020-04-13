@@ -16,6 +16,7 @@
  */
 package org.apache.freemarker.generator.cli.config;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Map;
@@ -140,6 +141,7 @@ public class DataModelSupplierTest {
     // == URL ===
 
     @Test
+    @Ignore
     public void shouldResolveUrlToTopLevelDataModel() {
         final DataModelSupplier supplier = supplier("post=https://jsonplaceholder.typicode.com/posts/2");
 
@@ -150,6 +152,7 @@ public class DataModelSupplierTest {
     }
 
     @Test
+    @Ignore
     public void shouldResolveUrlToDataModelVariable() {
         final DataModelSupplier supplier = supplier("https://jsonplaceholder.typicode.com/posts/2");
 
@@ -159,6 +162,7 @@ public class DataModelSupplierTest {
     }
 
     @Test(expected = RuntimeException.class)
+    @Ignore
     public void shouldResolveUrlToDataModelVariables() {
         supplier("https://jsonplaceholder.typicode.com/posts/does-not-exist").get();
     }

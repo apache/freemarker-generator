@@ -25,15 +25,15 @@
 </#compress>
 
 <#function createCsvParser dataSource>
-    <#assign initialCvsInFormat = CSVTool.formats[SystemTool.getParameter("csv.in.format", "DEFAULT")]>
-    <#assign csvInDelimiter = CSVTool.toDelimiter(SystemTool.getParameter("csv.in.delimiter", initialCvsInFormat.getDelimiter()))>
+    <#assign initialCvsInFormat = CSVTool.formats[CSV_IN_FORMAT!"DEFAULT"]>
+    <#assign csvInDelimiter = CSVTool.toDelimiter(CSV_IN_DELIMITER!initialCvsInFormat.getDelimiter())>
     <#assign cvsInFormat = initialCvsInFormat.withDelimiter(csvInDelimiter)>
     <#return CSVTool.parse(dataSource, cvsInFormat)>
 </#function>
 
 <#function createCsvPrinter>
-    <#assign initialCvsOutFormat = CSVTool.formats[SystemTool.getParameter("csv.out.format", "DEFAULT")]>
-    <#assign csvOutDelimiter = CSVTool.toDelimiter(SystemTool.getParameter("csv.out.delimiter", initialCvsOutFormat.getDelimiter()))>
+    <#assign initialCvsOutFormat = CSVTool.formats[CSV_OUT_FORMAT!"DEFAULT"]>
+    <#assign csvOutDelimiter = CSVTool.toDelimiter(CSV_OUT_DELIMITER!initialCvsOutFormat.getDelimiter())>
     <#assign cvsOutFormat = initialCvsOutFormat.withDelimiter(csvOutDelimiter)>
     <#return CSVTool.printer(cvsOutFormat, SystemTool.writer)>
 </#function>

@@ -28,7 +28,7 @@ public class ManualTest {
     // private static final String CMD = "-b ./src/test -l de_AT -DFOO=foo -DBAR=bar -t templates/info.ftl site/sample/csv/transactions.csv";
     // private static final String CMD = "-b ./src/test -DFOO=foo -PBAR=bar -l de -t templates/demo.ftl site/sample/csv/transactions.csv";
     // private static final String CMD = "-b ./src/test -DFOO=foo -PBAR=bar -t templates/demo.ftl site/sample/csv/transactions.csv";
-    private static final String CMD = "-b ./src/test -P csv.out.format=TDF -t templates/csv/transform.ftl site/sample/csv/contract.csv";
+    private static final String CMD = "-b ./src/test -PCSV_OUT_FORMAT=TDF -t templates/csv/transform.ftl site/sample/csv/contract.csv";
     // private static final String CMD = "-t templates/excel/csv/transform.ftl -l de_AT site/sample/excel/test.xlsx";
     // private static final String CMD = "-i ${JsonPathTool.parse(DataSources.first).read('$.info.title')} site/sample/json/swagger-spec.json";
     // private static final String CMD = "-i ${XmlTool.parse(DataSources.first)['recipients/person[1]/name']} site/sample/xml/recipients.xml";
