@@ -21,6 +21,7 @@ import org.apache.freemarker.generator.base.datasource.DataSourcesSupplier;
 import org.junit.Test;
 
 import java.nio.charset.Charset;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
@@ -33,16 +34,18 @@ public class DataSourcesSupplierTest {
 
     private static final String NO_EXCLUDE = null;
     private static final String DATA_DIRECTORY = "./src/test/data";
+    private static final String PWD = Paths.get(".").toAbsolutePath().normalize().toString();
+
 
     @Test
     public void shouldResolveSingleFile() {
         assertEquals(1, supplier("pom.xml", "*", NO_EXCLUDE).get().size());
         assertEquals(1, supplier("./pom.xml", "*", NO_EXCLUDE).get().size());
-        assertEquals(1, supplier("file://./pom.xml", "*", NO_EXCLUDE).get().size());
         assertEquals(1, supplier("pom=pom.xml", "*", NO_EXCLUDE).get().size());
         assertEquals(1, supplier("pom=./pom.xml", "*", NO_EXCLUDE).get().size());
-        assertEquals(1, supplier("pom=file://./pom.xml", "*", NO_EXCLUDE).get().size());
-        assertEquals(1, supplier("pom=file://./pom.xml?mimetype=application/xml", "*", NO_EXCLUDE).get().size());
+        assertEquals(1, supplier("pom=./pom.xml#mimetype=application/xml", "*", NO_EXCLUDE).get().size());
+        assertEquals(1, supplier("pom=" + PWD + "/pom.xml", "*", NO_EXCLUDE).get().size());
+        assertEquals(1, supplier("pom=file:///" + PWD + "/pom.xml#mimetype=application/xml", "*", NO_EXCLUDE).get().size());
     }
 
     @Test
@@ -127,9 +130,7 @@ public class DataSourcesSupplierTest {
     public void shouldNormalizeDataSourceNameBasedOnFilePath() {
         assertEquals("pom.xml", supplier("pom.xml", "*", NO_EXCLUDE).get().get(0).getName());
         assertEquals("pom.xml", supplier("./pom.xml", "*", NO_EXCLUDE).get().get(0).getName());
-        assertEquals("pom.xml", supplier("file://./pom.xml", "*", NO_EXCLUDE).get().get(0).getName());
-        assertEquals("pom.xml", supplier("file:///pom.xml", "*", NO_EXCLUDE).get().get(0).getName());
-        assertEquals("pom.xml", supplier("file://tmp/pom.xml", "*", NO_EXCLUDE).get().get(0).getName());
+        assertEquals("pom.xml", supplier("file:///" + PWD + "/pom.xml", "*", NO_EXCLUDE).get().get(0).getName());
     }
 
     private static DataSourcesSupplier supplier(String directory, String include, String exclude) {

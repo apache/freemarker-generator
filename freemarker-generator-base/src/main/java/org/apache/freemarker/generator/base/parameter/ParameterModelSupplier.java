@@ -53,7 +53,7 @@ public class ParameterModelSupplier implements Supplier<Map<String, Object>> {
 
         for (NamedUri namedUri : namedUris) {
             final String key = namedUri.getName();
-            final String value = namedUri.getUri().getPath().substring(1);
+            final String value = namedUri.getUri().getPath();
 
             if (namedUri.hasGroup()) {
                 final String group = namedUri.getGroup();

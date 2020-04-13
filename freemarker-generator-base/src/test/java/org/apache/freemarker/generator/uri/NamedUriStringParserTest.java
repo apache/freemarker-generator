@@ -77,7 +77,7 @@ public class NamedUriStringParserTest {
 
         assertEquals("users", namedURI.getName());
         assertNull(namedURI.getGroup());
-        assertEquals("file:///users.csv", namedURI.getUri().toString());
+        assertEquals("users.csv", namedURI.getUri().toString());
         assertEquals("users.csv", namedURI.getFile().getName());
         assertEquals(0, namedURI.getParameters().size());
         assertTrue(namedURI.hasName());
@@ -90,7 +90,7 @@ public class NamedUriStringParserTest {
 
         assertEquals("name", namedURI.getName());
         assertEquals("group", namedURI.getGroup());
-        assertEquals("file:///users.csv", namedURI.getUri().toString());
+        assertEquals("users.csv", namedURI.getUri().toString());
         assertEquals("users.csv", namedURI.getFile().getName());
         assertEquals(0, namedURI.getParameters().size());
     }
