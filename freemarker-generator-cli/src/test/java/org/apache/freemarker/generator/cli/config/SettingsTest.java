@@ -60,14 +60,12 @@ public class SettingsTest {
         assertNotNull(settings.getParameters());
         assertNotNull(settings.getSytemProperties());
         assertTrue(settings.isReadFromStdin());
-        assertTrue(settings.isEnvironmentExposed());
         assertTrue(settings.isInteractiveTemplate());
         assertTrue(settings.isVerbose());
     }
 
     private SettingsBuilder allSettingsBuilder() {
         return Settings.builder()
-                .isEnvironmentExposed(true)
                 .isReadFromStdin(true)
                 .setArgs(ANY_ARGS)
                 .setConfiguration(ANY_CONFIGURATION)

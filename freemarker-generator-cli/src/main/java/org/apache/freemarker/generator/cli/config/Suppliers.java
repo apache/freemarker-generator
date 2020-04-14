@@ -23,9 +23,7 @@ import org.apache.freemarker.generator.base.file.PropertiesFileSystemSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesSupplier;
 import org.apache.freemarker.generator.base.parameter.ParameterModelSupplier;
 
-import java.util.List;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  * Convenience methods to create suppliers.
@@ -64,11 +62,7 @@ public class Suppliers {
     }
 
     public static ParameterModelSupplier parameterSupplier(Settings settings) {
-        final List<String> parameters = settings.getParameters().entrySet().stream()
-                .map(e -> e.getKey() + "=" + e.getValue())
-                .collect(Collectors.toList());
-
-        return new ParameterModelSupplier(parameters);
+        return new ParameterModelSupplier(settings.getParameters());
     }
 
     public static PropertiesSupplier propertiesSupplier(String fileName) {

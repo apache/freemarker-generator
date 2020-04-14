@@ -149,13 +149,6 @@ public class FreeMarkerTask implements Callable<Integer> {
 
         result.putAll(dataModelsSupplier.get());
         result.put(DATASOURCES, dataSources);
-
-        // TODO rework  based on FREEMARKER-140
-        if (settings.isEnvironmentExposed()) {
-            // add all system & user-supplied properties as top-level entries
-            result.putAll(System.getenv());
-        }
-
         result.putAll(parameterModelSupplier.get());
         result.putAll(tools.get());
 

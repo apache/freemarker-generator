@@ -28,12 +28,36 @@ import static org.junit.Assert.assertTrue;
 public class NamedUriStringParserTest {
 
     @Test
-    public void shouldParseRelativeFileName() {
+    public void shouldParseFileName() {
         final NamedUri namedURI = parse("users.csv");
 
         assertNull(namedURI.getName());
         assertNull(namedURI.getGroup());
         assertEquals("users.csv", namedURI.getUri().toString());
+        assertEquals("users.csv", namedURI.getFile().getName());
+        assertEquals(0, namedURI.getParameters().size());
+    }
+
+    @Test
+    public void shouldParseFileNameWithFragment() {
+        final NamedUri namedURI = parse("users.csv#foo=bar");
+
+        assertNull(namedURI.getName());
+        assertNull(namedURI.getGroup());
+        assertEquals("users.csv#foo=bar", namedURI.getUri().toString());
+        assertEquals("users.csv", namedURI.getFile().getName());
+        assertEquals("foo=bar", namedURI.getUri().getFragment());
+        assertEquals(1, namedURI.getParameters().size());
+        assertEquals("bar", namedURI.getParameters().get("foo"));
+    }
+
+    @Test
+    public void shouldParseRelativeFileName() {
+        final NamedUri namedURI = parse("./users.csv");
+
+        assertNull(namedURI.getName());
+        assertNull(namedURI.getGroup());
+        assertEquals("./users.csv", namedURI.getUri().toString());
         assertEquals("users.csv", namedURI.getFile().getName());
         assertEquals(0, namedURI.getParameters().size());
     }

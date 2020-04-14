@@ -82,9 +82,6 @@ public class Settings {
     /** Read from stdin? */
     private final boolean isReadFromStdin;
 
-    /** Expose environment variables globally in the data model? */
-    private final boolean isEnvironmentExposed;
-
     /** User-supplied list of data sources or directories */
     private final List<String> dataSources;
 
@@ -114,7 +111,6 @@ public class Settings {
             String exclude,
             Locale locale,
             boolean isReadFromStdin,
-            boolean isEnvironmentExposed,
             List<String> dataSources,
             List<String> dataModels,
             Map<String, String> parameters,
@@ -136,7 +132,6 @@ public class Settings {
         this.exclude = exclude;
         this.locale = requireNonNull(locale);
         this.isReadFromStdin = isReadFromStdin;
-        this.isEnvironmentExposed = isEnvironmentExposed;
         this.dataSources = requireNonNull(dataSources);
         this.dataModels = requireNonNull(dataModels);
         this.parameters = requireNonNull(parameters);
@@ -205,10 +200,6 @@ public class Settings {
         return isReadFromStdin;
     }
 
-    public boolean isEnvironmentExposed() {
-        return isEnvironmentExposed;
-    }
-
     public List<String> getDataSources() {
         return dataSources;
     }
@@ -270,16 +261,9 @@ public class Settings {
                 ", exclude='" + include + '\'' +
                 ", locale=" + locale +
                 ", isReadFromStdin=" + isReadFromStdin +
-                ", isEnvironmentExposed=" + isEnvironmentExposed +
                 ", dataSources=" + dataSources +
                 ", properties=" + parameters +
                 ", sytemProperties=" + sytemProperties +
-                ", writer=" + writer +
-                ", templateEncoding=" + getTemplateEncoding() +
-                ", readFromStdin=" + isReadFromStdin() +
-                ", environmentExposed=" + isEnvironmentExposed() +
-                ", hasOutputFile=" + hasOutputFile() +
-                ", toMap=" + toMap() +
                 '}';
     }
 
@@ -296,7 +280,6 @@ public class Settings {
         private String exclude;
         private String locale;
         private boolean isReadFromStdin;
-        private boolean isEnvironmentExposed;
         private List<String> dataSources;
         private List<String> dataModels;
         private Map<String, String> parameters;
@@ -386,11 +369,6 @@ public class Settings {
             return this;
         }
 
-        public SettingsBuilder isEnvironmentExposed(boolean isEnvironmentExposed) {
-            this.isEnvironmentExposed = isEnvironmentExposed;
-            return this;
-        }
-
         public SettingsBuilder setDataSources(List<String> dataSources) {
             if (dataSources != null) {
                 this.dataSources = dataSources;
@@ -451,7 +429,6 @@ public class Settings {
                     exclude,
                     LocaleUtils.parseLocale(currLocale),
                     isReadFromStdin,
-                    isEnvironmentExposed,
                     dataSources,
                     dataModels,
                     parameters,

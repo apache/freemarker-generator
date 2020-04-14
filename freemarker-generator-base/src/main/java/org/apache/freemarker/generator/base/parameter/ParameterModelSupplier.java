@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
@@ -37,6 +38,10 @@ import static java.util.stream.Collectors.toList;
 public class ParameterModelSupplier implements Supplier<Map<String, Object>> {
 
     private final Collection<String> parameters;
+
+    public ParameterModelSupplier(Map<String, String> parameters) {
+        this(toStrings(parameters));
+    }
 
     public ParameterModelSupplier(Collection<String> parameters) {
         this.parameters = requireNonNull(parameters);
@@ -86,4 +91,9 @@ public class ParameterModelSupplier implements Supplier<Map<String, Object>> {
         }
     }
 
+    private static Collection<String> toStrings(Map<String, String> parameters) {
+        return parameters.entrySet().stream()
+                .map(e -> e.getKey() + "=" + e.getValue())
+                .collect(Collectors.toList());
+    }
 }

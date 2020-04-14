@@ -38,7 +38,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,9 +76,6 @@ public class Main implements Callable<Integer> {
 
     @Option(names = { "-e", "--input-encoding" }, description = "Encoding of data source", defaultValue = "UTF-8")
     String inputEncoding;
-
-    @Option(names = { "-E", "--expose-env" }, description = "Expose environment variables and user-supplied properties globally")
-    boolean isEnvironmentExposed;
 
     @Option(names = { "-l", "--locale" }, description = "Locale being used for the output, e.g. 'en_US'")
     String locale;
@@ -210,7 +206,6 @@ public class Main implements Callable<Integer> {
 
     private Settings settings(Properties configuration, List<File> templateDirectories) {
         return Settings.builder()
-                .isEnvironmentExposed(isEnvironmentExposed)
                 .isReadFromStdin(readFromStdin)
                 .setArgs(args)
                 .setConfiguration(configuration)
