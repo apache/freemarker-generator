@@ -92,12 +92,12 @@ public class SystemTool {
         return System.getProperties();
     }
 
-    public String getParameter(String key) {
-        return parameters.get(key);
+    public String getParameter(String name) {
+        return parameters.get(name);
     }
 
-    public String getParameter(String key, String def) {
-        return parameters.getOrDefault(key, def);
+    public String getParameter(String name, String def) {
+        return parameters.getOrDefault(name, def);
     }
 
     public Map<String, String> getParameters() {

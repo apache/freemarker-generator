@@ -16,68 +16,42 @@
  */
 package org.apache.freemarker.generator.base.parameter;
 
-import org.apache.freemarker.generator.base.uri.NamedUri;
-import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
-import org.apache.freemarker.generator.base.util.StringUtils;
-
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toList;
 
 /**
- * Converts a list of parameters (as <code>Named Uris</code>)
- * to a map. The map contains either (key->String) or
- * (key->Map<String, Object>).
+ * Converts a map of parameters to a map. The resulting map contains
+ * either (key -> String) or (key -> Map<String, Object>).
  */
 public class ParameterModelSupplier implements Supplier<Map<String, Object>> {
 
-    private final Collection<String> parameters;
+    private final Map<String, String> parameters;
 
     public ParameterModelSupplier(Map<String, String> parameters) {
-        this(toStrings(parameters));
-    }
-
-    public ParameterModelSupplier(Collection<String> parameters) {
         this.parameters = requireNonNull(parameters);
     }
 
     @Override
     public Map<String, Object> get() {
-        final List<NamedUri> namedUris = toNamedUris(parameters);
-        return toMap(namedUris);
-    }
-
-    private static Map<String, Object> toMap(List<NamedUri> namedUris) {
         final Map<String, Object> map = new HashMap<>();
 
-        for (NamedUri namedUri : namedUris) {
-            final String key = namedUri.getName();
-            final String value = namedUri.getUri().getPath();
+        for (Map.Entry<String, String> entry : parameters.entrySet()) {
+            final Parameter parameter = ParameterParser.parse(entry.getKey(), entry.getValue());
+            final String name = parameter.getName();
+            final String value = parameter.getValue();
 
-            if (namedUri.hasGroup()) {
-                final String group = namedUri.getGroup();
-                final Map<String, Object> groupMap = getOrCreateGroupMap(map, group);
-                groupMap.put(key, value);
+            if (parameter.hasGroup()) {
+                final String group = parameter.getGroup();
+                getOrCreateGroupMap(map, group).put(name, value);
             } else {
-                map.put(key, value);
+                map.put(parameter.getName(), value);
             }
         }
 
         return map;
-    }
-
-    private static List<NamedUri> toNamedUris(Collection<String> parameters) {
-        return parameters.stream()
-                .filter(StringUtils::isNotEmpty)
-                .distinct()
-                .map(NamedUriStringParser::parse)
-                .collect(toList());
     }
 
     @SuppressWarnings("unchecked")
@@ -89,11 +63,5 @@ public class ParameterModelSupplier implements Supplier<Map<String, Object>> {
             map.put(group, groupMap);
             return groupMap;
         }
-    }
-
-    private static Collection<String> toStrings(Map<String, String> parameters) {
-        return parameters.entrySet().stream()
-                .map(e -> e.getKey() + "=" + e.getValue())
-                .collect(Collectors.toList());
     }
 }

@@ -16,12 +16,14 @@
  */
 package org.apache.freemarker.generator.parameter;
 
+import org.apache.freemarker.generator.base.parameter.Parameter;
 import org.apache.freemarker.generator.base.parameter.ParameterModelSupplier;
+import org.apache.freemarker.generator.base.parameter.ParameterParser;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 
@@ -30,7 +32,6 @@ public class ParameterModelSupplierTest {
     @Test
     public void shouldConvertMissingParametersToMap() {
         assertEquals(0, supplier(new String[0]).get().size());
-        assertEquals(0, supplier("").get().size());
     }
 
     @Test
@@ -39,6 +40,14 @@ public class ParameterModelSupplierTest {
 
         assertEquals(1, map.size());
         assertEquals("value", map.get("name"));
+    }
+
+    @Test
+    public void shouldConverNameValueWithSpacesToMap() {
+        final Map<String, Object> map = supplier("name=value with spaces").get();
+
+        assertEquals(1, map.size());
+        assertEquals("value with spaces", map.get("name"));
     }
 
     @Test
@@ -69,7 +78,10 @@ public class ParameterModelSupplierTest {
     }
 
     private static ParameterModelSupplier supplier(String... values) {
-        final ArrayList<String> parameters = new ArrayList<>(Arrays.asList(values));
+        final Map<String, String> parameters = Arrays.stream(values)
+                .map(ParameterParser::parse)
+                .collect(Collectors.toMap(Parameter::getKey, Parameter::getValue));
+
         return new ParameterModelSupplier(parameters);
     }
 
