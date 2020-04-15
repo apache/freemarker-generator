@@ -36,7 +36,6 @@ public class DataSourcesSupplierTest {
     private static final String DATA_DIRECTORY = "./src/test/data";
     private static final String PWD = Paths.get(".").toAbsolutePath().normalize().toString();
 
-
     @Test
     public void shouldResolveSingleFile() {
         assertEquals(1, supplier("pom.xml", "*", NO_EXCLUDE).get().size());
