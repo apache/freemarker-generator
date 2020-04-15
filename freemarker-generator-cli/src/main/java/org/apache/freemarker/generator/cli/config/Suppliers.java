@@ -21,8 +21,8 @@ import org.apache.freemarker.generator.base.datasource.DataSourcesSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesClassPathSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesFileSystemSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesSupplier;
-import org.apache.freemarker.generator.base.parameter.ParameterModelSupplier;
 
+import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -61,8 +61,8 @@ public class Suppliers {
         return new DataModelSupplier(settings.getDataModels());
     }
 
-    public static ParameterModelSupplier parameterSupplier(Settings settings) {
-        return new ParameterModelSupplier(settings.getParameters());
+    public static Supplier<Map<String, Object>> parameterSupplier(Settings settings) {
+        return settings::getParameters;
     }
 
     public static PropertiesSupplier propertiesSupplier(String fileName) {

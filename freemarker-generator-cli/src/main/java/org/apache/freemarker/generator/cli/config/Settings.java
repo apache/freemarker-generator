@@ -86,10 +86,10 @@ public class Settings {
     private final List<String> dataSources;
 
     /** User-supplied list of data sources directly exposed in the data model */
-    private List<String> dataModels;
+    private final List<String> dataModels;
 
     /** User-supplied parameters */
-    private final Map<String, String> parameters;
+    private final Map<String, Object> parameters;
 
     /** User-supplied system properties */
     private final Properties sytemProperties;
@@ -113,7 +113,7 @@ public class Settings {
             boolean isReadFromStdin,
             List<String> dataSources,
             List<String> dataModels,
-            Map<String, String> parameters,
+            Map<String, Object> parameters,
             Properties sytemProperties,
             Writer writer) {
         if (isEmpty(template) && isEmpty(interactiveTemplate)) {
@@ -208,7 +208,7 @@ public class Settings {
         return dataModels;
     }
 
-    public Map<String, String> getParameters() {
+    public Map<String, Object> getParameters() {
         return parameters;
     }
 
@@ -282,7 +282,7 @@ public class Settings {
         private boolean isReadFromStdin;
         private List<String> dataSources;
         private List<String> dataModels;
-        private Map<String, String> parameters;
+        private Map<String, Object> parameters;
         private Properties systemProperties;
         private Properties configuration;
         private Writer writer;
@@ -383,7 +383,7 @@ public class Settings {
             return this;
         }
 
-        public SettingsBuilder setParameters(Map<String, String> parameters) {
+        public SettingsBuilder setParameters(Map<String, Object> parameters) {
             if (parameters != null) {
                 this.parameters = parameters;
             }

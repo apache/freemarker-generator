@@ -16,22 +16,21 @@
  */
 package org.apache.freemarker.generator.base.parameter;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * Converts a map of parameters to a map. The resulting map contains
- * either (key -> String) or (key -> Map<String, Object>).
+ * either (key=String) or (key=Map&lt;String, Object&gt;).
  */
 public class ParameterModelSupplier implements Supplier<Map<String, Object>> {
 
     private final Map<String, String> parameters;
 
     public ParameterModelSupplier(Map<String, String> parameters) {
-        this.parameters = requireNonNull(parameters);
+        this.parameters = parameters != null ? parameters : Collections.emptyMap();
     }
 
     @Override

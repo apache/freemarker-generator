@@ -48,8 +48,12 @@ URI : ${dataSource.uri}
 
 User Supplied Parameters
 ------------------------------------------------------------------------------
-<#list SystemTool.parameters as name,value>
-- ${name} ==> ${value}
+<#list SystemTool.parameters as key,value>
+<#if value?is_hash>
+- ${key} ==> { <#list value as name,value>${name}=${value} </#list>}
+<#else>
+- ${key} ==> ${value}
+</#if>
 </#list>
 
 User Supplied System Properties
@@ -62,7 +66,5 @@ SystemTool
 ------------------------------------------------------------------------------
 Command line         : ${SystemTool.getCommandLineArgs()?join(", ")}
 Host Name            : ${SystemTool.getHostName()}
-Java Home            : ${SystemTool.getEnv("JAVA_HOME", "N.A.")}
+Current Dir          : ${SystemTool.getEnv("PWD", "N.A.")}
 User Name            : ${SystemTool.getSystemProperty("user.name", "N.A.")}
-Timestamp            : ${SystemTool.currentTimeMillis}
-Writer               : ${SystemTool.writer.class.name}

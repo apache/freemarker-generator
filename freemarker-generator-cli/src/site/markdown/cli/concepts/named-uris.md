@@ -18,13 +18,13 @@ scheme     authority               path        query   fragment
 
 For our purposes, the scheme and the path components are especially important, though the other components are used by certain datasources for particular purposes.
 
-| Component | Purpose |
-|-----------|---------|
-| scheme	| All datasources require a scheme (except for file when using relative paths) |
-| authority	| Used only by remote datasources, and can be omitted in some of those cases. Consists of userinfo (user:pass), host, and port. |
-| path	    | Can be omitted, but usually used as the basis of the locator for the datasource. |
-| query	    | Used mainly for HTTP and HTTPS URLs |
-| fragment	| Used rarely for providing additional attributes, e.g. `mimetype` of `charset` |
+| Component | Purpose                                                                                                   |
+|-----------|-----------------------------------------------------------------------------------------------------------|
+| scheme	| All datasources require a scheme (except for file when using relative paths)                              |
+| authority	| Used only by remote datasources, and can be omitted in some of those cases.                               |
+| path	    | Can be omitted, but usually used as the basis of the locator for the datasource.                          |
+| query	    | Used mainly for HTTP and HTTPS URLs                                                                       |
+| fragment	| Used rarely for providing additional attributes, e.g. `mimetype` of `charset`                             |
 
 The following Named URI loads a "user.csv" and the data source is available as `my_users` 
 

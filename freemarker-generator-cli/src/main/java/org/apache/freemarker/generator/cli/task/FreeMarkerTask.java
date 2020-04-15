@@ -89,7 +89,7 @@ public class FreeMarkerTask implements Callable<Integer> {
     public Integer call() {
         final Template template = template(settings, configurationSupplier);
         try (Writer writer = settings.getWriter(); DataSources dataSources = dataSources(settings, dataSourcesSupplier)) {
-            final Map<String, Object> dataModel = dataModel(settings, dataSources, parameterModelSupplier, dataModelsSupplier, toolsSupplier);
+            final Map<String, Object> dataModel = dataModel(dataSources, parameterModelSupplier, dataModelsSupplier, toolsSupplier);
             template.process(dataModel, writer);
             return SUCCESS;
         } catch (RuntimeException e) {
@@ -140,18 +140,15 @@ public class FreeMarkerTask implements Callable<Integer> {
     }
 
     private static Map<String, Object> dataModel(
-            Settings settings,
             DataSources dataSources,
             Supplier<Map<String, Object>> parameterModelSupplier,
             Supplier<Map<String, Object>> dataModelsSupplier,
             Supplier<Map<String, Object>> tools) {
         final Map<String, Object> result = new HashMap<>();
-
         result.putAll(dataModelsSupplier.get());
         result.put(DATASOURCES, dataSources);
         result.putAll(parameterModelSupplier.get());
         result.putAll(tools.get());
-
         return result;
     }
 

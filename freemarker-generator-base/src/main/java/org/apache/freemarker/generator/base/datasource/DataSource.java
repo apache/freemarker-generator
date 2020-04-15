@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.nio.charset.Charset.forName;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 import static org.apache.commons.io.IOUtils.lineIterator;
@@ -172,7 +171,7 @@ public class DataSource implements Closeable {
     public String getText(String charsetName) {
         final StringWriter writer = new StringWriter();
         try (InputStream is = getUnsafeInputStream()) {
-            IOUtils.copy(is, writer, forName(charsetName));
+            IOUtils.copy(is, writer, Charset.forName(charsetName));
             return writer.toString();
         } catch (IOException e) {
             throw new RuntimeException("Failed to get text: " + toString(), e);
@@ -224,7 +223,7 @@ public class DataSource implements Closeable {
      */
     public LineIterator getLineIterator(String charsetName) {
         try {
-            return closables.add(lineIterator(getUnsafeInputStream(), forName(charsetName)));
+            return closables.add(lineIterator(getUnsafeInputStream(), Charset.forName(charsetName)));
         } catch (IOException e) {
             throw new RuntimeException("Failed to create line iterator: " + toString(), e);
         }

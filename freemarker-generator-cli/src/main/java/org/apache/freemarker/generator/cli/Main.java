@@ -17,6 +17,7 @@
 package org.apache.freemarker.generator.cli;
 
 import org.apache.freemarker.generator.base.FreeMarkerConstants.GeneratorMode;
+import org.apache.freemarker.generator.base.parameter.ParameterModelSupplier;
 import org.apache.freemarker.generator.base.util.ClosableUtils;
 import org.apache.freemarker.generator.base.util.StringUtils;
 import org.apache.freemarker.generator.cli.config.Settings;
@@ -205,6 +206,8 @@ public class Main implements Callable<Integer> {
     }
 
     private Settings settings(Properties configuration, List<File> templateDirectories) {
+        final ParameterModelSupplier parameterModelSupplier = new ParameterModelSupplier(parameters);
+
         return Settings.builder()
                 .isReadFromStdin(readFromStdin)
                 .setArgs(args)
@@ -216,7 +219,7 @@ public class Main implements Callable<Integer> {
                 .setLocale(locale)
                 .setOutputEncoding(outputEncoding)
                 .setOutputFile(outputFile)
-                .setParameters(parameters != null ? parameters : new HashMap<>())
+                .setParameters(parameterModelSupplier.get())
                 .setDataSources(getCombindedDataSources())
                 .setDataModels(dataModels)
                 .setSystemProperties(systemProperties != null ? systemProperties : new Properties())
