@@ -20,9 +20,15 @@ import java.nio.charset.Charset;
 
 import static org.apache.freemarker.generator.base.util.StringUtils.isEmpty;
 
-// type/subtype;parameter=value
-// text/html;charset=utf-8
-// text/html;charset=windows-1252
+/**
+ * Parse a mimetype.
+ * <p>
+ * Some examples
+ * <ul>
+ *     <li>text/html;charset=utf-8</li>
+ *     <li>text/html;charset=windows-1252</li>
+ * </ul>
+ */
 public class MimetypeParser {
 
     public static String getMimetype(String raw) {
@@ -35,7 +41,7 @@ public class MimetypeParser {
     }
 
     public static Charset getCharset(String raw) {
-        if (isEmpty(raw) || !raw.toLowerCase().contains("charset")) {
+        if (isEmpty(raw) || !raw.contains(";") || !raw.toLowerCase().contains("charset")) {
             return null;
         }
 
