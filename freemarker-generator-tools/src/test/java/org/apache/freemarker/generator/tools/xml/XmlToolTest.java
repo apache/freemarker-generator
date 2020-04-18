@@ -23,7 +23,7 @@ import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertNotNull;
-import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_APPLICATION_XML;
+import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_APPLICATION_XML;
 
 public class XmlToolTest {
 

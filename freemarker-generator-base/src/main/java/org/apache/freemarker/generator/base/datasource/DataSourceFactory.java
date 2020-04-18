@@ -20,8 +20,8 @@ import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.activation.ByteArrayDataSource;
 import org.apache.freemarker.generator.base.activation.CachingUrlDataSource;
 import org.apache.freemarker.generator.base.activation.InputStreamDataSource;
-import org.apache.freemarker.generator.base.activation.MimetypesFileTypeMapFactory;
 import org.apache.freemarker.generator.base.activation.StringDataSource;
+import org.apache.freemarker.generator.base.mime.MimetypesFileTypeMapFactory;
 import org.apache.freemarker.generator.base.uri.NamedUri;
 import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
 import org.apache.freemarker.generator.base.util.PropertiesFactory;
@@ -43,7 +43,7 @@ import java.util.Properties;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
-import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_TEXT_PLAIN;
+import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_TEXT_PLAIN;
 import static org.apache.freemarker.generator.base.util.StringUtils.firstNonEmpty;
 
 /**

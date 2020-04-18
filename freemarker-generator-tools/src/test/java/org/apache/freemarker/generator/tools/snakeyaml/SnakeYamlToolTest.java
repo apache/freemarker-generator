@@ -16,9 +16,9 @@
  */
 package org.apache.freemarker.generator.tools.snakeyaml;
 
-import org.apache.freemarker.generator.base.activation.Mimetypes;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
+import org.apache.freemarker.generator.base.mime.Mimetypes;
 import org.junit.Test;
 
 import java.io.File;
@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertEquals;
 import static org.apache.commons.io.FileUtils.readFileToString;
 

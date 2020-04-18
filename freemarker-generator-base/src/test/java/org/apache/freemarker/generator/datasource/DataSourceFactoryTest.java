@@ -35,7 +35,7 @@ import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
-import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_APPLICATION_XML;
+import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_APPLICATION_XML;
 import static org.junit.Assert.assertEquals;
 
 public class DataSourceFactoryTest {

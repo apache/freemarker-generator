@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.base.activation;
+package org.apache.freemarker.generator.base.mime;
 
 public class Mimetypes {
 

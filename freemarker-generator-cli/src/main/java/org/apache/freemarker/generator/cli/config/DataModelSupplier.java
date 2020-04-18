@@ -37,9 +37,9 @@ import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toMap;
-import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_APPLICATION_JSON;
-import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_TEXT_PLAIN;
-import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_TEXT_YAML;
+import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_APPLICATION_JSON;
+import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_TEXT_PLAIN;
+import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_TEXT_YAML;
 
 /**
  * Create a map representing a data model based on a list of sources consisting of
