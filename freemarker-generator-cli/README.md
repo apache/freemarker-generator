@@ -78,11 +78,11 @@ You can test the installation by executing
 > ./bin/freemarker-cli -t templates/info.ftl 
 FreeMarker CLI Information
 ------------------------------------------------------------------------------
-FreeMarker version     : 2.3.29
+FreeMarker version     : 2.3.30
 Template name          : templates/info.ftl
 Language               : en
 Locale                 : en_US
-Timestamp              : Apr 4, 2020 12:39:28 PM
+Timestamp              : Apr 14, 2020 11:34:13 PM
 Output encoding        : UTF-8
 Output format          : plainText
 
@@ -122,7 +122,7 @@ Command line         : -t, templates/info.ftl
 Host Name            : W0GL5179.local
 Java Home            : /Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home
 User Name            : sgoeschl
-Timestamp            : 1,585,996,768,896
+Timestamp            : 1,586,900,053,355
 Writer               : org.apache.freemarker.generator.base.util.NonClosableWriterWrapper
 ```
 
@@ -195,13 +195,14 @@ Please note that generated PDF files are very likely not found since they requir
 
 ```text
 > ./bin/freemarker-cli  -h
-Usage: freemarker-cli (-t=<template> | -i=<interactiveTemplate>) [-EhV]
+Usage: freemarker-cli (-t=<template> | -i=<interactiveTemplate>) [-hV]
                       [--stdin] [-b=<baseDir>] [--config=<configFile>]
                       [-e=<inputEncoding>] [--exclude=<exclude>]
-                      [--include=<include>] [-l=<locale>] [-o=<outputFile>]
-                      [--output-encoding=<outputEncoding>] [--times=<times>]
-                      [-D=<String=String>]... [-P=<String=String>]...
-                      [<sources>...]
+                      [--include=<include>] [-l=<locale>] [--mode=<mode>]
+                      [-o=<outputFile>] [--output-encoding=<outputEncoding>]
+                      [--times=<times>] [-D=<String=String>]...
+                      [-m=<dataModels>]... [-P=<String=String>]...
+                      [-s=<dataSources>]... [<sources>...]
 Apache FreeMarker CLI
       [<sources>...]        List of input files and/or input directories
   -b, --basedir=<baseDir>   Optional template base directory
@@ -210,24 +211,26 @@ Apache FreeMarker CLI
                             Set system property
   -e, --input-encoding=<inputEncoding>
                             Encoding of data source
-  -E, --expose-env          Expose environment variables and user-supplied
-                              properties globally
       --exclude=<exclude>   File pattern for data source input directory
   -h, --help                Show this help message and exit.
   -i, --interactive=<interactiveTemplate>
                             Interactive FreeMarker template
       --include=<include>   File pattern for data source input directory
   -l, --locale=<locale>     Locale being used for the output, e.g. 'en_US'
+  -m, --data-model=<dataModels>
+                            Data model used for rendering
+      --mode=<mode>         [template|datasource]
   -o, --output=<outputFile> Output file
       --output-encoding=<outputEncoding>
                             Encoding of output, e.g. UTF-8
   -P, --param=<String=String>
                             Set parameter
-      --stdin               Read data source from stdin
+  -s, --data-source=<dataSources>
+                            Data source used for rendering
+      --stdin               Read data  source from stdin
   -t, --template=<template> FreeMarker template to render
       --times=<times>       Re-run X times for profiling
   -V, --version             Print version information and exit.
-
 ```
 
 # 6. Examples
@@ -876,7 +879,7 @@ While this looks small and tidy there are some nifty features
 
 Sometimes you have a CSV file which is not quite right - you need to change the format. Lets have a look how `freemarker-cli` can help
 
-> bin/freemarker-cli -Pcsv.in.delimiter=COMMA -Pcsv.out.delimiter=PIPE -t templates/csv/transform.ftl ./site/sample/csv/contract.csv 
+> bin/freemarker-cli -PCVS_IN_DELIMITER=COMMA -PCSV_OUT_DELIMITER=PIPE -t templates/csv/transform.ftl ./site/sample/csv/contract.csv 
 
 renders the following template
 
@@ -892,15 +895,15 @@ renders the following template
 </#compress>
 
 <#function createCsvParser dataSource>
-    <#assign initialCvsInFormat = CSVTool.formats[SystemTool.getParameter("csv.in.format", "DEFAULT")]>
-    <#assign csvInDelimiter = CSVTool.toDelimiter(SystemTool.getParameter("csv.in.delimiter", initialCvsInFormat.getDelimiter()))>
+    <#assign initialCvsInFormat = CSVTool.formats[CSV_IN_FORMAT!"DEFAULT"]>
+    <#assign csvInDelimiter = CSVTool.toDelimiter(CSV_IN_DELIMITER!initialCvsInFormat.getDelimiter())>
     <#assign cvsInFormat = initialCvsInFormat.withDelimiter(csvInDelimiter)>
     <#return CSVTool.parse(dataSource, cvsInFormat)>
 </#function>
 
 <#function createCsvPrinter>
-    <#assign initialCvsOutFormat = CSVTool.formats[SystemTool.getParameter("csv.out.format", "DEFAULT")]>
-    <#assign csvOutDelimiter = CSVTool.toDelimiter(SystemTool.getParameter("csv.out.delimiter", initialCvsOutFormat.getDelimiter()))>
+    <#assign initialCvsOutFormat = CSVTool.formats[CSV_OUT_FORMAT!"DEFAULT"]>
+    <#assign csvOutDelimiter = CSVTool.toDelimiter(CSV_OUT_DELIMITER!initialCvsOutFormat.getDelimiter())>
     <#assign cvsOutFormat = initialCvsOutFormat.withDelimiter(csvOutDelimiter)>
     <#return CSVTool.printer(cvsOutFormat, SystemTool.writer)>
 </#function>
@@ -1118,8 +1121,6 @@ Sometimes we simply need to transform a JSON into an equivalent YAML or the othe
 > ./bin/freemarker-cli -i '${YamlTool.toYaml(GsonTool.parse(DataSources.get(0)))}' site/sample/json/swagger-spec.json
 ```
 
-
-
 ## 6.16 Using Advanced FreeMarker Features
 
 There is a `demo.ftl` which shows some advanced FreeMarker functionality
@@ -1139,13 +1140,12 @@ gives you
 ```text
 1) FreeMarker Special Variables
 ---------------------------------------------------------------------------
-FreeMarker version     : 2.3.29
+FreeMarker version     : 2.3.30
 Template name          : templates/demo.ftl
 Language               : en
 Locale                 : en_US
-Timestamp              : Feb 22, 2020 4:54:19 PM
+Timestamp              : Apr 14, 2020 11:40:26 PM
 Output encoding        : UTF-8
-Output format          : plainText
 
 2) Invoke a constructor of a Java class
 ---------------------------------------------------------------------------
@@ -1264,13 +1264,13 @@ German Special Characters: äöüßÄÖÜ
 ---------------------------------------------------------------------------
 Small Number :  1.23
 Large Number :  12,345,678.90
-Date         :  Feb 22, 2020
-Time         :  4:54:20 PM
+Date         :  Apr 14, 2020
+Time         :  11:40:26 PM
 
 17) Execute a program
 ---------------------------------------------------------------------------
 > date
-Sat Feb 22 16:54:20 CET 2020
+Tue Apr 14 23:40:26 CEST 2020
 ```
 
 # 7. Design Considerations
@@ -1298,9 +1298,9 @@ Within the script a FreeMarker data model is set up and passed to the template -
 | JsoupTool             | Processing HTML files using [Jsoup](https://jsoup.org)                                                    |
 | PropertiesTool        | Process JDK properties files                                                                              |
 | SystemTool            | System-related utility methods                                                                            |
+| UUIDTool              | Create UUIDs                                                                                              |
 | XmlTool               | Process XML files using [Apache FreeMarker](https://freemarker.apache.org/docs/xgui.html)                 |
 | YamlTool              | Process YAML files using [SnakeYAML](https://bitbucket.org/asomov/snakeyaml/wiki/Home)                    |
-| UUIDTool              | Create UUIDs                                                                                              |
 
 
 # 8. Tips & Tricks

@@ -20,8 +20,8 @@ import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.activation.ByteArrayDataSource;
 import org.apache.freemarker.generator.base.activation.CachingUrlDataSource;
 import org.apache.freemarker.generator.base.activation.InputStreamDataSource;
-import org.apache.freemarker.generator.base.activation.MimetypesFileTypeMapFactory;
 import org.apache.freemarker.generator.base.activation.StringDataSource;
+import org.apache.freemarker.generator.base.mime.MimetypesFileTypeMapFactory;
 import org.apache.freemarker.generator.base.uri.NamedUri;
 import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
 import org.apache.freemarker.generator.base.util.PropertiesFactory;
@@ -43,7 +43,7 @@ import java.util.Properties;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
-import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_TEXT_PLAIN;
+import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_TEXT_PLAIN;
 import static org.apache.freemarker.generator.base.util.StringUtils.firstNonEmpty;
 
 /**
@@ -53,6 +53,7 @@ public class DataSourceFactory {
 
     private static final String NO_MIME_TYPE = null;
     private static final Charset NO_CHARSET = null;
+    private static final String ROOT_DIR = "/";
 
     private DataSourceFactory() {
     }
@@ -82,7 +83,8 @@ public class DataSourceFactory {
             final String name = namedUri.getNameOrElse(file.getName());
             return fromFile(name, group, file, charset);
         } else if (UriUtils.isEnvUri(uri)) {
-            final String key = uri.getPath().substring(1);
+            // environment variables come with a leading "/" to be removed
+            final String key = stripRootDir(uri.getPath());
             final String contentType = getMimeTypeOrElse(namedUri, MIME_TEXT_PLAIN);
             final String name = firstNonEmpty(namedUri.getName(), key, Location.ENVIRONMENT);
             if (StringUtils.isEmpty(key)) {
@@ -216,6 +218,14 @@ public class DataSourceFactory {
             return uri.toURL();
         } catch (MalformedURLException e) {
             throw new IllegalArgumentException(uri.toString(), e);
+        }
+    }
+
+    private static String stripRootDir(String str) {
+        if (str.startsWith(ROOT_DIR)) {
+            return str.substring(ROOT_DIR.length());
+        } else {
+            return str;
         }
     }
 }

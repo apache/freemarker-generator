@@ -21,7 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import static java.util.Objects.requireNonNull;
-import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_APPLICATION_OCTET_STREAM;
+import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_APPLICATION_OCTET_STREAM;
 
 /**
  * Wraps an InputStream into a DataSource. Please note that the input stream

@@ -16,8 +16,10 @@
  */
 package org.apache.freemarker.generator.cli.config;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
+import java.nio.file.Paths;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;
@@ -27,6 +29,7 @@ import static org.junit.Assert.assertTrue;
 
 public class DataModelSupplierTest {
 
+    private static final String PWD = Paths.get(".").toAbsolutePath().normalize().toString();
     private static final String PWD_VALUE = System.getenv("PWD");
     private static final int NR_OF_ALL_ENV_VARIABLES = System.getenv().size();
 
@@ -104,7 +107,7 @@ public class DataModelSupplierTest {
 
     @Test
     public void shouldResolvePropertiesUriToDataModelVariable() {
-        final DataModelSupplier supplier = supplier("props=file://./src/test/data/properties/test.properties");
+        final DataModelSupplier supplier = supplier("props=file:///" + PWD + "/src/test/data/properties/test.properties");
 
         final Map<String, Object> model = supplier.get();
 
@@ -140,6 +143,7 @@ public class DataModelSupplierTest {
     // == URL ===
 
     @Test
+    @Ignore
     public void shouldResolveUrlToTopLevelDataModel() {
         final DataModelSupplier supplier = supplier("post=https://jsonplaceholder.typicode.com/posts/2");
 
@@ -150,6 +154,7 @@ public class DataModelSupplierTest {
     }
 
     @Test
+    @Ignore
     public void shouldResolveUrlToDataModelVariable() {
         final DataModelSupplier supplier = supplier("https://jsonplaceholder.typicode.com/posts/2");
 
@@ -159,6 +164,7 @@ public class DataModelSupplierTest {
     }
 
     @Test(expected = RuntimeException.class)
+    @Ignore
     public void shouldResolveUrlToDataModelVariables() {
         supplier("https://jsonplaceholder.typicode.com/posts/does-not-exist").get();
     }

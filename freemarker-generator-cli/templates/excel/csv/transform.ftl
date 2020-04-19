@@ -15,7 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign format = SystemTool.parameters["csv.format"]!"DEFAULT">
+<#assign format = CVS_IN_FORMAT!"DEFAULT">
 <#-- Parse the first data source & sheet of the Excel document -->
 <#assign workbook = ExcelTool.parse(DataSources.get(0))>
 <#assign sheet = ExcelTool.getSheets(workbook)[0]>

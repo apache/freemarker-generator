@@ -20,6 +20,7 @@ import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.freemarker.generator.base.uri.NamedUri;
 import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -28,18 +29,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Paths;
 
+import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
-import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_APPLICATION_XML;
+import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_APPLICATION_XML;
 import static org.junit.Assert.assertEquals;
 
 public class DataSourceFactoryTest {
 
+    private static final String PWD = Paths.get(".").toAbsolutePath().normalize().toString();
     private static final String ANY_TEXT = "Hello World";
     private static final String ANY_FILE_NAME = "pom.xml";
-    private static final String ANY_FILE_URI = "file:///pom.xml";
+    private static final String ANY_FILE_URI = format("file:///%s/pom.xml", PWD);
     private static final Charset ANY_CHAR_SET = UTF_8;
     private static final File ANY_FILE = new File(ANY_FILE_NAME);
     private static final String ANY_NAMED_URL_STRING = "content:www=https://www.google.com?foo=bar#contenttype=application/json";
@@ -105,6 +109,7 @@ public class DataSourceFactoryTest {
     }
 
     @Test
+    @Ignore
     public void shouldCreateDataSourceFromURL() throws IOException {
         final URL url = new URL("https://jsonplaceholder.typicode.com/posts/2");
         final DataSource dataSource = DataSourceFactory.fromUrl("jsonplaceholder.typicode.com", "default", url, null, null);
@@ -115,6 +120,7 @@ public class DataSourceFactoryTest {
     }
 
     @Test
+    @Ignore
     public void shouldCreateDataSourceFromNamedURL() {
         final NamedUri namedUri = NamedUriStringParser.parse(ANY_NAMED_URL_STRING);
         final DataSource dataSource = DataSourceFactory.fromNamedUri(namedUri);
@@ -160,5 +166,4 @@ public class DataSourceFactoryTest {
         assertEquals("env:///PWD", dataSource.getUri().toString());
         assertEquals("text/plain", dataSource.getContentType());
     }
-
 }

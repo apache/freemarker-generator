@@ -45,4 +45,15 @@ public class StringUtils {
         return null;
     }
 
+    public static int count(final String s, final char c) {
+        final char[] chars = s.toCharArray();
+        int count = 0;
+        for (final char aChar : chars) {
+            if (aChar == c) {
+                count++;
+            }
+        }
+        return count;
+    }
+
 }

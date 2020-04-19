@@ -81,6 +81,21 @@ public class PicocliTest {
         assertNull(main.sources);
     }
 
+    @Test
+    public void testSingleParameter() {
+        final Main main = parse("-t", TEMPLATE, "-P", "name:group=value");
+
+        assertEquals("value", main.parameters.get("name:group"));
+    }
+
+    @Test
+    public void testMultipleParameters() {
+        final Main main = parse("-t", TEMPLATE, "-P", "name1:group=value1", "-P", "name2:group=value2");
+
+        assertEquals("value1", main.parameters.get("name1:group"));
+        assertEquals("value2", main.parameters.get("name2:group"));
+    }
+
     private static Main parse(String... args) {
         final Main main = new Main();
         new CommandLine(main).parseArgs(args);

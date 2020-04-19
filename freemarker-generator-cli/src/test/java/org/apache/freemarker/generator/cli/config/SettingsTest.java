@@ -42,7 +42,7 @@ public class SettingsTest {
     private static final String ANY_OUTPUT_FILE = "outputFile";
     private static final List<String> ANY_SOURCES = singletonList("sources");
     private static final String ANY_TEMPLATE_NAME = "templateName";
-    private static final Map<String, String> ANY_USER_PARAMETERS = new HashMap<>();
+    private static final Map<String, Object> ANY_USER_PARAMETERS = new HashMap<>();
     private static final Properties ANY_SYSTEM_PROPERTIES = new Properties();
 
     @Test
@@ -60,14 +60,12 @@ public class SettingsTest {
         assertNotNull(settings.getParameters());
         assertNotNull(settings.getSytemProperties());
         assertTrue(settings.isReadFromStdin());
-        assertTrue(settings.isEnvironmentExposed());
         assertTrue(settings.isInteractiveTemplate());
         assertTrue(settings.isVerbose());
     }
 
     private SettingsBuilder allSettingsBuilder() {
         return Settings.builder()
-                .isEnvironmentExposed(true)
                 .isReadFromStdin(true)
                 .setArgs(ANY_ARGS)
                 .setConfiguration(ANY_CONFIGURATION)

@@ -45,6 +45,7 @@ import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model.DAT
 import static org.apache.freemarker.generator.cli.config.Suppliers.configurationSupplier;
 import static org.apache.freemarker.generator.cli.config.Suppliers.dataModelSupplier;
 import static org.apache.freemarker.generator.cli.config.Suppliers.dataSourcesSupplier;
+import static org.apache.freemarker.generator.cli.config.Suppliers.parameterSupplier;
 import static org.apache.freemarker.generator.cli.config.Suppliers.toolsSupplier;
 
 /**
@@ -58,21 +59,29 @@ public class FreeMarkerTask implements Callable<Integer> {
     private final Supplier<Map<String, Object>> toolsSupplier;
     private final Supplier<List<DataSource>> dataSourcesSupplier;
     private final Supplier<Map<String, Object>> dataModelsSupplier;
+    private final Supplier<Map<String, Object>> parameterModelSupplier;
     private final Supplier<Configuration> configurationSupplier;
 
     public FreeMarkerTask(Settings settings) {
-        this(settings, toolsSupplier(settings), dataSourcesSupplier(settings), dataModelSupplier(settings), configurationSupplier(settings));
+        this(settings,
+                toolsSupplier(settings),
+                dataSourcesSupplier(settings),
+                dataModelSupplier(settings),
+                parameterSupplier(settings),
+                configurationSupplier(settings));
     }
 
     public FreeMarkerTask(Settings settings,
                           Supplier<Map<String, Object>> toolsSupplier,
                           Supplier<List<DataSource>> dataSourcesSupplier,
                           Supplier<Map<String, Object>> dataModelsSupplier,
+                          Supplier<Map<String, Object>> parameterModelSupplier,
                           Supplier<Configuration> configurationSupplier) {
         this.settings = requireNonNull(settings);
         this.toolsSupplier = requireNonNull(toolsSupplier);
         this.dataSourcesSupplier = requireNonNull(dataSourcesSupplier);
         this.dataModelsSupplier = requireNonNull(dataModelsSupplier);
+        this.parameterModelSupplier = requireNonNull(parameterModelSupplier);
         this.configurationSupplier = requireNonNull(configurationSupplier);
     }
 
@@ -80,7 +89,7 @@ public class FreeMarkerTask implements Callable<Integer> {
     public Integer call() {
         final Template template = template(settings, configurationSupplier);
         try (Writer writer = settings.getWriter(); DataSources dataSources = dataSources(settings, dataSourcesSupplier)) {
-            final Map<String, Object> dataModel = dataModel(settings, dataSources, dataModelsSupplier, toolsSupplier);
+            final Map<String, Object> dataModel = dataModel(dataSources, parameterModelSupplier, dataModelsSupplier, toolsSupplier);
             template.process(dataModel, writer);
             return SUCCESS;
         } catch (RuntimeException e) {
@@ -131,24 +140,15 @@ public class FreeMarkerTask implements Callable<Integer> {
     }
 
     private static Map<String, Object> dataModel(
-            Settings settings,
             DataSources dataSources,
+            Supplier<Map<String, Object>> parameterModelSupplier,
             Supplier<Map<String, Object>> dataModelsSupplier,
             Supplier<Map<String, Object>> tools) {
         final Map<String, Object> result = new HashMap<>();
-
         result.putAll(dataModelsSupplier.get());
         result.put(DATASOURCES, dataSources);
-
-        // TODO rework  based on FREEMARKER-140
-        if (settings.isEnvironmentExposed()) {
-            // add all system & user-supplied properties as top-level entries
-            result.putAll(System.getenv());
-            result.putAll(settings.getParameters());
-        }
-
+        result.putAll(parameterModelSupplier.get());
         result.putAll(tools.get());
-
         return result;
     }
 

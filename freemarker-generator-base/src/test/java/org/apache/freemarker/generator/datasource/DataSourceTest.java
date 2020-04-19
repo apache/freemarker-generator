@@ -17,9 +17,9 @@
 package org.apache.freemarker.generator.datasource;
 
 import org.apache.commons.io.LineIterator;
-import org.apache.freemarker.generator.base.activation.Mimetypes;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
+import org.apache.freemarker.generator.base.mime.Mimetypes;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -31,7 +31,7 @@ import java.util.Iterator;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
-import static org.apache.freemarker.generator.base.activation.Mimetypes.MIME_APPLICATION_OCTET_STREAM;
+import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_APPLICATION_OCTET_STREAM;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;

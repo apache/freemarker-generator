@@ -42,7 +42,7 @@ public class NamedUriStringParser {
     private static final String GROUP = "group";
     private static final String URI = "uri";
 
-    private static final Pattern NAMED_URI_REGEXP = compile("^(?<name>[a-zA-Z0-9-_]*):?(?<group>[a-zA-Z0-9-_]*)=(?<uri>.*)");
+    private static final Pattern NAMED_URI_REGEXP = compile("^(?<name>[a-zA-Z0-9-_$@]*):?(?<group>[a-zA-Z0-9-_$@]*)=(?<uri>.*)");
 
     public static NamedUri parse(String value) {
         Validate.notEmpty(value, "Named URI is empty");
@@ -52,7 +52,7 @@ public class NamedUriStringParser {
         if (matcher.matches()) {
             final String name = matcher.group(NAME);
             final String group = matcher.group(GROUP);
-            final URI uri = uri(matcher.group(URI));
+            final URI uri = UriUtils.toURI(matcher.group(URI));
             return new NamedUri(name, group, uri, parameters(uri));
         } else {
             final URI uri = UriUtils.toURI(value);
@@ -62,13 +62,5 @@ public class NamedUriStringParser {
 
     private static Map<String, String> parameters(URI uri) {
         return UriFragmentParser.parse(uri.getFragment());
-    }
-
-    private static URI uri(String str) {
-        if (!str.contains("://")) {
-            return UriUtils.toURI("file:///" + str);
-        } else {
-            return UriUtils.toURI(str);
-        }
     }
 }

@@ -99,7 +99,7 @@ public class ExamplesTest extends AbstractMainTest {
 
     @Test
     public void shouldRunWithExposedEnvironmentVariableExamples() throws IOException {
-        assertValid(execute("-b ./src/test -E -t templates/environment.ftl"));
+        assertValid(execute("-b ./src/test -m env:/// -t templates/environment.ftl"));
     }
 
     @Test

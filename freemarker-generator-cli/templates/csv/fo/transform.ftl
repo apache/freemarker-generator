@@ -15,7 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign csvFormatName = SystemTool.parameters["csv.format"]!"DEFAULT">
+<#assign csvFormatName = CVS_IN_FORMAT!"DEFAULT">
 <#assign cvsFormat = CSVTool.formats[csvFormatName].withHeader()>
 <#assign csvParser = CSVTool.parse(DataSources.get(0), cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderMap()?keys>

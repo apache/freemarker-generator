@@ -39,30 +39,29 @@ FreeMarker CLI Tools
 </#if>
 </#list>
 
+FreeMarker CLI Data Model
+---------------------------------------------------------------------------
+<#list .data_model?keys?sort as key>
+- ${key}<#lt>
+</#list>
+
+<#if DataSources.list?has_content>
 FreeMarker CLI DataSources
 ------------------------------------------------------------------------------
 <#list DataSources.list as dataSource>
-[#${dataSource?counter}], name=${dataSource.name}, group=${dataSource.group}, contentType=${dataSource.contentType}, charset=${dataSource.charset}, length=${dataSource.length} Bytes
-URI : ${dataSource.uri}
+    [#${dataSource?counter}], name=${dataSource.name}, group=${dataSource.group}, contentType=${dataSource.contentType}, charset=${dataSource.charset}, length=${dataSource.length} Bytes
+    URI : ${dataSource.uri}
 </#list>
+</#if>
 
-User Supplied Parameters
+<#if SystemTool.parameters?has_content>
+FreeMarker CLI Parameters
 ------------------------------------------------------------------------------
-<#list SystemTool.parameters as name,value>
-- ${name} ==> ${value}
+<#list SystemTool.parameters as key,value>
+<#if value?is_hash>
+- ${key} ==> { <#list value as name,value>${name}=${value} </#list>}
+<#else>
+- ${key} ==> ${value}
+</#if>
 </#list>
-
-User Supplied System Properties
-------------------------------------------------------------------------------
-<#list SystemTool.userSystemProperties as name,value>
-- ${name} ==> ${value}
-</#list>
-
-SystemTool
-------------------------------------------------------------------------------
-Command line         : ${SystemTool.getCommandLineArgs()?join(", ")}
-Host Name            : ${SystemTool.getHostName()}
-Java Home            : ${SystemTool.getEnv("JAVA_HOME", "N.A.")}
-User Name            : ${SystemTool.getSystemProperty("user.name", "N.A.")}
-Timestamp            : ${SystemTool.currentTimeMillis}
-Writer               : ${SystemTool.writer.class.name}
+</#if>
