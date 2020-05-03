@@ -24,42 +24,43 @@ import static org.junit.Assert.assertNull;
 
 public class PicocliTest {
 
-    private static final String TEMPLATE = "template.ftl";
+    private static final String ANY_TEMPLATE = "any.ftl";
+    private static final String OTHER_TEMPLATE = "other.ftl";
+    private static final String INTERACTIVE_TEMPLATE = "interactive-template";
     private static final String ANY_FILE = "users.csv";
-    private static final String ANY_NAMED_FILE = "users=users.csv";
     private static final String OTHER_FILE = "transctions.csv";
     private static final String ANY_FILE_URI = "file:///users.csv";
     private static final String OTHER_FILE_URI = "file:///transctions.csv";
 
     @Test
-    public void testSinglePositionalParameter() {
-        assertEquals(ANY_FILE_URI, parse("-t", TEMPLATE, ANY_FILE_URI).sources.get(0));
-        assertNull(ANY_FILE, parse("-t", TEMPLATE, ANY_FILE_URI).dataSources);
+    public void shouldParseSinglePositionalParameter() {
+        assertEquals(ANY_FILE_URI, parse("-t", ANY_TEMPLATE, ANY_FILE_URI).sources.get(0));
+        assertNull(ANY_FILE, parse("-t", ANY_TEMPLATE, ANY_FILE_URI).dataSources);
     }
 
     @Test
-    public void testMultiplePositionalParameter() {
-        assertEquals(ANY_FILE, parse("-t", TEMPLATE, ANY_FILE, OTHER_FILE).sources.get(0));
-        assertEquals(OTHER_FILE, parse("-t", TEMPLATE, ANY_FILE, OTHER_FILE).sources.get(1));
+    public void shouldParseMultiplePositionalParameter() {
+        assertEquals(ANY_FILE, parse("-t", ANY_TEMPLATE, ANY_FILE, OTHER_FILE).sources.get(0));
+        assertEquals(OTHER_FILE, parse("-t", ANY_TEMPLATE, ANY_FILE, OTHER_FILE).sources.get(1));
 
-        assertEquals(ANY_FILE, parse("-t", TEMPLATE, ANY_FILE, OTHER_FILE_URI).sources.get(0));
-        assertEquals(OTHER_FILE_URI, parse("-t", TEMPLATE, ANY_FILE, OTHER_FILE_URI).sources.get(1));
+        assertEquals(ANY_FILE, parse("-t", ANY_TEMPLATE, ANY_FILE, OTHER_FILE_URI).sources.get(0));
+        assertEquals(OTHER_FILE_URI, parse("-t", ANY_TEMPLATE, ANY_FILE, OTHER_FILE_URI).sources.get(1));
 
-        assertEquals(ANY_FILE_URI, parse("-t", TEMPLATE, ANY_FILE_URI, OTHER_FILE_URI).sources.get(0));
-        assertEquals(OTHER_FILE_URI, parse("-t", TEMPLATE, ANY_FILE_URI, OTHER_FILE_URI).sources.get(1));
+        assertEquals(ANY_FILE_URI, parse("-t", ANY_TEMPLATE, ANY_FILE_URI, OTHER_FILE_URI).sources.get(0));
+        assertEquals(OTHER_FILE_URI, parse("-t", ANY_TEMPLATE, ANY_FILE_URI, OTHER_FILE_URI).sources.get(1));
     }
 
     @Test
-    public void testSingleNamedDataSource() {
-        assertEquals(ANY_FILE, parse("-t", TEMPLATE, ANY_FILE).sources.get(0));
-        assertEquals(ANY_FILE, parse("-t", TEMPLATE, "-s", ANY_FILE).dataSources.get(0));
-        assertEquals(ANY_FILE, parse("-t", TEMPLATE, "--data-source", ANY_FILE).dataSources.get(0));
-        assertEquals(ANY_FILE_URI, parse("-t", TEMPLATE, "--data-source", ANY_FILE_URI).dataSources.get(0));
+    public void shouldParseSingleNamedDataSource() {
+        assertEquals(ANY_FILE, parse("-t", ANY_TEMPLATE, ANY_FILE).sources.get(0));
+        assertEquals(ANY_FILE, parse("-t", ANY_TEMPLATE, "-s", ANY_FILE).dataSources.get(0));
+        assertEquals(ANY_FILE, parse("-t", ANY_TEMPLATE, "--data-source", ANY_FILE).dataSources.get(0));
+        assertEquals(ANY_FILE_URI, parse("-t", ANY_TEMPLATE, "--data-source", ANY_FILE_URI).dataSources.get(0));
     }
 
     @Test
-    public void testMultipleNamedDataSource() {
-        final Main main = parse("-t", TEMPLATE, "-s", ANY_FILE, "--data-source", OTHER_FILE_URI);
+    public void shouldParseMultipleNamedDataSource() {
+        final Main main = parse("-t", ANY_TEMPLATE, "-s", ANY_FILE, "--data-source", OTHER_FILE_URI);
 
         assertEquals(ANY_FILE, main.dataSources.get(0));
         assertEquals(OTHER_FILE_URI, main.dataSources.get(1));
@@ -67,14 +68,14 @@ public class PicocliTest {
     }
 
     @Test
-    public void testSingleDataModel() {
-        assertEquals(ANY_FILE, parse("-t", TEMPLATE, "-m", ANY_FILE).dataModels.get(0));
-        assertEquals(ANY_FILE, parse("-t", TEMPLATE, "--data-model", ANY_FILE).dataModels.get(0));
+    public void shouldParseSingleDataModel() {
+        assertEquals(ANY_FILE, parse("-t", ANY_TEMPLATE, "-m", ANY_FILE).dataModels.get(0));
+        assertEquals(ANY_FILE, parse("-t", ANY_TEMPLATE, "--data-model", ANY_FILE).dataModels.get(0));
     }
 
     @Test
-    public void testMultipleDataModels() {
-        final Main main = parse("-t", TEMPLATE, "-m", ANY_FILE, "--data-model", OTHER_FILE_URI);
+    public void shouldParseMultipleDataModels() {
+        final Main main = parse("-t", ANY_TEMPLATE, "-m", ANY_FILE, "--data-model", OTHER_FILE_URI);
 
         assertEquals(ANY_FILE, main.dataModels.get(0));
         assertEquals(OTHER_FILE_URI, main.dataModels.get(1));
@@ -82,18 +83,32 @@ public class PicocliTest {
     }
 
     @Test
-    public void testSingleParameter() {
-        final Main main = parse("-t", TEMPLATE, "-P", "name:group=value");
+    public void shouldParseSingleParameter() {
+        final Main main = parse("-t", ANY_TEMPLATE, "-P", "name:group=value");
 
         assertEquals("value", main.parameters.get("name:group"));
     }
 
     @Test
-    public void testMultipleParameters() {
-        final Main main = parse("-t", TEMPLATE, "-P", "name1:group=value1", "-P", "name2:group=value2");
+    public void shouldParseMultipleParameters() {
+        final Main main = parse("-t", ANY_TEMPLATE, "-P", "name1:group=value1", "-P", "name2:group=value2");
 
         assertEquals("value1", main.parameters.get("name1:group"));
         assertEquals("value2", main.parameters.get("name2:group"));
+    }
+
+    @Test
+    public void shouldParseSingleTemplate() {
+        final Main main = parse("-t", ANY_TEMPLATE);
+
+        assertEquals(ANY_TEMPLATE, main.templateSourceOptions.template);
+    }
+
+    @Test
+    public void shouldParseInteractiveTemplate() {
+        final Main main = parse("-i", INTERACTIVE_TEMPLATE);
+
+        assertEquals(INTERACTIVE_TEMPLATE, main.templateSourceOptions.interactiveTemplate);
     }
 
     private static Main parse(String... args) {

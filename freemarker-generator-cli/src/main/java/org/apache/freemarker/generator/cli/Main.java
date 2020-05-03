@@ -60,12 +60,12 @@ public class Main implements Callable<Integer> {
     @ArgGroup(multiplicity = "1")
     TemplateSourceOptions templateSourceOptions;
 
-    static final class TemplateSourceOptions {
+    public static final class TemplateSourceOptions {
         @Option(names = { "-t", "--template" }, description = "FreeMarker template to render")
-        private String template;
+        public String template;
 
         @Option(names = { "-i", "--interactive" }, description = "Interactive FreeMarker template")
-        private String interactiveTemplate;
+        public String interactiveTemplate;
     }
 
     @Option(names = { "-b", "--basedir" }, description = "Optional template base directory")

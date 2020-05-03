@@ -1116,9 +1116,11 @@ Sometimes we simply need to transform a JSON into an equivalent YAML or the othe
 ```
 > ./bin/freemarker-cli -t templates/yaml/json/transform.ftl site/sample/yaml/swagger-spec.yaml 
 > ./bin/freemarker-cli -i '${GsonTool.toJson(YamlTool.parse(DataSources.get(0)))}' site/sample/yaml/swagger-spec.yaml
+> ./bin/freemarker-cli -i '${GsonTool.toJson(yaml)}' -m yaml=site/sample/yaml/swagger-spec.yaml
 
 > ./bin/freemarker-cli -t templates/json/yaml/transform.ftl site/sample/json/swagger-spec.json
 > ./bin/freemarker-cli -i '${YamlTool.toYaml(GsonTool.parse(DataSources.get(0)))}' site/sample/json/swagger-spec.json
+> ./bin/freemarker-cli -i '${YamlTool.toYaml(json)}' -m json=site/sample/json/swagger-spec.json
 ```
 
 ## 6.16 Using Advanced FreeMarker Features
