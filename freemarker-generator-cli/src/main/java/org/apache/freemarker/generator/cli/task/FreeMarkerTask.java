@@ -42,6 +42,7 @@ import static java.util.Objects.requireNonNull;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.Location.STDIN;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model.DATASOURCES;
+import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_TEXT_PLAIN;
 import static org.apache.freemarker.generator.cli.config.Suppliers.configurationSupplier;
 import static org.apache.freemarker.generator.cli.config.Suppliers.dataModelSupplier;
 import static org.apache.freemarker.generator.cli.config.Suppliers.dataSourcesSupplier;
@@ -106,7 +107,7 @@ public class FreeMarkerTask implements Callable<Integer> {
         // this allows easy sequence slicing in FreeMarker.
         if (settings.isReadFromStdin()) {
             final URI uri = UriUtils.toURI(Location.SYSTEM, "in");
-            dataSources.add(0, DataSourceFactory.fromInputStream(STDIN, DEFAULT_GROUP, uri, System.in, "text/plain", UTF_8));
+            dataSources.add(0, DataSourceFactory.fromInputStream(STDIN, DEFAULT_GROUP, uri, System.in, MIME_TEXT_PLAIN, UTF_8));
         }
 
         return new DataSources(dataSources);

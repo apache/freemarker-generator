@@ -16,7 +16,6 @@
  */
 package org.apache.freemarker.generator.cli;
 
-import org.apache.freemarker.generator.base.FreeMarkerConstants.GeneratorMode;
 import org.apache.freemarker.generator.base.parameter.ParameterModelSupplier;
 import org.apache.freemarker.generator.base.util.ClosableUtils;
 import org.apache.freemarker.generator.base.util.StringUtils;
@@ -103,9 +102,6 @@ public class Main implements Callable<Integer> {
 
     @Option(names = { "--output-encoding" }, description = "Encoding of output, e.g. UTF-8", defaultValue = "UTF-8")
     String outputEncoding;
-
-    @Option(names = { "--mode" }, description = "[template|datasource]", defaultValue = "TEMPLATE")
-    GeneratorMode mode;
 
     @Option(names = { "--stdin" }, description = "Read data  source from stdin")
     boolean readFromStdin;
@@ -255,18 +251,10 @@ public class Main implements Callable<Integer> {
      * @return List of data sources
      */
     private List<String> getCombindedDataSources() {
-        if (isTemplateDrivenGeneration()) {
-            return Stream.of(dataSources, sources)
-                    .filter(Objects::nonNull)
-                    .flatMap(Collection::stream)
-                    .collect(Collectors.toList());
-        } else {
-            throw new IllegalArgumentException("Not implemented yet");
-        }
-    }
-
-    private boolean isTemplateDrivenGeneration() {
-        return mode == GeneratorMode.TEMPLATE;
+        return Stream.of(dataSources, sources)
+                .filter(Objects::nonNull)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
     }
 
     private static List<File> getTemplateDirectories(String baseDir) {

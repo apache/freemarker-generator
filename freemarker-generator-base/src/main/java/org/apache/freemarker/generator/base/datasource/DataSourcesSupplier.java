@@ -105,7 +105,7 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
         final String path = namedUri.getFile().getPath();
         final String group = namedUri.getGroupOrElse(DEFAULT_GROUP);
         final Charset currCharset = getCharsetOrElse(namedUri, charset);
-        return fileResolver(path, include, exclude).get().stream()
+        return fileSupplier(path, include, exclude).get().stream()
                 .map(file -> DataSourceFactory.fromFile(getDataSourceName(namedUri, file), group, file, currCharset))
                 .collect(toList());
     }
@@ -115,7 +115,7 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
         return DataSourceFactory.fromNamedUri(namedUri);
     }
 
-    private static RecursiveFileSupplier fileResolver(String source, String include, String exclude) {
+    private static RecursiveFileSupplier fileSupplier(String source, String include, String exclude) {
         return new RecursiveFileSupplier(singletonList(source), singletonList(include), singletonList(exclude));
     }
 

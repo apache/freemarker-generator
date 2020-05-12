@@ -49,7 +49,7 @@ public class Settings {
     /** Command line arguments */
     private final List<String> args;
 
-    /** List of FreeMarker template directories */
+    /** List of FreeMarker template directories to be passed to FreeMarker <code>TemplateLoader</code> */
     private final List<File> templateDirectories;
 
     /** Name of the template to be loaded and rendered */
