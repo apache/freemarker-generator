@@ -35,7 +35,7 @@ public class RecursiveFileResolverTest {
 
     @Test
     public void shouldResolveAllFilesOfDirectory() {
-        assertEquals(4, fileResolver(ANY_DIRECTORY, null, null).get().size());
+        assertEquals(5, fileResolver(ANY_DIRECTORY, null, null).get().size());
         assertTrue(fileResolver(ANY_DIRECTORY, UNKNOWN_FILE_NAME, null).get().isEmpty());
     }
 
@@ -77,9 +77,10 @@ public class RecursiveFileResolverTest {
     public void shouldExcludeFiles() {
         final List<File> files = fileResolver(ANY_DIRECTORY, null, "*.csv").get();
 
-        assertEquals(2, files.size());
+        assertEquals(3, files.size());
         assertEquals("file_01.txt", files.get(0).getName());
-        assertEquals("test.properties", files.get(1).getName());
+        assertEquals("nginx.env", files.get(1).getName());
+        assertEquals("test.properties", files.get(2).getName());
     }
 
     @Test
