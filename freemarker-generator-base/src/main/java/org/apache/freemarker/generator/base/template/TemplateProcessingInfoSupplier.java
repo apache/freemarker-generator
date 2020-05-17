@@ -30,11 +30,19 @@ public class TemplateProcessingInfoSupplier implements Supplier<List<TemplatePro
     /** Optional user-supplied writer */
     private final Writer writer;
 
-    public TemplateProcessingInfoSupplier(Collection<String> sources, String include, String exclude, File out, Writer writer) {
+    public TemplateProcessingInfoSupplier(Collection<String> sources, String include, String exclude, File out) {
         this.sources = new ArrayList<>(sources);
         this.include = include;
         this.exclude = exclude;
         this.out = out;
+        this.writer = null;
+    }
+
+    public TemplateProcessingInfoSupplier(Collection<String> sources, String include, String exclude, Writer writer) {
+        this.sources = new ArrayList<>(sources);
+        this.include = include;
+        this.exclude = exclude;
+        this.out = null;
         this.writer = writer;
     }
 

@@ -21,7 +21,6 @@ import org.apache.freemarker.generator.base.template.TemplateProcessingInfoSuppl
 import org.junit.Test;
 
 import java.io.File;
-import java.io.StringWriter;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,19 +29,17 @@ import static org.junit.Assert.assertNotNull;
 
 public class TemplateProcessingInfoSupplierTest {
 
+    private static final File ROOT_DIR = new File("./target/out");
     private static final String ANY_TEMPLATE_FILE_NAME = "src/test/template/application.properties";
     private static final String ANY_TEMPLATE_PATH = "template/info.ftl";
     private static final String ANY_TEMPLATE_DIRECTORY_NAME = "src/test/template";
 
+    private static final String NO_INCLUDE = null;
+    private static final String NO_EXCLUDE = null;
+
     @Test
     public void shouldCreateFromTemplateFile() {
-        final TemplateProcessingInfoSupplier supplier = new TemplateProcessingInfoSupplier(
-                Collections.singleton(ANY_TEMPLATE_FILE_NAME),
-                null,
-                null,
-                null,
-                new StringWriter(1024));
-
+        final TemplateProcessingInfoSupplier supplier = supplier(ANY_TEMPLATE_FILE_NAME);
 
         final List<TemplateProcessingInfo> templateProcessingInfos = supplier.get();
 
@@ -52,13 +49,7 @@ public class TemplateProcessingInfoSupplierTest {
 
     @Test
     public void shouldCreateFromTemplatePath() {
-        final TemplateProcessingInfoSupplier supplier = new TemplateProcessingInfoSupplier(
-                Collections.singleton(ANY_TEMPLATE_PATH),
-                null,
-                null,
-                null,
-                new StringWriter(1024));
-
+        final TemplateProcessingInfoSupplier supplier = supplier(ANY_TEMPLATE_PATH);
 
         final List<TemplateProcessingInfo> templateProcessingInfos = supplier.get();
 
@@ -68,13 +59,7 @@ public class TemplateProcessingInfoSupplierTest {
 
     @Test
     public void shouldCreateFromTemplateDirectory() {
-        final TemplateProcessingInfoSupplier supplier = new TemplateProcessingInfoSupplier(
-                Collections.singleton(ANY_TEMPLATE_DIRECTORY_NAME),
-                null,
-                null,
-                new File("."),
-                null);
-
+        final TemplateProcessingInfoSupplier supplier = supplier(ANY_TEMPLATE_DIRECTORY_NAME);
 
         final List<TemplateProcessingInfo> templateProcessingInfos = supplier.get();
 
@@ -82,4 +67,11 @@ public class TemplateProcessingInfoSupplierTest {
         assertEquals(2, templateProcessingInfos.size());
     }
 
+    private TemplateProcessingInfoSupplier supplier(String source) {
+        return new TemplateProcessingInfoSupplier(
+                Collections.singleton(source),
+                NO_INCLUDE,
+                NO_EXCLUDE,
+                ROOT_DIR);
+    }
 }

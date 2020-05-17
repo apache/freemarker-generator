@@ -19,6 +19,7 @@ package org.apache.freemarker.generator.template;
 import org.apache.freemarker.generator.base.template.TemplateSource;
 import org.apache.freemarker.generator.base.template.TemplateSource.Origin;
 import org.apache.freemarker.generator.base.template.TemplateSourceFactory;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -65,7 +66,7 @@ public class TemplateSourceFactoryTest {
     }
 
     @Test
-    // @Ignore("Requires internet access")
+    @Ignore("Requires internet access")
     public void shouldCreateFromUrl() {
         final TemplateSource templateSource = TemplateSourceFactory.create(ANY_URL);
 
@@ -76,7 +77,7 @@ public class TemplateSourceFactoryTest {
     }
 
     @Test
-    // @Ignore("Requires internet access")
+    @Ignore("Requires internet access")
     public void shouldCreateFromNamedUri() {
         final TemplateSource templateSource = TemplateSourceFactory.create(ANY_NAMED_URI);
 
