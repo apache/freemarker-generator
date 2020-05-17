@@ -52,8 +52,8 @@ public class Suppliers {
 
     public static DataSourcesSupplier dataSourcesSupplier(Settings settings) {
         return new DataSourcesSupplier(settings.getDataSources(),
-                settings.getInclude(),
-                settings.getExclude(),
+                settings.getDataSourceIncludePattern(),
+                settings.getDataSourceExcludePattern(),
                 settings.getInputEncoding());
     }
 

@@ -61,7 +61,7 @@ public class Main implements Callable<Integer> {
 
     public static final class TemplateSourceOptions {
         @Option(names = { "-t", "--template" }, description = "FreeMarker template to render")
-        public String template;
+        public List<String> templates;
 
         @Option(names = { "-i", "--interactive" }, description = "Interactive FreeMarker template")
         public String interactiveTemplate;
@@ -82,7 +82,7 @@ public class Main implements Callable<Integer> {
     @Option(names = { "-m", "--data-model" }, description = "Data model used for rendering")
     List<String> dataModels;
 
-    @Option(names = { "-o", "--output" }, description = "Output file")
+    @Option(names = { "-o", "--output" }, description = "Output file or directory")
     String outputFile;
 
     @Option(names = { "-P", "--param" }, description = "Set parameter")
@@ -94,10 +94,10 @@ public class Main implements Callable<Integer> {
     @Option(names = { "--config" }, defaultValue = FREEMARKER_CLI_PROPERTY_FILE, description = "FreeMarker CLI configuration file")
     String configFile;
 
-    @Option(names = { "--include" }, description = "File pattern for data source input directory")
+    @Option(names = { "--data-source-include" }, description = "File pattern for data source input directory")
     String include;
 
-    @Option(names = { "--exclude" }, description = "File pattern for data source input directory")
+    @Option(names = { "--data-source-exclude" }, description = "File pattern for data source input directory")
     String exclude;
 
     @Option(names = { "--output-encoding" }, description = "Encoding of output, e.g. UTF-8", defaultValue = "UTF-8")
@@ -118,7 +118,7 @@ public class Main implements Callable<Integer> {
     /** User-supplied writer (used mainly for unit testing) */
     Writer userSuppliedWriter;
 
-    /** Injected by Picolci */
+    /** Injected by Picocli */
     @Spec private CommandSpec spec;
 
     Main() {
@@ -190,14 +190,6 @@ public class Main implements Callable<Integer> {
                 }
             }
         }
-
-        // "-t" or "--template" parameter shall not contain wildcard characters
-        if (StringUtils.isNotEmpty(templateSourceOptions.template)) {
-            final String source = templateSourceOptions.template;
-            if (isFileSource(source) && (source.contains("*") || source.contains("?"))) {
-                throw new ParameterException(spec.commandLine(), "No wildcards supported for template: " + source);
-            }
-        }
     }
 
     private Settings settings(Properties configuration, List<File> templateDirectories) {
@@ -207,31 +199,31 @@ public class Main implements Callable<Integer> {
                 .isReadFromStdin(readFromStdin)
                 .setArgs(args)
                 .setConfiguration(configuration)
-                .setInclude(include)
-                .setExclude(exclude)
+                .setDataSourceIncludePattern(include)
+                .setDataSourceExcludePattern(exclude)
                 .setInputEncoding(inputEncoding)
                 .setInteractiveTemplate(templateSourceOptions.interactiveTemplate)
                 .setLocale(locale)
                 .setOutputEncoding(outputEncoding)
                 .setOutputFile(outputFile)
                 .setParameters(parameterModelSupplier.get())
-                .setDataSources(getCombindedDataSources())
+                .setDataSources(getCombinedDataSources())
                 .setDataModels(dataModels)
                 .setSystemProperties(systemProperties != null ? systemProperties : new Properties())
                 .setTemplateDirectories(templateDirectories)
-                .setTemplateName(templateSourceOptions.template)
+                .setTemplateNames(templateSourceOptions.templates)
                 .setWriter(writer(outputFile, outputEncoding))
                 .build();
     }
 
-    private Writer writer(String outputFile, String ouputEncoding) {
+    private Writer writer(String outputFile, String outputEncoding) {
         try {
             if (userSuppliedWriter != null) {
                 return userSuppliedWriter;
             } else if (!StringUtils.isEmpty(outputFile)) {
                 return new BufferedWriter(new FileWriter(outputFile));
             } else {
-                return new BufferedWriter(new OutputStreamWriter(System.out, ouputEncoding));
+                return new BufferedWriter(new OutputStreamWriter(System.out, outputEncoding));
             }
         } catch (IOException e) {
             throw new RuntimeException("Unable to create writer", e);
@@ -250,7 +242,7 @@ public class Main implements Callable<Integer> {
      *
      * @return List of data sources
      */
-    private List<String> getCombindedDataSources() {
+    private List<String> getCombinedDataSources() {
         return Stream.of(dataSources, sources)
                 .filter(Objects::nonNull)
                 .flatMap(Collection::stream)
