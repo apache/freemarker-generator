@@ -1,6 +1,7 @@
 package org.apache.freemarker.generator.base.template;
 
 import org.apache.freemarker.generator.base.util.CloseableReaper;
+import org.apache.freemarker.generator.base.util.Validate;
 
 import java.io.Closeable;
 import java.io.File;
@@ -67,6 +68,8 @@ public class TemplateOutput implements Closeable {
     }
 
     private FileWriter fileWriter() {
+        Validate.notNull(file, "Output file is null");
+
         try {
             return closables.add(new FileWriter(file));
         } catch (IOException e) {
