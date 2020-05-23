@@ -2,7 +2,10 @@ package org.apache.freemarker.generator.base.template;
 
 import static java.util.Objects.requireNonNull;
 
-public class TemplateProcessingInfo {
+/**
+ * Information about loading templates and writing their output.
+ */
+public class TemplateTransformation {
 
     /** Source of template */
     private final TemplateSource templateSource;
@@ -10,7 +13,7 @@ public class TemplateProcessingInfo {
     /** Output of template */
     private final TemplateOutput templateOutput;
 
-    public TemplateProcessingInfo(TemplateSource templateSource, TemplateOutput templateOutput) {
+    public TemplateTransformation(TemplateSource templateSource, TemplateOutput templateOutput) {
         this.templateSource = requireNonNull(templateSource);
         this.templateOutput = requireNonNull(templateOutput);
     }

@@ -1,37 +1,34 @@
 package org.apache.freemarker.generator.base.template;
 
-import org.apache.freemarker.generator.base.util.CloseableReaper;
 import org.apache.freemarker.generator.base.util.Validate;
 
-import java.io.Closeable;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * Information about where to write the ouput of a template. Initially we
  * wanted to use a <code>FileWriter</code> but it requires actually an
  * existing output file (otherwise a FileNotFound exception is thrown).
+ *
+ * TODO what to do with created FileWriter?
  */
-public class TemplateOutput implements Closeable {
+public class TemplateOutput {
 
     private final Writer writer;
     private final File file;
 
-    /** Collect all closables handed out to the caller to be closed when the instance is closed */
-    private final CloseableReaper closables;
-
     private TemplateOutput(File file) {
         this.writer = null;
-        this.file = file;
-        this.closables = new CloseableReaper();
+        this.file = requireNonNull(file);
     }
 
     private TemplateOutput(Writer writer) {
-        this.writer = writer;
+        this.writer = requireNonNull(writer);
         this.file = null;
-        this.closables = new CloseableReaper();
     }
 
     public static TemplateOutput fromWriter(Writer writer) {
@@ -62,16 +59,11 @@ public class TemplateOutput implements Closeable {
         return writer != null ? writer : fileWriter();
     }
 
-    @Override
-    public void close() throws IOException {
-        closables.close();
-    }
-
     private FileWriter fileWriter() {
         Validate.notNull(file, "Output file is null");
 
         try {
-            return closables.add(new FileWriter(file));
+            return new FileWriter(file);
         } catch (IOException e) {
             throw new RuntimeException("Failed to create FileWriter: " + file.getAbsolutePath(), e);
         }

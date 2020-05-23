@@ -37,7 +37,7 @@ public class TemplateSource {
         this.origin = Origin.CODE;
         this.code = code;
         this.path = null;
-        this.encoding = null;
+        this.encoding = StandardCharsets.UTF_8;
     }
 
     private TemplateSource(String name, String path, Charset encoding) {
@@ -79,6 +79,10 @@ public class TemplateSource {
 
     public String getName() {
         return name;
+    }
+
+    public Charset getEncoding() {
+        return encoding;
     }
 
     @Override
