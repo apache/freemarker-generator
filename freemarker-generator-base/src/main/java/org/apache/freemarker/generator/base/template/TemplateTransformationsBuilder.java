@@ -18,7 +18,13 @@ import java.util.List;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.singletonList;
 
+/**
+ * Provide the logic to define multiple transformations from the user input.
+ */
 public class TemplateTransformationsBuilder {
+
+    /** Interactive template */
+    private TemplateSource template;
 
     /** List of templates and/or template directories to be rendered */
     private final List<String> sources;
@@ -48,15 +54,29 @@ public class TemplateTransformationsBuilder {
     }
 
     public TemplateTransformations build() {
+        validate();
+
         final List<TemplateTransformation> result = new ArrayList<>();
 
-        for (int i = 0; i < sources.size(); i++) {
-            final String source = sources.get(i);
-            final File output = i < outputs.size() ? outputs.get(i) : null;
-            result.addAll(resolve(source, output));
+        if (template != null) {
+            final File outputFile = outputs.isEmpty() ? null : outputs.get(0);
+            result.add(resolveInteractiveTemplate(outputFile));
+        } else {
+            for (int i = 0; i < sources.size(); i++) {
+                final String source = sources.get(i);
+                final File output = i < outputs.size() ? outputs.get(i) : null;
+                result.addAll(resolve(source, output));
+            }
         }
 
         return new TemplateTransformations(result);
+    }
+
+    public TemplateTransformationsBuilder setTemplate(String name, String code) {
+        if (StringUtils.isNotEmpty(code)) {
+            this.template = TemplateSource.fromCode(name, code);
+        }
+        return this;
     }
 
     public TemplateTransformationsBuilder addSource(String source) {
@@ -67,9 +87,7 @@ public class TemplateTransformationsBuilder {
     }
 
     public TemplateTransformationsBuilder addSources(Collection<String> sources) {
-        if (sources != null) {
-            this.sources.addAll(sources);
-        }
+        sources.forEach(this::addSource);
         return this;
     }
 
@@ -108,6 +126,13 @@ public class TemplateTransformationsBuilder {
         return this;
     }
 
+    public TemplateTransformationsBuilder addOutput(File output) {
+        if (output != null) {
+            this.outputs.add(output);
+        }
+        return this;
+    }
+
     public TemplateTransformationsBuilder addOutputs(Collection<String> outputs) {
         if (outputs != null) {
             outputs.forEach(this::addOutput);
@@ -125,6 +150,11 @@ public class TemplateTransformationsBuilder {
         return this;
     }
 
+    private void validate() {
+        Validate.isTrue(template != null || !sources.isEmpty(), "No template was provided");
+        Validate.isTrue(template == null || sources.isEmpty(), "Interactive template does not support multiple sources");
+    }
+
     /**
      * Resolve a <code>source</code> to a list of <code>TemplateTransformation</code>.
      *
@@ -140,7 +170,7 @@ public class TemplateTransformationsBuilder {
         } else if (isTemplatePath(source)) {
             return resolveTemplatePath(source, output);
         } else {
-            throw new RuntimeException("Don't know how to resolve: " + source);
+            return resolveTemplateCode(source, output);
         }
     }
 
@@ -169,6 +199,17 @@ public class TemplateTransformationsBuilder {
 
     private List<TemplateTransformation> resolveTemplatePath(String source, File out) {
         final TemplateSource templateSource = templateSource(source);
+        final TemplateOutput templateOutput = templateOutput(out);
+        return singletonList(new TemplateTransformation(templateSource, templateOutput));
+    }
+
+    private TemplateTransformation resolveInteractiveTemplate(File out) {
+        final TemplateOutput templateOutput = templateOutput(out);
+        return new TemplateTransformation(template, templateOutput);
+    }
+
+    private List<TemplateTransformation> resolveTemplateCode(String source, File out) {
+        final TemplateSource templateSource = TemplateSource.fromCode("interactive", source);
         final TemplateOutput templateOutput = templateOutput(out);
         return singletonList(new TemplateTransformation(templateSource, templateOutput));
     }

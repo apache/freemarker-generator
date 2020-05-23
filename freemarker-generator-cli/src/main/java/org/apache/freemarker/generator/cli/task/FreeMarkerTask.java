@@ -23,6 +23,7 @@ import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.freemarker.generator.base.datasource.DataSources;
+import org.apache.freemarker.generator.base.template.TemplateTransformations;
 import org.apache.freemarker.generator.base.util.UriUtils;
 import org.apache.freemarker.generator.cli.config.Settings;
 
@@ -47,6 +48,7 @@ import static org.apache.freemarker.generator.cli.config.Suppliers.configuration
 import static org.apache.freemarker.generator.cli.config.Suppliers.dataModelSupplier;
 import static org.apache.freemarker.generator.cli.config.Suppliers.dataSourcesSupplier;
 import static org.apache.freemarker.generator.cli.config.Suppliers.parameterSupplier;
+import static org.apache.freemarker.generator.cli.config.Suppliers.templateTransformationsSupplier;
 import static org.apache.freemarker.generator.cli.config.Suppliers.toolsSupplier;
 
 /**
@@ -62,32 +64,39 @@ public class FreeMarkerTask implements Callable<Integer> {
     private final Supplier<Map<String, Object>> dataModelsSupplier;
     private final Supplier<Map<String, Object>> parameterModelSupplier;
     private final Supplier<Configuration> configurationSupplier;
+    private final Supplier<TemplateTransformations> templateTransformationsSupplier;
+
 
     public FreeMarkerTask(Settings settings) {
         this(settings,
-                toolsSupplier(settings),
+                configurationSupplier(settings),
+                templateTransformationsSupplier(settings),
                 dataSourcesSupplier(settings),
                 dataModelSupplier(settings),
                 parameterSupplier(settings),
-                configurationSupplier(settings));
+                toolsSupplier(settings)
+        );
     }
 
     public FreeMarkerTask(Settings settings,
-                          Supplier<Map<String, Object>> toolsSupplier,
+                          Supplier<Configuration> configurationSupplier,
+                          Supplier<TemplateTransformations> templateTransformationsSupplier,
                           Supplier<List<DataSource>> dataSourcesSupplier,
                           Supplier<Map<String, Object>> dataModelsSupplier,
                           Supplier<Map<String, Object>> parameterModelSupplier,
-                          Supplier<Configuration> configurationSupplier) {
+                          Supplier<Map<String, Object>> toolsSupplier) {
         this.settings = requireNonNull(settings);
         this.toolsSupplier = requireNonNull(toolsSupplier);
         this.dataSourcesSupplier = requireNonNull(dataSourcesSupplier);
         this.dataModelsSupplier = requireNonNull(dataModelsSupplier);
         this.parameterModelSupplier = requireNonNull(parameterModelSupplier);
         this.configurationSupplier = requireNonNull(configurationSupplier);
+        this.templateTransformationsSupplier = requireNonNull(templateTransformationsSupplier);
     }
 
     @Override
     public Integer call() {
+        final TemplateTransformations templateTransformations = templateTransformationsSupplier.get();
         final Template template = template(settings, configurationSupplier);
         try (Writer writer = settings.getWriter(); DataSources dataSources = dataSources(settings, dataSourcesSupplier)) {
             final Map<String, Object> dataModel = dataModel(dataSources, parameterModelSupplier, dataModelsSupplier, toolsSupplier);

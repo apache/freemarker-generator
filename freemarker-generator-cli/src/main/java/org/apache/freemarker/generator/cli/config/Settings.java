@@ -171,6 +171,7 @@ public class Settings {
         return templates;
     }
 
+    // TODO remove later on
     public String getTemplateName() {
         return templates.isEmpty() ? null : templates.get(0);
     }

@@ -33,8 +33,43 @@ import static org.junit.Assert.assertNull;
 public class TemplateTransformationsBuilderTest {
 
     private static final String ANY_TEMPLATE_FILE_NAME = "src/test/template/application.properties";
+    private static final String OTHER_TEMPLATE_FILE_NAME = "src/test/template/nginx/nginx.conf.ftl";
     private static final String ANY_TEMPLATE_PATH = "template/info.ftl";
     private static final String ANY_TEMPLATE_DIRECTORY_NAME = "src/test/template";
+
+    // === Interactive Template =============================================
+
+    @Test
+    public void shouldCreateFromInteractiveTemplate() {
+        final TemplateTransformations transformations = builder()
+                .setTemplate("interactive", "Hello World")
+                .setStdOut()
+                .build();
+
+        assertEquals(1, transformations.size());
+
+        final TemplateSource templateSource = transformations.get(0).getTemplateSource();
+        final TemplateOutput templateOutput = transformations.get(0).getTemplateOutput();
+
+        assertEquals("interactive", templateSource.getName());
+        assertEquals(Origin.CODE, templateSource.getOrigin());
+        assertEquals("Hello World", templateSource.getCode());
+        assertNull(templateSource.getPath());
+        assertEquals(StandardCharsets.UTF_8, templateSource.getEncoding());
+
+        assertNotNull(templateOutput.getWriter());
+        assertNull(templateOutput.getFile());
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldThrowIllegalArgumentExceptionWheMixingInteractiveTemplateWithSources() {
+        builder()
+                .setTemplate("interactive", "Hello World")
+                .addSource(ANY_TEMPLATE_FILE_NAME)
+                .setStdOut()
+                .build();
+    }
+
 
     // === Template File ====================================================
 
@@ -58,6 +93,20 @@ public class TemplateTransformationsBuilderTest {
 
         assertNotNull(templateOutput.getWriter());
         assertNull(templateOutput.getFile());
+    }
+
+    @Test
+    public void shouldCreateFromMultipleTemplateFiles() {
+        final TemplateTransformations transformations = builder()
+                .addSource(ANY_TEMPLATE_FILE_NAME)
+                .addOutput("foo/first.out")
+                .addSource(OTHER_TEMPLATE_FILE_NAME)
+                .addOutput("foo/second.out")
+                .build();
+
+        assertEquals(2, transformations.size());
+        assertEquals(new File("foo/first.out"), transformations.get(0).getTemplateOutput().getFile());
+        assertEquals(new File("foo/second.out"), transformations.get(1).getTemplateOutput().getFile());
     }
 
     // === Template Path ====================================================
@@ -102,12 +151,12 @@ public class TemplateTransformationsBuilderTest {
     public void shouldCreateFromTemplateDirectoryWithOutputDirectory() {
         final TemplateTransformations transformations = builder()
                 .addSource(ANY_TEMPLATE_DIRECTORY_NAME)
-                .addOutput("/tmp")
+                .addOutput("/foo")
                 .build();
 
         assertEquals(2, transformations.size());
-        assertEquals(new File("/tmp/nginx/nginx.conf"), transformations.get(0).getTemplateOutput().getFile());
-        assertEquals(new File("/tmp/application.properties"), transformations.get(1).getTemplateOutput().getFile());
+        assertEquals(new File("/foo/nginx/nginx.conf"), transformations.get(0).getTemplateOutput().getFile());
+        assertEquals(new File("/foo/application.properties"), transformations.get(1).getTemplateOutput().getFile());
     }
 
     @Test
