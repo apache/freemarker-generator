@@ -143,8 +143,8 @@ public class TemplateTransformationsBuilderTest {
                 .build();
 
         assertEquals(2, transformations.size());
-        assertEquals(new File("nginx/nginx.conf"), transformations.get(0).getTemplateOutput().getFile());
-        assertEquals(new File("application.properties"), transformations.get(1).getTemplateOutput().getFile());
+        assertEquals("application.properties", transformations.get(0).getTemplateSource().getName());
+        assertEquals("nginx.conf.ftl", transformations.get(1).getTemplateSource().getName());
     }
 
     @Test
@@ -155,8 +155,8 @@ public class TemplateTransformationsBuilderTest {
                 .build();
 
         assertEquals(2, transformations.size());
-        assertEquals(new File("/foo/nginx/nginx.conf"), transformations.get(0).getTemplateOutput().getFile());
-        assertEquals(new File("/foo/application.properties"), transformations.get(1).getTemplateOutput().getFile());
+        assertEquals("application.properties", transformations.get(0).getTemplateSource().getName());
+        assertEquals("nginx.conf.ftl", transformations.get(1).getTemplateSource().getName());
     }
 
     @Test
@@ -168,7 +168,7 @@ public class TemplateTransformationsBuilderTest {
                 .build();
 
         assertEquals(1, transformations.size());
-        assertEquals(new File("application.properties"), transformations.get(0).getTemplateOutput().getFile());
+        assertEquals("application.properties", transformations.get(0).getTemplateSource().getName());
     }
 
     @Test
@@ -180,7 +180,7 @@ public class TemplateTransformationsBuilderTest {
                 .build();
 
         assertEquals(1, transformations.size());
-        assertEquals(new File("application.properties"), transformations.get(0).getTemplateOutput().getFile());
+        assertEquals("application.properties", transformations.get(0).getTemplateSource().getName());
     }
 
     private TemplateTransformationsBuilder builder() {

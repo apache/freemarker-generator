@@ -53,8 +53,8 @@ public class RecursiveFileSupplierTest {
         final List<File> files = fileSupplier(sources, "*", null).get();
 
         assertEquals(2, files.size());
-        assertEquals("pom.xml", files.get(0).getName());
-        assertEquals("README.md", files.get(1).getName());
+        assertEquals("README.md", files.get(0).getName());
+        assertEquals("pom.xml", files.get(1).getName());
     }
 
     @Test
@@ -78,9 +78,9 @@ public class RecursiveFileSupplierTest {
         final List<File> files = fileSupplier(ANY_DIRECTORY, null, "*.csv").get();
 
         assertEquals(3, files.size());
-        assertEquals("file_01.txt", files.get(0).getName());
-        assertEquals("nginx.env", files.get(1).getName());
-        assertEquals("test.properties", files.get(2).getName());
+        assertEquals("nginx.env", files.get(0).getName());
+        assertEquals("test.properties", files.get(1).getName());
+        assertEquals("file_01.txt", files.get(2).getName());
     }
 
     @Test

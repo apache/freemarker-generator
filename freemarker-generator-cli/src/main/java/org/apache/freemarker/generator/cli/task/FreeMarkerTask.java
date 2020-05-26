@@ -18,16 +18,22 @@ package org.apache.freemarker.generator.cli.task;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import org.apache.commons.io.FileUtils;
 import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.freemarker.generator.base.datasource.DataSources;
+import org.apache.freemarker.generator.base.template.TemplateOutput;
+import org.apache.freemarker.generator.base.template.TemplateSource;
+import org.apache.freemarker.generator.base.template.TemplateTransformation;
 import org.apache.freemarker.generator.base.template.TemplateTransformations;
 import org.apache.freemarker.generator.base.util.UriUtils;
 import org.apache.freemarker.generator.cli.config.Settings;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.net.URI;
@@ -96,16 +102,28 @@ public class FreeMarkerTask implements Callable<Integer> {
 
     @Override
     public Integer call() {
-        final TemplateTransformations templateTransformations = templateTransformationsSupplier.get();
-        final Template template = template(settings, configurationSupplier);
-        try (Writer writer = settings.getWriter(); DataSources dataSources = dataSources(settings, dataSourcesSupplier)) {
+        try {
+            final Configuration configuration = configurationSupplier.get();
+            final TemplateTransformations templateTransformations = templateTransformationsSupplier.get();
+            final DataSources dataSources = dataSources(settings, dataSourcesSupplier);
             final Map<String, Object> dataModel = dataModel(dataSources, parameterModelSupplier, dataModelsSupplier, toolsSupplier);
-            template.process(dataModel, writer);
+            templateTransformations.getList().forEach(t -> process(configuration, t, dataModel));
             return SUCCESS;
         } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to render FreeMarker template: " + template.getName(), e);
+            throw new RuntimeException("Failed to process templates", e);
+        }
+    }
+
+    private void process(Configuration configuration,
+                         TemplateTransformation templateTransformation,
+                         Map<String, Object> dataModel) {
+        final TemplateSource templateSource = templateTransformation.getTemplateSource();
+        final TemplateOutput templateOutput = templateTransformation.getTemplateOutput();
+        try (Writer writer = writer(templateOutput)) {
+            final Template template = template(configuration, templateSource);
+            template.process(dataModel, writer);
+        } catch (TemplateException | IOException e) {
+            throw new RuntimeException("Failed to process template: " + templateSource.getName(), e);
         }
     }
 
@@ -122,33 +140,6 @@ public class FreeMarkerTask implements Callable<Integer> {
         return new DataSources(dataSources);
     }
 
-    /**
-     * Loading FreeMarker templates from absolute paths is not encouraged due to security
-     * concern (see https://freemarker.apache.org/docs/pgui_config_templateloading.html#autoid_42)
-     * which are mostly irrelevant when running on the command line. So we resolve the absolute file
-     * instead of relying on existing template loaders.
-     *
-     * @param settings              Settings
-     * @param configurationSupplier Supplies FreeMarker configuration
-     * @return FreeMarker template
-     */
-    private static Template template(Settings settings, Supplier<Configuration> configurationSupplier) {
-        final String templateName = settings.getTemplateName();
-        final Configuration configuration = configurationSupplier.get();
-
-        try {
-            if (settings.isInteractiveTemplate()) {
-                return interactiveTemplate(settings, configuration);
-            } else if (isAbsoluteTemplateFile(settings)) {
-                return fileTemplate(settings, configuration);
-            } else {
-                return configuration.getTemplate(templateName);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load template: " + templateName, e);
-        }
-    }
-
     private static Map<String, Object> dataModel(
             DataSources dataSources,
             Supplier<Map<String, Object>> parameterModelSupplier,
@@ -162,27 +153,55 @@ public class FreeMarkerTask implements Callable<Integer> {
         return result;
     }
 
-    private static boolean isAbsoluteTemplateFile(Settings settings) {
-        final File file = new File(settings.getTemplateName());
-        return file.isAbsolute() && file.exists() & !file.isDirectory();
+    // ==============================================================
+
+    private static Writer writer(TemplateOutput templateOutput) throws IOException {
+        if (templateOutput.getWriter() != null) {
+            return templateOutput.getWriter();
+        }
+
+        final File file = templateOutput.getFile();
+        FileUtils.forceMkdirParent(file);
+        return new BufferedWriter(new FileWriter(file));
     }
 
-    private static Template fileTemplate(Settings settings, Configuration configuration) {
-        final String templateName = settings.getTemplateName();
-        final File templateFile = new File(templateName);
-        try {
-            final String content = FileUtils.readFileToString(templateFile, settings.getTemplateEncoding());
-            return new Template(templateName, content, configuration);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load template: " + templateName, e);
+    /**
+     * Loading FreeMarker templates from absolute paths is not encouraged due to security
+     * concern (see https://freemarker.apache.org/docs/pgui_config_templateloading.html#autoid_42)
+     * which are mostly irrelevant when running on the command line. So we resolve the absolute file
+     * instead of relying on existing template loaders.
+     *
+     * @param configuration  FreeMarker configuration
+     * @param templateSource source template to load
+     * @return FreeMarker template
+     */
+    private static Template template(Configuration configuration, TemplateSource templateSource) {
+        switch (templateSource.getOrigin()) {
+            case PATH:
+                return fromTemplatePath(configuration, templateSource);
+            case CODE:
+                return fromTemplateCode(configuration, templateSource);
+            default:
+                throw new IllegalArgumentException("Don't know how to handle: " + templateSource.getOrigin());
         }
     }
 
-    private static Template interactiveTemplate(Settings settings, Configuration configuration) {
+    private static Template fromTemplatePath(Configuration configuration, TemplateSource templateSource) {
+        final String path = templateSource.getPath();
         try {
-            return new Template(Location.INTERACTIVE, settings.getInteractiveTemplate(), configuration);
+            return configuration.getTemplate(path);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load interactive template", e);
+            throw new RuntimeException("Failed to load template from path: " + path, e);
+        }
+    }
+
+    private static Template fromTemplateCode(Configuration configuration, TemplateSource templateSource) {
+        final String name = templateSource.getName();
+
+        try {
+            return new Template(name, templateSource.getCode(), configuration);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load template code: " + name, e);
         }
     }
 }

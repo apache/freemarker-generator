@@ -33,7 +33,6 @@ import picocli.CommandLine.Spec;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
@@ -220,10 +219,10 @@ public class Main implements Callable<Integer> {
         try {
             if (userSuppliedWriter != null) {
                 return userSuppliedWriter;
-            } else if (!StringUtils.isEmpty(outputFile)) {
-                return new BufferedWriter(new FileWriter(outputFile));
-            } else {
+            } else if (StringUtils.isEmpty(outputFile)) {
                 return new BufferedWriter(new OutputStreamWriter(System.out, outputEncoding));
+            } else {
+                return null;
             }
         } catch (IOException e) {
             throw new RuntimeException("Unable to create writer", e);

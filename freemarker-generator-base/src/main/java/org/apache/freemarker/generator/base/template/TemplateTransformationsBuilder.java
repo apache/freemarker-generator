@@ -215,7 +215,7 @@ public class TemplateTransformationsBuilder {
     }
 
     private TemplateOutput templateOutput(File templateOutputFile) {
-        if (templateOutputFile != null) {
+        if (writer == null && templateOutputFile != null) {
             return TemplateOutput.fromFile(templateOutputFile);
         } else {
             return TemplateOutput.fromWriter(writer);

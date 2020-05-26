@@ -148,7 +148,7 @@ public class Settings {
         this.parameters = requireNonNull(parameters);
         this.systemProperties = requireNonNull(systemProperties);
         this.configuration = requireNonNull(configuration);
-        this.writer = new NonClosableWriterWrapper(requireNonNull(writer));
+        this.writer = writer != null ? new NonClosableWriterWrapper(writer) : null;
     }
 
     public static SettingsBuilder builder() {
