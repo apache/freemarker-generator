@@ -48,7 +48,7 @@ public class ManualTest {
     // private static final String CMD = "-b ./src/test -t templates/demo.ftl -m env=./site/sample/properties/user_0001/user.properties";
     // private static final String CMD = "-b ./src/test -t templates/demo.ftl -m ./site/sample/properties/user_0001/user.properties";
     // private static final String CMD = "-b ./src/test --data-model post=https://jsonplaceholder.typicode.com/posts/2 -t templates/info.ftl";
-    private static final String CMD = "-b ./src/test -t templates/info.ftl -P name=value";
+    private static final String CMD = "-b ./src/test -t templates/dataframe/html/print.ftl ./site/sample/csv/data_join_a.csv ./site/sample/csv/data_join_b.csv";
 
 
     public static void main(String[] args) {

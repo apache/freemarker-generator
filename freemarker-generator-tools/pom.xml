@@ -54,6 +54,12 @@
             <artifactId>commons-csv</artifactId>
             <version>1.8</version>
         </dependency>
+        <!-- DataFrame -->
+        <dependency>
+            <groupId>de.unknownreality</groupId>
+            <artifactId>dataframe</artifactId>
+            <version>0.7.6</version>
+        </dependency>
         <!-- ExcelTool -->
         <dependency>
             <groupId>org.apache.poi</groupId>
