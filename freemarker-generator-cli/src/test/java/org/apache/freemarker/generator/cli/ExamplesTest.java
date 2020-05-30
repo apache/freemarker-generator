@@ -16,6 +16,7 @@
  */
 package org.apache.freemarker.generator.cli;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -119,7 +120,7 @@ public class ExamplesTest extends AbstractMainTest {
     }
 
     @Test
-    // @Ignore("Manual test to check memory consumption and resource handling")
+    @Ignore("Manual test to check memory consumption and resource handling")
     public void shouldCloseAllResources() throws IOException {
         for (int i = 0; i < 500; i++) {
             shouldRunInfo();
