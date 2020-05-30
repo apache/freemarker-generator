@@ -14,30 +14,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.util;
+package org.apache.freemarker.generator.base.template;
 
-import org.apache.freemarker.generator.base.util.MapFlattener;
-import org.junit.Test;
+import org.apache.freemarker.generator.base.datasource.DataSource;
+import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
+import org.apache.freemarker.generator.base.util.UriUtils;
 
-import java.util.Collections;
-import java.util.Map;
+import java.io.File;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+public abstract class TemplateSourceFactory {
 
-public class MapFlattenerTest {
-
-    @Test
-    public void shouldHandleEmptyMap() {
-        final Map<String, Object> result = MapFlattener.flatten(Collections.emptyMap());
-
-        assertTrue(result.isEmpty());
+    public static TemplateSource create(String str) {
+        if (isTemplatePath(str)) {
+            return TemplateSource.fromPath(str);
+        } else {
+            try (DataSource dataSource = DataSourceFactory.create(str)) {
+                return TemplateSource.fromCode(dataSource.getName(), dataSource.getText());
+            }
+        }
     }
 
-    @Test
-    public void shouldPreserveFlatMap() {
-        final Map<String, Object> result = MapFlattener.flatten(Collections.singletonMap("key", "value"));
-
-        assertEquals("value", result.get("key"));
+    private static boolean isTemplatePath(String str) {
+        return !UriUtils.isUri(str) && !new File(str).exists();
     }
 }

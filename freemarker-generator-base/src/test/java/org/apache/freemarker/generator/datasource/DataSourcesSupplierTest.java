@@ -44,7 +44,8 @@ public class DataSourcesSupplierTest {
         assertEquals(1, supplier("pom=./pom.xml", "*", NO_EXCLUDE).get().size());
         assertEquals(1, supplier("pom=./pom.xml#mimetype=application/xml", "*", NO_EXCLUDE).get().size());
         assertEquals(1, supplier("pom=" + PWD + "/pom.xml", "*", NO_EXCLUDE).get().size());
-        assertEquals(1, supplier("pom=file:///" + PWD + "/pom.xml#mimetype=application/xml", "*", NO_EXCLUDE).get().size());
+        assertEquals(1, supplier("pom=file:///" + PWD + "/pom.xml#mimetype=application/xml", "*", NO_EXCLUDE).get()
+                .size());
     }
 
     @Test
@@ -62,10 +63,10 @@ public class DataSourcesSupplierTest {
 
     @Test
     public void shouldResolveDirectory() {
-        assertEquals(4, supplier(DATA_DIRECTORY, null, null).get().size());
-        assertEquals(4, supplier(DATA_DIRECTORY, "", null).get().size());
-        assertEquals(4, supplier(DATA_DIRECTORY, "*", null).get().size());
-        assertEquals(4, supplier(DATA_DIRECTORY, "*.*", null).get().size());
+        assertEquals(5, supplier(DATA_DIRECTORY, null, null).get().size());
+        assertEquals(5, supplier(DATA_DIRECTORY, "", null).get().size());
+        assertEquals(5, supplier(DATA_DIRECTORY, "*", null).get().size());
+        assertEquals(5, supplier(DATA_DIRECTORY, "*.*", null).get().size());
         assertEquals(2, supplier(DATA_DIRECTORY, "*.csv", null).get().size());
         assertEquals(1, supplier(DATA_DIRECTORY, "*.t*", null).get().size());
         assertEquals(0, supplier(DATA_DIRECTORY, "*.bin", null).get().size());
@@ -75,10 +76,10 @@ public class DataSourcesSupplierTest {
     public void shouldResolveFilesAndDirectory() {
         final List<String> sources = Arrays.asList("pom.xml", "README.md", DATA_DIRECTORY);
 
-        assertEquals(6, supplier(sources, null, null).get().size());
-        assertEquals(6, supplier(sources, "", null).get().size());
-        assertEquals(6, supplier(sources, "*", null).get().size());
-        assertEquals(6, supplier(sources, "*.*", null).get().size());
+        assertEquals(7, supplier(sources, null, null).get().size());
+        assertEquals(7, supplier(sources, "", null).get().size());
+        assertEquals(7, supplier(sources, "*", null).get().size());
+        assertEquals(7, supplier(sources, "*.*", null).get().size());
         assertEquals(2, supplier(sources, "*.csv", null).get().size());
         assertEquals(1, supplier(sources, "*.t*", null).get().size());
         assertEquals(1, supplier(sources, "*.xml", null).get().size());
@@ -87,8 +88,9 @@ public class DataSourcesSupplierTest {
         assertEquals(0, supplier(sources, null, "*").get().size());
         assertEquals(0, supplier(sources, null, "*.*").get().size());
         assertEquals(0, supplier(sources, "*", "*").get().size());
-        assertEquals(5, supplier(sources, "*", "*.md").get().size());
-        assertEquals(3, supplier(sources, "*", "file*.*").get().size());
+
+        assertEquals(6, supplier(sources, "*", "*.md").get().size());
+        assertEquals(4, supplier(sources, "*", "file*.*").get().size());
     }
 
     @Test

@@ -16,6 +16,8 @@
  */
 package org.apache.freemarker.generator.base.util;
 
+import java.io.File;
+
 /**
  * Simple validation methods designed for interal use.
  */
@@ -140,6 +142,18 @@ public final class Validate {
     }
 
     /**
+     * Validates that the file exists
+     *
+     * @param file the file to test
+     * @param msg  message to output if validation fails
+     */
+    public static void fileExists(File file, String msg) {
+        if (file == null || !file.exists()) {
+            throw new IllegalArgumentException(msg);
+        }
+    }
+
+    /**
      * Cause a failure.
      *
      * @param msg message to output.
@@ -147,4 +161,5 @@ public final class Validate {
     public static void fail(String msg) {
         throw new IllegalArgumentException(msg);
     }
+
 }

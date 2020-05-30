@@ -49,7 +49,7 @@ import static org.apache.freemarker.generator.base.util.StringUtils.firstNonEmpt
 /**
  * Creates a FreeMarker data source from various sources.
  */
-public class DataSourceFactory {
+public abstract class DataSourceFactory {
 
     private static final String NO_MIME_TYPE = null;
     private static final Charset NO_CHARSET = null;

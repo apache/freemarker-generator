@@ -14,30 +14,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.util;
+package org.apache.freemarker.generator.base.template;
 
-import org.apache.freemarker.generator.base.util.MapFlattener;
-import org.junit.Test;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-import java.util.Collections;
-import java.util.Map;
+import static java.util.Objects.requireNonNull;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+public class TemplateTransformations {
 
-public class MapFlattenerTest {
+    private final List<TemplateTransformation> templateTransformations;
 
-    @Test
-    public void shouldHandleEmptyMap() {
-        final Map<String, Object> result = MapFlattener.flatten(Collections.emptyMap());
-
-        assertTrue(result.isEmpty());
+    public TemplateTransformations(Collection<? extends TemplateTransformation> templateTransformations) {
+        this.templateTransformations = new ArrayList<>(requireNonNull(templateTransformations));
     }
 
-    @Test
-    public void shouldPreserveFlatMap() {
-        final Map<String, Object> result = MapFlattener.flatten(Collections.singletonMap("key", "value"));
+    public List<? extends TemplateTransformation> getList() {
+        return templateTransformations;
+    }
 
-        assertEquals("value", result.get("key"));
+    public TemplateTransformation get(int index) {
+        return templateTransformations.get(index);
+    }
+
+    public int size() {
+        return templateTransformations.size();
     }
 }

@@ -21,6 +21,8 @@ import org.apache.freemarker.generator.base.datasource.DataSourcesSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesClassPathSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesFileSystemSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesSupplier;
+import org.apache.freemarker.generator.base.template.TemplateTransformationsBuilder;
+import org.apache.freemarker.generator.base.template.TemplateTransformationsSupplier;
 
 import java.util.Map;
 import java.util.function.Supplier;
@@ -52,8 +54,8 @@ public class Suppliers {
 
     public static DataSourcesSupplier dataSourcesSupplier(Settings settings) {
         return new DataSourcesSupplier(settings.getDataSources(),
-                settings.getInclude(),
-                settings.getExclude(),
+                settings.getDataSourceIncludePattern(),
+                settings.getDataSourceExcludePattern(),
                 settings.getInputEncoding());
     }
 
@@ -63,6 +65,17 @@ public class Suppliers {
 
     public static Supplier<Map<String, Object>> parameterSupplier(Settings settings) {
         return settings::getParameters;
+    }
+
+    public static TemplateTransformationsSupplier templateTransformationsSupplier(Settings settings) {
+        return (() -> TemplateTransformationsBuilder.builder()
+                .setTemplate("interactive", settings.getInteractiveTemplate())
+                .addSources(settings.getTemplates())
+                .addInclude(settings.getTemplateFileIncludePattern())
+                .addExclude(settings.getTemplateFileExcludePattern())
+                .addOutput(settings.getOutput())
+                .setWriter(settings.getWriter())
+                .build());
     }
 
     public static PropertiesSupplier propertiesSupplier(String fileName) {
