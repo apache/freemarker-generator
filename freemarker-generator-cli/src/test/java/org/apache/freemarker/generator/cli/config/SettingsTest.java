@@ -55,7 +55,7 @@ public class SettingsTest {
         assertEquals(ANY_INPUT_ENCODING, settings.getInputEncoding().name());
         assertEquals(ANY_OUTPUT_ENCODING, settings.getOutputEncoding().name());
         assertEquals(ANY_OUTPUT_FILE, settings.getOutput().getName());
-        assertEquals(ANY_TEMPLATE_NAME, settings.getTemplateName());
+        assertEquals(ANY_TEMPLATE_NAME, settings.getTemplates().get(0));
         assertNotNull(settings.getDataSources());
         assertNotNull(settings.getParameters());
         assertNotNull(settings.getSystemProperties());

@@ -170,12 +170,7 @@ public class Settings {
     public List<String> getTemplates() {
         return templates;
     }
-
-    // TODO remove later on
-    public String getTemplateName() {
-        return templates.isEmpty() ? null : templates.get(0);
-    }
-
+    
     public String getInteractiveTemplate() {
         return interactiveTemplate;
     }
