@@ -59,56 +59,56 @@ public class Main implements Callable<Integer> {
     TemplateSourceOptions templateSourceOptions;
 
     public static final class TemplateSourceOptions {
-        @Option(names = { "-t", "--template" }, description = "FreeMarker template to render")
+        @Option(names = { "-t", "--template" }, description = "template to process")
         public List<String> templates;
 
-        @Option(names = { "-i", "--interactive" }, description = "Interactive FreeMarker template")
+        @Option(names = { "-i", "--interactive" }, description = "interactive template to process")
         public String interactiveTemplate;
     }
 
-    @Option(names = { "-b", "--basedir" }, description = "Optional template base directory")
+    @Option(names = { "-b", "--basedir" }, description = "optional template base directory")
     String baseDir;
 
-    @Option(names = { "-D", "--system-property" }, description = "Set system property")
+    @Option(names = { "-D", "--system-property" }, description = "set system property")
     Properties systemProperties;
 
-    @Option(names = { "-e", "--input-encoding" }, description = "Encoding of data source", defaultValue = "UTF-8")
+    @Option(names = { "-e", "--input-encoding" }, description = "encoding of data source", defaultValue = "UTF-8")
     String inputEncoding;
 
-    @Option(names = { "-l", "--locale" }, description = "Locale being used for the output, e.g. 'en_US'")
+    @Option(names = { "-l", "--locale" }, description = "locale being used for the output, e.g. 'en_US'")
     String locale;
 
-    @Option(names = { "-m", "--data-model" }, description = "Data model used for rendering")
+    @Option(names = { "-m", "--data-model" }, description = "data model used for rendering")
     List<String> dataModels;
 
-    @Option(names = { "-o", "--output" }, description = "Output file or directory")
+    @Option(names = { "-o", "--output" }, description = "output file or directory")
     String outputFile;
 
-    @Option(names = { "-P", "--param" }, description = "Set parameter")
+    @Option(names = { "-P", "--param" }, description = "set parameter")
     Map<String, String> parameters;
 
-    @Option(names = { "-s", "--data-source" }, description = "Data source used for rendering")
+    @Option(names = { "-s", "--data-source" }, description = "data source used for redering")
     List<String> dataSources;
 
     @Option(names = { "--config" }, defaultValue = FREEMARKER_CLI_PROPERTY_FILE, description = "FreeMarker CLI configuration file")
     String configFile;
 
-    @Option(names = { "--data-source-include" }, description = "File pattern for data source input directory")
+    @Option(names = { "--data-source-include" }, description = "file include pattern for data sources")
     String include;
 
-    @Option(names = { "--data-source-exclude" }, description = "File pattern for data source input directory")
+    @Option(names = { "--data-source-exclude" }, description = "file exclude pattern for data sources")
     String exclude;
 
-    @Option(names = { "--output-encoding" }, description = "Encoding of output, e.g. UTF-8", defaultValue = "UTF-8")
+    @Option(names = { "--output-encoding" }, description = "encoding of output, e.g. UTF-8", defaultValue = "UTF-8")
     String outputEncoding;
 
-    @Option(names = { "--stdin" }, description = "Read data  source from stdin")
+    @Option(names = { "--stdin" }, description = "read data source from stdin")
     boolean readFromStdin;
 
-    @Option(names = { "--times" }, defaultValue = "1", description = "Re-run X times for profiling")
+    @Option(names = { "--times" }, defaultValue = "1", description = "re-run X times for profiling")
     int times;
 
-    @Parameters(description = "List of input files and/or input directories")
+    @Parameters(description = "data source files and/or directories")
     List<String> sources;
 
     /** User-supplied command line parameters */
