@@ -29,8 +29,6 @@ import static java.util.Objects.requireNonNull;
  * Information about where to write the ouput of a template. Initially we
  * wanted to use a <code>FileWriter</code> but it requires actually an
  * existing output file (otherwise a FileNotFound exception is thrown).
- *
- * TODO what to do with created FileWriter?
  */
 public class TemplateOutput {
 
