@@ -16,7 +16,6 @@
  */
 package org.apache.freemarker.generator.cli;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -114,9 +113,15 @@ public class ExamplesTest extends AbstractMainTest {
     }
 
     @Test
-    @Ignore("Manual test to check memory consumption and resource handling")
+    public void shouldTransformTemplateDirectory() throws IOException {
+        assertTrue(execute("-t site/template").contains("server.name=somehost"));
+        assertTrue(execute("-t site/template -PNGINX_HOSTNAME=localhost").contains("server.name=localhost"));
+    }
+
+    @Test
+    // @Ignore("Manual test to check memory consumption and resource handling")
     public void shouldCloseAllResources() throws IOException {
-        for (int i = 0; i < 5000; i++) {
+        for (int i = 0; i < 500; i++) {
             shouldRunInfo();
             shouldRunDemoExamples();
             shouldRunCsvExamples();
@@ -128,6 +133,7 @@ public class ExamplesTest extends AbstractMainTest {
             shouldRunXmlExamples();
             shouldRunGrokExamples();
             shouldRunInteractiveTemplateExamples();
+            shouldTransformTemplateDirectory();
             shouldRunWithExposedEnvironmentVariableExamples();
         }
     }

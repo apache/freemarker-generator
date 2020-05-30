@@ -17,7 +17,7 @@
 # == nginx-conf =============================================================
 server {
   listen ${NGINX_PORT!"80"};
-  server_name ${NGINX_HOSTNAME!"127.0.0.1"};
+  server_name ${NGINX_HOSTNAME!"somehost"};
 
   root ${NGINX_WEBROOT!"/usr/share/nginx/www"};
   index index.htm;
