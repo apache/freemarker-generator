@@ -103,6 +103,11 @@ public class ExamplesTest extends AbstractMainTest {
     }
 
     @Test
+    public void shouldRunDataFrameExamples() throws IOException {
+        assertValid(execute("-DCSV_TOOL_DELIMITER=SEMICOLON -DCSV_TOOL_HEADERS=true -t templates/dataframe/example.ftl site/sample/csv/dataframe.csv"));
+    }
+
+    @Test
     public void shouldRunInteractiveTemplateExamples() throws IOException {
         assertValid(execute("-i ${JsonPathTool.parse(DataSources.first).read(\"$.info.title\")} site/sample/json/swagger-spec.json"));
         assertValid(execute("-i ${XmlTool.parse(DataSources.first)[\"recipients/person[1]/name\"]} site/sample/xml/recipients.xml"));

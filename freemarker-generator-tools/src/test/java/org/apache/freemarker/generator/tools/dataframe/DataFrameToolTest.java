@@ -35,8 +35,11 @@ import static org.apache.commons.csv.CSVFormat.DEFAULT;
 
 public class DataFrameToolTest {
 
-    private static final File DATA_JOIN_A = new File("./src/test/data/csv/data_join_a.csv");
-    private static final File DATA_JOIN_B = new File("./src/test/data/csv/data_join_b.csv");
+    private static final String CSV_WITH_HEADER = "GENE_ID;FPKM;CHR\n" +
+            "A;5;1\n" +
+            "B;4;2\n" +
+            "C;6;3\n" +
+            "D;6;1";
 
     private static final String JSON_ARRAY = "[\n" +
             "    {\n" +
@@ -63,7 +66,7 @@ public class DataFrameToolTest {
 
     @Test
     public void shouldParseCsvFileWithHeader() {
-        final CSVParser csvParser = csvParser(DATA_JOIN_A, DEFAULT.withHeader().withDelimiter(';'));
+        final CSVParser csvParser = csvParser(CSV_WITH_HEADER, DEFAULT.withHeader().withDelimiter(';'));
         final DataFrame dataFrame = dataFrameTool().toDataFrame(csvParser);
 
         assertEquals(3, dataFrame.getColumns().size());
@@ -100,7 +103,7 @@ public class DataFrameToolTest {
         return DataSourceFactory.fromFile(file, UTF_8);
     }
 
-    private CSVParser csvParser(File file, CSVFormat csvFormat) {
-        return commonsCSVTool().parse(dataSource(file), csvFormat);
+    private CSVParser csvParser(String csv, CSVFormat csvFormat) {
+        return commonsCSVTool().parse(csv, csvFormat);
     }
 }

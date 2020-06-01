@@ -101,6 +101,13 @@ if hash wkhtmltopdf 2>/dev/null; then
 fi
 
 #############################################################################
+# DataFrame
+#############################################################################
+
+echo "templates/dataframe/example.ftl"
+$FREEMARKER_CMD -DCSV_TOOL_DELIMITER=SEMICOLON -DCSV_TOOL_HEADERS=true -t templates/dataframe/example.ftl site/sample/csv/dataframe.csv > target/out/dataframe.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
+#############################################################################
 # Grok
 #############################################################################
 
