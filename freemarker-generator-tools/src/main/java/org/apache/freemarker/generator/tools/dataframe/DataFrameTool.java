@@ -20,6 +20,7 @@ import de.unknownreality.dataframe.DataFrame;
 import de.unknownreality.dataframe.DataFrameBuilder;
 import de.unknownreality.dataframe.DataFrameWriter;
 import de.unknownreality.dataframe.sort.SortColumn.Direction;
+import de.unknownreality.dataframe.transform.ColumnDataFrameTransform;
 import de.unknownreality.dataframe.transform.CountTransformer;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -121,8 +122,15 @@ public class DataFrameTool {
         return result;
     }
 
-    public CountTransformer countTransformer(boolean ignoreNA) {
-        return new CountTransformer(ignoreNA);
+    /**
+     * Provide a map with predefined transformers.
+     *
+     * @return available transformers
+     */
+    public Map<String, ColumnDataFrameTransform> getTransformer() {
+        final Map<String, ColumnDataFrameTransform> result = new HashMap<>();
+        result.put("COUNT", countTransformer(false));
+        return result;
     }
 
     /**
@@ -139,4 +147,9 @@ public class DataFrameTool {
     public String toString() {
         return "Bridge to nRo/DataFrame (see https://github.com/nRo/DataFrame)";
     }
+
+    private static CountTransformer countTransformer(boolean ignoreNA) {
+        return new CountTransformer(ignoreNA);
+    }
+
 }

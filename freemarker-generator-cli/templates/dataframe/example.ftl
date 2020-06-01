@@ -36,7 +36,7 @@ ${DataFrameTool.print(users.head(2))}
 
 Count Column Values
 =============================================================================
-${DataFrameTool.print(users.getColumn("country").transform(DataFrameTool.countTransformer(false)))}
+${DataFrameTool.print(users.getColumn("country").transform(DataFrameTool.transformer["COUNT"]))}
 
 Group By Age & Country
 =============================================================================
