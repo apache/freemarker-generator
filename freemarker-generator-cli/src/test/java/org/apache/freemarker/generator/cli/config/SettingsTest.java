@@ -51,14 +51,14 @@ public class SettingsTest {
 
         assertEquals(1, settings.getArgs().size());
         assertNotNull(settings.getConfiguration());
-        assertEquals(ANY_INCLUDE, settings.getInclude());
+        assertEquals(ANY_INCLUDE, settings.getDataSourceIncludePattern());
         assertEquals(ANY_INPUT_ENCODING, settings.getInputEncoding().name());
         assertEquals(ANY_OUTPUT_ENCODING, settings.getOutputEncoding().name());
-        assertEquals(ANY_OUTPUT_FILE, settings.getOutputFile().getName());
-        assertEquals(ANY_TEMPLATE_NAME, settings.getTemplateName());
+        assertEquals(ANY_OUTPUT_FILE, settings.getOutput().getName());
+        assertEquals(ANY_TEMPLATE_NAME, settings.getTemplates().get(0));
         assertNotNull(settings.getDataSources());
         assertNotNull(settings.getParameters());
-        assertNotNull(settings.getSytemProperties());
+        assertNotNull(settings.getSystemProperties());
         assertTrue(settings.isReadFromStdin());
         assertTrue(settings.isInteractiveTemplate());
         assertTrue(settings.isVerbose());
@@ -69,7 +69,7 @@ public class SettingsTest {
                 .isReadFromStdin(true)
                 .setArgs(ANY_ARGS)
                 .setConfiguration(ANY_CONFIGURATION)
-                .setInclude(ANY_INCLUDE)
+                .setDataSourceIncludePattern(ANY_INCLUDE)
                 .setInputEncoding(ANY_INPUT_ENCODING)
                 .setInteractiveTemplate(ANY_INTERACTIVE_TEMPLATE)
                 .setLocale(ANY_LOCALE)
@@ -78,7 +78,7 @@ public class SettingsTest {
                 .setParameters(ANY_USER_PARAMETERS)
                 .setDataSources(ANY_SOURCES)
                 .setSystemProperties(ANY_SYSTEM_PROPERTIES)
-                .setTemplateName(ANY_TEMPLATE_NAME)
+                .setTemplateNames(singletonList(ANY_TEMPLATE_NAME))
                 .setWriter(new StringWriter())
                 .setVerbose(true);
     }

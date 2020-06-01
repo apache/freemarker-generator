@@ -101,7 +101,7 @@ public class PicocliTest {
     public void shouldParseSingleTemplate() {
         final Main main = parse("-t", ANY_TEMPLATE);
 
-        assertEquals(ANY_TEMPLATE, main.templateSourceOptions.template);
+        assertEquals(ANY_TEMPLATE, main.templateSourceOptions.templates.get(0));
     }
 
     @Test

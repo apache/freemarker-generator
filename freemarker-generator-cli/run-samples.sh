@@ -155,6 +155,13 @@ echo "templates/properties/csv/locker-test-users.ftl"
 $FREEMARKER_CMD -t templates/properties/csv/locker-test-users.ftl site/sample/properties > target/out/locker-test-users.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
+# Template Directory
+#############################################################################
+
+echo "site/template"
+$FREEMARKER_CMD -t site/template -PNGINX_HOSTNAME=localhost -o target/out/template  || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
+#############################################################################
 # YAML
 #############################################################################
 

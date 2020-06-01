@@ -6,8 +6,9 @@ All notable changes to this project will be documented in this file. We try to a
 
 ### Added
 * [FREEMARKER-144] Proof Of Concept for providing DataFrames
+* [FREEMARKER-142] Support Transformation Of Directories
 * [FREEMARKER-139] freemarker-cli: Provide GsonTool to align with Maven plugin
-* An environment variable can bes passed as `DataSource`
+* Environment variables can bes passed as `DataSource`
 * [FREEMARKER-135] Support user-supplied names for `DataSource` on the command line
 * [FREEMARKER-129] Support `DataSource` exclude pattern in addition to include pattern
 * [FREEMARKER-129] User-defined parameters are passed as `-Pkey=value` instead of using system properties
@@ -38,4 +39,5 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-136]: https://issues.apache.org/jira/browse/FREEMARKER-136
 [FREEMARKER-138]: https://issues.apache.org/jira/browse/FREEMARKER-138
 [FREEMARKER-139]: https://issues.apache.org/jira/browse/FREEMARKER-139
+[FREEMARKER-142]: https://issues.apache.org/jira/browse/FREEMARKER-142
 [FREEMARKER-144]: https://issues.apache.org/jira/browse/FREEMARKER-144

@@ -23,6 +23,7 @@ import org.apache.freemarker.generator.base.util.NonClosableWriterWrapper;
 import java.io.File;
 import java.io.Writer;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -52,11 +53,17 @@ public class Settings {
     /** List of FreeMarker template directories to be passed to FreeMarker <code>TemplateLoader</code> */
     private final List<File> templateDirectories;
 
-    /** Name of the template to be loaded and rendered */
-    private final String templateName;
+    /** List of template to be loaded and rendered */
+    private final List<String> templates;
 
-    /** Template provided by the user interactivly */
+    /** Template provided by the user interactively */
     private final String interactiveTemplate;
+
+    /** Optional include pattern for recursive directly search of template files */
+    private final String templateFileIncludePattern;
+
+    /** Optional exclude pattern for recursive directly search of data source files */
+    private final String templateFileExcludePattern;
 
     /** Encoding of input files */
     private final Charset inputEncoding;
@@ -67,14 +74,14 @@ public class Settings {
     /** Enable verbose mode (currently not used) **/
     private final boolean verbose;
 
-    /** Optional output file if not written to stdout */
-    private final File outputFile;
+    /** Optional output file or directory if not written to stdout */
+    private final File output;
 
-    /** Optional include pattern for recursice directly search of source files */
-    private final String include;
+    /** Optional include pattern for recursive directly search of data source files */
+    private final String dataSourceIncludePattern;
 
-    /** Optional exclude pattern for recursice directly search of source files */
-    private final String exclude;
+    /** Optional exclude pattern for recursive directly search of data source files */
+    private final String dataSourceExcludePattern;
 
     /** The locale used for rendering the template */
     private final Locale locale;
@@ -92,7 +99,7 @@ public class Settings {
     private final Map<String, Object> parameters;
 
     /** User-supplied system properties */
-    private final Properties sytemProperties;
+    private final Properties systemProperties;
 
     /** The writer used for rendering templates, e.g. stdout or a file writer */
     private final Writer writer;
@@ -101,43 +108,47 @@ public class Settings {
             Properties configuration,
             List<String> args,
             List<File> templateDirectories,
-            String template,
+            List<String> templates,
             String interactiveTemplate,
+            String templateFileIncludePattern,
+            String templateFileExcludePattern,
             Charset inputEncoding,
             Charset outputEncoding,
             boolean verbose,
-            File outputFile,
-            String include,
-            String exclude,
+            File output,
+            String dataSourceIncludePattern,
+            String dataSourceExcludePattern,
             Locale locale,
             boolean isReadFromStdin,
             List<String> dataSources,
             List<String> dataModels,
             Map<String, Object> parameters,
-            Properties sytemProperties,
+            Properties systemProperties,
             Writer writer) {
-        if (isEmpty(template) && isEmpty(interactiveTemplate)) {
+        if ((templates == null || templates.isEmpty()) && isEmpty(interactiveTemplate)) {
             throw new IllegalArgumentException("Either 'template' or 'interactiveTemplate' must be provided");
         }
 
         this.args = requireNonNull(args);
         this.templateDirectories = requireNonNull(templateDirectories);
-        this.templateName = template;
+        this.templates = requireNonNull(templates);
         this.interactiveTemplate = interactiveTemplate;
+        this.templateFileIncludePattern = templateFileIncludePattern;
+        this.templateFileExcludePattern = templateFileExcludePattern;
         this.inputEncoding = inputEncoding;
         this.outputEncoding = outputEncoding;
         this.verbose = verbose;
-        this.outputFile = outputFile;
-        this.include = include;
-        this.exclude = exclude;
+        this.output = output;
+        this.dataSourceIncludePattern = dataSourceIncludePattern;
+        this.dataSourceExcludePattern = dataSourceExcludePattern;
         this.locale = requireNonNull(locale);
         this.isReadFromStdin = isReadFromStdin;
         this.dataSources = requireNonNull(dataSources);
         this.dataModels = requireNonNull(dataModels);
         this.parameters = requireNonNull(parameters);
-        this.sytemProperties = requireNonNull(sytemProperties);
+        this.systemProperties = requireNonNull(systemProperties);
         this.configuration = requireNonNull(configuration);
-        this.writer = new NonClosableWriterWrapper(requireNonNull(writer));
+        this.writer = writer != null ? new NonClosableWriterWrapper(writer) : null;
     }
 
     public static SettingsBuilder builder() {
@@ -156,12 +167,20 @@ public class Settings {
         return templateDirectories;
     }
 
-    public String getTemplateName() {
-        return templateName;
+    public List<String> getTemplates() {
+        return templates;
     }
-
+    
     public String getInteractiveTemplate() {
         return interactiveTemplate;
+    }
+
+    public String getTemplateFileIncludePattern() {
+        return templateFileIncludePattern;
+    }
+
+    public String getTemplateFileExcludePattern() {
+        return templateFileExcludePattern;
     }
 
     public Charset getInputEncoding() {
@@ -180,16 +199,16 @@ public class Settings {
         return verbose;
     }
 
-    public File getOutputFile() {
-        return outputFile;
+    public File getOutput() {
+        return output;
     }
 
-    public String getInclude() {
-        return include;
+    public String getDataSourceIncludePattern() {
+        return dataSourceIncludePattern;
     }
 
-    public String getExclude() {
-        return exclude;
+    public String getDataSourceExcludePattern() {
+        return dataSourceExcludePattern;
     }
 
     public Locale getLocale() {
@@ -212,12 +231,12 @@ public class Settings {
         return parameters;
     }
 
-    public Properties getSytemProperties() {
-        return sytemProperties;
+    public Properties getSystemProperties() {
+        return systemProperties;
     }
 
     public boolean hasOutputFile() {
-        return outputFile != null;
+        return output != null;
     }
 
     public Writer getWriter() {
@@ -236,7 +255,7 @@ public class Settings {
         result.put(Model.FREEMARKER_LOCALE, getLocale());
         result.put(Model.FREEMARKER_TEMPLATE_DIRECTORIES, getTemplateDirectories());
         result.put(Model.FREEMARKER_USER_PARAMETERS, getParameters());
-        result.put(Model.FREEMARKER_USER_SYSTEM_PROPERTIES, getSytemProperties());
+        result.put(Model.FREEMARKER_USER_SYSTEM_PROPERTIES, getSystemProperties());
         result.put(Model.FREEMARKER_WRITER, getWriter());
         return result;
     }
@@ -251,33 +270,37 @@ public class Settings {
                 "configuration=" + configuration +
                 ", args=" + args +
                 ", templateDirectories=" + templateDirectories +
-                ", templateName='" + templateName + '\'' +
+                ", templateName=s'" + templates + '\'' +
                 ", interactiveTemplate='" + interactiveTemplate + '\'' +
+                ", templateFileIncludePattern='" + templateFileIncludePattern + '\'' +
+                ", templateFileExcludePattern='" + templateFileExcludePattern + '\'' +
                 ", inputEncoding=" + inputEncoding +
                 ", outputEncoding=" + outputEncoding +
                 ", verbose=" + verbose +
-                ", outputFile=" + outputFile +
-                ", include='" + include + '\'' +
-                ", exclude='" + include + '\'' +
+                ", outputFile=" + output +
+                ", include='" + dataSourceIncludePattern + '\'' +
+                ", exclude='" + dataSourceExcludePattern + '\'' +
                 ", locale=" + locale +
                 ", isReadFromStdin=" + isReadFromStdin +
                 ", dataSources=" + dataSources +
                 ", properties=" + parameters +
-                ", sytemProperties=" + sytemProperties +
+                ", systemProperties=" + systemProperties +
                 '}';
     }
 
     public static class SettingsBuilder {
         private List<String> args;
         private List<File> templateDirectories;
-        private String templateName;
+        private List<String> templateNames;
         private String interactiveTemplate;
+        private String templateFileIncludePattern;
+        private String templateFileExcludePattern;
         private String inputEncoding;
         private String outputEncoding;
         private boolean verbose;
         private String outputFile;
-        private String include;
-        private String exclude;
+        private String dataSourceIncludePattern;
+        private String dataSourceExcludePattern;
         private String locale;
         private boolean isReadFromStdin;
         private List<String> dataSources;
@@ -295,6 +318,7 @@ public class Settings {
             this.systemProperties = new Properties();
             this.setInputEncoding(DEFAULT_CHARSET.name());
             this.setOutputEncoding(DEFAULT_CHARSET.name());
+            this.templateNames = new ArrayList<>();
             this.dataSources = emptyList();
             this.dataModels = emptyList();
             this.templateDirectories = emptyList();
@@ -315,13 +339,25 @@ public class Settings {
             return this;
         }
 
-        public SettingsBuilder setTemplateName(String templateName) {
-            this.templateName = templateName;
+        public SettingsBuilder setTemplateNames(List<String> templateNames) {
+            if (templateNames != null) {
+                this.templateNames = templateNames;
+            }
             return this;
         }
 
         public SettingsBuilder setInteractiveTemplate(String interactiveTemplate) {
             this.interactiveTemplate = interactiveTemplate;
+            return this;
+        }
+
+        public SettingsBuilder setTemplateFileIncludePattern(String templateFileIncludePattern) {
+            this.templateFileIncludePattern = templateFileIncludePattern;
+            return this;
+        }
+
+        public SettingsBuilder setTemplateFileExcludePattern(String templateFileExcludePattern) {
+            this.templateFileExcludePattern = templateFileExcludePattern;
             return this;
         }
 
@@ -349,13 +385,13 @@ public class Settings {
             return this;
         }
 
-        public SettingsBuilder setInclude(String include) {
-            this.include = include;
+        public SettingsBuilder setDataSourceIncludePattern(String dataSourceIncludePattern) {
+            this.dataSourceIncludePattern = dataSourceIncludePattern;
             return this;
         }
 
-        public SettingsBuilder setExclude(String exclude) {
-            this.exclude = exclude;
+        public SettingsBuilder setDataSourceExcludePattern(String dataSourceExcludePattern) {
+            this.dataSourceExcludePattern = dataSourceExcludePattern;
             return this;
         }
 
@@ -419,14 +455,16 @@ public class Settings {
                     configuration,
                     args,
                     templateDirectories,
-                    templateName,
+                    templateNames,
                     interactiveTemplate,
+                    templateFileIncludePattern,
+                    templateFileExcludePattern,
                     inputEncoding,
                     outputEncoding,
                     verbose,
                     currOutputFile,
-                    include,
-                    exclude,
+                    dataSourceIncludePattern,
+                    dataSourceExcludePattern,
                     LocaleUtils.parseLocale(currLocale),
                     isReadFromStdin,
                     dataSources,
