@@ -15,7 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign map = GsonTool.parse(DataSources.get(0))>
+<#assign map = GsonTool.toMap(DataSources.get(0))>
 <#assign basePath = map.basePath!"/">
 <#assign paths = map.paths!{}>
 

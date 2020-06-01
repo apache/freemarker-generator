@@ -34,7 +34,7 @@ import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model.FRE
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model.FREEMARKER_WRITER;
 
 /**
- * Provides system related functionality, e.g. accessing environment variable,
+ * Provides system related functionality, e.g. accessing environment variables,
  * system properties, commandl-line arguments, hostname, FreeMarker writer, etc.
  */
 @SuppressWarnings("unchecked")

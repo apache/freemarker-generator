@@ -15,51 +15,40 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign dataSource = DataSources.get(0)>
-<#assign name = dataSource.name>
-<#assign date = .now?iso_utc>
-<#assign dataFrame = DataFrameTool.parse(dataSource, csvReader())>
+<#assign cvsFormat = CSVTool.formats["DEFAULT"].withHeader().withDelimiter(';')>
+<#assign csvParser = CSVTool.parse(DataSources.get(0), cvsFormat)>
+<#assign dataFrame = DataFrameTool.toDataFrame(csvParser)>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>${name}</title>
+    <title>DataFrame</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
 </head>
 <body>
 <div class="container-fluid">
-    <h1>DataFrame Test <small>${name}, ${date}</small></h1>
-    <table class="table table-striped">
-        <@writeHeader dataFrame/>
-        <@writeRows dataFrame/>
-    </table>
+    <h1>DataFrame</h1>
+    <@writeDataFrame dataFrame/>
 </div>
 </body>
 </html>
 
 <#--------------------------------------------------------------------------->
-<#function csvReader>
-    <#return DataFrameTool.csvReaderBuilder.containsHeader(true).withSeparator(CSV_IN_DELIMITER!';').build()>
-</#function>
-
-<#--------------------------------------------------------------------------->
-<#macro writeHeader dataFrame>
-    <tr>
-        <#list dataFrame.columns as column>
-            <th>${column.name}</th>
-        </#list>
-    </tr>
-</#macro>
-
-<#--------------------------------------------------------------------------->
-<#macro writeRows dataFrame>
-    <#list dataFrame.iterator() as row>
+<#macro writeDataFrame dataFrame>
+    <table class="table table-striped">
         <tr>
-            <#list 0..row.size()-1 as idx>
-                <td>${row.getString(idx)}</td>
+            <#list dataFrame.columns as column>
+                <th>${column.name}</th>
             </#list>
         </tr>
-    </#list>
+        <#list dataFrame.iterator() as row>
+            <tr>
+                <#list 0..row.size()-1 as idx>
+                    <td>${row.getString(idx)}</td>
+                </#list>
+            </tr>
+        </#list>
+    </table>
 </#macro>

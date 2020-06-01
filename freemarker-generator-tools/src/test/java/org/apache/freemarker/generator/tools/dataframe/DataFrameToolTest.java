@@ -17,64 +17,90 @@
 package org.apache.freemarker.generator.tools.dataframe;
 
 import de.unknownreality.dataframe.DataFrame;
-import de.unknownreality.dataframe.csv.CSVReader;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
+import org.apache.freemarker.generator.tools.commonscsv.CommonsCSVTool;
+import org.apache.freemarker.generator.tools.gson.GsonTool;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.List;
+import java.util.Map;
 
-import static de.unknownreality.dataframe.sort.SortColumn.Direction.Descending;
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static junit.framework.Assert.assertEquals;
+import static junit.framework.TestCase.assertEquals;
+import static org.apache.commons.csv.CSVFormat.DEFAULT;
 
 public class DataFrameToolTest {
 
-    private static final File CONTRACT_CSV = new File("./src/test/data/csv/contract.csv");
     private static final File DATA_JOIN_A = new File("./src/test/data/csv/data_join_a.csv");
     private static final File DATA_JOIN_B = new File("./src/test/data/csv/data_join_b.csv");
 
-    @Test
-    public void shouldParseCsvFile() {
-        final DataFrame dataFrame = dataFrameTool().parse(dataSource(DATA_JOIN_A));
+    private static final String JSON_ARRAY = "[\n" +
+            "    {\n" +
+            "        \"Book ID\": \"1\",\n" +
+            "        \"Book Name\": \"Computer Architecture\",\n" +
+            "        \"Category\": \"Computers\",\n" +
+            "        \"Price\": \"125.60\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "        \"Book ID\": \"2\",\n" +
+            "        \"Book Name\": \"Asp.Net 4 Blue Book\",\n" +
+            "        \"Category\": \"Programming\",\n" +
+            "        \"Price\": \"56.00\"\n" +
+            "    },\n" +
+            "    {\n" +
+            "        \"Book ID\": \"3\",\n" +
+            "        \"Book Name\": \"Popular Science\",\n" +
+            "        \"Category\": \"Science\",\n" +
+            "        \"Price\": \"210.40\"\n" +
+            "    }\n" +
+            "]";
 
-        assertEquals("data_join_a.csv", dataFrame.getName());
+    // === CSV ==============================================================
+
+    @Test
+    public void shouldParseCsvFileWithHeader() {
+        final CSVParser csvParser = csvParser(DATA_JOIN_A, DEFAULT.withHeader().withDelimiter(';'));
+        final DataFrame dataFrame = dataFrameTool().toDataFrame(csvParser);
+
         assertEquals(3, dataFrame.getColumns().size());
         assertEquals(4, dataFrame.getRows().size());
         assertEquals("A", dataFrame.getColumn("GENE_ID").get(0));
     }
 
-    @Test
-    public void shouldParseCsvFileUsingCSVReader() {
-        final DataFrameTool dataFrameTool = dataFrameTool();
-        final CSVReader csvReader = dataFrameTool.getCsvReaderBuilder().containsHeader(true).withSeparator(',').build();
-        final DataFrame dataFrame = dataFrameTool.parse(dataSource(CONTRACT_CSV), csvReader);
-
-        assertEquals("contract.csv", dataFrame.getName());
-        assertEquals(32, dataFrame.getColumns().size());
-        assertEquals(22, dataFrame.getRows().size());
-        assertEquals("C71", dataFrame.getColumn("contract_id").get(0));
-    }
+    // === JSON =============================================================
 
     @Test
-    public void shouldJoinDataFrames() {
-        final String columnName = "GENE_ID";
-        final DataFrame dataFrameA = dataFrameTool().parse(dataSource(DATA_JOIN_A));
-        final DataFrame dataFrameB = dataFrameTool().parse(dataSource(DATA_JOIN_B));
-        final DataFrame dataFrame = dataFrameA.joinInner(dataFrameB, columnName).sort(columnName, Descending);
+    public void shouldParseJsonTable() {
+        final String columnName = "Book ID";
+        final List<Map<String, Object>> json = gsonTool().toList(JSON_ARRAY);
+        final DataFrame dataFrame = dataFrameTool().toDataFrame(json);
 
-        assertEquals(6, dataFrame.getColumns().size());
+        assertEquals(4, dataFrame.getColumns().size());
         assertEquals(3, dataFrame.getRows().size());
-        assertEquals("B", dataFrame.getColumn(columnName).get(0));
-
-        dataFrame.print();
+        assertEquals("1", dataFrame.getColumn(columnName).get(0));
     }
 
     private DataFrameTool dataFrameTool() {
         return new DataFrameTool();
     }
 
+    private CommonsCSVTool commonsCSVTool() {
+        return new CommonsCSVTool();
+    }
+
+    private GsonTool gsonTool() {
+        return new GsonTool();
+    }
+
     private DataSource dataSource(File file) {
         return DataSourceFactory.fromFile(file, UTF_8);
+    }
+
+    private CSVParser csvParser(File file, CSVFormat csvFormat) {
+        return commonsCSVTool().parse(dataSource(file), csvFormat);
     }
 }

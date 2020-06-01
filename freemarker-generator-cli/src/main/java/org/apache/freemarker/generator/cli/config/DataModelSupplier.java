@@ -86,7 +86,7 @@ public class DataModelSupplier implements Supplier<Map<String, Object>> {
 
     private Map<String, Object> fromJson(DataSource dataSource, boolean isExplodedDataModel) {
         final GsonTool gsonTool = new GsonTool();
-        final Map<String, Object> map = gsonTool.parse(dataSource);
+        final Map<String, Object> map = gsonTool.toMap(dataSource);
         return fromMap(dataSource.getName(), map, isExplodedDataModel);
     }
 

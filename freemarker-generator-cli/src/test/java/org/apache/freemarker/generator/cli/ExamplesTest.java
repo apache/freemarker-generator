@@ -109,7 +109,7 @@ public class ExamplesTest extends AbstractMainTest {
         assertValid(execute("-i ${JsoupTool.parse(DataSources.first).select(\"a\")[0]} site/sample/html/dependencies.html"));
         assertValid(execute("-i ${GsonTool.toJson(YamlTool.parse(DataSources.get(0)))} site/sample/yaml/swagger-spec.yaml"));
         assertValid(execute("-i ${GsonTool.toJson(yaml)} -m yaml=site/sample/yaml/swagger-spec.yaml"));
-        assertValid(execute("-i ${YamlTool.toYaml(GsonTool.parse(DataSources.get(0)))} site/sample/json/swagger-spec.json"));
+        assertValid(execute("-i ${YamlTool.toYaml(GsonTool.toMap(DataSources.get(0)))} site/sample/json/swagger-spec.json"));
         assertValid(execute("-i ${YamlTool.toYaml(json)} -m json=site/sample/json/swagger-spec.json"));
     }
 

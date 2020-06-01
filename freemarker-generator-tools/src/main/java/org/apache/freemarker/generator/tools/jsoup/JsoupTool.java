@@ -18,13 +18,14 @@ package org.apache.freemarker.generator.tools.jsoup;
 
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.io.InputStream;
 
 public class JsoupTool {
 
-    public org.jsoup.nodes.Document parse(DataSource dataSource) {
+    public Document parse(DataSource dataSource) {
         try (InputStream is = dataSource.getUnsafeInputStream()) {
             return Jsoup.parse(is, dataSource.getCharset().name(), "");
         } catch (IOException e) {
@@ -32,7 +33,7 @@ public class JsoupTool {
         }
     }
 
-    public org.jsoup.nodes.Document parse(String html) {
+    public Document parse(String html) {
         return Jsoup.parse(html);
     }
 
