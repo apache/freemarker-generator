@@ -29,9 +29,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * JSON processing using <a href="https://github.com/google/gson">Google GSON</a>
+ */
 public class GsonTool {
 
-    private Gson gson;
+    private volatile Gson gson;
 
     /**
      * Parse a data source containing a JSON object.
@@ -110,5 +113,4 @@ public class GsonTool {
     private static Type listTypeToken() {
         return new TypeToken<ArrayList<Map<String, Object>>>() {}.getType();
     }
-
 }
