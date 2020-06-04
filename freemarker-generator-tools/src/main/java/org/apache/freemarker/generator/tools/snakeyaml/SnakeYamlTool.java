@@ -22,7 +22,6 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Map;
 
 import static org.yaml.snakeyaml.DumperOptions.FlowStyle.BLOCK;
 
@@ -30,7 +29,7 @@ public class SnakeYamlTool {
 
     private Yaml yaml;
 
-    public Map<String, Object> parse(DataSource dataSource) {
+    public Object parse(DataSource dataSource) {
         try (InputStream is = dataSource.getUnsafeInputStream()) {
             return yaml().load(is);
         } catch (IOException e) {
@@ -38,8 +37,8 @@ public class SnakeYamlTool {
         }
     }
 
-    public Map<String, Object> parse(String value) {
-        return yaml().load(value);
+    public Object parse(String yaml) {
+        return yaml().load(yaml);
     }
 
     public String toYaml(Object data) {

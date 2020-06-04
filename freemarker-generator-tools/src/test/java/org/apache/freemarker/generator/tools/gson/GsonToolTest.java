@@ -83,8 +83,9 @@ public class GsonToolTest {
     private final GsonTool gsonTool = gsonTool();
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldParseJsonObject() {
-        final Map<String, Object> map = gsonTool.toMap(JSON_OBJECT);
+        final Map<String, Object> map = (Map) gsonTool.parse(JSON_OBJECT);
 
         assertEquals(3, map.size());
         assertEquals("110.0", map.get("id").toString());
@@ -93,23 +94,26 @@ public class GsonToolTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldParseJsonObjectWithArray() {
-        final Map<String, Object> map = gsonTool.toMap(JSON_OBJECT_WITH_ARRAY);
+        final Map<String, Object> map = (Map) gsonTool.parse(JSON_OBJECT_WITH_ARRAY);
 
         assertEquals(1, map.size());
         assertEquals(3, ((List) map.get("eBooks")).size());
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldParseJsonWithComemnts() {
-        final Map<String, Object> map = gsonTool.toMap(JSON_WITH_COMMENTS);
+        final Map<String, Object> map = (Map) gsonTool.parse(JSON_WITH_COMMENTS);
 
         assertEquals("Apple", map.get("fruit"));
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldParseJsonArray() {
-        final List<Map<String, Object>> list = gsonTool.toList(JSON_ARRAY);
+        final List<Map<String, Object>> list = (List<Map<String, Object>>) gsonTool.parse(JSON_ARRAY);
 
         assertEquals(3, list.size());
         assertEquals("1", list.get(0).get("Book ID"));
@@ -118,18 +122,20 @@ public class GsonToolTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldConvertToJson() {
-        assertEquals(JSON_OBJECT, gsonTool.toJson(gsonTool.toMap(JSON_OBJECT)));
-        assertEquals(JSON_OBJECT_WITH_ARRAY, gsonTool.toJson(gsonTool.toMap(JSON_OBJECT_WITH_ARRAY)));
+        assertEquals(JSON_OBJECT, gsonTool.toJson(gsonTool.parse(JSON_OBJECT)));
+        assertEquals(JSON_OBJECT_WITH_ARRAY, gsonTool.toJson(gsonTool.parse(JSON_OBJECT_WITH_ARRAY)));
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldParseComplexJson() throws IOException {
         final String json = readFileToString(new File("./src/test/data/json/swagger.json"), UTF_8);
-        final Map<String, Object> map = gsonTool.toMap(json);
+        final Map<String, Object> map = (Map) gsonTool.parse(json);
 
         assertEquals("petstore.swagger.io", map.get("host"));
-        assertEquals(json, gsonTool.toJson(gsonTool.toMap(json)));
+        assertEquals(json, gsonTool.toJson(gsonTool.parse(json)));
     }
 
     private GsonTool gsonTool() {

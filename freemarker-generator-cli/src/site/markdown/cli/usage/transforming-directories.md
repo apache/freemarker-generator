@@ -33,7 +33,7 @@ total 8
 drwxr-xr-x  3 sgoeschl  staff   96 May 30 20:02 nginx
 ```
 
-### Pass Parameter On The Command Line
+### Use Command Line Parameters
 
 ```
 bin/freemarker-cli -t site/template/ -P NGINX_HOSTNAME=localhost
@@ -102,13 +102,30 @@ server {
   root /usr/share/nginx/www;
   index index.htm;
 }
+```
 
+### Use YAML File
+
+```
+echo -e "- NGINX_PORT": "\"8443\"\n- NGINX_HOSTNAME": "localhost" > nginx.yaml
+bin/freemarker-cli -t site/template/ -m nginx.yaml 
+# == application.properties ==================================================
+server.name=localhost
+server.logs=/var/log/nginx
+# == nginx-conf =============================================================
+server {
+  listen 8443;
+  server_name localhost;
+
+  root /usr/share/nginx/www;
+  index index.htm;
+}
 ```
 
 ### Use Environment Variable With JSON Payload
 
 ```
-export NGINX_CONF='{"NGINX_PORT":"8443","NGINX_HOSTNAME":"localhost"}'
+export NGINX_CONF='{"NGINX_PORT":"8443","NGINX_HOSTNAME":"somehost"}'
 echo $NGINX_CONF
 {"NGINX_PORT":"8443","NGINX_HOSTNAME":"localhost"}
 bin/freemarker-cli -t site/template/ -m env:///NGINX_CONF#mimetype=application/json

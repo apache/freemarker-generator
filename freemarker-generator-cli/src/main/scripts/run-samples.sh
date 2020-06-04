@@ -50,7 +50,7 @@ $FREEMARKER_CMD -i '${JsonPathTool.parse(DataSources.first).read("$.info.title")
 $FREEMARKER_CMD -i '${XmlTool.parse(DataSources.first)["recipients/person[1]/name"]}' site/sample/xml/recipients.xml > target/out/interactive-xml.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
 $FREEMARKER_CMD -i '${JsoupTool.parse(DataSources.first).select("a")[0]}' site/sample/html/dependencies.html > target/out/interactive-html.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
 $FREEMARKER_CMD -i '${GsonTool.toJson(YamlTool.parse(DataSources.get(0)))}' site/sample/yaml/swagger-spec.yaml > target/out/interactive-swagger.json || { echo >&2 "Test failed.  Aborting."; exit 1; }
-$FREEMARKER_CMD -i '${YamlTool.toYaml(GsonTool.toMap(DataSources.get(0)))}' site/sample/json/swagger-spec.json > target/out/interactive-swagger.yaml || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -i '${YamlTool.toYaml(GsonTool.parse(DataSources.get(0)))}' site/sample/json/swagger-spec.json > target/out/interactive-swagger.yaml || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
 # CSV

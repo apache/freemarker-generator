@@ -20,6 +20,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Map;
 
 import static java.util.Collections.singletonList;
@@ -36,7 +37,7 @@ public class DataModelSupplierTest {
     // === Environment Variables ===
 
     @Test
-    public void shouldResolveAllEnvironmentVariablesToTopLevelDataModel() {
+    public void shouldCopyAllEnvironmentVariablesToTopLevelDataModel() {
         final DataModelSupplier supplier = supplier("env:///");
 
         final Map<String, Object> model = supplier.get();
@@ -46,7 +47,7 @@ public class DataModelSupplierTest {
     }
 
     @Test
-    public void shouldResolveAllEnvironmentVariablesToDataModelVariable() {
+    public void shouldCopyAllEnvironmentVariablesToDataModelVariable() {
         final DataModelSupplier supplier = supplier("myenv=env:///");
 
         final Map<String, Object> model = supplier.get();
@@ -57,7 +58,7 @@ public class DataModelSupplierTest {
     }
 
     @Test
-    public void shouldResolveSingleEnvironmentVariablesToTopLevelDataModel() {
+    public void shouldCopySingleEnvironmentVariablesToTopLevelDataModel() {
         final DataModelSupplier supplier = supplier("env:///PWD");
 
         final Map<String, Object> model = supplier.get();
@@ -67,7 +68,7 @@ public class DataModelSupplierTest {
     }
 
     @Test
-    public void shouldResolveSingleEnvironmentVariableToDataModelVariable() {
+    public void shouldCopySingleEnvironmentVariableToDataModelVariable() {
         final DataModelSupplier supplier = supplier("mypwd=env:///PWD");
 
         final Map<String, Object> model = supplier.get();
@@ -84,7 +85,7 @@ public class DataModelSupplierTest {
     // === Properties ===
 
     @Test
-    public void shouldResolvePropertiesFileToTopLevelDataModel() {
+    public void shouldCopeyPropertiesFileToTopLevelDataModel() {
         final DataModelSupplier supplier = supplier("./src/test/data/properties/test.properties");
 
         final Map<String, Object> model = supplier.get();
@@ -95,7 +96,7 @@ public class DataModelSupplierTest {
     }
 
     @Test
-    public void shouldResolvePropertiesFileToDataModelVariable() {
+    public void shouldCopyPropertiesFileToDataModelVariable() {
         final DataModelSupplier supplier = supplier("props=./src/test/data/properties/test.properties");
 
         final Map<String, Object> model = supplier.get();
@@ -106,7 +107,7 @@ public class DataModelSupplierTest {
     }
 
     @Test
-    public void shouldResolvePropertiesUriToDataModelVariable() {
+    public void shouldCopyPropertiesUriToDataModelVariable() {
         final DataModelSupplier supplier = supplier("props=file:///" + PWD + "/src/test/data/properties/test.properties");
 
         final Map<String, Object> model = supplier.get();
@@ -119,7 +120,7 @@ public class DataModelSupplierTest {
     // === JSON ===
 
     @Test
-    public void shouldResolveJsonFileToTopLevelDataModel() {
+    public void shouldCopyJsonObjectFileToTopLevelDataModel() {
         final DataModelSupplier supplier = supplier("./src/test/data/json/environments.json");
 
         final Map<String, Object> model = supplier.get();
@@ -128,6 +129,24 @@ public class DataModelSupplierTest {
         assertEquals("scott", model.get("db_default_user"));
         assertEquals("tiger", model.get("db_default_password"));
     }
+
+    @Test
+    public void shouldCopyJsonArrayFileToDataModelVariable() {
+        final DataModelSupplier supplier = supplier("list=./src/test/data/json/list.json");
+
+        final Map<String, Object> model = supplier.get();
+
+        assertEquals(1, model.size());
+        assertEquals("first", ((List)model.get("list")).get(0));
+        assertEquals("second", ((List)model.get("list")).get(1));
+    }
+
+    @Test(expected = Exception.class)
+    public void shouldFailWhenCopyJsonArrayFileToTopLevelDataModel() {
+        supplier("./src/test/data/json/list.json").get();
+    }
+
+    // == YAML ===
 
     @Test
     public void shouldResolveYamlFileToTopLevelDataModel() {
@@ -145,6 +164,16 @@ public class DataModelSupplierTest {
     @Test
     @Ignore
     public void shouldResolveUrlToTopLevelDataModel() {
+        final DataModelSupplier supplier = supplier("https://jsonplaceholder.typicode.com/posts/2");
+
+        final Map<String, Object> model = supplier.get();
+
+        assertTrue(model.size() == 4);
+    }
+
+    @Test
+    @Ignore
+    public void shouldResolveUrlToDataModelVariable() {
         final DataModelSupplier supplier = supplier("post=https://jsonplaceholder.typicode.com/posts/2");
 
         final Map<String, Object> model = supplier.get();
@@ -154,16 +183,6 @@ public class DataModelSupplierTest {
     }
 
     @Test
-    @Ignore
-    public void shouldResolveUrlToDataModelVariable() {
-        final DataModelSupplier supplier = supplier("https://jsonplaceholder.typicode.com/posts/2");
-
-        final Map<String, Object> model = supplier.get();
-
-        assertTrue(model.size() == 4);
-    }
-
-    @Test(expected = RuntimeException.class)
     @Ignore
     public void shouldResolveUrlToDataModelVariables() {
         supplier("https://jsonplaceholder.typicode.com/posts/does-not-exist").get();

@@ -30,13 +30,14 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.toMap;
 import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_APPLICATION_JSON;
 import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_TEXT_PLAIN;
 import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_TEXT_YAML;
@@ -62,12 +63,12 @@ public class DataModelSupplier implements Supplier<Map<String, Object>> {
     public Map<String, Object> get() {
         return sources.stream()
                 .filter(StringUtils::isNotEmpty)
-                .map(this::toDataModel)
+                .map(DataModelSupplier::toDataModel)
                 .flatMap(map -> map.entrySet().stream())
-                .collect(toMap(Entry::getKey, Entry::getValue));
+                .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
     }
 
-    protected Map<String, Object> toDataModel(String source) {
+    private static Map<String, Object> toDataModel(String source) {
         final NamedUri namedUri = NamedUriStringParser.parse(source);
         final DataSource dataSource = DataSourceFactory.fromNamedUri(namedUri);
         final boolean isExplodedDataModel = !namedUri.hasName();
@@ -84,19 +85,19 @@ public class DataModelSupplier implements Supplier<Map<String, Object>> {
         }
     }
 
-    private Map<String, Object> fromJson(DataSource dataSource, boolean isExplodedDataModel) {
+    private static Map<String, Object> fromJson(DataSource dataSource, boolean isExplodedDataModel) {
         final GsonTool gsonTool = new GsonTool();
-        final Map<String, Object> map = gsonTool.toMap(dataSource);
-        return fromMap(dataSource.getName(), map, isExplodedDataModel);
+        final Object json = gsonTool.parse(dataSource);
+        return toMap(dataSource.getName(), json, isExplodedDataModel);
     }
 
-    private Map<String, Object> fromYaml(DataSource dataSource, boolean isExplodedDataModel) {
+    private static Map<String, Object> fromYaml(DataSource dataSource, boolean isExplodedDataModel) {
         final SnakeYamlTool snakeYamlTool = new SnakeYamlTool();
-        final Map<String, Object> map = snakeYamlTool.parse(dataSource);
-        return fromMap(dataSource.getName(), map, isExplodedDataModel);
+        final Object yaml = snakeYamlTool.parse(dataSource);
+        return toMap(dataSource.getName(), yaml, isExplodedDataModel);
     }
 
-    private Map<String, Object> fromProperties(DataSource dataSource, boolean isExplodedDataModel) {
+    private static Map<String, Object> fromProperties(DataSource dataSource, boolean isExplodedDataModel) {
         final Map<String, Object> result = new HashMap<>();
         final URI uri = dataSource.getUri();
 
@@ -114,13 +115,27 @@ public class DataModelSupplier implements Supplier<Map<String, Object>> {
         return result;
     }
 
-    private Map<String, Object> fromMap(String name, Map<String, Object> map, boolean isExplodedDataModel) {
+    @SuppressWarnings("unchecked")
+    private static Map<String, Object> toMap(String name, Object obj, boolean isExplodedDataModel) {
         final Map<String, Object> result = new HashMap<>();
 
-        if (isExplodedDataModel) {
-            map.forEach(result::put);
-        } else {
-            result.put(name, map);
+        if (obj instanceof Map) {
+            final Map<String, Object> map = (Map<String, Object>) obj;
+            if (isExplodedDataModel) {
+                map.forEach(result::put);
+            } else {
+                result.put(name, map);
+            }
+        } else if (obj instanceof List) {
+            final List<Object> list = (List<Object>) obj;
+            if (isExplodedDataModel) {
+                for (Object entry : list) {
+                    final Map<String, Object> map = (Map<String, Object>) entry;
+                    map.forEach(result::put);
+                }
+            } else {
+                result.put(name, list);
+            }
         }
 
         return result;

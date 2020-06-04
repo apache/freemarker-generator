@@ -114,14 +114,14 @@ public class ExamplesTest extends AbstractMainTest {
         assertValid(execute("-i ${JsoupTool.parse(DataSources.first).select(\"a\")[0]} site/sample/html/dependencies.html"));
         assertValid(execute("-i ${GsonTool.toJson(YamlTool.parse(DataSources.get(0)))} site/sample/yaml/swagger-spec.yaml"));
         assertValid(execute("-i ${GsonTool.toJson(yaml)} -m yaml=site/sample/yaml/swagger-spec.yaml"));
-        assertValid(execute("-i ${YamlTool.toYaml(GsonTool.toMap(DataSources.get(0)))} site/sample/json/swagger-spec.json"));
+        assertValid(execute("-i ${YamlTool.toYaml(GsonTool.parse(DataSources.get(0)))} site/sample/json/swagger-spec.json"));
         assertValid(execute("-i ${YamlTool.toYaml(json)} -m json=site/sample/json/swagger-spec.json"));
     }
 
     @Test
     public void shouldTransformTemplateDirectory() throws IOException {
-        assertTrue(execute("-t site/template").contains("server.name=somehost"));
-        assertTrue(execute("-t site/template -PNGINX_HOSTNAME=localhost").contains("server.name=localhost"));
+        assertTrue(execute("-t site/template").contains("server.name=127.0.0.1"));
+        assertTrue(execute("-t site/template -PNGINX_HOSTNAME=my.domain.com").contains("server.name=my.domain.com"));
     }
 
     @Test

@@ -19,17 +19,13 @@ package org.apache.freemarker.generator.tools.dataframe;
 import de.unknownreality.dataframe.DataFrame;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
-import org.apache.freemarker.generator.base.datasource.DataSource;
-import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.freemarker.generator.tools.commonscsv.CommonsCSVTool;
 import org.apache.freemarker.generator.tools.gson.GsonTool;
 import org.junit.Test;
 
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static junit.framework.TestCase.assertEquals;
 import static org.apache.commons.csv.CSVFormat.DEFAULT;
 
@@ -77,9 +73,10 @@ public class DataFrameToolTest {
     // === JSON =============================================================
 
     @Test
+    @SuppressWarnings("unchecked")
     public void shouldParseJsonTable() {
         final String columnName = "Book ID";
-        final List<Map<String, Object>> json = gsonTool().toList(JSON_ARRAY);
+        final List<Map<String, Object>> json = (List) gsonTool().parse(JSON_ARRAY);
         final DataFrame dataFrame = dataFrameTool().toDataFrame(json);
 
         assertEquals(4, dataFrame.getColumns().size());
@@ -97,10 +94,6 @@ public class DataFrameToolTest {
 
     private GsonTool gsonTool() {
         return new GsonTool();
-    }
-
-    private DataSource dataSource(File file) {
-        return DataSourceFactory.fromFile(file, UTF_8);
     }
 
     private CSVParser csvParser(String csv, CSVFormat csvFormat) {
