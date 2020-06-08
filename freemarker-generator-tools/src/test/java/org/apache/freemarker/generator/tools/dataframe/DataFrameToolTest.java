@@ -31,34 +31,50 @@ import static org.apache.commons.csv.CSVFormat.DEFAULT;
 
 public class DataFrameToolTest {
 
-    private static final String CSV_WITH_HEADER = "GENE_ID;FPKM;CHR\n" +
-            "A;5;1\n" +
+    private static final String CSV_WITHOUT_HEADER = "A;5;1\n" +
             "B;4;2\n" +
             "C;6;3\n" +
             "D;6;1";
+
+    private static final String CSV_WITH_HEADER = "GENE_ID;FPKM;CHR\n" +
+            CSV_WITHOUT_HEADER;
 
     private static final String JSON_ARRAY = "[\n" +
             "    {\n" +
             "        \"Book ID\": \"1\",\n" +
             "        \"Book Name\": \"Computer Architecture\",\n" +
             "        \"Category\": \"Computers\",\n" +
-            "        \"Price\": \"125.60\"\n" +
+            "        \"In Stock\": true,\n" +
+            "        \"Price\": 125.60\n" +
             "    },\n" +
             "    {\n" +
             "        \"Book ID\": \"2\",\n" +
             "        \"Book Name\": \"Asp.Net 4 Blue Book\",\n" +
             "        \"Category\": \"Programming\",\n" +
-            "        \"Price\": \"56.00\"\n" +
+            "        \"In Stock\": null,\n" +
+            "        \"Price\": 56.00\n" +
             "    },\n" +
             "    {\n" +
             "        \"Book ID\": \"3\",\n" +
             "        \"Book Name\": \"Popular Science\",\n" +
             "        \"Category\": \"Science\",\n" +
-            "        \"Price\": \"210.40\"\n" +
+            "        \"Price\": 210.40\n" +
             "    }\n" +
             "]";
 
     // === CSV ==============================================================
+
+    @Test
+    public void shouldParseCsvFileWithoutHeader() {
+        final CSVParser csvParser = csvParser(CSV_WITHOUT_HEADER, DEFAULT.withDelimiter(';'));
+        final DataFrame dataFrame = dataFrameTool().toDataFrame(csvParser);
+
+        assertEquals(3, dataFrame.getColumns().size());
+        assertEquals(4, dataFrame.getRows().size());
+        assertEquals("A", dataFrame.getRow(0).get(0));
+        assertEquals("4", dataFrame.getRow(1).get(1));
+        assertEquals("3", dataFrame.getRow(2).get(2));
+    }
 
     @Test
     public void shouldParseCsvFileWithHeader() {
@@ -68,6 +84,8 @@ public class DataFrameToolTest {
         assertEquals(3, dataFrame.getColumns().size());
         assertEquals(4, dataFrame.getRows().size());
         assertEquals("A", dataFrame.getColumn("GENE_ID").get(0));
+        assertEquals("4", dataFrame.getColumn("FPKM").get(1));
+        assertEquals("3", dataFrame.getColumn("CHR").get(2));
     }
 
     // === JSON =============================================================
@@ -76,12 +94,14 @@ public class DataFrameToolTest {
     @SuppressWarnings("unchecked")
     public void shouldParseJsonTable() {
         final String columnName = "Book ID";
-        final List<Map<String, Object>> json = (List) gsonTool().parse(JSON_ARRAY);
+        final List<Map<String, Object>> json = (List<Map<String, Object>>) gsonTool().parse(JSON_ARRAY);
         final DataFrame dataFrame = dataFrameTool().toDataFrame(json);
 
-        assertEquals(4, dataFrame.getColumns().size());
+        assertEquals(5, dataFrame.getColumns().size());
         assertEquals(3, dataFrame.getRows().size());
         assertEquals("1", dataFrame.getColumn(columnName).get(0));
+        assertEquals("2", dataFrame.getColumn(columnName).get(1));
+        assertEquals("3", dataFrame.getColumn(columnName).get(2));
     }
 
     private DataFrameTool dataFrameTool() {

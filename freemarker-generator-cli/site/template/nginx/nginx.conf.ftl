@@ -14,7 +14,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-# == nginx-conf =============================================================
+# == nginx-conf ==============================================================
 server {
   listen ${NGINX_PORT!"80"};
   server_name ${NGINX_HOSTNAME!"127.0.0.1"};
