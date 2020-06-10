@@ -17,17 +17,15 @@
 package org.apache.freemarker.generator.tools.dataframe;
 
 import de.unknownreality.dataframe.DataFrame;
-import de.unknownreality.dataframe.DataFrameBuilder;
 import de.unknownreality.dataframe.DataFrameWriter;
 import de.unknownreality.dataframe.sort.SortColumn.Direction;
 import de.unknownreality.dataframe.transform.ColumnDataFrameTransform;
 import de.unknownreality.dataframe.transform.CountTransformer;
 import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
-import org.apache.freemarker.generator.base.table.Table;
 import org.apache.freemarker.generator.base.util.Validate;
+import org.apache.freemarker.generator.tools.dataframe.impl.CommonsCSVConverter;
+import org.apache.freemarker.generator.tools.dataframe.impl.MapConverter;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.List;
@@ -62,36 +60,7 @@ public class DataFrameTool {
      * @return data frame
      */
     public DataFrame toDataFrame(CSVParser csvParser) {
-        try {
-            final List<String> headerNames = csvParser.getHeaderNames();
-            final DataFrameBuilder builder = DataFrameBuilder.create();
-            final List<CSVRecord> records = csvParser.getRecords();
-            final CSVRecord firstRecord = records.get(0);
-
-            //  build dataframe with headers
-            if (headerNames != null && !headerNames.isEmpty()) {
-                headerNames.forEach(builder::addStringColumn);
-            } else {
-                for (int i = 0; i < firstRecord.size(); i++) {
-                    builder.addStringColumn(getAlpha(i + 1));
-                }
-            }
-
-            final DataFrame dataFrame = builder.build();
-
-            // populate rows
-            final String[] currValues = new String[firstRecord.size()];
-            for (CSVRecord csvRecord : records) {
-                for (int i = 0; i < currValues.length; i++) {
-                    currValues[i] = csvRecord.get(i);
-                }
-                dataFrame.append(currValues);
-            }
-
-            return dataFrame;
-        } catch (IOException e) {
-            throw new RuntimeException("Unable to create DataFrame", e);
-        }
+        return CommonsCSVConverter.toDataFrame(csvParser);
     }
 
     /**
@@ -103,26 +72,7 @@ public class DataFrameTool {
      * @return data frame
      */
     public DataFrame toDataFrame(List<Map<String, Object>> list) {
-        if (list == null || list.isEmpty()) {
-            return DataFrameBuilder.createDefault();
-        }
-
-        final Table table = Table.fromMaps(list);
-
-        //  build dataframe with headers
-        final DataFrameBuilder builder = DataFrameBuilder.create();
-        for (int i = 0; i < table.getColumnNames().length; i++) {
-            addColumn(builder, table.getColumnNames()[i], table.getColumnTypes()[i]);
-        }
-        final DataFrame dataFrame = builder.build();
-
-        // populate rows
-        for (int i = 0; i < table.getNrOfRows(); i++) {
-            final Object[] values = table.getRowValues(i);
-            dataFrame.append(toComparables(values));
-        }
-
-        return dataFrame;
+        return MapConverter.toDataFrame(list);
     }
 
     /**
@@ -163,51 +113,7 @@ public class DataFrameTool {
         return "Bridge to nRo/DataFrame (see https://github.com/nRo/DataFrame)";
     }
 
-    private static DataFrameBuilder addColumn(DataFrameBuilder builder, String name, Class<?> clazz) {
-        switch (clazz.getName()) {
-            case "java.lang.Boolean":
-                return builder.addBooleanColumn(name);
-            case "java.lang.Byte":
-                return builder.addByteColumn(name);
-            case "java.lang.Double":
-                return builder.addDoubleColumn(name);
-            case "java.lang.Float":
-                return builder.addFloatColumn(name);
-            case "java.lang.Integer":
-                return builder.addIntegerColumn(name);
-            case "java.lang.Long":
-                return builder.addLongColumn(name);
-            case "java.lang.Short":
-                return builder.addShortColumn(name);
-            case "java.lang.String":
-                return builder.addStringColumn(name);
-            default:
-                throw new RuntimeException("Unable to add colum for the following type: " + clazz.getName());
-        }
-    }
-
     private static CountTransformer countTransformer(boolean ignoreNA) {
         return new CountTransformer(ignoreNA);
     }
-
-    private static Comparable<?>[] toComparables(Object[] values) {
-        final Comparable<?>[] comparables = new Comparable<?>[values.length];
-        for (int i = 0; i < values.length; i++) {
-            comparables[i] = (Comparable<?>) values[i];
-        }
-        return comparables;
-    }
-
-    private static String getAlpha(int num) {
-        String result = "";
-        while (num > 0) {
-            num--; // 1 => a, not 0 => a
-            int remainder = num % 26;
-            char digit = (char) (remainder + 65);
-            result = digit + result;
-            num = (num - remainder) / 26;
-        }
-        return result;
-    }
-
 }

@@ -1,14 +1,15 @@
 package org.apache.freemarker.generator.base.table;
 
+import org.apache.freemarker.generator.base.util.ArrayUtils;
 import org.apache.freemarker.generator.base.util.Validate;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static java.util.Objects.requireNonNull;
 
@@ -24,7 +25,7 @@ public class Table {
     private Table(String[] columnNames, Class<?>[] columnTypes, Object[][] columnValuesList) {
         this.columnNames = requireNonNull(columnNames);
         this.columnTypes = requireNonNull(columnTypes);
-        this.values = transpose(requireNonNull(columnValuesList));
+        this.values = ArrayUtils.transpose(requireNonNull(columnValuesList));
 
         this.columnMap = new HashMap<>();
         for (int i = 0; i < this.columnNames.length; i++) {
@@ -56,17 +57,30 @@ public class Table {
         return new Row(columnMap, getRowValues(row));
     }
 
-    public static Table fromMaps(List<Map<String, Object>> list) {
-        Validate.notNull(list, "list is null");
+    public static Table fromMaps(List<Map<String, Object>> maps) {
+        Validate.notNull(maps, "list is null");
 
-        final List<String> columnNames = columnNames(list);
-        final Object[][] tableValues = columnValues(list, columnNames);
-        final List<Class<?>> columnTypes = columnTypes(tableValues);
+        final List<String> columnNames = columnNames(maps);
+        final Object[][] columnValuesList = columnValuesList(maps, columnNames);
+        final List<Class<?>> columnTypes = columnTypes(columnValuesList);
 
         return new Table(
                 columnNames.toArray(new String[0]),
                 columnTypes.toArray(new Class[0]),
-                tableValues);
+                columnValuesList);
+    }
+
+    public static Table fromLists(List<List<Object>> list) {
+        Validate.notNull(list, "list is null");
+
+        final List<String> columnNames = Arrays.asList(ArrayUtils.copy(list.toArray(new Object[0])));
+        final Object[][] columnValuesList = columnValuesList(list.subList(1, list.size()));
+        final List<Class<?>> columnTypes = columnTypes(columnValuesList);
+
+        return new Table(
+                columnNames.toArray(new String[0]),
+                columnTypes.toArray(new Class[0]),
+                columnValuesList);
     }
 
     public static final class Row {
@@ -99,16 +113,33 @@ public class Table {
                 .collect(Collectors.toList());
     }
 
-    private static Object[][] columnValues(List<Map<String, Object>> list, List<String> columnNames) {
+    private static Object[][] columnValuesList(List<Map<String, Object>> list, List<String> columnNames) {
         return columnNames.stream()
                 .map(columnName -> columnValues(list, columnName))
                 .collect(Collectors.toList())
                 .toArray(new Object[0][0]);
     }
 
-    private static Object[] columnValues(List<Map<String, Object>> list, String columnName) {
-        return list.stream()
+    private static Object[][] columnValuesList(List<List<Object>> lists) {
+        if (lists.isEmpty()) {
+            return new Object[0][0];
+        }
+
+        return IntStream.range(0, lists.get(0).size())
+                .mapToObj(i -> columnValues(lists, i))
+                .collect(Collectors.toList())
+                .toArray(new Object[0][0]);
+    }
+
+    private static Object[] columnValues(List<Map<String, Object>> maps, String columnName) {
+        return maps.stream()
                 .map(map -> map.getOrDefault(columnName, null))
+                .toArray();
+    }
+
+    private static Object[] columnValues(List<List<Object>> lists, int column) {
+        return lists.stream()
+                .map(list -> list.get(column))
                 .toArray();
     }
 
@@ -132,32 +163,5 @@ public class Table {
         }
 
         throw new IllegalArgumentException("No column value found!!!");
-    }
-
-    /**
-     * Transposes the given array, swapping rows with columns. The given array might contain arrays as elements that are
-     * not all of the same length. The returned array will have {@code null} values at those places.
-     *
-     * @param <T>   the type of the array
-     * @param array the array
-     * @return the transposed array
-     * @throws NullPointerException if the given array is {@code null}
-     */
-    public static <T> T[][] transpose(final T[][] array) {
-        requireNonNull(array);
-        // get y count
-        final int yCount = Arrays.stream(array).mapToInt(a -> a.length).max().orElse(0);
-        final int xCount = array.length;
-        final Class<?> componentType = array.getClass().getComponentType().getComponentType();
-        @SuppressWarnings("unchecked") final T[][] newArray = (T[][]) Array.newInstance(componentType, yCount, xCount);
-        for (int x = 0; x < xCount; x++) {
-            for (int y = 0; y < yCount; y++) {
-                if (array[x] == null || y >= array[x].length) {
-                    break;
-                }
-                newArray[y][x] = array[x][y];
-            }
-        }
-        return newArray;
     }
 }
