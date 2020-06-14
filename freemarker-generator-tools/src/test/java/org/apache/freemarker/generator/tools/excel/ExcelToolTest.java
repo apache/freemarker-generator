@@ -39,7 +39,7 @@ public class ExcelToolTest {
         final Workbook workbook = workbook(TEST_XLS);
 
         final List<Sheet> sheets = excelTool().getSheets(workbook);
-        final List<List<String>> records = excelTool().toTable(sheets.get(0));
+        final List<List<Object>> records = excelTool().toTable(sheets.get(0));
 
         assertEquals(1, sheets.size());
         assertEquals(3, records.size());
@@ -50,7 +50,7 @@ public class ExcelToolTest {
         final Workbook workbook = workbook(TEST_XLSX);
 
         final List<Sheet> sheets = excelTool().getSheets(workbook);
-        final List<List<String>> records = excelTool().toTable(sheets.get(0));
+        final List<List<Object>> records = excelTool().toTable(sheets.get(0));
 
         assertEquals(1, sheets.size());
         assertEquals(3, records.size());
@@ -71,9 +71,9 @@ public class ExcelToolTest {
     public void shouldConvertSheetToTable() {
         final Workbook workbook = workbook(TEST_XLSX);
         final List<Sheet> sheets = excelTool().getSheets(workbook);
-        final List<List<String>> records = excelTool().toTable(sheets.get(0));
+        final List<List<Object>> records = excelTool().toTable(sheets.get(0));
 
-        final List<String> record = records.get(1);
+        final List<Object> record = records.get(1);
 
         assertEquals("Row 1", record.get(0));
         assertEquals("01/31/17", record.get(1));

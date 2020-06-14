@@ -23,8 +23,9 @@ import de.unknownreality.dataframe.transform.ColumnDataFrameTransform;
 import de.unknownreality.dataframe.transform.CountTransformer;
 import org.apache.commons.csv.CSVParser;
 import org.apache.freemarker.generator.base.util.Validate;
-import org.apache.freemarker.generator.tools.dataframe.impl.CommonsCSVConverter;
-import org.apache.freemarker.generator.tools.dataframe.impl.MapConverter;
+import org.apache.freemarker.generator.tools.dataframe.converter.CSVConverter;
+import org.apache.freemarker.generator.tools.dataframe.converter.ListConverter;
+import org.apache.freemarker.generator.tools.dataframe.converter.MapConverter;
 
 import java.io.Writer;
 import java.util.HashMap;
@@ -59,20 +60,29 @@ public class DataFrameTool {
      * @param csvParser CSV Parser
      * @return data frame
      */
-    public DataFrame toDataFrame(CSVParser csvParser) {
-        return CommonsCSVConverter.toDataFrame(csvParser);
+    public DataFrame fromCSVParser(CSVParser csvParser) {
+        return CSVConverter.toDataFrame(csvParser);
     }
 
     /**
-     * Create a data frame from a list of maps. It is assumed
-     * that the map represent tabular data without missing
-     * values.
+     * Create a data frame from a list of maps.
      *
-     * @param list map to build the data frame
+     * @param maps maps to build the data frame
      * @return data frame
      */
-    public DataFrame toDataFrame(List<Map<String, Object>> list) {
-        return MapConverter.toDataFrame(list);
+    public DataFrame fromMaps(List<Map<String, Object>> maps) {
+        return MapConverter.toDataFrame(maps);
+    }
+
+    /**
+     * Create a data frame from a list of rows.
+     *
+     * @param lists                     lists to build the data frame from
+     * @param withFirstRowAsColumnNames column names as first row?
+     * @return data frame
+     */
+    public DataFrame fromLists(List<List<Object>> lists, boolean withFirstRowAsColumnNames) {
+        return ListConverter.toDataFrame(lists, withFirstRowAsColumnNames);
     }
 
     /**

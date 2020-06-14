@@ -19,8 +19,11 @@ package org.apache.freemarker.generator.tools.dataframe;
 import de.unknownreality.dataframe.DataFrame;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
+import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.freemarker.generator.tools.commonscsv.CommonsCSVTool;
+import org.apache.freemarker.generator.tools.excel.ExcelTool;
 import org.apache.freemarker.generator.tools.gson.GsonTool;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.Test;
 
 import java.util.List;
@@ -67,7 +70,7 @@ public class DataFrameToolTest {
     @Test
     public void shouldParseCsvFileWithoutHeader() {
         final CSVParser csvParser = csvParser(CSV_WITHOUT_HEADER, DEFAULT.withDelimiter(';'));
-        final DataFrame dataFrame = dataFrameTool().toDataFrame(csvParser);
+        final DataFrame dataFrame = dataFrameTool().fromCSVParser(csvParser);
 
         assertEquals(3, dataFrame.getColumns().size());
         assertEquals(4, dataFrame.getRows().size());
@@ -79,7 +82,7 @@ public class DataFrameToolTest {
     @Test
     public void shouldParseCsvFileWithHeader() {
         final CSVParser csvParser = csvParser(CSV_WITH_HEADER, DEFAULT.withHeader().withDelimiter(';'));
-        final DataFrame dataFrame = dataFrameTool().toDataFrame(csvParser);
+        final DataFrame dataFrame = dataFrameTool().fromCSVParser(csvParser);
 
         assertEquals(3, dataFrame.getColumns().size());
         assertEquals(4, dataFrame.getRows().size());
@@ -95,13 +98,27 @@ public class DataFrameToolTest {
     public void shouldParseJsonTable() {
         final String columnName = "Book ID";
         final List<Map<String, Object>> json = (List<Map<String, Object>>) gsonTool().parse(JSON_ARRAY);
-        final DataFrame dataFrame = dataFrameTool().toDataFrame(json);
+        final DataFrame dataFrame = dataFrameTool().fromMaps(json);
 
         assertEquals(5, dataFrame.getColumns().size());
         assertEquals(3, dataFrame.getRows().size());
         assertEquals("1", dataFrame.getColumn(columnName).get(0));
         assertEquals("2", dataFrame.getColumn(columnName).get(1));
         assertEquals("3", dataFrame.getColumn(columnName).get(2));
+    }
+
+    // === Excel ============================================================
+
+    @Test
+    public void shouldParseExcelSheet() {
+        final ExcelTool excelTool = excelTool();
+        final Workbook workbook = excelTool.parse(DataSourceFactory.create("./src/test/data/excel/test.xls"));
+        final List<List<Object>> sheet = excelTool.toTable(workbook.getSheetAt(0));
+
+        final DataFrame dataFrame = dataFrameTool().fromLists(sheet, true);
+
+        return;
+
     }
 
     private DataFrameTool dataFrameTool() {
@@ -114,6 +131,10 @@ public class DataFrameToolTest {
 
     private GsonTool gsonTool() {
         return new GsonTool();
+    }
+
+    private ExcelTool excelTool() {
+        return new ExcelTool();
     }
 
     private CSVParser csvParser(String csv, CSVFormat csvFormat) {

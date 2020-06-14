@@ -1,4 +1,4 @@
-package org.apache.freemarker.generator.tools.dataframe.impl;
+package org.apache.freemarker.generator.tools.dataframe.converter;
 
 import de.unknownreality.dataframe.DataFrame;
 import de.unknownreality.dataframe.DataFrameBuilder;
@@ -8,7 +8,7 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.IOException;
 import java.util.List;
 
-public class CommonsCSVConverter {
+public class CSVConverter {
 
     /**
      * Create a data frame from  Apache Commons CSV Parser.

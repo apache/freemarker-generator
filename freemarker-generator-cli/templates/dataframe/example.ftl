@@ -16,7 +16,7 @@
   under the License.
 -->
 <#assign csvParser = CSVTool.parse(DataSources.get(0))>
-<#assign users = DataFrameTool.toDataFrame(csvParser)>
+<#assign users = DataFrameTool.fromCSVParser(csvParser)>
 
 Original Data
 =============================================================================
@@ -26,8 +26,8 @@ Select By Name & Country
 =============================================================================
 <#assign country = "Germany">
 ${DataFrameTool.print(users
-    .select("(name == 'Schmitt' || name == 'Meier') && country == '${country}'")
-    .sort("name", DataFrameTool.sortOrder["ASCENDING"]))}
+.select("(name == 'Schmitt' || name == 'Meier') && country == '${country}'")
+.sort("name", DataFrameTool.sortOrder["ASCENDING"]))}
 
 Head of Users
 =============================================================================
