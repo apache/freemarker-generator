@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
 import static org.apache.commons.csv.CSVFormat.DEFAULT;
 
 public class DataFrameToolTest {
@@ -117,7 +118,16 @@ public class DataFrameToolTest {
 
         final DataFrame dataFrame = dataFrameTool().fromLists(sheet, true);
 
-        return;
+        assertEquals(7, dataFrame.getColumns().size());
+        assertEquals(2, dataFrame.getRows().size());
+        assertNotNull(dataFrame.getColumn("Text"));
+        assertNotNull(dataFrame.getColumn("Date"));
+        assertNotNull(dataFrame.getColumn("Number"));
+        assertNotNull(dataFrame.getColumn("Time"));
+        assertNotNull(dataFrame.getColumn("Percentage"));
+        assertNotNull(dataFrame.getColumn("Forumula"));
+        assertEquals("Row 1", dataFrame.getValue(0,0));
+        assertEquals("C3*F3", dataFrame.getColumn("Forumula").get(1));
 
     }
 

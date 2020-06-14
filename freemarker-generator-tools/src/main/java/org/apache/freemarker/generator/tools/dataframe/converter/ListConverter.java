@@ -8,14 +8,14 @@ import java.util.List;
 public class ListConverter {
 
     /**
-     * Create a data frame from a list of lists. It is assumed
-     * that the lists represent tabular data.
+     * Create a data frame from a list of rows. It is assumed
+     * that the rows represent tabular data.
      *
-     * @param lists lists to build the data frame
+     * @param rows rows to build the data frame
      * @return <code>DataFrame</code>
      */
-    public static DataFrame toDataFrame(List<List<Object>> lists, boolean withFirstRowAsColumnNames) {
-        final Table table = Table.fromLists(lists, withFirstRowAsColumnNames);
+    public static DataFrame toDataFrame(List<List<Object>> rows, boolean withFirstRowAsColumnNames) {
+        final Table table = Table.fromLists(rows, withFirstRowAsColumnNames);
         return ConverterUtils.toDataFrame(table);
     }
 }

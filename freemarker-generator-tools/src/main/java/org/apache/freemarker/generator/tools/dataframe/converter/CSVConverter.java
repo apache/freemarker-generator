@@ -28,7 +28,7 @@ public class CSVConverter {
                 headerNames.forEach(builder::addStringColumn);
             } else {
                 for (int i = 0; i < firstRecord.size(); i++) {
-                    builder.addStringColumn(getAlphaColumnName(i + 1));
+                    builder.addStringColumn(ConverterUtils.getAlphaColumnName(i + 1));
                 }
             }
 
@@ -49,15 +49,4 @@ public class CSVConverter {
         }
     }
 
-    private static String getAlphaColumnName(int num) {
-        String result = "";
-        while (num > 0) {
-            num--; // 1 => a, not 0 => a
-            final int remainder = num % 26;
-            final char digit = (char) (remainder + 65);
-            result = digit + result;
-            num = (num - remainder) / 26;
-        }
-        return result;
-    }
 }

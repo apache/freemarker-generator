@@ -13,6 +13,18 @@ public class ConverterUtils {
         return appendValues(dataFrame, table);
     }
 
+    static String getAlphaColumnName(int num) {
+        String result = "";
+        while (num > 0) {
+            num--; // 1 => a, not 0 => a
+            final int remainder = num % 26;
+            final char digit = (char) (remainder + 65);
+            result = digit + result;
+            num = (num - remainder) / 26;
+        }
+        return result;
+    }
+
     private static DataFrameBuilder addColumn(DataFrameBuilder builder, String name, Class<?> clazz) {
         switch (clazz.getName()) {
             case "java.lang.Boolean":
@@ -51,14 +63,6 @@ public class ConverterUtils {
         return comparables;
     }
 
-    private static Comparable<?>[] toComparables(Object[] values) {
-        final Comparable<?>[] comparables = new Comparable<?>[values.length];
-        for (int i = 0; i < values.length; i++) {
-            comparables[i] = (Comparable<?>) values[i];
-        }
-        return comparables;
-    }
-
     /**
      * Create a <code>DataFrame</code> from a table.
      *
@@ -90,17 +94,5 @@ public class ConverterUtils {
             dataFrame.append(ConverterUtils.toComparables(table.getRow(i)));
         }
         return dataFrame;
-    }
-
-    private static String getAlphaColumnName(int num) {
-        String result = "";
-        while (num > 0) {
-            num--; // 1 => a, not 0 => a
-            final int remainder = num % 26;
-            final char digit = (char) (remainder + 65);
-            result = digit + result;
-            num = (num - remainder) / 26;
-        }
-        return result;
     }
 }

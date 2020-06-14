@@ -18,22 +18,20 @@ package org.apache.freemarker.generator.tools.dataframe;
 
 import de.unknownreality.dataframe.DataFrame;
 import de.unknownreality.dataframe.DataFrameWriter;
+import de.unknownreality.dataframe.print.Printer;
+import de.unknownreality.dataframe.print.PrinterBuilder;
 import de.unknownreality.dataframe.sort.SortColumn.Direction;
 import de.unknownreality.dataframe.transform.ColumnDataFrameTransform;
 import de.unknownreality.dataframe.transform.CountTransformer;
 import org.apache.commons.csv.CSVParser;
-import org.apache.freemarker.generator.base.util.Validate;
 import org.apache.freemarker.generator.tools.dataframe.converter.CSVConverter;
 import org.apache.freemarker.generator.tools.dataframe.converter.ListConverter;
 import org.apache.freemarker.generator.tools.dataframe.converter.MapConverter;
 
-import java.io.Writer;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static java.util.Objects.requireNonNull;
-import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model.FREEMARKER_WRITER;
 
 /**
  * Create and manipulate data frame (tabular data structure). Data frames allow
@@ -41,18 +39,6 @@ import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model.FRE
  * For more information see <a href="https://github.com/nRo/DataFrame">nRo/DataFrame</a>.
  */
 public class DataFrameTool {
-
-    /** Underlying FreeMarker writer for rendering templates */
-    private final Writer writer;
-
-    public DataFrameTool() {
-        this.writer = null;
-    }
-
-    public DataFrameTool(Map<String, Object> settings) {
-        requireNonNull(settings);
-        this.writer = (Writer) settings.getOrDefault(FREEMARKER_WRITER, null);
-    }
 
     /**
      * Create a data frame from  Apache Commons CSVParser.
@@ -77,12 +63,12 @@ public class DataFrameTool {
     /**
      * Create a data frame from a list of rows.
      *
-     * @param lists                     lists to build the data frame from
+     * @param rows                      rows to build the data frame from
      * @param withFirstRowAsColumnNames column names as first row?
      * @return data frame
      */
-    public DataFrame fromLists(List<List<Object>> lists, boolean withFirstRowAsColumnNames) {
-        return ListConverter.toDataFrame(lists, withFirstRowAsColumnNames);
+    public DataFrame fromLists(List<List<Object>> rows, boolean withFirstRowAsColumnNames) {
+        return ListConverter.toDataFrame(rows, withFirstRowAsColumnNames);
     }
 
     /**
@@ -113,9 +99,11 @@ public class DataFrameTool {
      *
      * @param dataFrame data frame
      */
-    public void print(DataFrame dataFrame) {
-        Validate.notNull(writer, "No writer available");
-        DataFrameWriter.write(writer, dataFrame, DataFrameWriter.DEFAULT_PRINT_FORMAT);
+    public String print(DataFrame dataFrame) {
+        final StringWriter writer = new StringWriter();
+        final Printer printer = PrinterBuilder.create().withAutoWidth(dataFrame.getHeader()).build();
+        DataFrameWriter.write(writer, dataFrame, printer);
+        return writer.toString();
     }
 
     @Override

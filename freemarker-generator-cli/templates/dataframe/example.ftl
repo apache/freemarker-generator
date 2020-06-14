@@ -22,6 +22,10 @@ Original Data
 =============================================================================
 ${DataFrameTool.print(users)}
 
+Select By Age
+=============================================================================
+${DataFrameTool.print(users.select("(age > 40)"))}
+
 Select By Name & Country
 =============================================================================
 <#assign country = "Germany">
@@ -39,6 +43,6 @@ ${DataFrameTool.print(users.getColumn("country").transform(DataFrameTool.transfo
 
 Group By Age & Country
 =============================================================================
-${DataFrameTool.print(users.groupBy("age", "country").sort("age"))}
+${DataFrameTool.print(users.groupBy("country", "age").sort("country"))}
 
 

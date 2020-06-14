@@ -48,8 +48,8 @@ public class ManualTest {
     // private static final String CMD = "-b ./src/test -t templates/demo.ftl -m env=./site/sample/properties/user_0001/user.properties";
     // private static final String CMD = "-b ./src/test -t templates/demo.ftl -m ./site/sample/properties/user_0001/user.properties";
     // private static final String CMD = "-b ./src/test --data-model post=https://jsonplaceholder.typicode.com/posts/2 -t templates/info.ftl";
-    // private static final String CMD = "-DCSV_TOOL_DELIMITER=SEMICOLON -DCSV_TOOL_HEADERS=true -b ./src/test -t templates/dataframe/example.ftl https://raw.githubusercontent.com/nRo/DataFrame/master/src/test/resources/users.csv";
-    private static final String CMD = "-b ./src/test -t site/template/ -m nginx.yaml";
+    private static final String CMD = "-DCSV_TOOL_DELIMITER=SEMICOLON -DCSV_TOOL_HEADERS=true -b ./src/test -t templates/dataframe/example.ftl https://raw.githubusercontent.com/nRo/DataFrame/master/src/test/resources/users.csv";
+    // private static final String CMD = "-b ./src/test -t site/template/ -m nginx.yaml";
 
 
     public static void main(String[] args) {

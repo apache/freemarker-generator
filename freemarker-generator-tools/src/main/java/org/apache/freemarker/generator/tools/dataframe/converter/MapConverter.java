@@ -29,10 +29,6 @@ public class MapConverter {
      * @return <code>DataFrame</code>
      */
     public static DataFrame toDataFrame(List<Map<String, Object>> maps) {
-        if (maps == null || maps.isEmpty()) {
-            return DataFrameBuilder.createDefault();
-        }
-
         final Table table = Table.fromMaps(maps);
         return ConverterUtils.toDataFrame(table);
     }
