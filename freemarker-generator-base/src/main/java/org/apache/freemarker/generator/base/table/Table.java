@@ -25,10 +25,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyList;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Simple table model filled from maps or lists representing tabular data.
+ * Simple table model filled from maps or rows representing tabular data.
  */
 public class Table {
 
@@ -41,13 +42,13 @@ public class Table {
     /** Table data as rows */
     private final List<List<Object>> values;
 
-    /** Map column names to numeric column values */
+    /** Map column names to column index */
     private final Map<String, Integer> columnMap;
 
     private Table() {
-        this.columnNames = new ArrayList<>();
-        this.columnTypes = new ArrayList<>();
-        this.values = new ArrayList<>();
+        this.columnNames = emptyList();
+        this.columnTypes = emptyList();
+        this.values = emptyList();
         this.columnMap = new HashMap<>();
     }
 
@@ -55,11 +56,7 @@ public class Table {
         this.columnNames = new ArrayList<>(requireNonNull(columnNames));
         this.columnTypes = new ArrayList<>(requireNonNull(columnTypes));
         this.values = ListUtils.transpose(requireNonNull(columnValuesList));
-
-        this.columnMap = new HashMap<>();
-        for (int i = 0; i < this.columnNames.size(); i++) {
-            this.columnMap.put(this.columnNames.get(i), i);
-        }
+        this.columnMap = columnMap(this.columnNames);
     }
 
     public List<String> getColumnNames() {
@@ -127,15 +124,15 @@ public class Table {
     }
 
     /**
-     * Create a table from a list of lists representing tabular data.
+     * Create a table from a list of rows representing tabular data.
      *
-     * @param lists row values as lists
+     * @param rows row values
      * @return table
      */
-    public static Table fromLists(List<List<Object>> lists) {
-        requireNonNull(lists, "lists is null");
+    public static Table fromRows(List<List<Object>> rows) {
+        requireNonNull(rows, "rows is null");
 
-        final List<List<Object>> columnValuesList = ListUtils.transpose(lists);
+        final List<List<Object>> columnValuesList = ListUtils.transpose(rows);
         final List<Class<?>> columnTypes = columnTypes(columnValuesList);
 
         return new Table(
@@ -145,24 +142,24 @@ public class Table {
     }
 
     /**
-     * Create a table from a list of lists representing tabular data
+     * Create a table from a list of rows representing tabular data
      * where the first row may consists of column headers.
      *
-     * @param lists                     row values as lists
+     * @param rows                      row values
      * @param withFirstRowAsColumnNames column names as first row?
      * @return table
      */
-    public static Table fromLists(List<List<Object>> lists, boolean withFirstRowAsColumnNames) {
-        if (ListUtils.isNullOrEmpty(lists) && withFirstRowAsColumnNames) {
+    public static Table fromRows(List<List<Object>> rows, boolean withFirstRowAsColumnNames) {
+        if (ListUtils.isNullOrEmpty(rows) && withFirstRowAsColumnNames) {
             throw new IllegalArgumentException("Header columns expected but list is empty");
         }
 
         if (withFirstRowAsColumnNames) {
-            final List<String> columnNames = columnNames(lists.get(0));
-            final List<List<Object>> table = lists.subList(1, lists.size());
-            return fromLists(columnNames, table);
+            final List<String> columnNames = columnNames(rows.get(0));
+            final List<List<Object>> table = rows.subList(1, rows.size());
+            return fromRows(columnNames, table);
         } else {
-            return fromLists(lists);
+            return fromRows(rows);
         }
     }
 
@@ -170,14 +167,14 @@ public class Table {
      * Create a table from column names and row values.
      *
      * @param columnNames list of column names
-     * @param lists       row values as lists
+     * @param rows        row values as rows
      * @return table
      */
-    public static Table fromLists(Collection<String> columnNames, List<List<Object>> lists) {
+    public static Table fromRows(Collection<String> columnNames, List<List<Object>> rows) {
         requireNonNull(columnNames, "columnNames is null");
-        requireNonNull(lists, "lists is null");
+        requireNonNull(rows, "rows is null");
 
-        final List<List<Object>> columnValuesList = ListUtils.transpose(lists);
+        final List<List<Object>> columnValuesList = ListUtils.transpose(rows);
         final List<Class<?>> columnTypes = columnTypes(columnValuesList);
 
         return new Table(
@@ -258,5 +255,13 @@ public class Table {
      */
     private static Class<?> columnType(List<Object> columnValues) {
         return ListUtils.coalesce(columnValues).getClass();
+    }
+
+    private static Map<String, Integer> columnMap(List<String> columnNames) {
+        final Map<String, Integer> result = new HashMap<>();
+        for (int i = 0; i < columnNames.size(); i++) {
+            result.put(columnNames.get(i), i);
+        }
+        return result;
     }
 }

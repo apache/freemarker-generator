@@ -97,7 +97,7 @@ public class TableTest {
 
     @Test
     public void shouldConvertFromListsWithExplicitHeaders() {
-        final Table table = Table.fromLists(booksHeader, booksList);
+        final Table table = Table.fromRows(booksHeader, booksList);
 
         validateBooks(table);
         assertEquals(booksHeader, table.getColumnNames());
@@ -105,7 +105,7 @@ public class TableTest {
 
     @Test
     public void shouldConvertFromListsWithImplicitHeaders() {
-        final Table table = Table.fromLists(booksListWithHeaders, true);
+        final Table table = Table.fromRows(booksListWithHeaders, true);
 
         validateBooks(table);
         assertEquals(booksHeader, table.getColumnNames());
@@ -113,7 +113,7 @@ public class TableTest {
 
     @Test
     public void shouldConvertFromListsWithEmptyHeaders() {
-        final Table table = Table.fromLists(booksList);
+        final Table table = Table.fromRows(booksList);
 
         validateBooks(table);
     }

@@ -27,6 +27,7 @@ import org.apache.freemarker.generator.tools.dataframe.converter.ListConverter;
 import org.apache.freemarker.generator.tools.dataframe.converter.MapConverter;
 
 import java.io.StringWriter;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +35,7 @@ import java.util.Map;
 import static de.unknownreality.dataframe.DataFrameWriter.DEFAULT_PRINT_FORMAT;
 
 /**
- * Create and manipulate data frame (tabular data structure). Data frames allow
+ * Create and manipulate data frames (tabular data structure). Data frames allow
  * easy manipulation and transformation of data, e.g. joining two data frames.
  * For more information see <a href="https://github.com/nRo/DataFrame">nRo/DataFrame</a>.
  */
@@ -56,7 +57,7 @@ public class DataFrameTool {
      * @param maps maps to build the data frame
      * @return data frame
      */
-    public DataFrame fromMaps(List<Map<String, Object>> maps) {
+    public DataFrame fromMaps(Collection<Map<String, Object>> maps) {
         return MapConverter.toDataFrame(maps);
     }
 
@@ -67,7 +68,7 @@ public class DataFrameTool {
      * @param withFirstRowAsColumnNames column names as first row?
      * @return data frame
      */
-    public DataFrame fromLists(List<List<Object>> rows, boolean withFirstRowAsColumnNames) {
+    public DataFrame fromRows(List<List<Object>> rows, boolean withFirstRowAsColumnNames) {
         return ListConverter.toDataFrame(rows, withFirstRowAsColumnNames);
     }
 

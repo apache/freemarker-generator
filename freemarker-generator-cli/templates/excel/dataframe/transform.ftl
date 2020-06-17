@@ -29,7 +29,7 @@
     <#assign sheets = ExcelTool.getSheets(workbook)>
     <#list sheets as sheet>
         <#assign table = ExcelTool.toTable(sheet)>
-        <#assign df = DataFrameTool.fromLists(table, true)>
+        <#assign df = DataFrameTool.fromRows(table, true)>
         ${DataFrameTool.print(df)}<#t>
     </#list>
 </#macro>

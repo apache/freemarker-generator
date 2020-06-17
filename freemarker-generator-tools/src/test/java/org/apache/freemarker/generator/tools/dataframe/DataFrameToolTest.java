@@ -116,7 +116,7 @@ public class DataFrameToolTest {
         final Workbook workbook = excelTool.parse(DataSourceFactory.create("./src/test/data/excel/test.xls"));
         final List<List<Object>> sheet = excelTool.toTable(workbook.getSheetAt(0));
 
-        final DataFrame dataFrame = dataFrameTool().fromLists(sheet, true);
+        final DataFrame dataFrame = dataFrameTool().fromRows(sheet, true);
 
         assertEquals(7, dataFrame.getColumns().size());
         assertEquals(2, dataFrame.getRows().size());

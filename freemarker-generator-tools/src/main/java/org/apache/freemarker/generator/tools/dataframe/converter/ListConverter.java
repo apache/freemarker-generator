@@ -15,7 +15,7 @@ public class ListConverter {
      * @return <code>DataFrame</code>
      */
     public static DataFrame toDataFrame(List<List<Object>> rows, boolean withFirstRowAsColumnNames) {
-        final Table table = Table.fromLists(rows, withFirstRowAsColumnNames);
+        final Table table = Table.fromRows(rows, withFirstRowAsColumnNames);
         return ConverterUtils.toDataFrame(table);
     }
 }
