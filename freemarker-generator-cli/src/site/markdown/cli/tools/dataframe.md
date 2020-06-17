@@ -46,7 +46,25 @@ and create a `DateFrame` using the following code
 <#assign users = DataFrameTool.toDataFrame(csvParser)>
 ```
 
-### Select & Sort
+### Select By Age
+
+```
+${DataFrameTool.print(users.select("(age > 40)"))}
+```
+
+which shows 
+
+```
+┌────────────┬────────────┬────────────┐
+│#name       │#age        │#country    │
+├────────────┼────────────┼────────────┤
+│Parker      │45          │USA         │
+├────────────┼────────────┼────────────┤
+│Peter       │44          │Germany     │
+└────────────┴────────────┴────────────┘
+```
+
+### Complex Select & Sort
 
 Now we want to create a new `DataFrame` by selecting `name` and `country`
 
