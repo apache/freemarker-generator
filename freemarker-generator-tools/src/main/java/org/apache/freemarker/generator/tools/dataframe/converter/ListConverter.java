@@ -14,31 +14,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.tools.jsoup;
+package org.apache.freemarker.generator.tools.dataframe.converter;
 
-import org.apache.freemarker.generator.base.datasource.DataSource;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
+import de.unknownreality.dataframe.DataFrame;
+import org.apache.freemarker.generator.base.table.Table;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.List;
 
-public class JsoupTool {
+public class ListConverter {
 
-    public Document parse(DataSource dataSource) {
-        try (InputStream is = dataSource.getUnsafeInputStream()) {
-            return Jsoup.parse(is, dataSource.getCharset().name(), "");
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to parse HTML data source: " + dataSource, e);
-        }
-    }
-
-    public Document parse(String html) {
-        return Jsoup.parse(html);
-    }
-
-    @Override
-    public String toString() {
-        return "Process  HTML files using Jsoup (see https://jsoup.org)";
+    /**
+     * Create a data frame from a list of rows. It is assumed
+     * that the rows represent tabular data.
+     *
+     * @param rows rows to build the data frame
+     * @return <code>DataFrame</code>
+     */
+    public static DataFrame toDataFrame(List<List<Object>> rows, boolean withFirstRowAsColumnNames) {
+        final Table table = Table.fromRows(rows, withFirstRowAsColumnNames);
+        return ConverterUtils.toDataFrame(table);
     }
 }

@@ -13,7 +13,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */package org.apache.freemarker.generator.base.template;
+ */
+package org.apache.freemarker.generator.base.template;
 
 import org.apache.freemarker.generator.base.file.RecursiveFileSupplier;
 import org.apache.freemarker.generator.base.util.NonClosableWriterWrapper;
@@ -22,8 +23,6 @@ import org.apache.freemarker.generator.base.util.Validate;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -73,7 +72,7 @@ public class TemplateTransformationsBuilder {
 
         final List<TemplateTransformation> result = new ArrayList<>();
 
-        if (template != null) {
+        if (hasInteractiveTemplate()) {
             final File outputFile = outputs.isEmpty() ? null : outputs.get(0);
             result.add(resolveInteractiveTemplate(outputFile));
         } else {
@@ -249,18 +248,8 @@ public class TemplateTransformationsBuilder {
         return excludes.isEmpty() ? null : excludes.get(0);
     }
 
-    private Writer writer(String outputFile, String outputEncoding) {
-        try {
-            if (writer != null) {
-                return writer;
-            } else if (!StringUtils.isEmpty(outputFile)) {
-                return new BufferedWriter(new FileWriter(outputFile));
-            } else {
-                return new BufferedWriter(new OutputStreamWriter(System.out, outputEncoding));
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Unable to create writer", e);
-        }
+    private boolean hasInteractiveTemplate() {
+        return template != null;
     }
 
     private static File getTemplateOutputFile(File templateDirectory, File templateFile, File outputDirectory) {

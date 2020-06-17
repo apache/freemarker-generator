@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. We try to a
 ## 0.1.0-SNAPSHOT
 
 ### Added
+* [FREEMARKER-144] Proof Of Concept for providing DataFrames
 * [FREEMARKER-142] Support Transformation Of Directories
 * [FREEMARKER-139] freemarker-cli: Provide GsonTool to align with Maven plugin
 * Environment variables can bes passed as `DataSource`
@@ -39,3 +40,4 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-138]: https://issues.apache.org/jira/browse/FREEMARKER-138
 [FREEMARKER-139]: https://issues.apache.org/jira/browse/FREEMARKER-139
 [FREEMARKER-142]: https://issues.apache.org/jira/browse/FREEMARKER-142
+[FREEMARKER-144]: https://issues.apache.org/jira/browse/FREEMARKER-144

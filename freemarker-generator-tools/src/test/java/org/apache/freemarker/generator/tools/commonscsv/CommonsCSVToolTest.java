@@ -74,7 +74,6 @@ public class CommonsCSVToolTest {
         }
 
         assertEquals(7, keys.size());
-        assertEquals(7, keys.size());
         assertEquals("C71", keys.get(0));
         assertEquals("C72", keys.get(1));
         assertEquals("C73", keys.get(2));

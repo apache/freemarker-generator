@@ -146,7 +146,7 @@
                         <exclude>src/main/resources/patterns/*</exclude>
                         <exclude>site/sample/*/**</exclude>
                         <exclude>src/test/data/encoding/utf8.txt</exclude>
-                        <exclude>src/test/data/json/environments.json</exclude>
+                        <exclude>src/test/data/json/*/**</exclude>
                         <exclude>src/test/data/yaml/environments.yaml</exclude>
                     </excludes>
                 </configuration>

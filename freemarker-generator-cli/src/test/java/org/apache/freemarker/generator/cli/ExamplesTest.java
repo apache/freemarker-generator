@@ -62,6 +62,7 @@ public class ExamplesTest extends AbstractMainTest {
         assertValid(execute("-t templates/excel/md/transform.ftl site/sample/excel/test-multiple-sheets.xlsx"));
         assertValid(execute("-t templates/excel/csv/transform.ftl site/sample/excel/test-multiple-sheets.xlsx"));
         assertValid(execute("-t templates/excel/csv/custom.ftl -Pcsv.format=MYSQL site/sample/excel/test.xls"));
+        assertValid(execute("-t templates/excel/dataframe/transform.ftl site/sample/excel/test.xls"));
     }
 
     @Test
@@ -103,6 +104,11 @@ public class ExamplesTest extends AbstractMainTest {
     }
 
     @Test
+    public void shouldRunDataFrameExamples() throws IOException {
+        assertValid(execute("-DCSV_TOOL_DELIMITER=SEMICOLON -DCSV_TOOL_HEADERS=true -t templates/dataframe/example.ftl site/sample/csv/dataframe.csv"));
+    }
+
+    @Test
     public void shouldRunInteractiveTemplateExamples() throws IOException {
         assertValid(execute("-i ${JsonPathTool.parse(DataSources.first).read(\"$.info.title\")} site/sample/json/swagger-spec.json"));
         assertValid(execute("-i ${XmlTool.parse(DataSources.first)[\"recipients/person[1]/name\"]} site/sample/xml/recipients.xml"));
@@ -111,12 +117,13 @@ public class ExamplesTest extends AbstractMainTest {
         assertValid(execute("-i ${GsonTool.toJson(yaml)} -m yaml=site/sample/yaml/swagger-spec.yaml"));
         assertValid(execute("-i ${YamlTool.toYaml(GsonTool.parse(DataSources.get(0)))} site/sample/json/swagger-spec.json"));
         assertValid(execute("-i ${YamlTool.toYaml(json)} -m json=site/sample/json/swagger-spec.json"));
+        assertValid(execute("-i ${DataFrameTool.print(DataFrameTool.fromMaps(GsonTool.parse(DataSources.get(0))))} site/sample/json/github-users.json"));
     }
 
     @Test
     public void shouldTransformTemplateDirectory() throws IOException {
-        assertTrue(execute("-t site/template").contains("server.name=somehost"));
-        assertTrue(execute("-t site/template -PNGINX_HOSTNAME=localhost").contains("server.name=localhost"));
+        assertTrue(execute("-t site/template").contains("server.name=127.0.0.1"));
+        assertTrue(execute("-t site/template -PNGINX_HOSTNAME=my.domain.com").contains("server.name=my.domain.com"));
     }
 
     @Test

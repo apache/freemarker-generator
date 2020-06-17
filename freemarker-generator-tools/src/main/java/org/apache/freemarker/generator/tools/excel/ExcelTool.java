@@ -78,10 +78,10 @@ public class ExcelTool {
      * @param sheet Excel sheet
      * @return Table containing formatted cell values as strings
      */
-    public List<List<String>> toTable(Sheet sheet) {
+    public List<List<Object>> toTable(Sheet sheet) {
         final DataFormatter dataFormatter = dataFormatter();
         final Iterator<Row> iterator = sheet.iterator();
-        final List<List<String>> result = new ArrayList<>();
+        final List<List<Object>> result = new ArrayList<>();
 
         while (iterator.hasNext()) {
             final Row row = iterator.next();
@@ -117,8 +117,8 @@ public class ExcelTool {
         return "Process Excels files (XLS, XLSX) using Apache POI (see https://poi.apache.org)";
     }
 
-    private static List<String> toColumns(Row row, DataFormatter dataFormatter) {
-        final List<String> columnValues = new ArrayList<>();
+    private static List<Object> toColumns(Row row, DataFormatter dataFormatter) {
+        final List<Object> columnValues = new ArrayList<>();
         for (int columnIndex = 0; columnIndex < row.getLastCellNum(); columnIndex++) {
             final Cell cell = row.getCell(columnIndex, CREATE_NULL_AS_BLANK);
             final String formatedCellValue = dataFormatter.formatCellValue(cell).trim();

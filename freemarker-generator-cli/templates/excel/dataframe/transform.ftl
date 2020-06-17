@@ -14,11 +14,10 @@
   specific language governing permissions and limitations
   under the License.
 -->
-# == nginx-conf ==============================================================
-server {
-  listen ${NGINX_PORT!"80"};
-  server_name ${NGINX_HOSTNAME!"127.0.0.1"};
-
-  root ${NGINX_WEBROOT!"/usr/share/nginx/www"};
-  index index.htm;
-}
+<#assign dataSource = DataSources.get(0)>
+<#assign workbook = ExcelTool.parse(dataSource)>
+<#list ExcelTool.getSheets(workbook) as sheet>
+    <#assign table = ExcelTool.toTable(sheet)>
+    <#assign df = DataFrameTool.fromRows(table, true)>
+    ${DataFrameTool.print(df)}<#t>
+</#list>

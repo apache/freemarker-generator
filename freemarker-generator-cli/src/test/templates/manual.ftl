@@ -17,10 +17,4 @@
 -->
 Manual Test
 ---------------------------------------------------------------------------
-<#assign smallNumber = 3.1415927>
-<#assign largeNumber = 99999.99>
-
-Small Number :  ${smallNumber}
-Large Number :  ${largeNumber}
-Date         :  ${.now?date}
-Time         :  ${.now?time}
+<#assign df=DataFrameTool.fromMaps(GsonTool.parse(DataSources.get(0)))>${DataFrameTool.print(df)}

@@ -37,6 +37,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.lang.Boolean.parseBoolean;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
@@ -44,8 +45,10 @@ import static org.apache.commons.io.IOUtils.toInputStream;
 
 public class CommonsCSVTool {
 
+    private final CSVFormat defaulCSVFormat = csvFormat();
+
     public CSVParser parse(DataSource dataSource) {
-        return parse(dataSource, CSVFormat.DEFAULT);
+        return parse(dataSource, defaulCSVFormat);
     }
 
     public CSVParser parse(DataSource dataSource, CSVFormat format) {
@@ -65,7 +68,7 @@ public class CommonsCSVTool {
     }
 
     public CSVParser parse(String csv) {
-        return parse(csv, CSVFormat.DEFAULT);
+        return parse(csv, defaulCSVFormat);
     }
 
     public CSVParser parse(String csv, CSVFormat format) {
@@ -257,6 +260,23 @@ public class CommonsCSVTool {
         result.put("POSTGRESQL_TEXT", CSVFormat.POSTGRESQL_TEXT);
         result.put("TDF", CSVFormat.TDF);
         return result;
+    }
+
+    private CSVFormat csvFormat() {
+
+        CSVFormat csvFormat = CSVFormat.valueOf(System.getProperty("CSV_TOOL_FORMAT", "Default"));
+
+        final String delimiter = System.getProperty("CSV_TOOL_DELIMITER");
+        if (StringUtils.isNotEmpty(delimiter)) {
+            csvFormat = csvFormat.withDelimiter(toDelimiter(delimiter));
+        }
+
+        final boolean withHeader = parseBoolean(System.getProperty("CSV_TOOL_HEADERS", Boolean.toString(!csvFormat.getSkipHeaderRecord())));
+        if (withHeader) {
+            csvFormat = csvFormat.withHeader();
+        }
+
+        return csvFormat;
     }
 
     private static final class ValueResolver implements Function<CSVRecord, String> {

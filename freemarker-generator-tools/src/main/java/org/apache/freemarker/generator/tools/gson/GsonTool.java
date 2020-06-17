@@ -18,32 +18,49 @@ package org.apache.freemarker.generator.tools.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Type;
-import java.util.Map;
 
+/**
+ * JSON processing using <a href="https://github.com/google/gson">Google GSON</a>
+ */
 public class GsonTool {
 
-    private Gson gson;
-    private Type type;
+    private volatile Gson gson;
 
-    public Map<String, Object> parse(DataSource dataSource) {
+    /**
+     * Parse a data source containing a JSON object.
+     *
+     * @param dataSource data source
+     * @return parsed JSON either as a map or list
+     */
+    public Object parse(DataSource dataSource) {
         try (JsonReader reader = new JsonReader(new InputStreamReader(dataSource.getUnsafeInputStream()))) {
-            return gson().fromJson(reader, type());
+            return gson().fromJson(reader, Object.class);
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse data source:" + dataSource, e);
         }
     }
 
-    public Map<String, Object> parse(String json) {
-        return gson().fromJson(json, type());
+    /**
+     * Parse a JSON object string.
+     *
+     * @param json Json string
+     * @return parsed JSON either as a map or list
+     */
+    public Object parse(String json) {
+        return gson().fromJson(json, Object.class);
     }
 
+    /**
+     * Converts to JSON string.
+     *
+     * @param src source object
+     * @return JSON string
+     */
     public String toJson(Object src) {
         return gson().toJson(src);
     }
@@ -58,12 +75,5 @@ public class GsonTool {
             gson = new GsonBuilder().setLenient().setPrettyPrinting().disableHtmlEscaping().create();
         }
         return gson;
-    }
-
-    private synchronized Type type() {
-        if (type == null) {
-            type = new TypeToken<Map<String, Object>>() {}.getType();
-        }
-        return type;
     }
 }

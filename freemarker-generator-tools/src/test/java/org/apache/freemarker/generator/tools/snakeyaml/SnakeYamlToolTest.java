@@ -34,16 +34,48 @@ public class SnakeYamlToolTest {
 
     private static final String ANY_GROUP = "group";
 
-    private static final String ANY_YAML_STRING = "docker:\n" +
+    private static final String NESTED_YAML_MAP = "docker:\n" +
             "    - image: ubuntu:14.04\n" +
             "    - image: mongo:2.6.8\n" +
             "      command: [mongod, --smallfiles]\n" +
             "    - image: postgres:9.4.1";
 
+    private static final String MAP_YAML = "- NGINX_PORT: 8443\n" +
+            "- NGINX_HOSTNAME: localhost";
+
+    private static final String LIST_YAML = "- foo\n" +
+            "- bar";
+
+    @Test
+    public void shallParseSimpleListYamlString() {
+        final List<String> list = (List<String>) snakeYamlTool().parse(LIST_YAML);
+
+        assertEquals(2, list.size());
+        assertEquals("foo", list.get(0));
+        assertEquals("bar", list.get(1));
+    }
+
+    @Test
+    public void shallParseListOfMapYamlString() {
+        final List<Map<String, Object>> list = (List<Map<String, Object>>) snakeYamlTool().parse(MAP_YAML);
+
+        assertEquals(2, list.size());
+        assertEquals(8443, list.get(0).get("NGINX_PORT"));
+        assertEquals("localhost", list.get(1).get("NGINX_HOSTNAME"));
+    }
+
+    @Test
+    public void shallParseNestedYamlString() {
+        final Map<String, Object> map = (Map<String, Object>) snakeYamlTool().parse(NESTED_YAML_MAP);
+
+        assertEquals(1, map.size());
+        assertEquals(3, ((List<?>) map.get("docker")).size());
+    }
+
     @Test
     public void shallParseYamlDataSource() {
-        try (DataSource dataSource = dataSource(ANY_YAML_STRING)) {
-            final Map<String, Object> map = snakeYamlTool().parse(dataSource);
+        try (DataSource dataSource = dataSource(NESTED_YAML_MAP)) {
+            final Map<String, Object> map = (Map<String, Object>) snakeYamlTool().parse(dataSource);
 
             assertEquals(1, map.size());
             assertEquals(3, ((List<?>) map.get("docker")).size());
@@ -51,27 +83,19 @@ public class SnakeYamlToolTest {
     }
 
     @Test
-    public void shallParseYamlString() {
-        final Map<String, Object> map = snakeYamlTool().parse(ANY_YAML_STRING);
+    public void shouldParseComplexYaml() throws IOException {
+        final String yaml = readFileToString(new File("./src/test/data/yaml/swagger.yaml"), UTF_8);
+        final Map<String, Object> map = (Map<String, Object>) snakeYamlTool().parse(yaml);
 
-        assertEquals(1, map.size());
-        assertEquals(3, ((List<?>) map.get("docker")).size());
+        assertEquals("2.0", map.get("swagger"));
+        assertEquals(16956, snakeYamlTool().toYaml(map).length());
     }
 
     @Test
     public void shallConvertToYamlString() {
-        final Map<String, Object> map = snakeYamlTool().parse(ANY_YAML_STRING);
+        final Map<String, Object> map = (Map<String, Object>) snakeYamlTool().parse(NESTED_YAML_MAP);
 
         assertEquals(114, snakeYamlTool().toYaml(map).length());
-    }
-
-    @Test
-    public void shouldParseComplexYaml() throws IOException {
-        final String yaml = readFileToString(new File("./src/test/data/yaml/swagger.yaml"), UTF_8);
-        final Map<String, Object> map = snakeYamlTool().parse(yaml);
-
-        assertEquals("2.0", map.get("swagger"));
-        assertEquals(16956, snakeYamlTool().toYaml(map).length());
     }
 
     private SnakeYamlTool snakeYamlTool() {
