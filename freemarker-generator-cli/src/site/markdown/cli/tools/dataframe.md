@@ -7,8 +7,8 @@ A `DataFrame` allows declartive filtering and transformation of tabular data, i.
 Currently the following sources are supported
 
 * Apache Commons CSV Parser
-* JSON arrays
-* Excel sheets (to be done)
+* JSON arrays represented as collection of maps
+* Excel sheets represented as rows
 
 ## CSV Examples
 
@@ -160,7 +160,19 @@ being parsed as a list of maps and print the JSOB as dataframe
 
 ## Excel Examples
 
-Let's transform an Excel Sheet to a dataframe being printed
+Let's transform an Excel Sheet to a `DataFrame` being printed using the following template
+
+```
+<#assign dataSource = DataSources.get(0)>
+<#assign workbook = ExcelTool.parse(dataSource)>
+<#list ExcelTool.getSheets(workbook) as sheet>
+    <#assign table = ExcelTool.toTable(sheet)>
+    <#assign df = DataFrameTool.fromRows(table, true)>
+    ${DataFrameTool.print(df)}<#t>
+</#list>
+```
+
+which is rendered by the following command line invocation
 
 ```
 ./bin/freemarker-cli -t templates/excel/dataframe/transform.ftl site/sample/excel/test.xls
