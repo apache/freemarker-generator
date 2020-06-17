@@ -62,6 +62,7 @@ public class ExamplesTest extends AbstractMainTest {
         assertValid(execute("-t templates/excel/md/transform.ftl site/sample/excel/test-multiple-sheets.xlsx"));
         assertValid(execute("-t templates/excel/csv/transform.ftl site/sample/excel/test-multiple-sheets.xlsx"));
         assertValid(execute("-t templates/excel/csv/custom.ftl -Pcsv.format=MYSQL site/sample/excel/test.xls"));
+        assertValid(execute("-t templates/excel/dataframe/transform.ftl site/sample/excel/test.xls"));
     }
 
     @Test
@@ -116,6 +117,7 @@ public class ExamplesTest extends AbstractMainTest {
         assertValid(execute("-i ${GsonTool.toJson(yaml)} -m yaml=site/sample/yaml/swagger-spec.yaml"));
         assertValid(execute("-i ${YamlTool.toYaml(GsonTool.parse(DataSources.get(0)))} site/sample/json/swagger-spec.json"));
         assertValid(execute("-i ${YamlTool.toYaml(json)} -m json=site/sample/json/swagger-spec.json"));
+        assertValid(execute("-i ${DataFrameTool.print(DataFrameTool.fromMaps(GsonTool.parse(DataSources.get(0))))} site/sample/json/github-users.json"));
     }
 
     @Test

@@ -1,3 +1,19 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.apache.freemarker.generator.tools.dataframe.converter;
 
 import de.unknownreality.dataframe.DataFrame;
@@ -25,36 +41,36 @@ public class ConverterUtils {
         return result;
     }
 
-    private static DataFrameBuilder addColumn(DataFrameBuilder builder, String name, Class<?> clazz) {
-        switch (clazz.getName()) {
+    private static DataFrameBuilder addColumn(DataFrameBuilder builder, String columnName, Class<?> columnType) {
+        switch (columnType.getName()) {
             case "java.lang.Boolean":
-                return builder.addBooleanColumn(name);
+                return builder.addBooleanColumn(columnName);
             case "java.lang.Byte":
-                return builder.addByteColumn(name);
+                return builder.addByteColumn(columnName);
             case "java.lang.Double":
-                return builder.addDoubleColumn(name);
+                return builder.addDoubleColumn(columnName);
             case "java.lang.Float":
-                return builder.addFloatColumn(name);
+                return builder.addFloatColumn(columnName);
             case "java.lang.Integer":
-                return builder.addIntegerColumn(name);
+                return builder.addIntegerColumn(columnName);
             case "java.lang.Long":
-                return builder.addLongColumn(name);
+                return builder.addLongColumn(columnName);
             case "java.lang.Short":
-                return builder.addShortColumn(name);
+                return builder.addShortColumn(columnName);
             case "java.lang.String":
-                return builder.addStringColumn(name);
+                return builder.addStringColumn(columnName);
             case "java.time.LocalDate":
-                return builder.addStringColumn(name);
+                return builder.addStringColumn(columnName);
             case "java.time.LocalTime":
-                return builder.addStringColumn(name);
+                return builder.addStringColumn(columnName);
             case "java.util.Date":
-                return builder.addStringColumn(name);
+                return builder.addStringColumn(columnName);
             default:
-                throw new RuntimeException("Unable to add colum for the following type: " + clazz.getName());
+                throw new RuntimeException("Unable to add colum for the following type: " + columnType.getName());
         }
     }
 
-    private static Comparable<?>[] toComparables(List<Object> values) {
+    private static Comparable<?>[] toComparables(List<?> values) {
         final int size = values.size();
         final Comparable<?>[] comparables = new Comparable<?>[size];
         for (int i = 0; i < size; i++) {
@@ -74,13 +90,17 @@ public class ConverterUtils {
 
         if (table.hasColumnHeaderRow()) {
             for (int i = 0; i < table.getColumnNames().size(); i++) {
-                addColumn(builder, table.getColumnNames().get(i), table.getColumnTypes().get(i));
+                final String columnName = table.getColumnNames().get(i);
+                final Class<?> columnType = table.getColumnTypes().get(i);
+                addColumn(builder, columnName, columnType);
             }
         } else {
             if (!table.isEmpty()) {
                 final List<Object> firstRecord = table.getRow(0);
                 for (int i = 0; i < firstRecord.size(); i++) {
-                    builder.addStringColumn(getAlphaColumnName(i + 1));
+                    final String columnName = getAlphaColumnName(i + 1);
+                    final Class<?> columnType = table.getColumnTypes().get(i);
+                    addColumn(builder, columnName, columnType);
                 }
             }
         }

@@ -75,7 +75,9 @@ public class Table {
     }
 
     public int getNrOfColumns() {
-        return columnNames.isEmpty() ? (values.isEmpty() ? 0 : values.get(0).size()) : columnNames.size();
+        return columnNames.isEmpty() ?
+                (values.isEmpty() ? 0 : values.get(0).size()) :
+                columnNames.size();
     }
 
     public int size() {
@@ -109,7 +111,7 @@ public class Table {
      * @param maps list of maps
      * @return table
      */
-    public static Table fromMaps(List<Map<String, Object>> maps) {
+    public static Table fromMaps(Collection<Map<String, Object>> maps) {
         if (maps == null || maps.isEmpty()) {
             return new Table();
         }
@@ -151,7 +153,9 @@ public class Table {
      * @return table
      */
     public static Table fromLists(List<List<Object>> lists, boolean withFirstRowAsColumnNames) {
-        requireNonNull(lists, "lists is null");
+        if (ListUtils.isNullOrEmpty(lists) && withFirstRowAsColumnNames) {
+            throw new IllegalArgumentException("Header columns expected but list is empty");
+        }
 
         if (withFirstRowAsColumnNames) {
             final List<String> columnNames = columnNames(lists.get(0));
@@ -215,7 +219,7 @@ public class Table {
      * @param columnNames column names
      * @return list of column values
      */
-    private static List<List<Object>> columnValuesList(List<Map<String, Object>> maps, List<String> columnNames) {
+    private static List<List<Object>> columnValuesList(Collection<Map<String, Object>> maps, List<String> columnNames) {
         return columnNames.stream()
                 .map(columnName -> columnValues(maps, columnName))
                 .collect(Collectors.toList());
@@ -228,7 +232,7 @@ public class Table {
      * @param columnName column name
      * @return values of the given column
      */
-    private static List<Object> columnValues(List<Map<String, Object>> maps, String columnName) {
+    private static List<Object> columnValues(Collection<Map<String, Object>> maps, String columnName) {
         return maps.stream()
                 .map(map -> map.getOrDefault(columnName, null))
                 .collect(Collectors.toList());

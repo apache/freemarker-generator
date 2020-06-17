@@ -15,6 +15,21 @@
   specific language governing permissions and limitations
   under the License.
 -->
-Manual Test
----------------------------------------------------------------------------
-<#assign df=DataFrameTool.fromMaps(GsonTool.parse(DataSources.get(0)))>${DataFrameTool.print(df)}
+<#assign dataSource = DataSources.get(0)>
+<#assign name = dataSource.name>
+<#assign workbook = ExcelTool.parse(dataSource)>
+<#assign date = .now?iso_utc>
+<#--------------------------------------------------------------------------->
+<@writeSheets workbook/>
+
+<#--------------------------------------------------------------------------->
+<#-- writeSheets                                                           -->
+<#--------------------------------------------------------------------------->
+<#macro writeSheets workbook>
+    <#assign sheets = ExcelTool.getSheets(workbook)>
+    <#list sheets as sheet>
+        <#assign table = ExcelTool.toTable(sheet)>
+        <#assign df = DataFrameTool.fromLists(table, true)>
+        ${DataFrameTool.print(df)}<#t>
+    </#list>
+</#macro>

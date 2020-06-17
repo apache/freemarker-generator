@@ -18,8 +18,6 @@ package org.apache.freemarker.generator.tools.dataframe;
 
 import de.unknownreality.dataframe.DataFrame;
 import de.unknownreality.dataframe.DataFrameWriter;
-import de.unknownreality.dataframe.print.Printer;
-import de.unknownreality.dataframe.print.PrinterBuilder;
 import de.unknownreality.dataframe.sort.SortColumn.Direction;
 import de.unknownreality.dataframe.transform.ColumnDataFrameTransform;
 import de.unknownreality.dataframe.transform.CountTransformer;
@@ -33,6 +31,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static de.unknownreality.dataframe.DataFrameWriter.DEFAULT_PRINT_FORMAT;
+
 /**
  * Create and manipulate data frame (tabular data structure). Data frames allow
  * easy manipulation and transformation of data, e.g. joining two data frames.
@@ -41,7 +41,7 @@ import java.util.Map;
 public class DataFrameTool {
 
     /**
-     * Create a data frame from  Apache Commons CSVParser.
+     * Create a data frame from Apache Commons CSVParser.
      *
      * @param csvParser CSV Parser
      * @return data frame
@@ -101,8 +101,7 @@ public class DataFrameTool {
      */
     public String print(DataFrame dataFrame) {
         final StringWriter writer = new StringWriter();
-        final Printer printer = PrinterBuilder.create().withAutoWidth(dataFrame.getHeader()).build();
-        DataFrameWriter.write(writer, dataFrame, printer);
+        DataFrameWriter.write(writer, dataFrame, DEFAULT_PRINT_FORMAT);
         return writer.toString();
     }
 

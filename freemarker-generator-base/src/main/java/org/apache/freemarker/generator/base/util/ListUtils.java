@@ -22,6 +22,10 @@ import java.util.Objects;
 
 public class ListUtils {
 
+    public static <T> boolean isNullOrEmpty(final List<T> list) {
+        return list == null || list.isEmpty();
+    }
+
     /**
      * Transposes the given tabular data, swapping rows with columns.
      *
@@ -31,7 +35,7 @@ public class ListUtils {
      * @throws NullPointerException if the given table is {@code null}
      */
     public static <T> List<List<T>> transpose(final List<List<T>> table) {
-        if (table.isEmpty()) {
+        if (isNullOrEmpty(table)) {
             return new ArrayList<>();
         }
 
