@@ -1,3 +1,4 @@
+#!/bin/sh
 mvn clean install
 cd ./freemarker-generator-cli
 sh ./run-samples.sh

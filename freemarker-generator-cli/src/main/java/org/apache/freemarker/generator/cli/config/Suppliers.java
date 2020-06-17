@@ -68,14 +68,14 @@ public class Suppliers {
     }
 
     public static TemplateTransformationsSupplier templateTransformationsSupplier(Settings settings) {
-        return (() -> TemplateTransformationsBuilder.builder()
+        return () -> TemplateTransformationsBuilder.builder()
                 .setTemplate("interactive", settings.getInteractiveTemplate())
                 .addSources(settings.getTemplates())
                 .addInclude(settings.getTemplateFileIncludePattern())
                 .addExclude(settings.getTemplateFileExcludePattern())
                 .addOutput(settings.getOutput())
                 .setWriter(settings.getWriter())
-                .build());
+                .build();
     }
 
     public static PropertiesSupplier propertiesSupplier(String fileName) {

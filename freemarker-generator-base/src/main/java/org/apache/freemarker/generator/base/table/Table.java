@@ -72,9 +72,7 @@ public class Table {
     }
 
     public int getNrOfColumns() {
-        return columnNames.isEmpty() ?
-                (values.isEmpty() ? 0 : values.get(0).size()) :
-                columnNames.size();
+        return columnNames.isEmpty() ? values.isEmpty() ? 0 : values.get(0).size() : columnNames.size();
     }
 
     public int size() {

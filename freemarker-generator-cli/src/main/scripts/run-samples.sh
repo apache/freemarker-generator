@@ -51,6 +51,7 @@ $FREEMARKER_CMD -i '${XmlTool.parse(DataSources.first)["recipients/person[1]/nam
 $FREEMARKER_CMD -i '${JsoupTool.parse(DataSources.first).select("a")[0]}' site/sample/html/dependencies.html > target/out/interactive-html.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
 $FREEMARKER_CMD -i '${GsonTool.toJson(YamlTool.parse(DataSources.get(0)))}' site/sample/yaml/swagger-spec.yaml > target/out/interactive-swagger.json || { echo >&2 "Test failed.  Aborting."; exit 1; }
 $FREEMARKER_CMD -i '${YamlTool.toYaml(GsonTool.parse(DataSources.get(0)))}' site/sample/json/swagger-spec.json > target/out/interactive-swagger.yaml || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -i '${DataFrameTool.print(DataFrameTool.fromMaps(GsonTool.parse(DataSources.get(0))))}' site/sample/json/github-users.json > target/out/interactive-dataframe.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
 # CSV
@@ -117,6 +118,9 @@ $FREEMARKER_CMD -t templates/accesslog/combined-access.ftl site/sample/accesslog
 #############################################################################
 # Excel
 #############################################################################
+
+echo "templates/excel/dataframe/transform.ftl"
+$FREEMARKER_CMD -t templates/excel/dataframe/transform.ftl site/sample/excel/test.xls > target/out/test.xls.dataframe.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 echo "templates/excel/html/transform.ftl"
 $FREEMARKER_CMD -t templates/excel/html/transform.ftl site/sample/excel/test.xls > target/out/test.xls.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
