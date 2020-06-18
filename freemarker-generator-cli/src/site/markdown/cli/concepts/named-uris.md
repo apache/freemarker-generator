@@ -29,17 +29,17 @@ For our purposes, the scheme and the path components are especially important, t
 The following Named URI loads a "user.csv" and the data source is available as `my_users` 
 
 ```
-bin/freemarker-cli -t templates/info.ftl my_users=site/sample/csv/user.csv
+bin/freemarker-cli -t templates/info.ftl my_users=examples/data/csv/user.csv
 [#1], name=my_users, group=default, contentType=text/csv, charset=UTF-8, length=376 Bytes
-URI : file:site/sample/csv/user.csv
+URI : file:examples/data/csv/user.csv
 ```
 
 A Named URI allows to pass additional information as part of the fragment, e.g. the charset of the text file 
 
 ```
-bin/freemarker-cli -t templates/info.ftl my_users=site/sample/csv/user.csv#charset=UTF-16
+bin/freemarker-cli -t templates/info.ftl my_users=examples/data/csv/user.csv#charset=UTF-16
 [#1], name=my_users, group=default, contentType=text/csv, charset=UTF-16, length=376 Bytes
-URI : file:site/sample/csv/user.csv
+URI : file:examples/data/csv/user.csv
 ```
 
 In addition to the simplified file syntax full URIs can be used

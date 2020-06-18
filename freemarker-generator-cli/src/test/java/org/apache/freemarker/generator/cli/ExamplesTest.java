@@ -40,84 +40,84 @@ public class ExamplesTest extends AbstractMainTest {
 
     @Test
     public void shouldRunDemoExamples() throws IOException {
-        assertValid(execute("-t templates/demo.ftl README.md"));
+        assertValid(execute("-t examples/templates/demo.ftl README.md"));
     }
 
     @Test
     public void shouldRunCsvExamples() throws IOException {
-        assertValid(execute("-t templates/csv/html/transform.ftl site/sample/csv/contract.csv"));
-        assertValid(execute("-t templates/csv/md/transform.ftl site/sample/csv/contract.csv"));
-        assertValid(execute("-t templates/csv/shell/curl.ftl site/sample/csv/user.csv"));
-        assertValid(execute("-t templates/csv/fo/transform.ftl site/sample/csv/locker-test-users.csv"));
-        assertValid(execute("-t templates/csv/fo/transactions.ftl site/sample/csv/transactions.csv"));
-        assertValid(execute("-t templates/csv/html/transactions.ftl site/sample/csv/transactions.csv"));
-        assertValid(execute("-t templates/csv/transform.ftl site/sample/csv/contract.csv"));
+        assertValid(execute("-t examples/templates/csv/html/transform.ftl examples/data/csv/contract.csv"));
+        assertValid(execute("-t examples/templates/csv/md/transform.ftl examples/data/csv/contract.csv"));
+        assertValid(execute("-t examples/templates/csv/shell/curl.ftl examples/data/csv/user.csv"));
+        assertValid(execute("-t examples/templates/csv/fo/transform.ftl examples/data/csv/locker-test-users.csv"));
+        assertValid(execute("-t examples/templates/csv/fo/transactions.ftl examples/data/csv/transactions.csv"));
+        assertValid(execute("-t examples/templates/csv/html/transactions.ftl examples/data/csv/transactions.csv"));
+        assertValid(execute("-t examples/templates/csv/transform.ftl examples/data/csv/contract.csv"));
     }
 
     @Test
     public void shouldRunExcelExamples() throws IOException {
-        assertValid(execute("-t templates/excel/html/transform.ftl site/sample/excel/test.xls"));
-        assertValid(execute("-t templates/excel/html/transform.ftl site/sample/excel/test.xlsx"));
-        assertValid(execute("-t templates/excel/html/transform.ftl site/sample/excel/test-multiple-sheets.xlsx"));
-        assertValid(execute("-t templates/excel/md/transform.ftl site/sample/excel/test-multiple-sheets.xlsx"));
-        assertValid(execute("-t templates/excel/csv/transform.ftl site/sample/excel/test-multiple-sheets.xlsx"));
-        assertValid(execute("-t templates/excel/csv/custom.ftl -Pcsv.format=MYSQL site/sample/excel/test.xls"));
-        assertValid(execute("-t templates/excel/dataframe/transform.ftl site/sample/excel/test.xls"));
+        assertValid(execute("-t examples/templates/excel/html/transform.ftl examples/data/excel/test.xls"));
+        assertValid(execute("-t examples/templates/excel/html/transform.ftl examples/data/excel/test.xlsx"));
+        assertValid(execute("-t examples/templates/excel/html/transform.ftl examples/data/excel/test-multiple-sheets.xlsx"));
+        assertValid(execute("-t examples/templates/excel/md/transform.ftl examples/data/excel/test-multiple-sheets.xlsx"));
+        assertValid(execute("-t examples/templates/excel/csv/transform.ftl examples/data/excel/test-multiple-sheets.xlsx"));
+        assertValid(execute("-t examples/templates/excel/csv/custom.ftl -Pcsv.format=MYSQL examples/data/excel/test.xls"));
+        assertValid(execute("-t examples/templates/excel/dataframe/transform.ftl examples/data/excel/test.xls"));
     }
 
     @Test
     public void shouldRunHtmlExamples() throws IOException {
-        assertValid(execute("-t templates/html/csv/dependencies.ftl site/sample/html/dependencies.html"));
+        assertValid(execute("-t examples/templates/html/csv/dependencies.ftl examples/data/html/dependencies.html"));
     }
 
     @Test
     public void shouldRunJsonExamples() throws IOException {
-        assertValid(execute("-t templates/json/csv/swagger-endpoints.ftl site/sample/json/swagger-spec.json"));
-        assertValid(execute("-t templates/json/md/github-users.ftl site/sample/json/github-users.json"));
-        assertValid(execute("-t templates/json/yaml/transform.ftl site/sample/json/swagger-spec.json"));
+        assertValid(execute("-t examples/templates/json/csv/swagger-endpoints.ftl examples/data/json/swagger-spec.json"));
+        assertValid(execute("-t examples/templates/json/md/github-users.ftl examples/data/json/github-users.json"));
+        assertValid(execute("-t examples/templates/json/yaml/transform.ftl examples/data/json/swagger-spec.json"));
     }
 
     @Test
     public void shouldRunPropertiesExamples() throws IOException {
-        assertValid(execute("-t templates/properties/csv/locker-test-users.ftl site/sample/properties"));
+        assertValid(execute("-t examples/templates/properties/csv/locker-test-users.ftl examples/data/properties"));
     }
 
     @Test
     public void shouldRunYamlExamples() throws IOException {
-        assertValid(execute("-t templates/yaml/txt/transform.ftl site/sample/yaml/customer.yaml"));
-        assertValid(execute("-t templates/yaml/json/transform.ftl site/sample/yaml/swagger-spec.yaml"));
+        assertValid(execute("-t examples/templates/yaml/txt/transform.ftl examples/data/yaml/customer.yaml"));
+        assertValid(execute("-t examples/templates/yaml/json/transform.ftl examples/data/yaml/swagger-spec.yaml"));
     }
 
     @Test
     public void shouldRunXmlExamples() throws IOException {
-        assertValid(execute("-t templates/xml/txt/recipients.ftl site/sample/xml/recipients.xml"));
+        assertValid(execute("-t examples/templates/xml/txt/recipients.ftl examples/data/xml/recipients.xml"));
     }
 
     @Test
     public void shouldRunGrokExamples() throws IOException {
-        assertValid(execute("-t templates/accesslog/combined-access.ftl site/sample/accesslog/combined-access.log"));
+        assertValid(execute("-t examples/templates/accesslog/combined-access.ftl examples/data/accesslog/combined-access.log"));
     }
 
     @Test
     public void shouldRunWithExposedEnvironmentVariableExamples() throws IOException {
-        assertValid(execute("-b ./src/test -m env:/// -t templates/environment.ftl"));
+        assertValid(execute("-m env:/// -t ./src/test/templates/environment.ftl"));
     }
 
     @Test
     public void shouldRunDataFrameExamples() throws IOException {
-        assertValid(execute("-DCSV_TOOL_DELIMITER=SEMICOLON -DCSV_TOOL_HEADERS=true -t templates/dataframe/example.ftl site/sample/csv/dataframe.csv"));
+        assertValid(execute("-DCSV_TOOL_DELIMITER=SEMICOLON -DCSV_TOOL_HEADERS=true -t examples/templates/dataframe/example.ftl examples/data/csv/dataframe.csv"));
     }
 
     @Test
     public void shouldRunInteractiveTemplateExamples() throws IOException {
-        assertValid(execute("-i ${JsonPathTool.parse(DataSources.first).read(\"$.info.title\")} site/sample/json/swagger-spec.json"));
-        assertValid(execute("-i ${XmlTool.parse(DataSources.first)[\"recipients/person[1]/name\"]} site/sample/xml/recipients.xml"));
-        assertValid(execute("-i ${JsoupTool.parse(DataSources.first).select(\"a\")[0]} site/sample/html/dependencies.html"));
-        assertValid(execute("-i ${GsonTool.toJson(YamlTool.parse(DataSources.get(0)))} site/sample/yaml/swagger-spec.yaml"));
-        assertValid(execute("-i ${GsonTool.toJson(yaml)} -m yaml=site/sample/yaml/swagger-spec.yaml"));
-        assertValid(execute("-i ${YamlTool.toYaml(GsonTool.parse(DataSources.get(0)))} site/sample/json/swagger-spec.json"));
-        assertValid(execute("-i ${YamlTool.toYaml(json)} -m json=site/sample/json/swagger-spec.json"));
-        assertValid(execute("-i ${DataFrameTool.print(DataFrameTool.fromMaps(GsonTool.parse(DataSources.get(0))))} site/sample/json/github-users.json"));
+        assertValid(execute("-i ${JsonPathTool.parse(DataSources.first).read(\"$.info.title\")} examples/data/json/swagger-spec.json"));
+        assertValid(execute("-i ${XmlTool.parse(DataSources.first)[\"recipients/person[1]/name\"]} examples/data/xml/recipients.xml"));
+        assertValid(execute("-i ${JsoupTool.parse(DataSources.first).select(\"a\")[0]} examples/data/html/dependencies.html"));
+        assertValid(execute("-i ${GsonTool.toJson(YamlTool.parse(DataSources.get(0)))} examples/data/yaml/swagger-spec.yaml"));
+        assertValid(execute("-i ${GsonTool.toJson(yaml)} -m yaml=examples/data/yaml/swagger-spec.yaml"));
+        assertValid(execute("-i ${YamlTool.toYaml(GsonTool.parse(DataSources.get(0)))} examples/data/json/swagger-spec.json"));
+        assertValid(execute("-i ${YamlTool.toYaml(json)} -m json=examples/data/json/swagger-spec.json"));
+        assertValid(execute("-i ${DataFrameTool.print(DataFrameTool.fromMaps(GsonTool.parse(DataSources.get(0))))} examples/data/json/github-users.json"));
     }
 
     @Test

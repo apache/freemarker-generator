@@ -75,14 +75,14 @@ It is recommended
 You can test the installation by executing
 
 ```text
-> ./bin/freemarker-cli -t templates/info.ftl 
+> ./bin/freemarker-cli -t templates/info.ftl
 FreeMarker CLI Information
 ------------------------------------------------------------------------------
 FreeMarker version     : 2.3.30
-Template name          : templates/info.ftl
+Template name          : info.ftl
 Language               : en
 Locale                 : en_US
-Timestamp              : Apr 14, 2020 11:34:13 PM
+Timestamp              : Jun 18, 2020 10:55:04 AM
 Output encoding        : UTF-8
 Output format          : plainText
 
@@ -94,6 +94,7 @@ FreeMarker CLI Template Directories
 FreeMarker CLI Tools
 ------------------------------------------------------------------------------
 - CSVTool              : Process CSV files using Apache Commons CSV (see https://commons.apache.org/proper/commons-csv/)
+- DataFrameTool        : Bridge to nRo/DataFrame (see https://github.com/nRo/DataFrame)
 - ExcelTool            : Process Excels files (XLS, XLSX) using Apache POI (see https://poi.apache.org)
 - ExecTool             : Execute command line tools using Apache Commons Exec (see https://commons.apache.org/proper/commons-exec/)
 - FreeMarkerTool       : Expose useful Apache FreeMarker classes
@@ -107,86 +108,96 @@ FreeMarker CLI Tools
 - XmlTool              : Process XML files using Apache FreeMarker (see https://freemarker.apache.org/docs/xgui.html)
 - YamlTool             : Process YAML files using SnakeYAML(see https://bitbucket.org/asomov/snakeyaml/wiki/Home)
 
-FreeMarker CLI DataSources
-------------------------------------------------------------------------------
-
-User Supplied Parameters
-------------------------------------------------------------------------------
-
-User Supplied System Properties
-------------------------------------------------------------------------------
-
-SystemTool
-------------------------------------------------------------------------------
-Command line         : -t, templates/info.ftl
-Host Name            : W0GL5179.local
-Java Home            : /Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home
-User Name            : sgoeschl
-Timestamp            : 1,586,900,053,355
-Writer               : org.apache.freemarker.generator.base.util.NonClosableWriterWrapper
+FreeMarker CLI Data Model
+---------------------------------------------------------------------------
+- CSVTool
+- DataFrameTool
+- DataSources
+- ExcelTool
+- ExecTool
+- FreeMarkerTool
+- GrokTool
+- GsonTool
+- JsonPathTool
+- JsoupTool
+- PropertiesTool
+- SystemTool
+- UUIDTool
+- XmlTool
+- YamlTool
 ```
 
-There a many examples (see below) available you can execute - run `./run-samples.sh` and have a look at the generated output
+There a many examples (see below) available you can execute - run `./run-examples.sh` and have a look at the generated output
 
 ```text
-./run-samples.sh 
+./run-examples.sh 
 templates/info.ftl
-templates/demo.ftl
-templates/csv/html/transform.ftl
-templates/csv/md/transform.ftl
-templates/csv/shell/curl.ftl
-templates/csv/md/filter.ftl
-templates/csv/fo/transform.ftl
+examples/templates/demo.ftl
+examples/templates/csv/html/transform.ftl
+examples/templates/csv/md/transform.ftl
+examples/templates/csv/shell/curl.ftl
+examples/templates/csv/md/filter.ftl
+examples/templates/csv/fo/transform.ftl
 fop -fo target/out/locker-test-users.fo target/out/locker-test-users.pdf
-templates/csv/fo/transactions.ftl
+examples/templates/csv/fo/transactions.ftl
 fop -fo target/out/transactions.fo target/out/transactions-fo.pdf
-templates/csv/html/transform.ftl
+examples/templates/csv/html/transform.ftl
 wkhtmltopdf -O landscape target/out/transactions.html target/out/transactions-html.pdf
-templates/accesslog/combined-access.ftl
-templates/excel/html/transform.ftl
-templates/excel/md/transform.ftl
-templates/excel/csv/transform.ftl
-templates/excel/csv/custom.ftl
-templates/html/csv/dependencies.ftl
-templates/json/csv/swagger-endpoints.ftl
-templates/json/yaml/transform.ftl
-templates/json/md/github-users.ftl
-templates/properties/csv/locker-test-users.ftl
-templates/yaml/txt/transform.ftl
-templates/yaml/json/transform.ftl
-templates/xml/txt/recipients.ftl
+examples/templates/dataframe/example.ftl
+examples/templates/accesslog/combined-access.ftl
+examples/templates/excel/dataframe/transform.ftl
+examples/templates/excel/html/transform.ftl
+examples/templates/excel/md/transform.ftl
+examples/templates/excel/csv/transform.ftl
+examples/templates/excel/csv/custom.ftl
+examples/templates/html/csv/dependencies.ftl
+examples/templates/json/csv/swagger-endpoints.ftl
+examples/templates/json/yaml/transform.ftl
+examples/templates/json/md/github-users.ftl
+examples/templates/properties/csv/locker-test-users.ftl
+site/template
+examples/templates/yaml/txt/transform.ftl
+examples/templates/yaml/json/transform.ftl
+examples/templates/xml/txt/recipients.ftl
 Created the following sample files in ./target/out
-total 1440
--rw-r--r--  1 sgoeschl  staff     646 Apr  4 13:03 combined-access.log.txt
--rw-r--r--  1 sgoeschl  staff   22548 Apr  4 13:03 contract.html
--rw-r--r--  1 sgoeschl  staff    7933 Apr  4 13:03 contract.md
--rw-r--r--  1 sgoeschl  staff     784 Apr  4 13:03 curl.sh
--rw-r--r--  1 sgoeschl  staff     232 Apr  4 13:03 customer.txt
--rw-r--r--  1 sgoeschl  staff   15268 Apr  4 13:03 demo.txt
--rw-r--r--  1 sgoeschl  staff    1310 Apr  4 13:03 dependencies.csv
--rw-r--r--  1 sgoeschl  staff    2029 Apr  4 13:03 github-users-curl.md
--rw-r--r--  1 sgoeschl  staff    2901 Apr  4 13:03 info.txt
--rw-r--r--  1 sgoeschl  staff      66 Apr  4 13:03 interactive-html.txt
--rw-r--r--  1 sgoeschl  staff      16 Apr  4 13:03 interactive-json.txt
--rw-r--r--  1 sgoeschl  staff      10 Apr  4 13:03 interactive-xml.txt
--rw-r--r--  1 sgoeschl  staff     285 Apr  4 13:03 locker-test-users.csv
--rw-r--r--  1 sgoeschl  staff    6341 Apr  4 13:03 locker-test-users.fo
--rw-r--r--  1 sgoeschl  staff    5526 Apr  4 13:03 locker-test-users.pdf
--rw-r--r--  1 sgoeschl  staff     921 Apr  4 13:03 recipients.txt
--rw-r--r--  1 sgoeschl  staff     910 Apr  4 13:03 sales-records.md
--rw-r--r--  1 sgoeschl  staff    2453 Apr  4 13:03 swagger-spec.csv
--rw-r--r--  1 sgoeschl  staff   25090 Apr  4 13:03 swagger-spec.json
--rw-r--r--  1 sgoeschl  staff   16870 Apr  4 13:03 swagger-spec.yaml
--rw-r--r--  1 sgoeschl  staff     156 Apr  4 13:03 test-multiple-sheets.xlsx.csv
--rw-r--r--  1 sgoeschl  staff    1917 Apr  4 13:03 test-multiple-sheets.xlsx.html
--rw-r--r--  1 sgoeschl  staff     389 Apr  4 13:03 test-multiple-sheets.xlsx.md
--rw-r--r--  1 sgoeschl  staff     150 Apr  4 13:03 test-transform-xls.csv
--rw-r--r--  1 sgoeschl  staff    1556 Apr  4 13:03 test.xls.html
--rw-r--r--  1 sgoeschl  staff    1558 Apr  4 13:03 test.xslx.html
--rw-r--r--  1 sgoeschl  staff   25756 Apr  4 13:03 transactions-fo.pdf
--rw-r--r--  1 sgoeschl  staff   66016 Apr  4 13:03 transactions-html.pdf
--rw-r--r--  1 sgoeschl  staff  330127 Apr  4 13:03 transactions.fo
--rw-r--r--  1 sgoeschl  staff   51008 Apr  4 13:03 transactions.html
+total 1576
+-rw-r--r--  1 sgoeschl  staff     646 Jun 18 10:56 combined-access.log.txt
+-rw-r--r--  1 sgoeschl  staff   22548 Jun 18 10:56 contract.html
+-rw-r--r--  1 sgoeschl  staff    7933 Jun 18 10:56 contract.md
+-rw-r--r--  1 sgoeschl  staff     784 Jun 18 10:56 curl.sh
+-rw-r--r--  1 sgoeschl  staff     232 Jun 18 10:56 customer.txt
+-rw-r--r--  1 sgoeschl  staff    6488 Jun 18 10:56 dataframe.txt
+-rw-r--r--  1 sgoeschl  staff   15632 Jun 18 10:56 demo.txt
+-rw-r--r--  1 sgoeschl  staff    1310 Jun 18 10:56 dependencies.csv
+-rw-r--r--  1 sgoeschl  staff    2029 Jun 18 10:56 github-users-curl.md
+-rw-r--r--  1 sgoeschl  staff    2630 Jun 18 10:56 info.txt
+-rw-r--r--  1 sgoeschl  staff    8075 Jun 18 10:56 interactive-dataframe.txt
+-rw-r--r--  1 sgoeschl  staff      66 Jun 18 10:56 interactive-html.txt
+-rw-r--r--  1 sgoeschl  staff      16 Jun 18 10:56 interactive-json.txt
+-rw-r--r--  1 sgoeschl  staff   25090 Jun 18 10:56 interactive-swagger.json
+-rw-r--r--  1 sgoeschl  staff   16870 Jun 18 10:56 interactive-swagger.yaml
+-rw-r--r--  1 sgoeschl  staff      10 Jun 18 10:56 interactive-xml.txt
+-rw-r--r--  1 sgoeschl  staff     285 Jun 18 10:56 locker-test-users.csv
+-rw-r--r--  1 sgoeschl  staff    6341 Jun 18 10:56 locker-test-users.fo
+-rw-r--r--  1 sgoeschl  staff    5526 Jun 18 10:56 locker-test-users.pdf
+-rw-r--r--  1 sgoeschl  staff     921 Jun 18 10:56 recipients.txt
+-rw-r--r--  1 sgoeschl  staff     910 Jun 18 10:56 sales-records.md
+-rw-r--r--  1 sgoeschl  staff    2453 Jun 18 10:56 swagger-spec.csv
+-rw-r--r--  1 sgoeschl  staff   25090 Jun 18 10:56 swagger-spec.json
+-rw-r--r--  1 sgoeschl  staff   16870 Jun 18 10:56 swagger-spec.yaml
+drwxr-xr-x  4 sgoeschl  staff     128 Jun 18 10:49 template
+-rw-r--r--  1 sgoeschl  staff     156 Jun 18 10:56 test-multiple-sheets.xlsx.csv
+-rw-r--r--  1 sgoeschl  staff    1917 Jun 18 10:56 test-multiple-sheets.xlsx.html
+-rw-r--r--  1 sgoeschl  staff     389 Jun 18 10:56 test-multiple-sheets.xlsx.md
+-rw-r--r--  1 sgoeschl  staff     157 Jun 18 10:56 test-transform-xls.csv
+-rw-r--r--  1 sgoeschl  staff    1439 Jun 18 10:56 test.xls.dataframe.txt
+-rw-r--r--  1 sgoeschl  staff    1556 Jun 18 10:56 test.xls.html
+-rw-r--r--  1 sgoeschl  staff    1558 Jun 18 10:56 test.xslx.html
+-rw-r--r--  1 sgoeschl  staff   25760 Jun 18 10:56 transactions-fo.pdf
+-rw-r--r--  1 sgoeschl  staff   66016 Jun 18 10:56 transactions-html.pdf
+-rw-r--r--  1 sgoeschl  staff  330129 Jun 18 10:56 transactions.fo
+-rw-r--r--  1 sgoeschl  staff   51008 Jun 18 10:56 transactions.html
+
 ```
 
 Please note that generated PDF files are very likely not found since they require `wkhtmltopdf` and `Apache FOP` installation.
@@ -195,42 +206,46 @@ Please note that generated PDF files are very likely not found since they requir
 
 ```text
 > ./bin/freemarker-cli  -h
-Usage: freemarker-cli (-t=<template> | -i=<interactiveTemplate>) [-hV]
-                      [--stdin] [-b=<baseDir>] [--config=<configFile>]
-                      [-e=<inputEncoding>] [--exclude=<exclude>]
-                      [--include=<include>] [-l=<locale>] [--mode=<mode>]
-                      [-o=<outputFile>] [--output-encoding=<outputEncoding>]
-                      [--times=<times>] [-D=<String=String>]...
-                      [-m=<dataModels>]... [-P=<String=String>]...
-                      [-s=<dataSources>]... [<sources>...]
+Usage: freemarker-cli (-t=<templates> [-t=<templates>]... |
+                      -i=<interactiveTemplate>) [-hV] [--stdin] [-b=<baseDir>]
+                      [--config=<configFile>] [--data-source-exclude=<exclude>]
+                      [--data-source-include=<include>] [-e=<inputEncoding>]
+                      [-l=<locale>] [-o=<outputFile>]
+                      [--output-encoding=<outputEncoding>] [--times=<times>]
+                      [-D=<String=String>]... [-m=<dataModels>]...
+                      [-P=<String=String>]... [-s=<dataSources>]...
+                      [<sources>...]
 Apache FreeMarker CLI
-      [<sources>...]        List of input files and/or input directories
-  -b, --basedir=<baseDir>   Optional template base directory
+      [<sources>...]        data source files and/or directories
+  -b, --basedir=<baseDir>   optional template base directory
       --config=<configFile> FreeMarker CLI configuration file
   -D, --system-property=<String=String>
-                            Set system property
+                            set system property
+      --data-source-exclude=<exclude>
+                            file exclude pattern for data sources
+      --data-source-include=<include>
+                            file include pattern for data sources
   -e, --input-encoding=<inputEncoding>
-                            Encoding of data source
-      --exclude=<exclude>   File pattern for data source input directory
+                            encoding of data source
   -h, --help                Show this help message and exit.
   -i, --interactive=<interactiveTemplate>
-                            Interactive FreeMarker template
-      --include=<include>   File pattern for data source input directory
-  -l, --locale=<locale>     Locale being used for the output, e.g. 'en_US'
+                            interactive template to process
+  -l, --locale=<locale>     locale being used for the output, e.g. 'en_US'
   -m, --data-model=<dataModels>
-                            Data model used for rendering
-      --mode=<mode>         [template|datasource]
-  -o, --output=<outputFile> Output file
+                            data model used for rendering
+  -o, --output=<outputFile> output file or directory
       --output-encoding=<outputEncoding>
-                            Encoding of output, e.g. UTF-8
+                            encoding of output, e.g. UTF-8
   -P, --param=<String=String>
-                            Set parameter
+                            set parameter
   -s, --data-source=<dataSources>
-                            Data source used for rendering
-      --stdin               Read data  source from stdin
-  -t, --template=<template> FreeMarker template to render
-      --times=<times>       Re-run X times for profiling
+                            data source used for redering
+      --stdin               read data source from stdin
+  -t, --template=<templates>
+                            template to process
+      --times=<times>       re-run X times for profiling
   -V, --version             Print version information and exit.
+
 ```
 
 # 6. Examples
@@ -253,11 +268,11 @@ A simple example with real JSON data to be transformed into Markdown
 
 You can either use the existing JSON sample
 
-> ./bin/freemarker-cli -t templates/json/md/github-users.ftl site/sample/json/github-users.json
+> ./bin/freemarker-cli -t examples/templates/json/md/github-users.ftl examples/data/json/github-users.json
 
 or pipe a cURL response
 
-> curl -s https://api.github.com/users | ./bin/freemarker-cli -t templates/json/md/github-users.ftl --stdin
+> curl -s https://api.github.com/users | ./bin/freemarker-cli -t examples/templates/json/md/github-users.ftl --stdin
 
 ### FreeMarker Template
 
@@ -292,8 +307,8 @@ creates the following output
 Sometimes you have a CSV file which needs to be translated in Markdown or HTML - there are on-line solutions available such as [CSV To Markdown Table Generator](https://donatstudios.com/CsvToMarkdownTable) but having a local solution gives you more flexibility.
 
 ```text
-> ./bin/freemarker-cli -t templates/csv/md/transform.ftl site/sample/csv/contract.csv
-> ./bin/freemarker-cli -t templates/csv/html/transform.ftl site/sample/csv/contract.csv
+> ./bin/freemarker-cli -t examples/templates/csv/md/transform.ftl examples/data/csv/contract.csv
+> ./bin/freemarker-cli -t examples/templates/csv/html/transform.ftl examples/data/csv/contract.csv
 ```
 
 The FreeMarker template is shown below
@@ -331,7 +346,7 @@ The resulting file actually looks pleasant when compared to raw CSV
 Of course you can also transform a XML document
 
 ```text
-> ./bin/freemarker-cli -t templates/xml/txt/recipients.ftl site/sample/xml/recipients.xml
+> ./bin/freemarker-cli -t examples/templates/xml/txt/recipients.ftl examples/data/xml/recipients.xml
 ```
 
 using the following template
@@ -420,7 +435,7 @@ ${'\n'}
 
 Invoking the FTL template
 
-> ./bin/freemarker-cli -t templates/json/csv/swagger-endpoints.ftl site/sample/json/swagger-spec.json 
+> ./bin/freemarker-cli -t examples/templates/json/csv/swagger-endpoints.ftl examples/data/json/swagger-spec.json 
 
 gives you
 
@@ -437,10 +452,10 @@ ENDPOINT;METHOD;CONSUMES;PRODUCES;SUMMARY;DESCRIPTION
 Another day my project management asked me to create a CSV configuration file based on an Excel documents - as usual manual copying was not an option due to required data cleanup and data transformation. So I thought about Apache POI which support XLS and XLSX documents - integration of Apache POI was a breeze but the resulting code was not particularly useful example. So a more generic transformation was provided to show the transformation of Excel documents ...
 
 ```text
-> ./bin/freemarker-cli -t templates/excel/html/transform.ftl site/sample/excel/test.xls
-> ./bin/freemarker-cli -t templates/excel/html/transform.ftl site/sample/excel/test.xlsx
-> ./bin/freemarker-cli -t templates/excel/html/transform.ftl site/sample/excel/test-multiple-sheets.xlsx
-> ./bin/freemarker-cli -t templates/excel/md/transform.ftl site/sample/excel/test-multiple-sheets.xlsx
+> ./bin/freemarker-cli -t examples/templates/excel/html/transform.ftl examples/data/excel/test.xls
+> ./bin/freemarker-cli -t examples/templates/excel/html/transform.ftl examples/data/excel/test.xlsx
+> ./bin/freemarker-cli -t examples/templates/excel/html/transform.ftl examples/data/excel/test-multiple-sheets.xlsx
+> ./bin/freemarker-cli -t examples/templates/excel/md/transform.ftl examples/data/excel/test-multiple-sheets.xlsx
 ```
 
 The provided FTL transforms an Excel into a HTML document supporting multiple Excel sheets
@@ -524,7 +539,7 @@ but the result looks reasonable
 In this sample we transform all property files found in a directory (recursive search using include pattern) to a CSV file
 
 ```text
-> ./bin/freemarker-cli --include *.properties -t templates/properties/csv/locker-test-users.ftl site/sample/properties
+> ./bin/freemarker-cli --data-source-include *.properties -t examples/templates/properties/csv/locker-test-users.ftl examples/data/properties
 TENANT,SITE,USER_ID,DISPOSER_ID,PASSWORD,SMS_OTP,NAME,DESCRIPTION
 TENANT_A,fat,user_0004,user_0004,password_0004,,,
 TENANT_B,fat,user_0001,user_0001,password_0001,,,
@@ -655,7 +670,7 @@ For a POC (proof of concept) I created a sample transformation from CSV to XML-F
 In order to create the PDF you need to execute the following commands (assuming that you have Apache FOP installed)
 
 ```text
-> ./bin/freemarker-cli -t templates/csv/fo/transform.ftl site/sample/csv/locker-test-users.csv > sample.fo
+> ./bin/freemarker-cli -t examples/templates/csv/fo/transform.ftl examples/data/csv/locker-test-users.csv > sample.fo
 > fop -fo sample.fo sample.pdf
 Dec 29, 2018 10:24:30 PM org.apache.fop.events.LoggingEventListener processEvent
 WARNING: Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
@@ -672,7 +687,7 @@ The result does not look very impressive but it is a PDF :-)
 Further along the line of the POC we converted a transaction export from CSV to PDF using Apache FOP
 
 ```text
-> ./bin/freemarker-cli -t templates/csv/fo/transactions.ftl site/sample/csv/transactions.csv > transactions.fo
+> ./bin/freemarker-cli -t examples/templates/csv/fo/transactions.ftl examples/data/csv/transactions.csv > transactions.fo
 > fop -fo transactions.fo transactions.pdf
 Jan 16, 2019 11:15:21 PM org.apache.fop.events.LoggingEventListener processEvent
 WARNING: Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
@@ -733,7 +748,7 @@ Recently I got the rather unusual question how to determine the list of dependen
 Your dependencies as CSV can be generated as shown below
 
 ```text
-> ./bin/freemarker-cli -t templates/html/csv/dependencies.ftl site/sample/html/dependencies.html 
+> ./bin/freemarker-cli -t examples/templates/html/csv/dependencies.ftl examples/data/html/dependencies.html 
 GroupId,ArtifactId,Version,Type,Licenses
 com.jayway.jsonpath,json-path,2.4.0,jar,The Apache Software License Version 2.0
 commons-cli,commons-cli,1.4,jar,Apache License Version 2.0
@@ -788,7 +803,7 @@ date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',${record.disposer},%{http_c
 Rendering the FreeMarker template 
 
 ```
-> ./bin/freemarker-cli -t ./templates/csv/shell/curl.ftl site/sample/csv/user.csv
+> ./bin/freemarker-cli -t ./examples/templates/csv/shell/curl.ftl examples/data/csv/user.csv
 ```
 
 generates the following shell script
@@ -830,7 +845,7 @@ QUOTEDSTRING (?>(?<!\\)(?>"(?>\\.|[^\\"]+)+"|""|(?>'(?>\\.|[^\\']+)+')|''|(?>`(?
 
 And with `Grok` the `QUOTEDSTRING` is just a building block for an even more complex regular expession such as `COMBINEDAPACHELOG`
 
-> bin/freemarker-cli -t templates/accesslog/combined-access.ftl site/sample/accesslog/combined-access.log 
+> bin/freemarker-cli -t examples/templates/accesslog/combined-access.ftl examples/data/accesslog/combined-access.log 
 
 which gives you the following output
 
@@ -879,7 +894,7 @@ While this looks small and tidy there are some nifty features
 
 Sometimes you have a CSV file which is not quite right - you need to change the format. Lets have a look how `freemarker-cli` can help
 
-> bin/freemarker-cli -PCVS_IN_DELIMITER=COMMA -PCSV_OUT_DELIMITER=PIPE -t templates/csv/transform.ftl ./site/sample/csv/contract.csv 
+> bin/freemarker-cli -PCVS_IN_DELIMITER=COMMA -PCSV_OUT_DELIMITER=PIPE -t examples/templates/csv/transform.ftl ./examples/data/csv/contract.csv 
 
 renders the following template
 
@@ -988,16 +1003,16 @@ Sometime you need to apply a CSS, JSON or XPath query in ad ad-hoc way without i
 > bin/freemarker-cli -i 'Hello ${SystemTool.envs["USER"]}'; echo
 Hello sgoeschl
 
-> bin/freemarker-cli -i '${JsonPathTool.parse(DataSources.first).read("$.info.title")}' site/sample/json/swagger-spec.json; echo
+> bin/freemarker-cli -i '${JsonPathTool.parse(DataSources.first).read("$.info.title")}' examples/data/json/swagger-spec.json; echo
 Swagger Petstore
 
-> bin/freemarker-cli -i 'Post Title : ${JsonPathTool.parse(DataSources.first).read("$.title")}' https://jsonplaceholder.typicode.com/posts/2
+> bin/freemarker-cli -i 'Post Title : ${JsonPathTool.parse(DataSources.first).read("$.title")}' https://jsonplaceholder.typicode.com/posts/2; echo
 Post Title : qui est esse
 
-> bin/freemarker-cli -i '${XmlTool.parse(DataSources.first)["recipients/person[1]/name"]}' site/sample/xml/recipients.xml; echo
+> bin/freemarker-cli -i '${XmlTool.parse(DataSources.first)["recipients/person[1]/name"]}' examples/data/xml/recipients.xml; echo
 John Smith
 
-> bin/freemarker-cli -i '${JsoupTool.parse(DataSources.first).select("a")[0]}' site/sample/html/dependencies.html; echo
+> bin/freemarker-cli -i '${JsoupTool.parse(DataSources.first).select("a")[0]}' examples/data/html/dependencies.html; echo
 <a href="${project.url}" title="FreeMarker CLI">FreeMarker CLI</a>
 
 > ./bin/freemarker-cli -i '<#list SystemTool.envs as name,value>${name} ==> ${value}${"\n"}</#list>'
@@ -1010,16 +1025,16 @@ EDITOR ==> vi
 
 ## 6.14 Filtering & Transforming CSV
 
-During an integration project we imported large transactions CSV files (500.000+ records) and in case of import failures the developers would be happy to get a nice outline of the transactions causing the problem (the CSV records have 60+ columns) - in essence it is filtering (based on some primary key) and and transforming into an output format (Markdown).
+During an integration project we imported large transactions CSV files (500.000+ records) and in case of import failures the developers would be happy to get a nice outline of the transactions causing the problem (the CSV records have 60+ columns) - in essence it is filtering (based on some primary key) and and transforming into a human-readable output format (Markdown).
 
 So lets start the filtering & transformation using the following command line
 
 ```text
-> bin/freemarker-cli -e UTF-8 -l de_AT -Dcolumn="Order ID" \
-  -Dvalues=226939189,957081544 \
-  -Dformat=DEFAULT \
-  -Ddelimiter=COMMA \
-  -t templates/csv/md/filter.ftl site/sample/csv/sales-records.csv
+> bin/freemarker-cli -e UTF-8 -l de_AT -Pcolumn="Order ID" \
+  -Pvalues=226939189,957081544 \
+  -Pformat=DEFAULT \
+  -Pdelimiter=COMMA \
+  -t examples/templates/csv/md/filter.ftl examples/data/csv/sales-records.csv
 ```
 
 and Apache FreeMarker template
@@ -1029,13 +1044,12 @@ and Apache FreeMarker template
 <#assign dataSource = DataSources.get(0)>
 <#assign parser = parser(dataSource)>
 <#assign headers = parser.getHeaderNames()>
-<#assign column = SystemTool.getProperty("column")>
-<#assign values = SystemTool.getProperty("values")?split(",")>
-
-<#-- Process each line without materializing the whole file in memory -->
+<#assign column = SystemTool.getParameter("column")>
+<#assign values = SystemTool.getParameter("values")?split(",")>
 
 <#compress>
     <@writePageHeader dataSource/>
+    <#-- Process each line without materializing the whole file in memory -->
     <#list parser.iterator() as record>
         <#if filter(record)>
             <@writeCsvRecord headers record/>
@@ -1044,8 +1058,8 @@ and Apache FreeMarker template
 </#compress>
 
 <#function parser dataSource>
-    <#assign format = CSVTool.formats[SystemTool.getProperty("format", "DEFAULT")]>
-    <#assign delimiter = CSVTool.toDelimiter(SystemTool.getProperty("delimiter", format.getDelimiter()))>
+    <#assign format = CSVTool.formats[SystemTool.getParameter("format", "DEFAULT")]>
+    <#assign delimiter = CSVTool.toDelimiter(SystemTool.getParameter("delimiter", format.getDelimiter()))>
     <#return CSVTool.parse(dataSource, format.withFirstRecordAsHeader().withDelimiter(delimiter))>
 </#function>
 
@@ -1065,8 +1079,6 @@ and Apache FreeMarker template
     | ${header} | ${record.get(header)}       |
     </#list>
 </#macro>
-
-
 ```
 
 yields
@@ -1114,16 +1126,209 @@ yields
 Sometimes we simply need to transform a JSON into an equivalent YAML or the other way around
 
 ```
-> ./bin/freemarker-cli -t templates/yaml/json/transform.ftl site/sample/yaml/swagger-spec.yaml 
-> ./bin/freemarker-cli -i '${GsonTool.toJson(YamlTool.parse(DataSources.get(0)))}' site/sample/yaml/swagger-spec.yaml
-> ./bin/freemarker-cli -i '${GsonTool.toJson(yaml)}' -m yaml=site/sample/yaml/swagger-spec.yaml
+> ./bin/freemarker-cli -t examples/templates/yaml/json/transform.ftl examples/data/yaml/swagger-spec.yaml 
+> ./bin/freemarker-cli -i '${GsonTool.toJson(YamlTool.parse(DataSources.get(0)))}' examples/data/yaml/swagger-spec.yaml
+> ./bin/freemarker-cli -i '${GsonTool.toJson(yaml)}' -m yaml=examples/data/yaml/swagger-spec.yaml
 
-> ./bin/freemarker-cli -t templates/json/yaml/transform.ftl site/sample/json/swagger-spec.json
-> ./bin/freemarker-cli -i '${YamlTool.toYaml(GsonTool.parse(DataSources.get(0)))}' site/sample/json/swagger-spec.json
-> ./bin/freemarker-cli -i '${YamlTool.toYaml(json)}' -m json=site/sample/json/swagger-spec.json
+> ./bin/freemarker-cli -t examples/templates/json/yaml/transform.ftl examples/data/json/swagger-spec.json
+> ./bin/freemarker-cli -i '${YamlTool.toYaml(GsonTool.parse(DataSources.get(0)))}' examples/data/json/swagger-spec.json
+> ./bin/freemarker-cli -i '${YamlTool.toYaml(json)}' -m json=examples/data/json/swagger-spec.json
 ```
 
-## 6.16 Using Advanced FreeMarker Features
+## 6.16 Using DataFrames
+
+The `DataFrameTool` uses [nRo/DataFrame](https://github.com/nRo/DataFrame) to convert tabular data into a `DataFrame`.
+
+A `DataFrame` allows declartive filtering and transformation of tabular data, i.e. less code to write.
+
+Currently the following sources are supported
+
+* Apache Commons CSV Parser
+* JSON arrays represented as collection of maps
+* Excel sheets represented as rows
+
+### CSV Examples
+
+[nRo/DataFrame]("https://raw.githubusercontent.com/nRo/DataFrame/master/src/test/resources/users.csv") provides the following CSV file
+
+```
+name;age;country
+Schmitt;24;Germany
+Parker;45;USA
+Meier;20;Germany
+Schmitt;30;France
+Peter;44;Germany
+Meier;24;Germany
+Green;33;UK
+Schmitt;30;Germany
+Meier;30;Germany
+```
+
+and create a `DateFrame` using the following code
+
+```
+<#assign cvsFormat = CSVTool.formats["DEFAULT"].withHeader().withDelimiter(';')>
+<#assign csvParser = CSVTool.parse(DataSources.get(0), cvsFormat)>
+<#assign users = DataFrameTool.toDataFrame(csvParser)>
+```
+
+#### Select By Age
+
+```
+${DataFrameTool.print(users.select("(age > 40)"))}
+```
+
+which shows 
+
+```
+┌────────────┬────────────┬────────────┐
+│#name       │#age        │#country    │
+├────────────┼────────────┼────────────┤
+│Parker      │45          │USA         │
+├────────────┼────────────┼────────────┤
+│Peter       │44          │Germany     │
+└────────────┴────────────┴────────────┘
+```
+
+#### Complex Select & Sort
+
+Now we want to create a new `DataFrame` by selecting `name` and `country`
+
+```
+<#assign country = "Germany">
+${DataFrameTool.print(users
+    .select("(name == 'Schmitt' || name == 'Meier') && country == '${country}'")
+    .sort("name", DataFrameTool.sortOrder["ASCENDING"]))}
+```
+
+which shows
+
+```
+┌────────────┬────────────┬────────────┐
+│#name       │#age        │#country    │
+├────────────┼────────────┼────────────┤
+│Meier       │20          │Germany     │
+├────────────┼────────────┼────────────┤
+│Meier       │24          │Germany     │
+├────────────┼────────────┼────────────┤
+│Meier       │30          │Germany     │
+├────────────┼────────────┼────────────┤
+│Schmitt     │24          │Germany     │
+├────────────┼────────────┼────────────┤
+│Schmitt     │30          │Germany     │
+└────────────┴────────────┴────────────┘
+```
+
+#### Count Column Values
+
+Let's assume we want to count the records for each `country`
+
+```
+${DataFrameTool.print(users.getColumn("country").transform(DataFrameTool.transformer["COUNT"]))}
+```
+
+returns the following `DataFrame`
+
+```
+┌────────────┬────────────┐
+│#country    │#counts     │
+├────────────┼────────────┤
+│Germany     │6           │
+├────────────┼────────────┤
+│USA         │1           │
+├────────────┼────────────┤
+│France      │1           │
+├────────────┼────────────┤
+│UK          │1           │
+└────────────┴────────────┘
+```
+
+#### Group By Age And Country
+
+Let's assume that we want to group the `DataFrame` by `age` and `country`
+
+```
+${DataFrameTool.print(users.groupBy("age", "country").sort("age"))}
+``` 
+
+which results in 
+
+```
+┌────────────┬────────────┐
+│#age        │#country    │
+├────────────┼────────────┤
+│20          │Germany     │
+├────────────┼────────────┤
+│24          │Germany     │
+├────────────┼────────────┤
+│30          │France      │
+├────────────┼────────────┤
+│30          │Germany     │
+├────────────┼────────────┤
+│33          │UK          │
+├────────────┼────────────┤
+│44          │Germany     │
+├────────────┼────────────┤
+│45          │USA         │
+└────────────┴────────────┘
+```
+
+### JSON Examples
+
+Here we load a `examples/data/json/github-users.json` which represents a tabular data be 
+being parsed as a list of maps and print the JSOB as dataframe
+
+```
+./bin/freemarker-cli -i '${DataFrameTool.print(DataFrameTool.fromMaps(GsonTool.parse(DataSources.get(0))))}' examples/data/json/github-users.json
+
+┌────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┐
+│#login      │#id         │#avatar_ur  │#gravatar_  │#url        │#html_url   │#followers  │#following  │#gists_url  │#starred_u  │#subscript  │#organizat  │#repos_url  │#events_ur  │#received_  │#type       │#site_admi  │
+├────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┤
+│mojombo     │1.00000000  │https:/...  │            │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │User        │false       │
+├────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┤
+│defunkt     │2.00000000  │https:/...  │            │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │User        │true        │
+├────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┤
+│pjhyett     │3.00000000  │https:/...  │            │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │User        │true        │
+├────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┤
+│wycats      │4.00000000  │https:/...  │            │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │User        │false       │
+├────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┤
+│ezmobius    │5.00000000  │https:/...  │            │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │User        │false       │
+├────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┤
+│ivey        │6.00000000  │https:/...  │            │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │User        │false       │
+├────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┤
+│evanphx     │7.00000000  │https:/...  │            │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │https:/...  │User        │false       │
+└────────────┴────────────┴────────────┴────────────┴────────────┴────────────┴────────────┴────────────┴────────────┴────────────┴────────────┴────────────┴────────────┴────────────┴────────────┴────────────┴────────────┘
+```
+
+### Excel Examples
+
+Let's transform an Excel Sheet to a `DataFrame` being printed using the following template
+
+```
+<#assign dataSource = DataSources.get(0)>
+<#assign workbook = ExcelTool.parse(dataSource)>
+<#list ExcelTool.getSheets(workbook) as sheet>
+    <#assign table = ExcelTool.toTable(sheet)>
+    <#assign df = DataFrameTool.fromRows(table, true)>
+    ${DataFrameTool.print(df)}<#t>
+</#list>
+```
+
+which is rendered by the following command line invocation
+
+```
+./bin/freemarker-cli -t examples/templates/excel/dataframe/transform.ftl examples/data/excel/test.xls
+
+┌────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┐
+│#Text       │#Date       │#Number     │#Currency   │#Time       │#Percentag  │#Forumula   │
+├────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┤
+│Row 1       │01/01/17    │100.00      │€100.00     │10:00       │50.00%      │C2*F2       │
+├────────────┼────────────┼────────────┼────────────┼────────────┼────────────┼────────────┤
+│Row 2       │01/01/17    │100.00      │€100.00     │10:00       │50.00%      │C3*F3       │
+└────────────┴────────────┴────────────┴────────────┴────────────┴────────────┴────────────┘
+```
+
+## 6.17 Using Advanced FreeMarker Features
 
 There is a `demo.ftl` which shows some advanced FreeMarker functionality
 
@@ -1135,7 +1340,7 @@ There is a `demo.ftl` which shows some advanced FreeMarker functionality
 
 Running 
 
-> ./bin/freemarker-cli -t templates/demo.ftl 
+> ./bin/freemarker-cli -t examples/templates/demo.ftl 
 
 gives you
 
@@ -1143,11 +1348,12 @@ gives you
 1) FreeMarker Special Variables
 ---------------------------------------------------------------------------
 FreeMarker version     : 2.3.30
-Template name          : templates/demo.ftl
+Template name          : demo.ftl
 Language               : en
 Locale                 : en_US
-Timestamp              : Apr 14, 2020 11:40:26 PM
+Timestamp              : Jun 18, 2020 11:13:51 AM
 Output encoding        : UTF-8
+Output format          : plainText
 
 2) Invoke a constructor of a Java class
 ---------------------------------------------------------------------------
@@ -1155,8 +1361,8 @@ new java.utilDate(1000 * 3600 * 24): Jan 2, 1970 1:00:00 AM
 
 3) Invoke a static method of an non-constructor class
 ---------------------------------------------------------------------------
-Random UUID              : 1fdb5ead-80a3-418c-bcc7-242e41b4e950
-System.currentTimeMillis : 1,582,386,859,782
+Random UUID              : ac6c8bb2-a8cf-423e-ad6b-a4eff09b1fb9
+System.currentTimeMillis : 1,592,471,631,655
 
 4) Access an Enumeration
 ---------------------------------------------------------------------------
@@ -1173,23 +1379,23 @@ java.math.RoundingMode#UP: UP
 - java.math.RoundingMode.HALF_EVEN
 - java.math.RoundingMode.UNNECESSARY
 
-6) Display list of input files
+6) Display list of data sources
 ---------------------------------------------------------------------------
-List all files:
+List all data sources:
 
 7) SystemTool
 ---------------------------------------------------------------------------
-Host name       : W0GL5179.local
-Command line    : -t, templates/demo.ftl
+Host name       : W0GL5179.home
+Command line    : -t, examples/templates/demo.ftl
 System property : sgoeschl
-Timestamp       : 1582386860080
+Timestamp       : 1592471631667
 Environment var : sgoeschl
 
 8) Access System Properties
 ---------------------------------------------------------------------------
 app.dir      : 
 app.home     : /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler
-app.pid      : 71792
+app.pid      : 13037
 basedir      : /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler
 java.version : 1.8.0_192
 user.name    : sgoeschl
@@ -1198,11 +1404,45 @@ user.home    : /Users/sgoeschl
 
 9) List Environment Variables
 ---------------------------------------------------------------------------
+- PATH ==> /Users/sgoeschl/bin:/Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home/bin:/usr/local/opt/ruby/bin:HOME/.gem/ruby/2.7.0/bin:/usr/local/Cellar/git/2.19.1/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Applications/Java/apache-fop-2.3:/Applications/Java/freemarker-cli-2.0.0-BETA-2/bin:
+- GIT_HOME ==> /usr/local/Cellar/git/2.19.1
+- JAVA_8_HOME ==> /Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home
+- JAVA_HOME ==> /Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home
+- FOP_HOME ==> /Applications/Java/apache-fop-2.3
 - TERM ==> xterm-256color
 - LANG ==> en_US
+- MAVEN_OPTS ==> -Xmx2048m
 - DISPLAY ==> :0.0
+- JAVA_11_HOME ==> /Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home
+- BEEONE_NEXUS_CREDENTIALS ==> H50N0OB:fRidnevo0420!
+- JAVA_9_HOME ==> /Library/Java/JavaVirtualMachines/jdk-9.0.4.jdk/Contents/Home
+- LOGNAME ==> sgoeschl
+- XPC_SERVICE_NAME ==> 0
+- PWD ==> /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler
+- TERM_PROGRAM_VERSION ==> 433
+- RUBY_HOME ==> /usr/local/opt/ruby
+- JAVA_MAIN_CLASS_13037 ==> org.apache.freemarker.generator.cli.Main
 - SHELL ==> /bin/bash
+- PROFILE_TYPE ==> development
+- TERM_PROGRAM ==> Apple_Terminal
+- LSCOLORS ==> ExFxCxDxBxegedabagacad
+- PROFILE_ENV ==> default
+- SECURITYSESSIONID ==> 186a8
+- USER ==> sgoeschl
+- CLICOLOR ==> 1
+- GATLING_HOME ==> /Applications/Java/gatling-3.1.2
+- LaunchInstanceID ==> E8DE55F6-626E-4D15-B3B4-FFE4704CEF4E
+- TMPDIR ==> /var/folders/cd/jbgc9cg14ld7dlsqk44tpmrw0000gn/T/
+- SSH_AUTH_SOCK ==> /private/tmp/com.apple.launchd.DTdlBj20Ka/Listeners
 - EDITOR ==> vi
+- XPC_FLAGS ==> 0x0
+- FREEMARKER_CLI_HOME ==> /Applications/Java/freemarker-cli-2.0.0-BETA-2
+- TERM_SESSION_ID ==> 2745D6A3-543A-4DE3-830B-945678460311
+- LC_ALL ==> en_US.utf-8
+- __CF_USER_TEXT_ENCODING ==> 0x1F5:0x0:0x0
+- LC_CTYPE ==> UTF-8
+- HOME ==> /Users/sgoeschl
+- SHLVL ==> 1
 
 10) List System Properties
 ---------------------------------------------------------------------------
@@ -1210,19 +1450,23 @@ user.home    : /Users/sgoeschl
 - java.vm.version ==> 25.192-b12
 - java.vm.vendor ==> Oracle Corporation
 - java.vendor.url ==> http://java.oracle.com/
+- path.separator ==> :
 - java.vm.name ==> Java HotSpot(TM) 64-Bit Server VM
+- file.encoding.pkg ==> sun.io
+- user.country ==> AT
 
 11) Access DataSources
 ---------------------------------------------------------------------------
-Get the number of data sources:
+Get the number of documents:
 - 0
 List all files containing "README" in the name
 List all files having "md" extension
-Get all data sources
+Get all documents
 
 12) FreeMarker CLI Tools
 ---------------------------------------------------------------------------
 - CSVTool              : Process CSV files using Apache Commons CSV (see https://commons.apache.org/proper/commons-csv/)
+- DataFrameTool        : Bridge to nRo/DataFrame (see https://github.com/nRo/DataFrame)
 - ExcelTool            : Process Excels files (XLS, XLSX) using Apache POI (see https://poi.apache.org)
 - ExecTool             : Execute command line tools using Apache Commons Exec (see https://commons.apache.org/proper/commons-exec/)
 - FreeMarkerTool       : Expose useful Apache FreeMarker classes
@@ -1239,6 +1483,7 @@ Get all data sources
 13) Document Data Model
 ---------------------------------------------------------------------------
 - CSVTool
+- DataFrameTool
 - DataSources
 - ExcelTool
 - ExecTool
@@ -1255,7 +1500,7 @@ Get all data sources
 
 14) Create a UUID
 ---------------------------------------------------------------------------
-UUIDTool Random UUID  : 936315a5-ee3d-44cd-a32c-2be10d2249a6
+UUIDTool Random UUID  : 832a20fb-ac22-460a-b5d0-33c6fcc126d2
 UUIDTool Named UUID   : 298415f9-e888-3d98-90e7-6c0d63ad14dc
 
 15) Printing Special Characters
@@ -1266,13 +1511,13 @@ German Special Characters: äöüßÄÖÜ
 ---------------------------------------------------------------------------
 Small Number :  1.23
 Large Number :  12,345,678.90
-Date         :  Apr 14, 2020
-Time         :  11:40:26 PM
+Date         :  Jun 18, 2020
+Time         :  11:13:51 AM
 
 17) Execute a program
 ---------------------------------------------------------------------------
 > date
-Tue Apr 14 23:40:26 CEST 2020
+Thu Jun 18 11:13:51 CEST 2020
 ```
 
 # 7. Design Considerations
@@ -1290,6 +1535,7 @@ Within the script a FreeMarker data model is set up and passed to the template -
 | Entry                 | Description                                                                                               |
 |-----------------------|-----------------------------------------------------------------------------------------------------------|
 | CSVTool               | Process CSV files using [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/)              |
+| DataFrameTool         | Bridge to [nRo/DataFrame](https://github.com/nRo/DataFrame)                                            |
 | ExecTool              | Execute command line tools using [Apache Commons Exec](https://commons.apache.org/proper/commons-exec/)   |
 | ExcelTool             | Process Excels files (XLS, XLSX) using [Apache POI](https://poi.apache.org)                               |
 | DataSources           | Helper class to find data sources, e.g. by name, extension or index                                       |
@@ -1314,10 +1560,14 @@ When doing some ad-hoc scripting it is useful to rely on a base directory to res
 * As a default the FTL templates are resolved relative to the script directory
 * The caller can provide a `-b` or `--basedir` command line parameter
 
-> ./bin/freemarker-cli -t templates/json/html/customer-user-products.ftl freemarker-cli/site/sample/json/customer-user-products.jso
+```text
+./bin/freemarker-cli -b examples/templates -t json/md/github-users.ftl examples/data/json/github-users.json; echo
+```
 
 ## 8.2 Using Pipes
 
 When doing ad-hoc scripting it useful to pipe the output of one command directly into "freemarker-cli"
 
-> cat site/sample/json/customer-user-products.json | ./bin/freemarker-cli -t ./templates/json/html/customer-user-products.ftl --stdin
+```text
+cat examples/data/json/github-users.json | ./bin/freemarker-cli -t examples/templates/json/md/github-users.ftl --stdin; echo
+```

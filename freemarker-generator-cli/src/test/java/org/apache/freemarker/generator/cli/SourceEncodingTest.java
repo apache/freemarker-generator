@@ -28,13 +28,13 @@ public class SourceEncodingTest extends AbstractMainTest {
 
     @Test
     public void shouldLoadUtf8Text() throws IOException {
-        final String output = execute("-b ./src/test -e UTF-8 -t templates/echo.ftl ./src/test/data/encoding/utf8.txt");
+        final String output = execute("-e UTF-8 -t ./src/test/templates/echo.ftl ./src/test/data/encoding/utf8.txt");
         assertTrue("Unable to find expected cyrillic term", output.contains(CYRILLIC_TERM));
     }
 
     @Test
     public void shouldLoadUtf16Text() throws IOException {
-        final String output = execute("-b ./src/test -e UTF-16 -t templates/echo.ftl ./src/test/data/encoding/utf16.txt");
+        final String output = execute("-e UTF-16 -t ./src/test/templates/echo.ftl ./src/test/data/encoding/utf16.txt");
         assertTrue("Unable to find expected cyrillic term", output.contains(CYRILLIC_TERM));
     }
 }

@@ -108,7 +108,7 @@ public class DataFrameTool {
 
     @Override
     public String toString() {
-        return "Bridge to nRo/DataFrame (see https://github.com/nRo/DataFrame)";
+        return "Bridge to [nRo/DataFrame](https://github.com/nRo/DataFrame)";
     }
 
     private static CountTransformer countTransformer(boolean ignoreNA) {
