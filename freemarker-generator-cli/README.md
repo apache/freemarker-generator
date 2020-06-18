@@ -894,7 +894,7 @@ While this looks small and tidy there are some nifty features
 
 Sometimes you have a CSV file which is not quite right - you need to change the format. Lets have a look how `freemarker-cli` can help
 
-> bin/freemarker-cli -PCVS_IN_DELIMITER=COMMA -PCSV_OUT_DELIMITER=PIPE -t examples/templates/csv/transform.ftl ./examples/data/csv/contract.csv 
+> bin/freemarker-cli -PCVS_IN_DELIMITER=COMMA -PCSV_OUT_DELIMITER=PIPE -t examples/templates/csv/csv/transform.ftl ./examples/data/csv/contract.csv 
 
 renders the following template
 
@@ -902,7 +902,11 @@ renders the following template
 <#ftl output_format="plainText" strip_text="true">
 <#assign csvParser = createCsvParser(DataSources.get(0))>
 <#assign csvPrinter = createCsvPrinter()>
-<#-- Print each line without materializing the CSV in memory -->
+<#--
+    Print each record directly to the underyling writer without materializing the CSV in memory.
+    FreeMarker and CSV output are out of sync but millions of records can processed without
+    running out of memory.
+-->
 <#compress>
     <#list csvParser.iterator() as record>
         ${csvPrinter.printRecord(record)}

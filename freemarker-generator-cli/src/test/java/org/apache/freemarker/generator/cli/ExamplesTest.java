@@ -51,7 +51,7 @@ public class ExamplesTest extends AbstractMainTest {
         assertValid(execute("-t examples/templates/csv/fo/transform.ftl examples/data/csv/locker-test-users.csv"));
         assertValid(execute("-t examples/templates/csv/fo/transactions.ftl examples/data/csv/transactions.csv"));
         assertValid(execute("-t examples/templates/csv/html/transactions.ftl examples/data/csv/transactions.csv"));
-        assertValid(execute("-t examples/templates/csv/transform.ftl examples/data/csv/contract.csv"));
+        assertValid(execute("-t examples/templates/csv/csv/transform.ftl examples/data/csv/contract.csv"));
     }
 
     @Test

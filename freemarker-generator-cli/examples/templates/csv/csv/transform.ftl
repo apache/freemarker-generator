@@ -17,7 +17,11 @@
 -->
 <#assign csvParser = createCsvParser(DataSources.get(0))>
 <#assign csvPrinter = createCsvPrinter()>
-<#-- Print each line without materializing the CSV in memory -->
+<#--
+    Print each record directly to the underyling writer without materializing the CSV in memory.
+    FreeMarker and CSV output are out of sync but millions of records can processed without
+    running out of memory.
+-->
 <#compress>
     <#list csvParser.iterator() as record>
         ${csvPrinter.printRecord(record)}
