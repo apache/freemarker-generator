@@ -155,7 +155,7 @@ examples/templates/json/csv/swagger-endpoints.ftl
 examples/templates/json/yaml/transform.ftl
 examples/templates/json/md/github-users.ftl
 examples/templates/properties/csv/locker-test-users.ftl
-site/template
+examples/data/template
 examples/templates/yaml/txt/transform.ftl
 examples/templates/yaml/json/transform.ftl
 examples/templates/xml/txt/recipients.ftl

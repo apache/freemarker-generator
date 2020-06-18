@@ -122,8 +122,8 @@ public class ExamplesTest extends AbstractMainTest {
 
     @Test
     public void shouldTransformTemplateDirectory() throws IOException {
-        assertTrue(execute("-t site/template").contains("server.name=127.0.0.1"));
-        assertTrue(execute("-t site/template -PNGINX_HOSTNAME=my.domain.com").contains("server.name=my.domain.com"));
+        assertTrue(execute("-t examples/data/template").contains("server.name=127.0.0.1"));
+        assertTrue(execute("-t examples/data/template -PNGINX_HOSTNAME=my.domain.com").contains("server.name=my.domain.com"));
     }
 
     @Test
