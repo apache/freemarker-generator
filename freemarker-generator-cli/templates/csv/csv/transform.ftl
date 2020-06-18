@@ -29,7 +29,7 @@
 </#compress>
 
 <#function createCsvParser dataSource>
-    <#assign initialCvsInFormat = CSVTool.formats[CSV_IN_FORMAT!"DEFAULT"]>
+    <#assign initialCvsInFormat = CSVTool.formats[CSV_IN_FORMAT!"DEFAULT"].withHeader()>
     <#assign csvInDelimiter = CSVTool.toDelimiter(CSV_IN_DELIMITER!initialCvsInFormat.getDelimiter())>
     <#assign cvsInFormat = initialCvsInFormat.withDelimiter(csvInDelimiter)>
     <#return CSVTool.parse(dataSource, cvsInFormat)>

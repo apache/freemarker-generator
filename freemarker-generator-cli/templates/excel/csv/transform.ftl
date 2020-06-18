@@ -15,17 +15,22 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign format = CVS_IN_FORMAT!"DEFAULT">
 <#-- Parse the first data source & sheet of the Excel document -->
 <#assign workbook = ExcelTool.parse(DataSources.get(0))>
 <#assign sheet = ExcelTool.getSheets(workbook)[0]>
 <#assign records = ExcelTool.toTable(sheet)>
 <#-- Setup CSVPrinter  -->
-<#assign cvsFormat = CSVTool.formats[format]>
-<#assign csvPrinter = CSVTool.printer(cvsFormat, SystemTool.writer)>
+<#assign csvPrinter = createCsvPrinter()>
 <#-- Print each line of the Excel as CSV record -->
 <#compress>
     <#list records as record>
         ${csvPrinter.printRecord(record)}
     </#list>
 </#compress>
+<#--------------------------------------------------------------------------->
+<#function createCsvPrinter>
+    <#assign initialCvsOutFormat = CSVTool.formats[CSV_OUT_FORMAT!"DEFAULT"]>
+    <#assign csvOutDelimiter = CSVTool.toDelimiter(CSV_OUT_DELIMITER!initialCvsOutFormat.getDelimiter())>
+    <#assign cvsOutFormat = initialCvsOutFormat.withDelimiter(csvOutDelimiter)>
+    <#return CSVTool.printer(cvsOutFormat, SystemTool.writer)>
+</#function>

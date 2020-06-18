@@ -15,8 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign cvsFormat = CSVTool.formats["DEFAULT"].withHeader()>
-<#assign csvParser = CSVTool.parse(DataSources.get(0), cvsFormat)>
+<#assign csvParser = createCsvParser(DataSources.get(0))>
 <#assign csvHeaders = csvParser.getHeaderMap()?keys>
 <#assign csvRecords = csvParser.records>
 <#--------------------------------------------------------------------------->
@@ -35,3 +34,10 @@
     | ${column.iterator()?join(" | ", "")} |
     </#list>
 </#macro>
+<#--------------------------------------------------------------------------->
+<#function createCsvParser dataSource>
+    <#assign initialCvsInFormat = CSVTool.formats[CSV_IN_FORMAT!"DEFAULT"].withHeader()>
+    <#assign csvInDelimiter = CSVTool.toDelimiter(CSV_IN_DELIMITER!initialCvsInFormat.getDelimiter())>
+    <#assign cvsInFormat = initialCvsInFormat.withDelimiter(csvInDelimiter)>
+    <#return CSVTool.parse(dataSource, cvsInFormat)>
+</#function>
