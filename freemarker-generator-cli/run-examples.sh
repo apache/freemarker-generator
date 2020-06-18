@@ -57,11 +57,11 @@ $FREEMARKER_CMD -i '${DataFrameTool.print(DataFrameTool.fromMaps(GsonTool.parse(
 # CSV
 #############################################################################
 
-echo "examples/templates/csv/html/transform.ftl"
-$FREEMARKER_CMD -t examples/templates/csv/html/transform.ftl examples/data/csv/contract.csv > target/out/contract.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
+echo "templates/csv/html/transform.ftl"
+$FREEMARKER_CMD -t templates/csv/html/transform.ftl examples/data/csv/contract.csv > target/out/contract.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
-echo "examples/templates/csv/md/transform.ftl"
-$FREEMARKER_CMD -t examples/templates/csv/md/transform.ftl examples/data/csv/contract.csv > target/out/contract.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
+echo "templates/csv/md/transform.ftl"
+$FREEMARKER_CMD -t templates/csv/md/transform.ftl examples/data/csv/contract.csv > target/out/contract.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 echo "examples/templates/csv/shell/curl.ftl"
 $FREEMARKER_CMD -t ./examples/templates/csv/shell/curl.ftl examples/data/csv/user.csv > target/out/curl.sh || { echo >&2 "Test failed.  Aborting."; exit 1; }
@@ -93,7 +93,7 @@ fi
 # CSV to HTML & PDF
 #############################################################################
 
-echo "examples/templates/csv/html/transform.ftl"
+echo "templates/csv/html/transform.ftl"
 $FREEMARKER_CMD -t examples/templates/csv/html/transactions.ftl examples/data/csv/transactions.csv > target/out/transactions.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 if hash wkhtmltopdf 2>/dev/null; then
@@ -122,16 +122,16 @@ $FREEMARKER_CMD -t examples/templates/accesslog/combined-access.ftl examples/dat
 echo "examples/templates/excel/dataframe/transform.ftl"
 $FREEMARKER_CMD -t examples/templates/excel/dataframe/transform.ftl examples/data/excel/test.xls > target/out/test.xls.dataframe.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
-echo "examples/templates/excel/html/transform.ftl"
-$FREEMARKER_CMD -t examples/templates/excel/html/transform.ftl examples/data/excel/test.xls > target/out/test.xls.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
-$FREEMARKER_CMD -t examples/templates/excel/html/transform.ftl examples/data/excel/test.xlsx > target/out/test.xslx.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
-$FREEMARKER_CMD -t examples/templates/excel/html/transform.ftl examples/data/excel/test-multiple-sheets.xlsx > target/out/test-multiple-sheets.xlsx.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
+echo "templates/excel/html/transform.ftl"
+$FREEMARKER_CMD -t templates/excel/html/transform.ftl examples/data/excel/test.xls > target/out/test.xls.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -t templates/excel/html/transform.ftl examples/data/excel/test.xlsx > target/out/test.xslx.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -t templates/excel/html/transform.ftl examples/data/excel/test-multiple-sheets.xlsx > target/out/test-multiple-sheets.xlsx.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
-echo "examples/templates/excel/md/transform.ftl"
-$FREEMARKER_CMD -t examples/templates/excel/md/transform.ftl examples/data/excel/test-multiple-sheets.xlsx > target/out/test-multiple-sheets.xlsx.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
+echo "templates/excel/md/transform.ftl"
+$FREEMARKER_CMD -t templates/excel/md/transform.ftl examples/data/excel/test-multiple-sheets.xlsx > target/out/test-multiple-sheets.xlsx.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
-echo "examples/templates/excel/csv/transform.ftl"
-$FREEMARKER_CMD -t examples/templates/excel/csv/transform.ftl examples/data/excel/test-multiple-sheets.xlsx > target/out/test-multiple-sheets.xlsx.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
+echo "templates/excel/csv/transform.ftl"
+$FREEMARKER_CMD -t templates/excel/csv/transform.ftl examples/data/excel/test-multiple-sheets.xlsx > target/out/test-multiple-sheets.xlsx.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 echo "examples/templates/excel/csv/custom.ftl"
 $FREEMARKER_CMD -t examples/templates/excel/csv/custom.ftl -Pcsv.format=MYSQL examples/data/excel/test.xls > target/out/test-transform-xls.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }

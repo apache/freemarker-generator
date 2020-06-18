@@ -133,7 +133,7 @@ There a many examples (see below) available you can execute - run `./run-example
 ./run-examples.sh 
 templates/info.ftl
 examples/templates/demo.ftl
-examples/templates/csv/html/transform.ftl
+templates/csv/html/transform.ftl
 examples/templates/csv/md/transform.ftl
 examples/templates/csv/shell/curl.ftl
 examples/templates/csv/md/filter.ftl
@@ -141,14 +141,14 @@ examples/templates/csv/fo/transform.ftl
 fop -fo target/out/locker-test-users.fo target/out/locker-test-users.pdf
 examples/templates/csv/fo/transactions.ftl
 fop -fo target/out/transactions.fo target/out/transactions-fo.pdf
-examples/templates/csv/html/transform.ftl
+templates/csv/html/transform.ftl
 wkhtmltopdf -O landscape target/out/transactions.html target/out/transactions-html.pdf
 examples/templates/dataframe/example.ftl
 examples/templates/accesslog/combined-access.ftl
 examples/templates/excel/dataframe/transform.ftl
-examples/templates/excel/html/transform.ftl
-examples/templates/excel/md/transform.ftl
-examples/templates/excel/csv/transform.ftl
+templates/excel/html/transform.ftl
+templates/excel/md/transform.ftl
+templates/excel/csv/transform.ftl
 examples/templates/excel/csv/custom.ftl
 examples/templates/html/csv/dependencies.ftl
 examples/templates/json/csv/swagger-endpoints.ftl
@@ -307,8 +307,8 @@ creates the following output
 Sometimes you have a CSV file which needs to be translated in Markdown or HTML - there are on-line solutions available such as [CSV To Markdown Table Generator](https://donatstudios.com/CsvToMarkdownTable) but having a local solution gives you more flexibility.
 
 ```text
-> ./bin/freemarker-cli -t examples/templates/csv/md/transform.ftl examples/data/csv/contract.csv
-> ./bin/freemarker-cli -t examples/templates/csv/html/transform.ftl examples/data/csv/contract.csv
+> ./bin/freemarker-cli -t templates/csv/md/transform.ftl examples/data/csv/contract.csv
+> ./bin/freemarker-cli -t templates/csv/html/transform.ftl examples/data/csv/contract.csv
 ```
 
 The FreeMarker template is shown below
@@ -452,10 +452,10 @@ ENDPOINT;METHOD;CONSUMES;PRODUCES;SUMMARY;DESCRIPTION
 Another day my project management asked me to create a CSV configuration file based on an Excel documents - as usual manual copying was not an option due to required data cleanup and data transformation. So I thought about Apache POI which support XLS and XLSX documents - integration of Apache POI was a breeze but the resulting code was not particularly useful example. So a more generic transformation was provided to show the transformation of Excel documents ...
 
 ```text
-> ./bin/freemarker-cli -t examples/templates/excel/html/transform.ftl examples/data/excel/test.xls
-> ./bin/freemarker-cli -t examples/templates/excel/html/transform.ftl examples/data/excel/test.xlsx
-> ./bin/freemarker-cli -t examples/templates/excel/html/transform.ftl examples/data/excel/test-multiple-sheets.xlsx
-> ./bin/freemarker-cli -t examples/templates/excel/md/transform.ftl examples/data/excel/test-multiple-sheets.xlsx
+> ./bin/freemarker-cli -t templates/excel/html/transform.ftl examples/data/excel/test.xls
+> ./bin/freemarker-cli -t templates/excel/html/transform.ftl examples/data/excel/test.xlsx
+> ./bin/freemarker-cli -t templates/excel/html/transform.ftl examples/data/excel/test-multiple-sheets.xlsx
+> ./bin/freemarker-cli -t templates/excel/md/transform.ftl examples/data/excel/test-multiple-sheets.xlsx
 ```
 
 The provided FTL transforms an Excel into a HTML document supporting multiple Excel sheets
@@ -894,7 +894,7 @@ While this looks small and tidy there are some nifty features
 
 Sometimes you have a CSV file which is not quite right - you need to change the format. Lets have a look how `freemarker-cli` can help
 
-> bin/freemarker-cli -PCVS_IN_DELIMITER=COMMA -PCSV_OUT_DELIMITER=PIPE -t examples/templates/csv/csv/transform.ftl ./examples/data/csv/contract.csv 
+> bin/freemarker-cli -PCVS_IN_DELIMITER=COMMA -PCSV_OUT_DELIMITER=PIPE -t templates/csv/csv/transform.ftl ./examples/data/csv/contract.csv 
 
 renders the following template
 

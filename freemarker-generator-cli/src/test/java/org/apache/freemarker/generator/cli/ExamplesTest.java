@@ -45,22 +45,22 @@ public class ExamplesTest extends AbstractMainTest {
 
     @Test
     public void shouldRunCsvExamples() throws IOException {
-        assertValid(execute("-t examples/templates/csv/html/transform.ftl examples/data/csv/contract.csv"));
-        assertValid(execute("-t examples/templates/csv/md/transform.ftl examples/data/csv/contract.csv"));
+        assertValid(execute("-t templates/csv/html/transform.ftl examples/data/csv/contract.csv"));
+        assertValid(execute("-t templates/csv/md/transform.ftl examples/data/csv/contract.csv"));
         assertValid(execute("-t examples/templates/csv/shell/curl.ftl examples/data/csv/user.csv"));
         assertValid(execute("-t examples/templates/csv/fo/transform.ftl examples/data/csv/locker-test-users.csv"));
         assertValid(execute("-t examples/templates/csv/fo/transactions.ftl examples/data/csv/transactions.csv"));
         assertValid(execute("-t examples/templates/csv/html/transactions.ftl examples/data/csv/transactions.csv"));
-        assertValid(execute("-t examples/templates/csv/csv/transform.ftl examples/data/csv/contract.csv"));
+        assertValid(execute("-t templates/csv/csv/transform.ftl examples/data/csv/contract.csv"));
     }
 
     @Test
     public void shouldRunExcelExamples() throws IOException {
-        assertValid(execute("-t examples/templates/excel/html/transform.ftl examples/data/excel/test.xls"));
-        assertValid(execute("-t examples/templates/excel/html/transform.ftl examples/data/excel/test.xlsx"));
-        assertValid(execute("-t examples/templates/excel/html/transform.ftl examples/data/excel/test-multiple-sheets.xlsx"));
-        assertValid(execute("-t examples/templates/excel/md/transform.ftl examples/data/excel/test-multiple-sheets.xlsx"));
-        assertValid(execute("-t examples/templates/excel/csv/transform.ftl examples/data/excel/test-multiple-sheets.xlsx"));
+        assertValid(execute("-t templates/excel/html/transform.ftl examples/data/excel/test.xls"));
+        assertValid(execute("-t templates/excel/html/transform.ftl examples/data/excel/test.xlsx"));
+        assertValid(execute("-t templates/excel/html/transform.ftl examples/data/excel/test-multiple-sheets.xlsx"));
+        assertValid(execute("-t templates/excel/md/transform.ftl examples/data/excel/test-multiple-sheets.xlsx"));
+        assertValid(execute("-t templates/excel/csv/transform.ftl examples/data/excel/test-multiple-sheets.xlsx"));
         assertValid(execute("-t examples/templates/excel/csv/custom.ftl -Pcsv.format=MYSQL examples/data/excel/test.xls"));
         assertValid(execute("-t examples/templates/excel/dataframe/transform.ftl examples/data/excel/test.xls"));
     }
