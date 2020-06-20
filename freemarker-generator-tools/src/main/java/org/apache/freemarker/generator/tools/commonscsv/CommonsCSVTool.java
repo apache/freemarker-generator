@@ -45,10 +45,8 @@ import static org.apache.commons.io.IOUtils.toInputStream;
 
 public class CommonsCSVTool {
 
-    private final CSVFormat defaulCSVFormat = csvFormat();
-
     public CSVParser parse(DataSource dataSource) {
-        return parse(dataSource, defaulCSVFormat);
+        return parse(dataSource, defaultCSVInputFormat());
     }
 
     public CSVParser parse(DataSource dataSource, CSVFormat format) {
@@ -68,7 +66,7 @@ public class CommonsCSVTool {
     }
 
     public CSVParser parse(String csv) {
-        return parse(csv, defaulCSVFormat);
+        return parse(csv, defaultCSVInputFormat());
     }
 
     public CSVParser parse(String csv, CSVFormat format) {
@@ -86,6 +84,18 @@ public class CommonsCSVTool {
 
     public Map<String, CSVFormat> getFormats() {
         return createCSVFormats();
+    }
+
+    /**
+     * Get a CSVPrinter using the FreeMarker's writer instance.
+     *
+     * @param writer Writer to receive the CSV output
+     * @return CSVPrinter instance
+     * @throws IOException thrown if the parameters of the format are inconsistent or if either out or format are null.
+     */
+    public CSVPrinter printer(Writer writer) throws IOException {
+        // We do not close the CSVPrinter but the underlying writer at the of processing
+        return new CSVPrinter(writer, defaultCSVOutputFormat());
     }
 
     /**
@@ -262,16 +272,53 @@ public class CommonsCSVTool {
         return result;
     }
 
-    private CSVFormat csvFormat() {
+    /**
+     * Provides a CSV default input format controlled by the following system properties:
+     * <ul>
+     *     <li>CSV_IN_FORMAT</li>
+     *     <li>CSV_IN_DELIMITER</li>
+     *     <li>CSV_IN_WITH_HEADER</li>
+     * </ul>
+     *
+     * @return CSV format
+     */
+    private CSVFormat defaultCSVInputFormat() {
 
-        CSVFormat csvFormat = CSVFormat.valueOf(System.getProperty("CSV_TOOL_FORMAT", "Default"));
+        CSVFormat csvFormat = getFormats().getOrDefault(System.getProperty("CSV_IN_FORMAT"), CSVFormat.DEFAULT);
 
-        final String delimiter = System.getProperty("CSV_TOOL_DELIMITER");
+        final String delimiter = System.getProperty("CSV_IN_DELIMITER");
         if (StringUtils.isNotEmpty(delimiter)) {
             csvFormat = csvFormat.withDelimiter(toDelimiter(delimiter));
         }
 
-        final boolean withHeader = parseBoolean(System.getProperty("CSV_TOOL_HEADERS", Boolean.toString(!csvFormat.getSkipHeaderRecord())));
+        final boolean withHeader = parseBoolean(System.getProperty("CSV_IN_WITH_HEADER", Boolean.toString(!csvFormat.getSkipHeaderRecord())));
+        if (withHeader) {
+            csvFormat = csvFormat.withHeader();
+        }
+
+        return csvFormat;
+    }
+
+    /**
+     * Provides a CSV default output format controlled by the following system properties:
+     * <ul>
+     *     <li>CSV_OUT_FORMAT</li>
+     *     <li>CSV_OUT_DELIMITER</li>
+     *     <li>CSV_OUT_WITH_HEADER</li>
+     * </ul>
+     *
+     * @return CSV format
+     */
+    private CSVFormat defaultCSVOutputFormat() {
+
+        CSVFormat csvFormat = getFormats().getOrDefault(System.getProperty("CSV_OUT_FORMAT"), CSVFormat.DEFAULT);
+
+        final String delimiter = System.getProperty("CSV_OUT_DELIMITER");
+        if (StringUtils.isNotEmpty(delimiter)) {
+            csvFormat = csvFormat.withDelimiter(toDelimiter(delimiter));
+        }
+
+        final boolean withHeader = parseBoolean(System.getProperty("CSV_OUT_WITH_HEADER", Boolean.toString(!csvFormat.getSkipHeaderRecord())));
         if (withHeader) {
             csvFormat = csvFormat.withHeader();
         }

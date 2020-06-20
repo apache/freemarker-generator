@@ -15,8 +15,8 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign csvParser = createCsvParser(DataSources.get(0))>
-<#assign csvPrinter = createCsvPrinter()>
+<#assign csvParser = CSVTool.parse(DataSources.get(0))>
+<#assign csvPrinter = CSVTool.printer(SystemTool.writer)>
 <#--
     Print each record directly to the underyling writer without materializing the CSV in memory.
     FreeMarker and CSV output are out of sync but millions of records can processed without
@@ -27,17 +27,3 @@
         ${csvPrinter.printRecord(record)}
     </#list>
 </#compress>
-
-<#function createCsvParser dataSource>
-    <#assign initialCvsInFormat = CSVTool.formats[CSV_IN_FORMAT!"DEFAULT"].withHeader()>
-    <#assign csvInDelimiter = CSVTool.toDelimiter(CSV_IN_DELIMITER!initialCvsInFormat.getDelimiter())>
-    <#assign cvsInFormat = initialCvsInFormat.withDelimiter(csvInDelimiter)>
-    <#return CSVTool.parse(dataSource, cvsInFormat)>
-</#function>
-
-<#function createCsvPrinter>
-    <#assign initialCvsOutFormat = CSVTool.formats[CSV_OUT_FORMAT!"DEFAULT"]>
-    <#assign csvOutDelimiter = CSVTool.toDelimiter(CSV_OUT_DELIMITER!initialCvsOutFormat.getDelimiter())>
-    <#assign cvsOutFormat = initialCvsOutFormat.withDelimiter(csvOutDelimiter)>
-    <#return CSVTool.printer(cvsOutFormat, SystemTool.writer)>
-</#function>

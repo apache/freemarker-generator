@@ -106,7 +106,7 @@ fi
 #############################################################################
 
 echo "examples/templates/dataframe/example.ftl"
-$FREEMARKER_CMD -DCSV_TOOL_DELIMITER=SEMICOLON -DCSV_TOOL_HEADERS=true -t examples/templates/dataframe/example.ftl examples/data/csv/dataframe.csv > target/out/dataframe.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -DCSV_IN_DELIMITER=SEMICOLON -DCSV_IN_WITH_HEADER=true -t examples/templates/dataframe/example.ftl examples/data/csv/dataframe.csv > target/out/dataframe.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
 # Grok

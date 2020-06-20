@@ -894,14 +894,14 @@ While this looks small and tidy there are some nifty features
 
 Sometimes you have a CSV file which is not quite right - you need to change the format. Lets have a look how `freemarker-cli` can help
 
-> bin/freemarker-cli -PCVS_IN_DELIMITER=COMMA -PCSV_OUT_DELIMITER=PIPE -t templates/csv/csv/transform.ftl ./examples/data/csv/contract.csv 
+> bin/freemarker-cli -DCVS_IN_DELIMITER=COMMA -DCSV_OUT_DELIMITER=PIPE -t templates/csv/csv/transform.ftl ./examples/data/csv/contract.csv 
 
 renders the following template
 
 ```text
 <#ftl output_format="plainText" strip_text="true">
-<#assign csvParser = createCsvParser(DataSources.get(0))>
-<#assign csvPrinter = createCsvPrinter()>
+<#assign csvParser = CSVTool.parse(DataSources.get(0))>
+<#assign csvPrinter = CSVTool.printer(SystemTool.writer)>
 <#--
     Print each record directly to the underyling writer without materializing the CSV in memory.
     FreeMarker and CSV output are out of sync but millions of records can processed without
@@ -912,20 +912,6 @@ renders the following template
         ${csvPrinter.printRecord(record)}
     </#list>
 </#compress>
-
-<#function createCsvParser dataSource>
-    <#assign initialCvsInFormat = CSVTool.formats[CSV_IN_FORMAT!"DEFAULT"]>
-    <#assign csvInDelimiter = CSVTool.toDelimiter(CSV_IN_DELIMITER!initialCvsInFormat.getDelimiter())>
-    <#assign cvsInFormat = initialCvsInFormat.withDelimiter(csvInDelimiter)>
-    <#return CSVTool.parse(dataSource, cvsInFormat)>
-</#function>
-
-<#function createCsvPrinter>
-    <#assign initialCvsOutFormat = CSVTool.formats[CSV_OUT_FORMAT!"DEFAULT"]>
-    <#assign csvOutDelimiter = CSVTool.toDelimiter(CSV_OUT_DELIMITER!initialCvsOutFormat.getDelimiter())>
-    <#assign cvsOutFormat = initialCvsOutFormat.withDelimiter(csvOutDelimiter)>
-    <#return CSVTool.printer(cvsOutFormat, SystemTool.writer)>
-</#function>
 ```
 
 and generates the following output

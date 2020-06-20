@@ -57,8 +57,8 @@ public class SettingsTest {
         assertEquals(ANY_OUTPUT_FILE, settings.getOutput().getName());
         assertEquals(ANY_TEMPLATE_NAME, settings.getTemplates().get(0));
         assertNotNull(settings.getDataSources());
-        assertNotNull(settings.getParameters());
-        assertNotNull(settings.getSystemProperties());
+        assertNotNull(settings.getUserParameters());
+        assertNotNull(settings.getUserSystemProperties());
         assertTrue(settings.isReadFromStdin());
         assertTrue(settings.isInteractiveTemplate());
         assertTrue(settings.isVerbose());

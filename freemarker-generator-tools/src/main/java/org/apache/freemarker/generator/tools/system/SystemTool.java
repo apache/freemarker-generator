@@ -38,7 +38,7 @@ import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model.FRE
 
 /**
  * Provides system related functionality, e.g. accessing environment variables,
- * system properties, commandl-line arguments, hostname, FreeMarker writer, etc.
+ * system properties, command-line arguments, hostname, FreeMarker writer, etc.
  */
 @SuppressWarnings("unchecked")
 public class SystemTool {
@@ -145,7 +145,7 @@ public class SystemTool {
      * environment variables.
      *
      * @param name name of the configuration parameter
-     * @param def default value
+     * @param def  default value
      * @return value of null
      */
     public String getString(String name, String def) {

@@ -17,7 +17,8 @@
 -->
 <#assign dataSource = DataSources.get(0)>
 <#assign name = dataSource.name>
-<#assign csvParser = createCsvParser(DataSources.get(0))>
+<#assign csvParser = CSVTool.parse(dataSource)>
+<#assign csvPrinter = CSVTool.printer(SystemTool.writer)>
 <#assign csvHeaders = csvParser.getHeaderNames()>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>
@@ -53,10 +54,3 @@
         </#list>
     </tr>
 </#macro>
-<#--------------------------------------------------------------------------->
-<#function createCsvParser dataSource>
-    <#assign initialCvsInFormat = CSVTool.formats[CSV_IN_FORMAT!"DEFAULT"].withHeader()>
-    <#assign csvInDelimiter = CSVTool.toDelimiter(CSV_IN_DELIMITER!initialCvsInFormat.getDelimiter())>
-    <#assign cvsInFormat = initialCvsInFormat.withDelimiter(csvInDelimiter)>
-    <#return CSVTool.parse(dataSource, cvsInFormat)>
-</#function>

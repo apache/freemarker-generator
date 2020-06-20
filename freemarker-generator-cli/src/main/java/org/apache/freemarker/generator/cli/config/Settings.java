@@ -96,10 +96,10 @@ public class Settings {
     private final List<String> dataModels;
 
     /** User-supplied parameters */
-    private final Map<String, Object> parameters;
+    private final Map<String, Object> userParameters;
 
     /** User-supplied system properties */
-    private final Properties systemProperties;
+    private final Properties userSystemProperties;
 
     /** The writer used for rendering templates, e.g. stdout or a file writer */
     private final Writer writer;
@@ -122,8 +122,8 @@ public class Settings {
             boolean isReadFromStdin,
             List<String> dataSources,
             List<String> dataModels,
-            Map<String, Object> parameters,
-            Properties systemProperties,
+            Map<String, Object> userParameters,
+            Properties userSystemProperties,
             Writer writer) {
         if ((templates == null || templates.isEmpty()) && isEmpty(interactiveTemplate)) {
             throw new IllegalArgumentException("Either 'template' or 'interactiveTemplate' must be provided");
@@ -145,8 +145,8 @@ public class Settings {
         this.isReadFromStdin = isReadFromStdin;
         this.dataSources = requireNonNull(dataSources);
         this.dataModels = requireNonNull(dataModels);
-        this.parameters = requireNonNull(parameters);
-        this.systemProperties = requireNonNull(systemProperties);
+        this.userParameters = requireNonNull(userParameters);
+        this.userSystemProperties = requireNonNull(userSystemProperties);
         this.configuration = requireNonNull(configuration);
         this.writer = writer != null ? new NonClosableWriterWrapper(writer) : null;
     }
@@ -170,7 +170,7 @@ public class Settings {
     public List<String> getTemplates() {
         return templates;
     }
-    
+
     public String getInteractiveTemplate() {
         return interactiveTemplate;
     }
@@ -227,12 +227,12 @@ public class Settings {
         return dataModels;
     }
 
-    public Map<String, Object> getParameters() {
-        return parameters;
+    public Map<String, Object> getUserParameters() {
+        return userParameters;
     }
 
-    public Properties getSystemProperties() {
-        return systemProperties;
+    public Properties getUserSystemProperties() {
+        return userSystemProperties;
     }
 
     public boolean hasOutputFile() {
@@ -254,8 +254,8 @@ public class Settings {
         result.put(Model.FREEMARKER_CLI_ARGS, getArgs());
         result.put(Model.FREEMARKER_LOCALE, getLocale());
         result.put(Model.FREEMARKER_TEMPLATE_DIRECTORIES, getTemplateDirectories());
-        result.put(Model.FREEMARKER_USER_PARAMETERS, getParameters());
-        result.put(Model.FREEMARKER_USER_SYSTEM_PROPERTIES, getSystemProperties());
+        result.put(Model.FREEMARKER_USER_PARAMETERS, getUserParameters());
+        result.put(Model.FREEMARKER_USER_SYSTEM_PROPERTIES, getUserSystemProperties());
         result.put(Model.FREEMARKER_WRITER, getWriter());
         return result;
     }
@@ -283,8 +283,8 @@ public class Settings {
                 ", locale=" + locale +
                 ", isReadFromStdin=" + isReadFromStdin +
                 ", dataSources=" + dataSources +
-                ", properties=" + parameters +
-                ", systemProperties=" + systemProperties +
+                ", userParameters=" + userParameters +
+                ", userSystemProperties=" + userSystemProperties +
                 '}';
     }
 

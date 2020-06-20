@@ -64,7 +64,7 @@ public class Suppliers {
     }
 
     public static Supplier<Map<String, Object>> parameterSupplier(Settings settings) {
-        return settings::getParameters;
+        return settings::getUserParameters;
     }
 
     public static TemplateTransformationsSupplier templateTransformationsSupplier(Settings settings) {
