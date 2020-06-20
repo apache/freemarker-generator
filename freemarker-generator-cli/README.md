@@ -152,12 +152,12 @@ templates/excel/csv/transform.ftl
 examples/templates/excel/csv/custom.ftl
 examples/templates/html/csv/dependencies.ftl
 examples/templates/json/csv/swagger-endpoints.ftl
-examples/templates/json/yaml/transform.ftl
+templates/json/yaml/transform.ftl
 examples/templates/json/md/github-users.ftl
 examples/templates/properties/csv/locker-test-users.ftl
 examples/data/template
 examples/templates/yaml/txt/transform.ftl
-examples/templates/yaml/json/transform.ftl
+templates/yaml/json/transform.ftl
 examples/templates/xml/txt/recipients.ftl
 Created the following sample files in ./target/out
 total 1576
@@ -1022,8 +1022,6 @@ So lets start the filtering & transformation using the following command line
 ```text
 > bin/freemarker-cli -e UTF-8 -l de_AT -Pcolumn="Order ID" \
   -Pvalues=226939189,957081544 \
-  -Pformat=DEFAULT \
-  -Pdelimiter=COMMA \
   -t examples/templates/csv/md/filter.ftl examples/data/csv/sales-records.csv
 ```
 
@@ -1116,11 +1114,11 @@ yields
 Sometimes we simply need to transform a JSON into an equivalent YAML or the other way around
 
 ```
-> ./bin/freemarker-cli -t examples/templates/yaml/json/transform.ftl examples/data/yaml/swagger-spec.yaml 
+> ./bin/freemarker-cli -t templates/yaml/json/transform.ftl examples/data/yaml/swagger-spec.yaml 
 > ./bin/freemarker-cli -i '${GsonTool.toJson(YamlTool.parse(DataSources.get(0)))}' examples/data/yaml/swagger-spec.yaml
 > ./bin/freemarker-cli -i '${GsonTool.toJson(yaml)}' -m yaml=examples/data/yaml/swagger-spec.yaml
 
-> ./bin/freemarker-cli -t examples/templates/json/yaml/transform.ftl examples/data/json/swagger-spec.json
+> ./bin/freemarker-cli -t templates/json/yaml/transform.ftl examples/data/json/swagger-spec.json
 > ./bin/freemarker-cli -i '${YamlTool.toYaml(GsonTool.parse(DataSources.get(0)))}' examples/data/json/swagger-spec.json
 > ./bin/freemarker-cli -i '${YamlTool.toYaml(json)}' -m json=examples/data/json/swagger-spec.json
 ```

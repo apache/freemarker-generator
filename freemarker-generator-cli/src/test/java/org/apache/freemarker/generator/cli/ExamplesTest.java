@@ -74,7 +74,7 @@ public class ExamplesTest extends AbstractMainTest {
     public void shouldRunJsonExamples() throws IOException {
         assertValid(execute("-t examples/templates/json/csv/swagger-endpoints.ftl examples/data/json/swagger-spec.json"));
         assertValid(execute("-t examples/templates/json/md/github-users.ftl examples/data/json/github-users.json"));
-        assertValid(execute("-t examples/templates/json/yaml/transform.ftl examples/data/json/swagger-spec.json"));
+        assertValid(execute("-t templates/json/yaml/transform.ftl examples/data/json/swagger-spec.json"));
     }
 
     @Test
@@ -85,7 +85,7 @@ public class ExamplesTest extends AbstractMainTest {
     @Test
     public void shouldRunYamlExamples() throws IOException {
         assertValid(execute("-t examples/templates/yaml/txt/transform.ftl examples/data/yaml/customer.yaml"));
-        assertValid(execute("-t examples/templates/yaml/json/transform.ftl examples/data/yaml/swagger-spec.yaml"));
+        assertValid(execute("-t templates/yaml/json/transform.ftl examples/data/yaml/swagger-spec.yaml"));
     }
 
     @Test
