@@ -105,7 +105,7 @@ public class ExamplesTest extends AbstractMainTest {
 
     @Test
     public void shouldRunDataFrameExamples() throws IOException {
-        assertValid(execute("-DCSV_IN_DELIMITER=SEMICOLON -DCSV_IN_WITH_HEADER=true -t examples/templates/dataframe/example.ftl examples/data/csv/dataframe.csv"));
+        assertValid(execute("-PCSV_IN_DELIMITER=SEMICOLON -PCSV_IN_WITH_HEADER=true -t examples/templates/dataframe/example.ftl examples/data/csv/dataframe.csv"));
     }
 
     @Test

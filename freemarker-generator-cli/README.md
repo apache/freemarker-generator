@@ -894,7 +894,7 @@ While this looks small and tidy there are some nifty features
 
 Sometimes you have a CSV file which is not quite right - you need to change the format. Lets have a look how `freemarker-cli` can help
 
-> bin/freemarker-cli -DCVS_IN_DELIMITER=COMMA -DCSV_OUT_DELIMITER=PIPE -t templates/csv/csv/transform.ftl ./examples/data/csv/contract.csv 
+> bin/freemarker-cli -PCVS_IN_DELIMITER=COMMA -PCSV_OUT_DELIMITER=PIPE -t templates/csv/csv/transform.ftl ./examples/data/csv/contract.csv 
 
 renders the following template
 

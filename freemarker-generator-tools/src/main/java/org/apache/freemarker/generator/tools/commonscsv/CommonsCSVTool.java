@@ -18,7 +18,6 @@ package org.apache.freemarker.generator.tools.commonscsv;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.input.BOMInputStream;
 import org.apache.freemarker.generator.base.datasource.DataSource;
@@ -26,7 +25,6 @@ import org.apache.freemarker.generator.base.util.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,7 +35,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static java.lang.Boolean.parseBoolean;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
@@ -86,29 +83,12 @@ public class CommonsCSVTool {
         return createCSVFormats();
     }
 
-    /**
-     * Get a CSVPrinter using the FreeMarker's writer instance.
-     *
-     * @param writer Writer to receive the CSV output
-     * @return CSVPrinter instance
-     * @throws IOException thrown if the parameters of the format are inconsistent or if either out or format are null.
-     */
-    public CSVPrinter printer(Writer writer) throws IOException {
-        // We do not close the CSVPrinter but the underlying writer at the of processing
-        return new CSVPrinter(writer, defaultCSVOutputFormat());
+    public CommonsCSVPrinterFacade printer() throws IOException {
+        return printer(defaultCSVOutputFormat());
     }
 
-    /**
-     * Get a CSVPrinter using the FreeMarker's writer instance.
-     *
-     * @param csvFormat CSV format to use for writing records
-     * @param writer    Writer to receive the CSV output
-     * @return CSVPrinter instance
-     * @throws IOException thrown if the parameters of the format are inconsistent or if either out or format are null.
-     */
-    public CSVPrinter printer(CSVFormat csvFormat, Writer writer) throws IOException {
-        // We do not close the CSVPrinter but the underlying writer at the of processing
-        return new CSVPrinter(writer, csvFormat);
+    public CommonsCSVPrinterFacade printer(CSVFormat csvFormat) throws IOException {
+        return new CommonsCSVPrinterFacade(csvFormat);
     }
 
     /**
@@ -258,6 +238,7 @@ public class CommonsCSVTool {
     private static Map<String, CSVFormat> createCSVFormats() {
         final Map<String, CSVFormat> result = new HashMap<>();
         result.put("DEFAULT", CSVFormat.DEFAULT);
+        result.put("DATAFRAME", CSVFormat.DEFAULT.withDelimiter(';').withFirstRecordAsHeader());
         result.put("EXCEL", CSVFormat.EXCEL);
         result.put("INFORMIX_UNLOAD", CSVFormat.INFORMIX_UNLOAD);
         result.put("INFORMIX_UNLOAD_CSV", CSVFormat.INFORMIX_UNLOAD_CSV);
@@ -273,57 +254,21 @@ public class CommonsCSVTool {
     }
 
     /**
-     * Provides a CSV default input format controlled by the following system properties:
-     * <ul>
-     *     <li>CSV_IN_FORMAT</li>
-     *     <li>CSV_IN_DELIMITER</li>
-     *     <li>CSV_IN_WITH_HEADER</li>
-     * </ul>
+     * Provides a CSV default input format.
      *
      * @return CSV format
      */
-    private CSVFormat defaultCSVInputFormat() {
-
-        CSVFormat csvFormat = getFormats().getOrDefault(System.getProperty("CSV_IN_FORMAT"), CSVFormat.DEFAULT);
-
-        final String delimiter = System.getProperty("CSV_IN_DELIMITER");
-        if (StringUtils.isNotEmpty(delimiter)) {
-            csvFormat = csvFormat.withDelimiter(toDelimiter(delimiter));
-        }
-
-        final boolean withHeader = parseBoolean(System.getProperty("CSV_IN_WITH_HEADER", Boolean.toString(!csvFormat.getSkipHeaderRecord())));
-        if (withHeader) {
-            csvFormat = csvFormat.withHeader();
-        }
-
-        return csvFormat;
+    private static CSVFormat defaultCSVInputFormat() {
+        return CSVFormat.DEFAULT;
     }
 
     /**
-     * Provides a CSV default output format controlled by the following system properties:
-     * <ul>
-     *     <li>CSV_OUT_FORMAT</li>
-     *     <li>CSV_OUT_DELIMITER</li>
-     *     <li>CSV_OUT_WITH_HEADER</li>
-     * </ul>
+     * Provides a CSV default output format.
      *
      * @return CSV format
      */
-    private CSVFormat defaultCSVOutputFormat() {
-
-        CSVFormat csvFormat = getFormats().getOrDefault(System.getProperty("CSV_OUT_FORMAT"), CSVFormat.DEFAULT);
-
-        final String delimiter = System.getProperty("CSV_OUT_DELIMITER");
-        if (StringUtils.isNotEmpty(delimiter)) {
-            csvFormat = csvFormat.withDelimiter(toDelimiter(delimiter));
-        }
-
-        final boolean withHeader = parseBoolean(System.getProperty("CSV_OUT_WITH_HEADER", Boolean.toString(!csvFormat.getSkipHeaderRecord())));
-        if (withHeader) {
-            csvFormat = csvFormat.withHeader();
-        }
-
-        return csvFormat;
+    private static CSVFormat defaultCSVOutputFormat() {
+        return CSVFormat.DEFAULT;
     }
 
     private static final class ValueResolver implements Function<CSVRecord, String> {

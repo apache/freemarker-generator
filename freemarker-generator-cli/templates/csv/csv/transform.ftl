@@ -1,4 +1,3 @@
-<#ftl output_format="plainText" strip_text="true">
 <#--
   Licensed to the Apache Software Foundation (ASF) under one
   or more contributor license agreements.  See the NOTICE file
@@ -15,15 +14,31 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign csvParser = CSVTool.parse(DataSources.get(0))>
-<#assign csvPrinter = CSVTool.printer(SystemTool.writer)>
-<#--
-    Print each record directly to the underyling writer without materializing the CSV in memory.
-    FreeMarker and CSV output are out of sync but millions of records can processed without
-    running out of memory.
--->
-<#compress>
-    <#list csvParser.iterator() as record>
-        ${csvPrinter.printRecord(record)}
-    </#list>
-</#compress>
+<#assign dataSource = DataSources.get(0)>
+<#assign csvParser = CSVTool.parse(dataSource, csvInFormat())>
+<#assign csvPrinter = CSVTool.printer(csvOutFormat())>
+<#list csvParser.iterator() as record>
+    ${csvPrinter.printRecord(record)}<#t>
+</#list>
+
+<#function csvInFormat>
+    <#assign format = CSVTool.formats[CSV_IN_FORMAT!"DEFAULT"]>
+    <#assign delimiter = CSVTool.toDelimiter(CSV_IN_DELIMITER!format.getDelimiter())>
+    <#assign withHeader = CSV_IN_WITH_HEADER!"false">
+    <#assign format = format.withDelimiter(delimiter)>
+    <#if withHeader?boolean>
+        <#assign format = format.withHeader()>
+    </#if>
+    <#return format>
+</#function>
+
+<#function csvOutFormat>
+    <#assign format = CSVTool.formats[CSV_OUT_FORMAT!"DEFAULT"]>
+    <#assign delimiter = CSVTool.toDelimiter(CSV_OUT_DELIMITER!format.getDelimiter())>
+    <#assign withHeader = CSV_OUT_WITH_HEADER!"false">
+    <#assign format = format.withDelimiter(delimiter)>
+    <#if withHeader?boolean>
+        <#assign format = format.withHeader>
+    </#if>
+    <#return format>
+</#function>

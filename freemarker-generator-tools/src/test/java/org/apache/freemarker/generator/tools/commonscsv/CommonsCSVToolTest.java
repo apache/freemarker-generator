@@ -18,7 +18,6 @@ package org.apache.freemarker.generator.tools.commonscsv;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
@@ -26,8 +25,6 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.List;
 import java.util.Map;
 
@@ -113,15 +110,12 @@ public class CommonsCSVToolTest {
     public void shallPrintCsvRecords() throws IOException {
         final CommonsCSVTool commonsCsvTool = commonsCsvTool();
         final CSVFormat cvsFormat = DEFAULT.withHeader();
-        final Writer writer = new StringWriter();
 
         try (CSVParser parser = commonsCsvTool.parse(dataSource(), cvsFormat)) {
-            try (CSVPrinter printer = commonsCsvTool.printer(cvsFormat, writer)) {
-                printer.printRecord(parser.getHeaderMap());
+            try (final CommonsCSVPrinterFacade printer = commonsCsvTool.printer(cvsFormat)) {
+                assertTrue(printer.printRecord(parser.getHeaderMap()).contains(CONTRACT_ID));
             }
         }
-
-        assertTrue(writer.toString().contains(CONTRACT_ID));
     }
 
     @Test

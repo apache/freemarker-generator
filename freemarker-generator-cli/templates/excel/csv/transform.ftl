@@ -20,7 +20,7 @@
 <#assign sheet = ExcelTool.getSheets(workbook)[0]>
 <#assign records = ExcelTool.toTable(sheet)>
 <#-- Setup CSVPrinter  -->
-<#assign csvPrinter = createCsvPrinter()>
+<#assign csvPrinter = CSVTool.printer(csvOutFormat())>
 <#-- Print each line of the Excel as CSV record -->
 <#compress>
     <#list records as record>
@@ -28,9 +28,14 @@
     </#list>
 </#compress>
 <#--------------------------------------------------------------------------->
-<#function createCsvPrinter>
-    <#assign initialCvsOutFormat = CSVTool.formats[CSV_OUT_FORMAT!"DEFAULT"]>
-    <#assign csvOutDelimiter = CSVTool.toDelimiter(CSV_OUT_DELIMITER!initialCvsOutFormat.getDelimiter())>
-    <#assign cvsOutFormat = initialCvsOutFormat.withDelimiter(csvOutDelimiter)>
-    <#return CSVTool.printer(cvsOutFormat, SystemTool.writer)>
+<#function csvOutFormat>
+    <#assign format = CSVTool.formats[CSV_OUT_FORMAT!"DEFAULT"]>
+    <#assign delimiter = CSVTool.toDelimiter(CSV_OUT_DELIMITER!format.getDelimiter())>
+    <#assign withHeader = CSV_OUT_WITH_HEADER!"false">
+    <#assign format = format.withDelimiter(delimiter)>
+    <#if withHeader?boolean>
+        <#assign format = format.withHeader>
+    </#if>
+    <#return format>
 </#function>
+

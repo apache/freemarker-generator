@@ -16,15 +16,13 @@
   under the License.
 -->
 <#assign dataSource = DataSources.get(0)>
-<#assign name = dataSource.name>
-<#assign csvParser = CSVTool.parse(dataSource)>
-<#assign csvPrinter = CSVTool.printer(SystemTool.writer)>
+<#assign csvParser = CSVTool.parse(dataSource, csvInFormat())>
 <#assign csvHeaders = csvParser.getHeaderNames()>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>${name}</title>
+    <title>${dataSource.name}</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
@@ -54,3 +52,14 @@
         </#list>
     </tr>
 </#macro>
+<#--------------------------------------------------------------------------->
+<#function csvInFormat>
+    <#assign format = CSVTool.formats[CSV_IN_FORMAT!"DEFAULT"]>
+    <#assign delimiter = CSVTool.toDelimiter(CSV_IN_DELIMITER!format.getDelimiter())>
+    <#assign withHeader = CSV_IN_WITH_HEADER!"false">
+    <#assign format = format.withDelimiter(delimiter)>
+    <#if withHeader?boolean>
+        <#assign format = format.withHeader()>
+    </#if>
+    <#return format>
+</#function>

@@ -24,8 +24,8 @@ import java.util.Arrays;
 public class ManualTest {
 
     private static final String SPACE = " ";
-    // private static final String CMD = "-DCSV_IN_DELIMITER=SEMICOLON -DCSV_IN_WITH_HEADER=true -t examples/templates/dataframe/example.ftl https://raw.githubusercontent.com/nRo/DataFrame/master/src/test/resources/users.csv";
-    private static final String CMD = "-DCSV_IN_FORMAT=DEFAULT -DCSV_OUT_FORMAT=INFORMIX_UNLOAD -t templates/csv/csv/transform.ftl examples/data/csv/contract.csv";
+    private static final String CMD = "-PCSV_IN_FORMAT=DATAFRAME -t examples/templates/dataframe/example.ftl https://raw.githubusercontent.com/nRo/DataFrame/master/src/test/resources/users.csv";
+    // private static final String CMD = "-PCSV_IN_WITH_HEADER=true -PCSV_IN_FORMAT=DEFAULT -PCSV_OUT_FORMAT=EXCEL -t templates/csv/csv/transform.ftl examples/data/csv/contract.csv";
 
     public static void main(String[] args) {
         Main.execute(toArgs(CMD));
