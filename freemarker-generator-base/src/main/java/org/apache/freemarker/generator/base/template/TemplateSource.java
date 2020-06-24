@@ -23,7 +23,7 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * Information how to load a template. The template is either
- * provided as source code or as template path resolved
+ * provided as literal text or as template path resolved
  * by FreeMarker's template loader.
  */
 public class TemplateSource {

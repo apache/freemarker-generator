@@ -1,4 +1,4 @@
-# Named URIs
+## Named URIs
 
 Named URIs allow to identify `DataSources` and pass additional information 
 

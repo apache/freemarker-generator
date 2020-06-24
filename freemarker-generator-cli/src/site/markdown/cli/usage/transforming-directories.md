@@ -1,6 +1,6 @@
 ## Transforming Directories
 
-FreeMarker CLI supports the transformation of directories
+`Apache FreeMarker CLI` supports the transformation of directories
 
 * Transform an input directory recursively into an output directory
 * If a template has a ".ftl" extension this extension will be removed after processing
@@ -13,7 +13,7 @@ The following sample files are used
 * template/nginx/nginx.conf.ftl
 
 ```
-appassembler> tree examples/data/template/
+tree examples/data/template/
 examples/data/template/
 |-- application.properties
 `-- nginx

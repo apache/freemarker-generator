@@ -9,14 +9,14 @@ A `DataModel` is an eagerly loaded `DataSource` available in Apache FreeMarker's
 Expose the fields of the JSON data source in FreeMarker's model 
 
 ```
-bin/freemarker-cli --data-model https://xkcd.com/info.0.json  -i '<a href="${img}">${title}</a>'
+bin/freemarker-cli --data-model https://xkcd.com/info.0.json  -i '<a href="${img}">${title}</a>'; echo
 <a href="https://imgs.xkcd.com/comics/scenario_4.png">Scenario 4</a>
 ```
 
 Exposed the JSON data source as variable `post` in FreeMarker's model 
 
 ```
-bin/freemarker-cli --data-model post=https://jsonplaceholder.typicode.com/posts/2 -i 'post title is: ${post.title}'
+bin/freemarker-cli --data-model post=https://jsonplaceholder.typicode.com/posts/2 -i 'post title is: ${post.title}'; echo
 post title is: qui est esse
 ```
 
@@ -31,14 +31,14 @@ USER=sgoeschl
 Expose a single envionment variable in theFreeMarker model
 
 ```
-bin/freemarker-cli --data-model NAME=env:///USER -i 'Hello ${NAME}'
+bin/freemarker-cli --data-model NAME=env:///USER -i 'Hello ${NAME}'; echo
 Hello sgoeschl
 ```
 
 Alternatively use the short command line options, e.g.
 
 ```
-bin/freemarker-cli -m NAME=env:///USER -i 'Hello ${NAME}!'
+bin/freemarker-cli -m NAME=env:///USER -i 'Hello ${NAME}!'; echo
 Hello sgoeschl!
 ```
 

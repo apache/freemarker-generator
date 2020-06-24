@@ -60,7 +60,7 @@ FreeMarker CLI DataSources
 or load them from a directory
 
 ```
-bin/freemarker-cli -t templates/info.ftl -s examples/data/
+bin/freemarker-cli -t templates/info.ftl -s examples/data
 FreeMarker CLI DataSources
 ------------------------------------------------------------------------------
     [#1], name=combined-access.log, group=default, contentType=text/plain, charset=UTF-8, length=2,068 Bytes

@@ -1,4 +1,4 @@
-# User-Supplied Parameters
+## User-Supplied Parameters
 
 User-supplied parameters allow to pass additional information to an Apache FreeMarker template 
 

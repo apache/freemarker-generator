@@ -1523,7 +1523,7 @@ Within the script a FreeMarker data model is set up and passed to the template -
 | Entry                 | Description                                                                                               |
 |-----------------------|-----------------------------------------------------------------------------------------------------------|
 | CSVTool               | Process CSV files using [Apache Commons CSV](https://commons.apache.org/proper/commons-csv/)              |
-| DataFrameTool         | Bridge to [nRo/DataFrame](https://github.com/nRo/DataFrame)                                            |
+| DataFrameTool         | Bridge to [nRo/DataFrame](https://github.com/nRo/DataFrame)                                               |
 | ExecTool              | Execute command line tools using [Apache Commons Exec](https://commons.apache.org/proper/commons-exec/)   |
 | ExcelTool             | Process Excels files (XLS, XLSX) using [Apache POI](https://poi.apache.org)                               |
 | DataSources           | Helper class to find data sources, e.g. by name, extension or index                                       |

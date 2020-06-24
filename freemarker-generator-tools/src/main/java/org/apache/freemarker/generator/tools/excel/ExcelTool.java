@@ -53,7 +53,7 @@ public class ExcelTool {
             // make sure that the workbook is closed together with the data source
             return dataSource.addClosable(workbook);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to parse Ecxel data source: " + dataSource, e);
+            throw new RuntimeException("Failed to parse Excel data source: " + dataSource, e);
         }
     }
 
