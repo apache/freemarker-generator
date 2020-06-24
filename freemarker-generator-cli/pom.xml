@@ -71,14 +71,17 @@
                         <configuration>
                             <target>
                                 <copy file="README.md" todir="./target/appassembler" />
-                                <copy file="./src/main/scripts/run-samples.sh" todir="./target/appassembler" />
+                                <copy file="./src/main/scripts/run-examples.sh" todir="./target/appassembler" />
                                 <copy todir="./target/appassembler/site">
                                     <fileset dir="site" />
                                 </copy>
                                 <copy todir="./target/appassembler/templates">
                                     <fileset dir="templates" />
                                 </copy>
-                                <chmod file="./target/appassembler/run-samples.sh" perm="a+x" />
+                                <copy todir="./target/appassembler/examples">
+                                    <fileset dir="examples" />
+                                </copy>
+                                <chmod file="./target/appassembler/run-examples.sh" perm="a+x" />
                             </target>
                         </configuration>
                         <goals>
@@ -144,7 +147,7 @@
                         <exclude>src/site/markdown/**/*.md</exclude>
                         <exclude>.travis.yml</exclude>
                         <exclude>src/main/resources/patterns/*</exclude>
-                        <exclude>site/sample/*/**</exclude>
+                        <exclude>examples/data/*/**</exclude>
                         <exclude>src/test/data/encoding/utf8.txt</exclude>
                         <exclude>src/test/data/json/*/**</exclude>
                         <exclude>src/test/data/yaml/environments.yaml</exclude>

@@ -1,3 +1,4 @@
+<#ftl output_format="plainText" strip_whitespace=true>
 <#--
   Licensed to the Apache Software Foundation (ASF) under one
   or more contributor license agreements.  See the NOTICE file
@@ -17,25 +18,7 @@
 <#import "/templates/lib/commons-csv.ftl" as csv />
 <#assign dataSource = DataSources.get(0)>
 <#assign csvParser = CSVTool.parse(dataSource, csv.sourceFormat())>
-<#assign headers = (csvParser.getHeaderMap()!{})?keys>
-<#assign records = csvParser.records>
-<#--------------------------------------------------------------------------->
-<#compress>
-    <@writeHeaders headers/>
-    <@writeColums records/>
-</#compress>
-<#--------------------------------------------------------------------------->
-<#macro writeHeaders headers>
-    <#if headers?has_content>
-        | ${headers?join(" | ", "")} |
-        <#list headers as header>| --------</#list>|
-    </#if>
-</#macro>
-<#--------------------------------------------------------------------------->
-<#macro writeColums columns>
-    <#if columns?has_content>
-        <#list columns as column>
-            | ${column.iterator()?join(" | ", "")} |
-        </#list>
-    </#if>
-</#macro>
+<#assign csvPrinter = CSVTool.printer(csv.targetFormat())>
+<#list csvParser.iterator() as record>
+    ${csvPrinter.printRecord(record)}<#t>
+</#list>

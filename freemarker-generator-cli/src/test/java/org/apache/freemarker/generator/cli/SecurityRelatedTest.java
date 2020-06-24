@@ -26,11 +26,11 @@ public class SecurityRelatedTest extends AbstractMainTest {
 
     @Test(expected = RuntimeException.class)
     public void shouldDisallowFreeMarkerNewBuiltIn() throws IOException {
-        execute("-b ./src/test -t templates/security/new.ftl");
+        execute("-t ./src/test/templates/security/new.ftl");
     }
 
     @Test(expected = RuntimeException.class)
     public void shouldDisallowFreeMarkerApiBuiltIn() throws IOException {
-        execute("-b ./src/test -t templates/security/api.ftl");
+        execute("-t ./src/test/templates/security/api.ftl");
     }
 }

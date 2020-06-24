@@ -18,22 +18,35 @@ package org.apache.freemarker.generator.tools.system;
 
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 public class SystemToolTest {
 
+    private static final String USER = System.getenv("USER");
+
     @Test
-    public void shallGetProperties() {
+    public void shouldGetProperties() {
         assertFalse(systemTool().getSystemProperties().isEmpty());
     }
 
     @Test
-    public void shallGetEnvs() {
+    public void shouldGetEnvs() {
         assertFalse(systemTool().getEnvs().isEmpty());
     }
 
     @Test
-    public void shallGetHostName() {
+    public void shouldGetString() {
+        assertEquals(USER, systemTool().getString("USER"));
+    }
+
+    @Test
+    public void shouldGetStringWithDefault() {
+        assertEquals("foo", systemTool().getString("_DOES_NOT_EXIST_", "foo"));
+    }
+
+    @Test
+    public void shouldGetHostName() {
         assertFalse(systemTool().getHostName().isEmpty());
     }
 

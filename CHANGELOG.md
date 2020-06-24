@@ -16,6 +16,7 @@ All notable changes to this project will be documented in this file. We try to a
 * [FREEMARKER-129] Migrate `freemarker-cli` into `freemarker-generator` project (see [https://github.com/sgoeschl/freemarker-cli](https://github.com/sgoeschl/freemarker-cli))
 
 ### Changed
+* [FREEMARKER-146] Cleanly separate example templates and data from user-supplied content
 * `DataSource` use `uri` instead of `location`
 * [FREEMARKER-138] freemarker-generator: Rename `Datasource` to `DataSource`
 * [FREEMARKER-136] Fix broken `site:stage` build
@@ -41,3 +42,4 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-139]: https://issues.apache.org/jira/browse/FREEMARKER-139
 [FREEMARKER-142]: https://issues.apache.org/jira/browse/FREEMARKER-142
 [FREEMARKER-144]: https://issues.apache.org/jira/browse/FREEMARKER-144
+[FREEMARKER-146]: https://issues.apache.org/jira/browse/FREEMARKER-146

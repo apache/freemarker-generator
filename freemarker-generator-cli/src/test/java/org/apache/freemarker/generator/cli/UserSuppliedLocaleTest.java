@@ -26,7 +26,7 @@ public class UserSuppliedLocaleTest extends AbstractMainTest {
 
     @Test
     public void shouldUserGermanLocalForRenderingTemplate() throws IOException {
-        final String output = execute("-b ./src/test -l de -t templates/locale.ftl README.md");
+        final String output = execute("-l de -t ./src/test/templates/locale.ftl README.md");
 
         assertTrue(output.contains("3,142"));
         assertTrue(output.contains("99.999,99"));
@@ -34,7 +34,7 @@ public class UserSuppliedLocaleTest extends AbstractMainTest {
 
     @Test
     public void shouldUserEnglishLocalForRenderingTemplate() throws IOException {
-        final String output = execute("-b ./src/test -l en -t templates/locale.ftl README.md");
+        final String output = execute("-l en -t ./src/test/templates/locale.ftl README.md");
 
         assertTrue(output.contains("3.142"));
         assertTrue(output.contains("99,999.99"));

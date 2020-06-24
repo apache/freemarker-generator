@@ -1,4 +1,4 @@
-<#ftl output_format="HTML" >
+<#ftl output_format="HTML" strip_whitespace=true>
 <#--
   Licensed to the Apache Software Foundation (ASF) under one
   or more contributor license agreements.  See the NOTICE file
@@ -15,16 +15,15 @@
   specific language governing permissions and limitations
   under the License.
 -->
+<#import "/templates/lib/commons-csv.ftl" as csv />
 <#assign dataSource = DataSources.get(0)>
-<#assign name = dataSource.name>
-<#assign cvsFormat = CSVTool.formats["DEFAULT"].withHeader()>
-<#assign csvParser = CSVTool.parse(dataSource, cvsFormat)>
+<#assign csvParser = CSVTool.parse(dataSource, csv.sourceFormat())>
 <#assign csvHeaders = csvParser.getHeaderNames()>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>
 <html>
 <head>
-    <title>${name}</title>
+    <title>${dataSource.name}</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
@@ -40,17 +39,21 @@
 </html>
 <#--------------------------------------------------------------------------->
 <#macro writeHeaders headers>
-    <tr>
-        <#list headers as header>
-            <th>${header}</th>
-        </#list>
-    </tr>
+    <#if headers?has_content>
+        <tr>
+            <#list headers as header>
+                <th>${header}</th>
+            </#list>
+        </tr>
+    </#if>
 </#macro>
 <#--------------------------------------------------------------------------->
 <#macro writeColumns record>
-    <tr>
-        <#list record.iterator() as field>
-            <th>${field}</th>
-        </#list>
-    </tr>
+    <#if record?has_content>
+        <tr>
+            <#list record.iterator() as field>
+                <td>${field}</td>
+            </#list>
+        </tr>
+    </#if>
 </#macro>

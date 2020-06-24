@@ -36,7 +36,7 @@ public class FreeMarkerTool {
 
     public synchronized BeansWrapper getBeansWrapper() {
         if (beansWrapper == null) {
-            beansWrapper = new BeansWrapperBuilder(Configuration.VERSION_2_3_29).build();
+            beansWrapper = new BeansWrapperBuilder(Configuration.VERSION_2_3_30).build();
         }
         return beansWrapper;
     }

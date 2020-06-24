@@ -60,27 +60,27 @@ FreeMarker CLI DataSources
 or load them from a directory
 
 ```
-bin/freemarker-cli -t templates/info.ftl -s site/sample/
+bin/freemarker-cli -t templates/info.ftl -s examples/data/
 FreeMarker CLI DataSources
 ------------------------------------------------------------------------------
     [#1], name=combined-access.log, group=default, contentType=text/plain, charset=UTF-8, length=2,068 Bytes
-    URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/site/sample/accesslog/combined-access.log
+    URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/accesslog/combined-access.log
     ...
     [#22], name=swagger-spec.yaml, group=default, contentType=text/yaml, charset=UTF-8, length=17,555 Bytes
-    URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/site/sample/yaml/swagger-spec.yaml
+    URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/yaml/swagger-spec.yaml
 
 ```
 
 which can be combined with `include` and `exclude` filters
 
 ```
-bin/freemarker-cli -t templates/info.ftl -s site/sample --data-source-include=*.json
+bin/freemarker-cli -t templates/info.ftl -s examples/data --data-source-include=*.json
 
 FreeMarker CLI DataSources
 ------------------------------------------------------------------------------
     [#1], name=github-users.json, group=default, contentType=application/json, charset=UTF-8, length=7,168 Bytes
-    URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/site/sample/json/github-users.json
+    URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/json/github-users.json
     [#2], name=swagger-spec.json, group=default, contentType=application/json, charset=UTF-8, length=24,948 Bytes
-    URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/site/sample/json/swagger-spec.json
+    URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/json/swagger-spec.json
 
 ```

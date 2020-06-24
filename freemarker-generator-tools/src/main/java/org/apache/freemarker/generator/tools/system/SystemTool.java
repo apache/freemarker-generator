@@ -1,3 +1,4 @@
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -15,6 +16,8 @@
  * limitations under the License.
  */
 package org.apache.freemarker.generator.tools.system;
+
+import org.apache.freemarker.generator.base.util.StringUtils;
 
 import java.io.File;
 import java.io.Writer;
@@ -35,7 +38,7 @@ import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model.FRE
 
 /**
  * Provides system related functionality, e.g. accessing environment variables,
- * system properties, commandl-line arguments, hostname, FreeMarker writer, etc.
+ * system properties, command-line arguments, hostname, FreeMarker writer, etc.
  */
 @SuppressWarnings("unchecked")
 public class SystemTool {
@@ -121,6 +124,34 @@ public class SystemTool {
         return env != null ? env : def;
     }
 
+    /**
+     * Convinience lookup of a configuration value based on
+     * user-supplied parameters, system properties and
+     * environment variables.
+     *
+     * @param name name of the configuration parameter
+     * @return value of null
+     */
+    public String getString(String name) {
+        return StringUtils.firstNonEmpty(
+                getParameter(name),
+                System.getProperty(name),
+                getEnv(name));
+    }
+
+    /**
+     * Convinience lookup of a configuration value based on
+     * user-supplied parameters, system properties and
+     * environment variables.
+     *
+     * @param name name of the configuration parameter
+     * @param def  default value
+     * @return value of null
+     */
+    public String getString(String name, String def) {
+        return StringUtils.firstNonEmpty(getString(name), def);
+    }
+
     public String getHostName() {
         try {
             return InetAddress.getLocalHost().getHostName();
@@ -129,6 +160,13 @@ public class SystemTool {
         }
     }
 
+    /**
+     * The <code>Writer</code> passed to FreeMarker for rendering the output. Please
+     * note that FreeMarker does some magic on top of the writer so output generated
+     * by using the writer and FreeMarker templates are scrambled.
+     *
+     * @return writer
+     */
     public Writer getWriter() {
         return writer;
     }

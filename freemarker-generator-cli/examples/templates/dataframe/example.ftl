@@ -15,7 +15,8 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign csvParser = CSVTool.parse(DataSources.get(0))>
+<#assign dataSource = DataSources.get(0)>
+<#assign csvParser = CSVTool.parse(dataSource, csvInFormat())>
 <#assign users = DataFrameTool.fromCSVParser(csvParser)>
 
 Original Data
@@ -44,5 +45,14 @@ ${DataFrameTool.print(users.getColumn("country").transform(DataFrameTool.transfo
 Group By Age & Country
 =============================================================================
 ${DataFrameTool.print(users.groupBy("country", "age").sort("country"))}
-
-
+<#--------------------------------------------------------------------------->
+<#function csvInFormat>
+    <#assign format = CSVTool.formats[CSV_SOURCE_FORMAT!"DEFAULT"]>
+    <#assign delimiter = CSVTool.toDelimiter(CSV_SOURCE_DELIMITER!format.getDelimiter())>
+    <#assign withHeader = CSV_SOURCE_WITH_HEADER!"false">
+    <#assign format = format.withDelimiter(delimiter)>
+    <#if withHeader?boolean>
+        <#assign format = format.withHeader()>
+    </#if>
+    <#return format>
+</#function>
