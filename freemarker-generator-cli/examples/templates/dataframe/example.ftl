@@ -47,9 +47,9 @@ Group By Age & Country
 ${DataFrameTool.print(users.groupBy("country", "age").sort("country"))}
 <#--------------------------------------------------------------------------->
 <#function csvInFormat>
-    <#assign format = CSVTool.formats[CSV_IN_FORMAT!"DEFAULT"]>
-    <#assign delimiter = CSVTool.toDelimiter(CSV_IN_DELIMITER!format.getDelimiter())>
-    <#assign withHeader = CSV_IN_WITH_HEADER!"false">
+    <#assign format = CSVTool.formats[CSV_SOURCE_FORMAT!"DEFAULT"]>
+    <#assign delimiter = CSVTool.toDelimiter(CSV_SOURCE_DELIMITER!format.getDelimiter())>
+    <#assign withHeader = CSV_SOURCE_WITH_HEADER!"false">
     <#assign format = format.withDelimiter(delimiter)>
     <#if withHeader?boolean>
         <#assign format = format.withHeader()>

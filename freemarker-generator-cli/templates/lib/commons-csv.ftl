@@ -15,21 +15,35 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#-- Parse the first data source & sheet of the Excel document -->
-<#import "/templates/lib/commons-csv.ftl" as csv />
-<#assign workbook = ExcelTool.parse(DataSources.get(0))>
-<#assign sheet = ExcelTool.getSheets(workbook)[0]>
-<#assign records = ExcelTool.toTable(sheet)>
-<#-- Setup CSVPrinter  -->
-<#assign csvPrinter = CSVTool.printer(csv.targetFormat())>
-<#-- Print each line of the Excel as CSV record -->
-<#compress>
-    <#list records as record>
-        ${csvPrinter.printRecord(record)}
-    </#list>
-</#compress>
-<#--------------------------------------------------------------------------->
-<#function csvOutFormat>
+
+<#---
+    Detemine the CSV format for reading a CSV files using user-supplied
+    parameters from the data model.
+
+    * CSV_SOURCE_FORMAT - see https://commons.apache.org/proper/commons-csv/apidocs/org/apache/commons/csv/CSVFormat.html
+    * CSV_SOURCE_DELIMITER - symbolic name of delimiter, e.g. "COLON" or "SEMICOLON"
+    * CSV_SOURCE_WITH_HEADER - whether the first rows are headers
+-->
+<#function sourceFormat>
+    <#assign format = CSVTool.formats[CSV_SOURCE_FORMAT!"DEFAULT"]>
+    <#assign delimiter = CSVTool.toDelimiter(CSV_SOURCE_DELIMITER!format.getDelimiter())>
+    <#assign withHeader = CSV_SOURCE_WITH_HEADER!"false">
+    <#assign format = format.withDelimiter(delimiter)>
+    <#if withHeader?boolean>
+        <#assign format = format.withHeader()>
+    </#if>
+    <#return format>
+</#function>
+
+<#---
+    Detemine the CSV format for printing a CSV files using user-supplied
+    parameters from the data model.
+
+    * CSV_TARGET_FORMAT - see https://commons.apache.org/proper/commons-csv/apidocs/org/apache/commons/csv/CSVFormat.html
+    * CSV_TARGET_DELIMITER - symbolic name of delimiter, e.g. "COLON" or "SEMICOLON"
+    * CSV_TARGET_WITH_HEADER - whether the first rows are headers
+-->
+<#function targetFormat>
     <#assign format = CSVTool.formats[CSV_TARGET_FORMAT!"DEFAULT"]>
     <#assign delimiter = CSVTool.toDelimiter(CSV_TARGET_DELIMITER!format.getDelimiter())>
     <#assign withHeader = CSV_TARGET_WITH_HEADER!"false">
@@ -39,4 +53,3 @@
     </#if>
     <#return format>
 </#function>
-

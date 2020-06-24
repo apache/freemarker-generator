@@ -15,7 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign format = CSV_OUT_FORMAT!"DEFAULT">
+<#assign format = CSV_TARGET_FORMAT!"DEFAULT">
 <#assign salt = SystemTool.parameters["salt"]!"salt">
 <#-- Parse the first data source & sheet of the Excel document -->
 <#assign workbook = ExcelTool.parse(DataSources.get(0))>

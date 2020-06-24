@@ -14,8 +14,9 @@
   specific language governing permissions and limitations
   under the License.
 -->
+<#import "/templates/lib/commons-csv.ftl" as csv />
 <#assign dataSource = DataSources.get(0)>
-<#assign csvParser = CSVTool.parse(dataSource, csvInFormat())>
+<#assign csvParser = CSVTool.parse(dataSource, csv.sourceFormat())>
 <#assign headers = (csvParser.getHeaderMap()!{})?keys>
 <#assign records = csvParser.records>
 <#--------------------------------------------------------------------------->
@@ -32,18 +33,9 @@
 </#macro>
 <#--------------------------------------------------------------------------->
 <#macro writeColums columns>
-    <#list columns as column>
-        | ${column.iterator()?join(" | ", "")} |
-    </#list>
-</#macro>
-<#--------------------------------------------------------------------------->
-<#function csvInFormat>
-    <#assign format = CSVTool.formats[CSV_IN_FORMAT!"DEFAULT"]>
-    <#assign delimiter = CSVTool.toDelimiter(CSV_IN_DELIMITER!format.getDelimiter())>
-    <#assign withHeader = CSV_IN_WITH_HEADER!"false">
-    <#assign format = format.withDelimiter(delimiter)>
-    <#if withHeader?boolean>
-        <#assign format = format.withHeader()>
+    <#if columns?has_content>
+        <#list columns as column>
+            | ${column.iterator()?join(" | ", "")} |
+        </#list>
     </#if>
-    <#return format>
-</#function>
+</#macro>
