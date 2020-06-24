@@ -18,6 +18,7 @@ package org.apache.freemarker.generator.tools.dataframe;
 
 import de.unknownreality.dataframe.DataFrame;
 import de.unknownreality.dataframe.DataFrameWriter;
+import de.unknownreality.dataframe.DefaultDataFrame;
 import de.unknownreality.dataframe.sort.SortColumn.Direction;
 import de.unknownreality.dataframe.transform.ColumnDataFrameTransform;
 import de.unknownreality.dataframe.transform.CountTransformer;
@@ -40,6 +41,13 @@ import static de.unknownreality.dataframe.DataFrameWriter.DEFAULT_PRINT_FORMAT;
  * For more information see <a href="https://github.com/nRo/DataFrame">nRo/DataFrame</a>.
  */
 public class DataFrameTool {
+
+    /**
+     * Create a default data frame.
+     */
+    public DataFrame create() {
+        return new DefaultDataFrame();
+    }
 
     /**
      * Create a data frame from Apache Commons CSVParser.
