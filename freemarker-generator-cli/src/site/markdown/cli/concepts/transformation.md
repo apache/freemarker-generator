@@ -11,4 +11,4 @@ The `freemarker-cli` generates text output based on FreeMarker templates and dat
     * an output directory
 * When the output is written to a directory
     * the structure of the input directory is preserved
-    * a `ftl file externsion is removed
+    * a `ftl` file externsion is removed

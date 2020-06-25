@@ -23,9 +23,9 @@ import de.unknownreality.dataframe.sort.SortColumn.Direction;
 import de.unknownreality.dataframe.transform.ColumnDataFrameTransform;
 import de.unknownreality.dataframe.transform.CountTransformer;
 import org.apache.commons.csv.CSVParser;
-import org.apache.freemarker.generator.tools.dataframe.converter.CSVConverter;
-import org.apache.freemarker.generator.tools.dataframe.converter.ListConverter;
-import org.apache.freemarker.generator.tools.dataframe.converter.MapConverter;
+import org.apache.freemarker.generator.tools.dataframe.impl.CSVConverter;
+import org.apache.freemarker.generator.tools.dataframe.impl.ListConverter;
+import org.apache.freemarker.generator.tools.dataframe.impl.MapConverter;
 
 import java.io.StringWriter;
 import java.util.Collection;

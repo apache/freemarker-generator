@@ -1,6 +1,8 @@
-## Overview
+## Tools
 
-The following `tools` are currently implemented
+A `Apache FreeMarker CLI Tool` is just a POJO (plain old Java object) that is "useful" in a template and is not meant to be rendered in the output.
+
+The following tools are currently implemented
 
 | Tool                  | Description                                                                                               |
 |-----------------------|-----------------------------------------------------------------------------------------------------------|

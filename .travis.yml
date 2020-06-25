@@ -7,7 +7,7 @@ jdk:
   - openjdk12
   - openjdk13
 script:
-  - mvn clean install
+  - mvn clean install site site:stage
   - cd ./freemarker-generator-cli
   - sh ./run-examples.sh
   - cd ../freemarker-generator-maven-plugin-sample

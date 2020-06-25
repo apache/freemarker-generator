@@ -86,7 +86,7 @@ Timestamp              : Jun 18, 2020 10:55:04 AM
 Output encoding        : UTF-8
 Output format          : plainText
 
-FreeMarker CLI Template Directories
+FreeMarker CLI Template Loader Directories
 ------------------------------------------------------------------------------
 [#1] /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler
 [#2] /Users/sgoeschl/.freemarker-cli

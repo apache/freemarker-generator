@@ -4,8 +4,8 @@
 
 * Transform an input directory recursively into an output directory
 * If a template has a ".ftl" extension this extension will be removed after processing
-* Only a single directory is support
-* Currently no inclusion / exclusion patterns for templates are supported
+* Only a single directory is supported (for now)
+* Currently no inclusion / exclusion patterns for templates are supported (for now)
 
 The following sample files are used
 

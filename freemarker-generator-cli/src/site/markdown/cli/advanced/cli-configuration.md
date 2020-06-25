@@ -69,7 +69,7 @@ You can easily check this, e.g.
 ```
 > freemarker-cli -t templates/info.ftl
 
-FreeMarker CLI Template Directories
+FreeMarker CLI Template Loader Directories
 ------------------------------------------------------------------------------
 [#1] /Users/sgoeschl
 [#2] /Users/sgoeschl/.freemarker-cli

@@ -25,7 +25,7 @@ Timestamp              : ${.now}
 Output encoding        : ${.output_encoding}
 Output format          : ${.output_format}
 
-FreeMarker CLI Template Directories
+FreeMarker CLI Template Loader Directories
 ------------------------------------------------------------------------------
 <#list SystemTool.getTemplateDirectories() as directory>
 [#${directory?counter}] ${directory}

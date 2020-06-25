@@ -1,8 +1,8 @@
-## DataFrameTool
+## DataFrames
+
+A `DataFrame` allows declarative filtering and transformation of tabular data, i.e. less code to write. 
 
 The `DataFrameTool` uses [nRo/DataFrame](https://github.com/nRo/DataFrame) to convert tabular data into a `DataFrame`.
-
-A `DataFrame` allows declarative filtering and transformation of tabular data, i.e. less code to write.
 
 Currently the following sources are supported
 

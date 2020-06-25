@@ -3,7 +3,6 @@ Apache FreeMarker Generator
 
 For documentation or to report bugs visit: [https://freemarker.apache.org](https://freemarker.apache.org)
 
-
 Regarding pull requests on Github
 -----------------------------------------------------------------------------
 
@@ -14,7 +13,6 @@ license, etc.) to the Apache Software Foundation as if you have signed
 a [Contributor License Agreement](https://www.apache.org/dev/new-committers-guide.html#cla).
 For contributions that are judged to be non-trivial, you will be asked
 to actually signing a Contributor License Agreement.
-
 
 What is Apache FreeMarker Generator?
 -----------------------------------------------------------------------------
@@ -28,6 +26,18 @@ Currently it can be invoked as a
 * Command-line interface `freemarker-generator-cli`
 * Maven plug-in `freemarker-generator-maven-plugin`
 
+Building Apache FreeMarker Generator
+-----------------------------------------------------------------------------
+
+To create the artefacts locally run
+
+> mvn clean install
+
+To build the documentation site run
+
+> mvn clean site site:stage
+
+To 
 
 Licensing
 -----------------------------------------------------------------------------

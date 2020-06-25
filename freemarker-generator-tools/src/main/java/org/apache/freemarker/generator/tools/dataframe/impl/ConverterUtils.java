@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.tools.dataframe.converter;
+package org.apache.freemarker.generator.tools.dataframe.impl;
 
 import de.unknownreality.dataframe.DataFrame;
 import de.unknownreality.dataframe.DataFrameBuilder;

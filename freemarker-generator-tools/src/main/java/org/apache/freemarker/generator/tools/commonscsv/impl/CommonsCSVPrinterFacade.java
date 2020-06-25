@@ -1,4 +1,4 @@
-package org.apache.freemarker.generator.tools.commonscsv;
+package org.apache.freemarker.generator.tools.commonscsv.impl;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;

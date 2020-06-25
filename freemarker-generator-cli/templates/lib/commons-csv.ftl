@@ -27,10 +27,10 @@
 <#function sourceFormat>
     <#assign format = CSVTool.formats[CSV_SOURCE_FORMAT!"DEFAULT"]>
     <#assign delimiter = CSVTool.toDelimiter(CSV_SOURCE_DELIMITER!format.getDelimiter())>
-    <#assign withHeader = CSV_SOURCE_WITH_HEADER!"false">
+    <#assign withHeader = CSV_SOURCE_WITH_HEADER!"true">
     <#assign format = format.withDelimiter(delimiter)>
     <#if withHeader?boolean>
-        <#assign format = format.withHeader()>
+        <#assign format = format.withFirstRecordAsHeader()>
     </#if>
     <#return format>
 </#function>
@@ -46,10 +46,10 @@
 <#function targetFormat>
     <#assign format = CSVTool.formats[CSV_TARGET_FORMAT!"DEFAULT"]>
     <#assign delimiter = CSVTool.toDelimiter(CSV_TARGET_DELIMITER!format.getDelimiter())>
-    <#assign withHeader = CSV_TARGET_WITH_HEADER!"false">
+    <#assign withHeader = CSV_TARGET_WITH_HEADER!"true">
     <#assign format = format.withDelimiter(delimiter)>
     <#if withHeader?boolean>
-        <#assign format = format.withHeader>
+        <#assign format = format.withFirstRecordAsHeader()>
     </#if>
     <#return format>
 </#function>

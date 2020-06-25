@@ -1,47 +1,60 @@
 ## Template Loading
 
-`Apache FreeMarker CLI` loads templates from multiple locations in the following order
+In order the render a template it needs to be loaded first - there are multiple ways of creating/loading a template
+
+* Using a [FreeMarker Template Loader](https://freemarker.apache.org/docs/pgui_config_templateloading.html) and abstract template paths 
+* Load a template without template loader (aka free-style template loading), e.g. absolute template file, a directory or an URL
+* Provide the template directly on the command-line (aka interactive template)
+
+### FreeMarker MultiTemplateLoader
+
+`Apache FreeMarker CLI` uses a `MultiTemplateLoader` searching for templates in the following directories
 
 * Current working directory
 * Optional `~/.freemarker-cli` directory
 * `Apache FreeMarker CLI` installation directory
 
-You can check the available template locations easily on the command line
+You can check the currently used template loader directories easily on the command line, e.g.
 
 ```
 freemarker-cli -t templates/info.ftl
 
-FreeMarker CLI Template Directories
+FreeMarker CLI Template Loader Directories
 ------------------------------------------------------------------------------
 [#1] /Users/sgoeschl/work/github/apache/freemarker-generator
 [#2] /Users/sgoeschl/.freemarker-cli
 [#3] /Applications/Java/freemarker-cli-2.0.0
 ```
 
-### Template Loaders In Action
-
-Let's assume you have `freemarker-cli` in your path and you execute
+The main benefit of `MultiTemplateLoader` is the use of abstract template paths finding a template in the template loader directories
 
 ```
-> cd /
-> which freemarker-cli
-/Applications/Java/freemarker-cli-2.0.0/bin/freemarker-cli
-> freemarker-cli -t templates/cat.ftl https://jsonplaceholder.typicode.com/posts/2
-{
-  "userId": 1,
-  "id": 2,
-  "title": "qui est esse",
-  "body": "est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla"
-}
-```
+freemarker-cli -t templates/info.ftl
+``` 
 
-In your root directory there is no `templates/cat.ftl` but it is picked up from `/Applications/Java/freemarker-cli-2.0.0`
-
-### Literal Templates
-
-You can also directly specify a template to be loaded without relying on template loaders
+and [Template Includes](https://freemarker.apache.org/docs/ref_directive_include.html)
 
 ```
-freemarker-cli -t some-directory/transform.ftl some-directory/contract.csv
+<#import "/templates/lib/commons-csv.ftl" as csv />
+```  
+
+### Free-Style Template Loading
+
+The previosly described `Template Loaders` do not support absolute template files or arbitraRY URLS - this behaviour 
+stems from security aspects when running `Apache FreeMarker` on the server side. For a command-line tool this is mostly
+irrelevant therefore any template file outside of the template loader directories can be loaded 
+
+This example loads the `info.ftl` directly from a GitHub URL
+
+```
+freemarker-cli -t https://raw.githubusercontent.com/apache/freemarker-generator/master/freemarker-generator-cli/templates/info.ftl
+```
+
+### Interactive Template Loading
+
+The template can be defined directly on the command line in case of trivial transformations
+
+```
+freemarker-cli -i '${GsonTool.toJson(yaml)}' -m yaml=examples/data/yaml/swagger-spec.yaml
 ```
 

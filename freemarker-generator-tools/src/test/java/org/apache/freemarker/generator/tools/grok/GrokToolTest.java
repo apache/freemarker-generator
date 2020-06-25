@@ -16,6 +16,7 @@
  */
 package org.apache.freemarker.generator.tools.grok;
 
+import org.apache.freemarker.generator.tools.grok.impl.GrokWrapper;
 import org.junit.Test;
 
 import java.util.Map;

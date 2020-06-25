@@ -22,6 +22,7 @@ import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.input.BOMInputStream;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.util.StringUtils;
+import org.apache.freemarker.generator.tools.commonscsv.impl.CommonsCSVPrinterFacade;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -238,7 +239,7 @@ public class CommonsCSVTool {
     private static Map<String, CSVFormat> createCSVFormats() {
         final Map<String, CSVFormat> result = new HashMap<>();
         result.put("DEFAULT", CSVFormat.DEFAULT);
-        result.put("DATAFRAME", CSVFormat.DEFAULT.withDelimiter(';').withFirstRecordAsHeader());
+        result.put("DATAFRAME", CSVFormat.RFC4180.withDelimiter(';').withFirstRecordAsHeader());
         result.put("EXCEL", CSVFormat.EXCEL);
         result.put("INFORMIX_UNLOAD", CSVFormat.INFORMIX_UNLOAD);
         result.put("INFORMIX_UNLOAD_CSV", CSVFormat.INFORMIX_UNLOAD_CSV);

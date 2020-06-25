@@ -67,6 +67,7 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>package</id>
                         <phase>package</phase>
                         <configuration>
                             <target>

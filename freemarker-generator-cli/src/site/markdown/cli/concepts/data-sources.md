@@ -82,5 +82,30 @@ FreeMarker CLI DataSources
     URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/json/github-users.json
     [#2], name=swagger-spec.json, group=default, contentType=application/json, charset=UTF-8, length=24,948 Bytes
     URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/json/swagger-spec.json
+```
+
+### Selecting A DataSource
+
+After loading one or more `DataSource` it needs to be selected for template processing - the `DataSources` instance 
+exposed in the data model provides
+
+* Selecting by index  
+* Selecting by name
+* Filter by the globbing pattern (see [Apache Commons IO](https://commons.apache.org/proper/commons-io/javadocs/api-release/org/apache/commons/io/filefilter/WildcardFileFilter.html))
+
+A few FTL examples
 
 ```
+<#assign dataSource = DataSources.get(0)>
+
+<#assign dataSource = DataSources.get("user.csv)>
+
+<#list DataSources.find("*.md") as dataSource>
+- ${dataSource.name}
+</#list>
+```
+
+
+
+ 
+
