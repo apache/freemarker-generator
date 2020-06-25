@@ -1,4 +1,4 @@
-## Working With CSV
+## Transforming CSV
 
 A common task is changing the output format of a CSV file
 
@@ -55,6 +55,25 @@ freemarker-cli \
  https://raw.githubusercontent.com/apache/freemarker-generator/master/freemarker-generator-cli/examples/data/csv/contract.csv 
 ```  
 
+### CSV Configuration Options
 
+The following options can be passed to template (as user-supplied parameters)
 
+| Parameter                 | Default Value     | Description                                               |
+|---------------------------|-------------------|-----------------------------------------------------------|
+| CSV_SOURCE_FORMAT         | DEFAULT           | Source CSV format                                         |
+| CSV_SOURCE_DELIMITER      | COMMA             | Symbolic name of delimiter, e.g. "COLON" or "SEMICOLON"   |
+| CSV_SOURCE_WITH_HEADER    | true              | Whether the first rows are headers                        |
+| CSV_TAGRGET_FORMAT        | DEFAULT           | Target CSV format                                         |
+| CSV_TARGET_DELIMITER      | COMMA             | Symbolic name of delimiter, e.g. "COLON" or "SEMICOLON"   |
+| CSV_TARGET_WITH_HEADER    | true              | Whether the first rows are headers                        |
+                                                            
+The delimiters are passed as symbolic names since passing seperators breaks command line handling
 
+* COMMA
+* HASH
+* PIPE
+* RS (ASCII record seperator)
+* SEMICOLON
+* SPACE
+* TAB

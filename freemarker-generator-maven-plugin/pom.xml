@@ -40,8 +40,6 @@
         <jmockit.version>1.32</jmockit.version>
         <org.testng.version>6.8</org.testng.version>
         <assertj-core.version>3.8.0</assertj-core.version>
-        <clover-target-percentage>100</clover-target-percentage>
-        <clover-phase>pre-site</clover-phase>
     </properties>
 
     <dependencies>
@@ -150,27 +148,6 @@
                             <goal>descriptor</goal>
                         </goals>
                         <phase>process-classes</phase>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.openclover</groupId>
-                <artifactId>clover-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>clover</id>
-                        <phase>${clover-phase}</phase>
-                        <goals>
-                            <goal>instrument-test</goal>
-                            <goal>clover</goal>
-                            <goal>check</goal>
-                        </goals>
-                        <configuration>
-                            <targetPercentage>${clover-target-percentage}</targetPercentage>
-                            <generateHtml>true</generateHtml>
-                            <generateXml>true</generateXml>
-                            <jdk>${maven.compiler.source}</jdk>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
