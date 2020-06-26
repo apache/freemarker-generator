@@ -74,7 +74,7 @@ The delimiters are passed as symbolic names since passing seperators breaks comm
 * COMMA
 * HASH
 * PIPE
-* RS (ASCII record seperator)
+* RS (ASCII record separator)
 * SEMICOLON
 * SPACE
 * TAB
