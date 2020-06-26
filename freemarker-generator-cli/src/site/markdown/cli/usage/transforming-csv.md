@@ -1,6 +1,7 @@
 ## Transforming CSV
 
-A common task is changing the output format of a CSV file
+A common task is changing the output format of a CSV file therefore `Apache FreeMarker CLI` ships with a ready-to-use
+templates to convert CSVs
 
 * Convert a CSV into a different format
 * Convert a CSV into Markdown or HTML
@@ -8,8 +9,8 @@ A common task is changing the output format of a CSV file
 ### Convert CSV To A Different Output Format
 
 Let's assume that a CSV file in [DEFAULT format](https://commons.apache.org/proper/commons-csv/apidocs/org/apache/commons/csv/CSVFormat.html#DEFAULT) 
-should be converted into a [Microsoft Excel compatible format](https://commons.apache.org/proper/commons-csv/apidocs/org/apache/commons/csv/CSVFormat.html#EXCEL).
-This allows opening the CSV directly in Excel without going to the tedious CSV import form.
+should be converted into a [Microsoft Excel format](https://commons.apache.org/proper/commons-csv/apidocs/org/apache/commons/csv/CSVFormat.html#EXCEL).
+This allows opening the CSV directly in Excel without going to the tedious CSV import dialog.
 
 The following command line prints the converted CSV to `stdout`
 

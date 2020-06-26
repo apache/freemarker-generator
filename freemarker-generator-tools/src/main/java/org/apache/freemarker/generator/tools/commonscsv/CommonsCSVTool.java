@@ -73,7 +73,7 @@ public class CommonsCSVTool {
         }
 
         try {
-            // We don't need to close the underyling ByteArrayInputStream
+            // We don't need to close the underlying ByteArrayInputStream
             return parse(toInputStream(csv, UTF_8), UTF_8, format);
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse CSV", e);
@@ -116,7 +116,7 @@ public class CommonsCSVTool {
 
     /**
      * Map the given value of the CVS record into (key to record). If duplicates
-     * are encountered return the first occurence of the CVS record. The map
+     * are encountered return the first occurrence of the CVS record. The map
      * retains the insertion order of they keys.
      *
      * @param records records to process
@@ -129,7 +129,7 @@ public class CommonsCSVTool {
 
     /**
      * Map the given value of the CVS record into (key to record). If duplicates
-     * are encountered return the first occurence of the CVS record. The map
+     * are encountered return the first occurrence of the CVS record. The map
      * retains the insertion order of they keys.
      *
      * @param records records to process
@@ -163,8 +163,8 @@ public class CommonsCSVTool {
     }
 
     /**
-     * Maps the sybmolic name of a delimiter to a single character since it
-     * is not possible to define commony used delimiters on the command line.
+     * Maps the symbolic name of a delimiter to a single character since it
+     * is not possible to define commonly used delimiters on the command line.
      *
      * @param name symbolic name of delimiter
      * @return CSV delimiter

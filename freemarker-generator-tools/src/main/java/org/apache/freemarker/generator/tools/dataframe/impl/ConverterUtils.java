@@ -66,7 +66,7 @@ public class ConverterUtils {
             case "java.util.Date":
                 return builder.addStringColumn(columnName);
             default:
-                throw new RuntimeException("Unable to add colum for the following type: " + columnType.getName());
+                throw new RuntimeException("Unable to add column for the following type: " + columnType.getName());
         }
     }
 

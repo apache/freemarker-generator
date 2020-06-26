@@ -28,6 +28,7 @@ public class ListConverter {
      * that the rows represent tabular data.
      *
      * @param rows rows to build the data frame
+     * @param withFirstRowAsColumnNames column names as first row?
      * @return <code>DataFrame</code>
      */
     public static DataFrame toDataFrame(List<List<Object>> rows, boolean withFirstRowAsColumnNames) {

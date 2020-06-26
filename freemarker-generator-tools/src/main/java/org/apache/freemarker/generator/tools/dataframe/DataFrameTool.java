@@ -43,7 +43,9 @@ import static de.unknownreality.dataframe.DataFrameWriter.DEFAULT_PRINT_FORMAT;
 public class DataFrameTool {
 
     /**
-     * Create a default data frame.
+     * Create an empty data frame.
+     *
+     * @return data frame
      */
     public DataFrame create() {
         return new DefaultDataFrame();
@@ -81,7 +83,7 @@ public class DataFrameTool {
     }
 
     /**
-     * Provide a convinience map with predefined sort orders to be used by templates.
+     * Provide a convenience map with predefined sort orders to be used by templates.
      *
      * @return available sort orders
      */
@@ -93,7 +95,7 @@ public class DataFrameTool {
     }
 
     /**
-     * Provide a convinience map with predefined transformers.
+     * Provide a convenience map with predefined transformers.
      *
      * @return available transformers
      */
@@ -107,6 +109,7 @@ public class DataFrameTool {
      * Print the <code>DataFrame</code> to the FreeMarker writer.
      *
      * @param dataFrame data frame
+     * @return text representation of data frame
      */
     public String print(DataFrame dataFrame) {
         final StringWriter writer = new StringWriter();
@@ -119,6 +122,7 @@ public class DataFrameTool {
         return "Bridge to [nRo/DataFrame](https://github.com/nRo/DataFrame)";
     }
 
+    @SuppressWarnings("rawtypes")
     private static CountTransformer countTransformer(boolean ignoreNA) {
         return new CountTransformer(ignoreNA);
     }

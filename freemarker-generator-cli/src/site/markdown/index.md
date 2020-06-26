@@ -5,9 +5,13 @@
 * Requires JDK 1.8+ on Linux, Mac OSX and Windows
 * Use stdin, files and URLs to load data and templates 
 * Reads a variety of structured data formats such as access logs, CSV, Excel, JSON, HTML, YAML, XML
-* Provides JSONPath and DataFrames for advanced data manipulation
+* Provides JSONPath, XPath and DataFrames for advanced data manipulation
 * Transform a directory with a single command-line invocation
 * Made for the heavy lifting of data by using lazy-loading and streaming 
+
+### Getting Started
+
+* [Installation](cli/introduction/getting-started.html)
 
 ### Concepts
 
@@ -28,4 +32,4 @@
 
 ### Advanced Topics
 
-* [FreeMarker CLI Configuration](cli/usage/cli-configuration.html)
+* [FreeMarker CLI Configuration](cli/advanced/cli-configuration.html)

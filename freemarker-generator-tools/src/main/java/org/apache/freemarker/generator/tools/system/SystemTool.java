@@ -125,7 +125,7 @@ public class SystemTool {
     }
 
     /**
-     * Convinience lookup of a configuration value based on
+     * Convenience lookup of a configuration value based on
      * user-supplied parameters, system properties and
      * environment variables.
      *
@@ -140,7 +140,7 @@ public class SystemTool {
     }
 
     /**
-     * Convinience lookup of a configuration value based on
+     * Convenience lookup of a configuration value based on
      * user-supplied parameters, system properties and
      * environment variables.
      *
