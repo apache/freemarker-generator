@@ -37,8 +37,6 @@ To build the documentation site run
 
 > mvn clean site site:stage
 
-To 
-
 Licensing
 -----------------------------------------------------------------------------
 
