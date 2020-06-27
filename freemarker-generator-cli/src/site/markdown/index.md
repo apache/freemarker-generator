@@ -15,6 +15,7 @@
 
 ### Concepts
 
+* [Design Goals](cli/concepts/design-goals.html)
 * [Named URIs](cli/concepts/named-uris.html)
 * [Data Sources](cli/concepts/data-sources.html)
 * [Data Models](cli/concepts/data-models.html)
@@ -25,7 +26,7 @@
 
 ### Usage
 
-* [CLI Examples](https://github.com/apache/freemarker-generator/blob/master/freemarker-generator-cli/README.md)
+* [Running Examples](cli/usage/running-examples.html)
 * [Transforming Directories](cli/usage/transforming-directories.html)
 * [Using DataFrames](cli/usage/using-dataframes.html)
 * [Transforming CSV](cli/usage/transforming-csv.html)

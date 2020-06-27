@@ -1,4 +1,5 @@
-# Overview
+Apache FreeMarker Generator Base
+=============================================================================
 
 This module provides common functionality for `freemarker-generator-cli` and `freemarker-generator-maven-plugin` such as
 
