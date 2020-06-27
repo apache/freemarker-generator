@@ -82,11 +82,11 @@ A simple example with real JSON data to be transformed into Markdown
 
 You can either use the existing JSON sample
 
-> ./bin/freemarker-cli -t examples/templates/json/md/github-users.ftl examples/data/json/github-users.json
+> freemarker-cli -t examples/templates/json/md/github-users.ftl examples/data/json/github-users.json
 
 or pipe a cURL response
 
-> curl -s https://api.github.com/users | ./bin/freemarker-cli -t examples/templates/json/md/github-users.ftl --stdin
+> curl -s https://api.github.com/users | freemarker-cli -t examples/templates/json/md/github-users.ftl --stdin
 
 Below you see the Apache FreeMarker Template
 
@@ -121,8 +121,8 @@ creates the following output
 Sometimes you have a CSV file which needs to be translated in Markdown or HTML - there are on-line solutions available such as [CSV To Markdown Table Generator](https://donatstudios.com/CsvToMarkdownTable) but having a local solution gives you more flexibility.
 
 ```text
-> ./bin/freemarker-cli -t templates/csv/md/transform.ftl examples/data/csv/contract.csv
-> ./bin/freemarker-cli -t templates/csv/html/transform.ftl examples/data/csv/contract.csv
+> freemarker-cli -t templates/csv/md/transform.ftl examples/data/csv/contract.csv
+> freemarker-cli -t templates/csv/html/transform.ftl examples/data/csv/contract.csv
 ```
 
 The FreeMarker template is shown below
@@ -160,7 +160,7 @@ The resulting file actually looks pleasant when compared to raw CSV
 Of course you can also transform a XML document
 
 ```text
-> ./bin/freemarker-cli -t examples/templates/xml/txt/recipients.ftl examples/data/xml/recipients.xml
+> freemarker-cli -t examples/templates/xml/txt/recipients.ftl examples/data/xml/recipients.xml
 ```
 
 using the following template
@@ -249,7 +249,7 @@ ${'\n'}
 
 Invoking the FTL template
 
-> ./bin/freemarker-cli -t examples/templates/json/csv/swagger-endpoints.ftl examples/data/json/swagger-spec.json 
+> freemarker-cli -t examples/templates/json/csv/swagger-endpoints.ftl examples/data/json/swagger-spec.json 
 
 gives you
 
@@ -266,10 +266,10 @@ ENDPOINT;METHOD;CONSUMES;PRODUCES;SUMMARY;DESCRIPTION
 Another day my project management asked me to create a CSV configuration file based on an Excel documents - as usual manual copying was not an option due to required data cleanup and data transformation. So I thought about Apache POI which support XLS and XLSX documents - integration of Apache POI was a breeze but the resulting code was not particularly useful example. So a more generic transformation was provided to show the transformation of Excel documents ...
 
 ```text
-> ./bin/freemarker-cli -t templates/excel/html/transform.ftl examples/data/excel/test.xls
-> ./bin/freemarker-cli -t templates/excel/html/transform.ftl examples/data/excel/test.xlsx
-> ./bin/freemarker-cli -t templates/excel/html/transform.ftl examples/data/excel/test-multiple-sheets.xlsx
-> ./bin/freemarker-cli -t templates/excel/md/transform.ftl examples/data/excel/test-multiple-sheets.xlsx
+> freemarker-cli -t templates/excel/html/transform.ftl examples/data/excel/test.xls
+> freemarker-cli -t templates/excel/html/transform.ftl examples/data/excel/test.xlsx
+> freemarker-cli -t templates/excel/html/transform.ftl examples/data/excel/test-multiple-sheets.xlsx
+> freemarker-cli -t templates/excel/md/transform.ftl examples/data/excel/test-multiple-sheets.xlsx
 ```
 
 The provided FTL transforms an Excel into a HTML document supporting multiple Excel sheets
@@ -353,7 +353,7 @@ but the result looks reasonable
 In this sample we transform all property files found in a directory (recursive search using include pattern) to a CSV file
 
 ```text
-> ./bin/freemarker-cli --data-source-include *.properties -t examples/templates/properties/csv/locker-test-users.ftl examples/data/properties
+> freemarker-cli --data-source-include *.properties -t examples/templates/properties/csv/locker-test-users.ftl examples/data/properties
 TENANT,SITE,USER_ID,DISPOSER_ID,PASSWORD,SMS_OTP,NAME,DESCRIPTION
 TENANT_A,fat,user_0004,user_0004,password_0004,,,
 TENANT_B,fat,user_0001,user_0001,password_0001,,,
@@ -484,7 +484,7 @@ For a POC (proof of concept) I created a sample transformation from CSV to XML-F
 In order to create the PDF you need to execute the following commands (assuming that you have Apache FOP installed)
 
 ```text
-> ./bin/freemarker-cli -t examples/templates/csv/fo/transform.ftl examples/data/csv/locker-test-users.csv > sample.fo
+> freemarker-cli -t examples/templates/csv/fo/transform.ftl examples/data/csv/locker-test-users.csv > sample.fo
 > fop -fo sample.fo sample.pdf
 Dec 29, 2018 10:24:30 PM org.apache.fop.events.LoggingEventListener processEvent
 WARNING: Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
@@ -501,7 +501,7 @@ The result does not look very impressive but it is a PDF :-)
 Further along the line of the POC we converted a transaction export from CSV to PDF using Apache FOP
 
 ```text
-> ./bin/freemarker-cli -t examples/templates/csv/fo/transactions.ftl examples/data/csv/transactions.csv > transactions.fo
+> freemarker-cli -t examples/templates/csv/fo/transactions.ftl examples/data/csv/transactions.csv > transactions.fo
 > fop -fo transactions.fo transactions.pdf
 Jan 16, 2019 11:15:21 PM org.apache.fop.events.LoggingEventListener processEvent
 WARNING: Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
@@ -562,7 +562,7 @@ Recently I got the rather unusual question how to determine the list of dependen
 Your dependencies as CSV can be generated as shown below
 
 ```text
-> ./bin/freemarker-cli -t examples/templates/html/csv/dependencies.ftl examples/data/html/dependencies.html 
+> freemarker-cli -t examples/templates/html/csv/dependencies.ftl examples/data/html/dependencies.html 
 GroupId,ArtifactId,Version,Type,Licenses
 com.jayway.jsonpath,json-path,2.4.0,jar,The Apache Software License Version 2.0
 commons-cli,commons-cli,1.4,jar,Apache License Version 2.0
@@ -617,7 +617,7 @@ date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',${record.disposer},%{http_c
 Rendering the FreeMarker template 
 
 ```
-> ./bin/freemarker-cli -t ./examples/templates/csv/shell/curl.ftl examples/data/csv/user.csv
+> freemarker-cli -t ./examples/templates/csv/shell/curl.ftl examples/data/csv/user.csv
 ```
 
 generates the following shell script
@@ -780,7 +780,7 @@ John Smith
 > bin/freemarker-cli -i '${JsoupTool.parse(DataSources.first).select("a")[0]}' examples/data/html/dependencies.html; echo
 <a href="${project.url}" title="FreeMarker CLI">FreeMarker CLI</a>
 
-> ./bin/freemarker-cli -i '<#list SystemTool.envs as name,value>${name} ==> ${value}${"\n"}</#list>'
+> freemarker-cli -i '<#list SystemTool.envs as name,value>${name} ==> ${value}${"\n"}</#list>'
 TERM ==> xterm-256color
 LANG ==> en_US
 DISPLAY ==> :0.0
@@ -889,13 +889,13 @@ yields
 Sometimes we simply need to transform a JSON into an equivalent YAML or the other way around
 
 ```
-> ./bin/freemarker-cli -t templates/yaml/json/transform.ftl examples/data/yaml/swagger-spec.yaml 
-> ./bin/freemarker-cli -i '${GsonTool.toJson(YamlTool.parse(DataSources.get(0)))}' examples/data/yaml/swagger-spec.yaml
-> ./bin/freemarker-cli -i '${GsonTool.toJson(yaml)}' -m yaml=examples/data/yaml/swagger-spec.yaml
+> freemarker-cli -t templates/yaml/json/transform.ftl examples/data/yaml/swagger-spec.yaml 
+> freemarker-cli -i '${GsonTool.toJson(YamlTool.parse(DataSources.get(0)))}' examples/data/yaml/swagger-spec.yaml
+> freemarker-cli -i '${GsonTool.toJson(yaml)}' -m yaml=examples/data/yaml/swagger-spec.yaml
 
-> ./bin/freemarker-cli -t templates/json/yaml/transform.ftl examples/data/json/swagger-spec.json
-> ./bin/freemarker-cli -i '${YamlTool.toYaml(GsonTool.parse(DataSources.get(0)))}' examples/data/json/swagger-spec.json
-> ./bin/freemarker-cli -i '${YamlTool.toYaml(json)}' -m json=examples/data/json/swagger-spec.json
+> freemarker-cli -t templates/json/yaml/transform.ftl examples/data/json/swagger-spec.json
+> freemarker-cli -i '${YamlTool.toYaml(GsonTool.parse(DataSources.get(0)))}' examples/data/json/swagger-spec.json
+> freemarker-cli -i '${YamlTool.toYaml(json)}' -m json=examples/data/json/swagger-spec.json
 ```
 
 ### 15. Using Advanced FreeMarker Features
@@ -910,7 +910,7 @@ There is a `demo.ftl` which shows some advanced FreeMarker functionality
 
 Running 
 
-> ./bin/freemarker-cli -t examples/templates/demo.ftl 
+> freemarker-cli -t examples/templates/demo.ftl 
 
 gives you
 

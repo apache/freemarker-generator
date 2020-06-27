@@ -155,7 +155,7 @@ data being parsed as a list of maps and print the JSON as dataframe. Technically
 it is a list of maps hence we invoke `DataFrameTool.fromMaps()
 
 ```
-./bin/freemarker-cli \
+freemarker-cli \
   -i '${DataFrameTool.print(DataFrameTool.fromMaps(GsonTool.parse(DataSources.get(0))))}' \
   examples/data/json/github-users.json
 
@@ -195,7 +195,7 @@ Let's transform an Excel Sheet to a `DataFrame` being printed using the followin
 which is rendered by the following command line invocation
 
 ```
-./bin/freemarker-cli -t examples/templates/excel/dataframe/transform.ftl examples/data/excel/test.xls
+freemarker-cli -t examples/templates/excel/dataframe/transform.ftl examples/data/excel/test.xls
 
 ┌────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┐
 │#Text       │#Date       │#Number     │#Currency   │#Time       │#Percentag  │#Forumula   │
