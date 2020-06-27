@@ -74,7 +74,7 @@ The following snippet shows a more advanced example
 > export DB_CONFIG='{"db_default_user":"scott","db_default_password":"tiger"}'
 > echo $DB_CONFIG 
 {"db_default_user":"scott","db_default_password":"tiger"}
-> bin/freemarker-cli -m config=env:///DB_CONFIG#mimetype=application/json  -i '<#list config as name,value>${name}=${value}${"\n"}</#list>'
+> freemarker-cli -m config=env:///DB_CONFIG#mimetype=application/json  -i '<#list config as name,value>${name}=${value}${"\n"}</#list>'
 db_default_user=scott
 db_default_password=tiger
 ```

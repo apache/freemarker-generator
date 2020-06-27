@@ -73,9 +73,6 @@
                             <target>
                                 <copy file="README.md" todir="./target/appassembler" />
                                 <copy file="./src/main/scripts/run-examples.sh" todir="./target/appassembler" />
-                                <copy todir="./target/appassembler/site">
-                                    <fileset dir="site" />
-                                </copy>
                                 <copy todir="./target/appassembler/templates">
                                     <fileset dir="templates" />
                                 </copy>

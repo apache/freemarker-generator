@@ -23,7 +23,7 @@ User-supplied parameters allow to pass additional information to an Apache FreeM
 Pass a simple name/value pair on the command line 
 
 ```
-> bin/freemarker-cli -t templates/info.ftl -P key=value
+> freemarker-cli -t templates/info.ftl -P key=value
 
 User Supplied Parameters
 ------------------------------------------------------------------------------
@@ -33,7 +33,7 @@ User Supplied Parameters
 By providing a `group` you can create nested maps
 
 ```
-> bin/freemarker-cli -t templates/info.ftl -P foo1:group=bar1 -P foo2:group=bar2
+> freemarker-cli -t templates/info.ftl -P foo1:group=bar1 -P foo2:group=bar2
 
 User Supplied Parameters
 ------------------------------------------------------------------------------
@@ -43,7 +43,7 @@ User Supplied Parameters
 It is also possible to mix and match the two approaches
 
 ```
-> bin/freemarker-cli -t templates/info.ftl -P foo1:group=bar1 -P foo2:group=bar2 -P key=value
+> freemarker-cli -t templates/info.ftl -P foo1:group=bar1 -P foo2:group=bar2 -P key=value
 
 User Supplied Parameters
 ------------------------------------------------------------------------------
