@@ -27,9 +27,8 @@ All notable changes to this project will be documented in this file. We try to a
 * [FREEMARKER-129] Change artifact `freemarker-maven-plugin` to `freemarker-generator-maven-plugin`
 * [FREEMARKER-128] Update `freemarker-maven-plugin` to Apache FreeMarker 2.3.29
 
-### Deleted
-
 ### Fixed 
+* [FREEMARKER-147] Complete Maven site documenation
 * [FREEMARKER-127] Site build fails with missing "org/apache/maven/doxia/siterenderer/DocumentContent"
 
 [FREEMARKER-127]: https://issues.apache.org/jira/browse/FREEMARKER-127
@@ -43,3 +42,4 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-142]: https://issues.apache.org/jira/browse/FREEMARKER-142
 [FREEMARKER-144]: https://issues.apache.org/jira/browse/FREEMARKER-144
 [FREEMARKER-146]: https://issues.apache.org/jira/browse/FREEMARKER-146
+[FREEMARKER-147]: https://issues.apache.org/jira/browse/FREEMARKER-147
