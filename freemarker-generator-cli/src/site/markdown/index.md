@@ -12,6 +12,7 @@
 ### Getting Started
 
 * [Installation](cli/introduction/getting-started.html)
+* [Running Examples](cli/usage/running-examples.html)
 
 ### Concepts
 
@@ -26,7 +27,6 @@
 
 ### Usage
 
-* [Running Examples](cli/usage/running-examples.html)
 * [Transforming Directories](cli/usage/transforming-directories.html)
 * [Using DataFrames](cli/usage/using-dataframes.html)
 * [Transforming CSV](cli/usage/transforming-csv.html)
