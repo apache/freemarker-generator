@@ -71,6 +71,7 @@
                         <phase>package</phase>
                         <configuration>
                             <target>
+                                <copy file="CHANGELOG.md" todir="./target/appassembler" />
                                 <copy file="README.md" todir="./target/appassembler" />
                                 <copy file="./src/main/scripts/run-examples.sh" todir="./target/appassembler" />
                                 <copy todir="./target/appassembler/templates">
@@ -97,7 +98,6 @@
                         <configuration>
                             <tarLongFileMode>gnu</tarLongFileMode>
                             <descriptors>
-                                <descriptor>${basedir}/src/main/assembly/dist.xml</descriptor>
                                 <descriptor>${basedir}/src/main/assembly/app.xml</descriptor>
                             </descriptors>
                         </configuration>
