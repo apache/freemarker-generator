@@ -67,14 +67,13 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>package</id>
                         <phase>package</phase>
                         <configuration>
                             <target>
+                                <copy file="CHANGELOG.md" todir="./target/appassembler" />
                                 <copy file="README.md" todir="./target/appassembler" />
                                 <copy file="./src/main/scripts/run-examples.sh" todir="./target/appassembler" />
-                                <copy todir="./target/appassembler/site">
-                                    <fileset dir="site" />
-                                </copy>
                                 <copy todir="./target/appassembler/templates">
                                     <fileset dir="templates" />
                                 </copy>
@@ -99,7 +98,6 @@
                         <configuration>
                             <tarLongFileMode>gnu</tarLongFileMode>
                             <descriptors>
-                                <descriptor>${basedir}/src/main/assembly/dist.xml</descriptor>
                                 <descriptor>${basedir}/src/main/assembly/app.xml</descriptor>
                             </descriptors>
                         </configuration>
@@ -126,6 +124,20 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+                    <prefix>git</prefix>
+                    <verbose>false</verbose>
+                    <generateGitPropertiesFile>true</generateGitPropertiesFile>
+                    <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties
+                    </generateGitPropertiesFilename>
+                    <format>properties</format>
+                    <gitDescribe>
+                        <skip>false</skip>
+                        <always>false</always>
+                        <dirty>-dirty</dirty>
+                    </gitDescribe>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -177,7 +189,7 @@
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
+            <artifactId>slf4j-nop</artifactId>
         </dependency>
         <!-- Testing -->
         <dependency>

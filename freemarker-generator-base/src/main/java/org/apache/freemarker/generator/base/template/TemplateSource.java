@@ -23,7 +23,7 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * Information how to load a template. The template is either
- * provided as source code or as template path resolved
+ * provided as literal text or as template path resolved
  * by FreeMarker's template loader.
  */
 public class TemplateSource {
@@ -64,10 +64,24 @@ public class TemplateSource {
         this.encoding = encoding;
     }
 
+    /**
+     * Template will be loaded from path using a file-base template loader.
+     *
+     * @param path template path
+     * @return file-based template source
+     */
     public static TemplateSource fromPath(String path) {
         Validate.notEmpty(path, "Template path is empty");
         return new TemplateSource(path, path, StandardCharsets.UTF_8);
     }
+
+    /**
+     * Template will be loaded from path using a file-base template loader.
+     *
+     * @param path template path
+     * @param encoding character encoding og template
+     * @return file-based template source
+     */
 
     public static TemplateSource fromPath(String path, Charset encoding) {
         Validate.notEmpty(path, "Template path is empty");
@@ -75,6 +89,13 @@ public class TemplateSource {
         return new TemplateSource(path, path, encoding);
     }
 
+    /**
+     * Template will be loaded from a literal content.
+     *
+     * @param name name of the template
+     * @param code template code
+     * @return template source
+     */
     public static TemplateSource fromCode(String name, String code) {
         Validate.notEmpty(name, "Template name is empty");
         Validate.notEmpty(code, "Template code is empty");

@@ -90,7 +90,6 @@ public class DataSourcesTest {
         assertEquals("unknown", dataSources().get(0).getName());
         assertEquals("pom.xml", dataSources().get(1).getName());
         assertEquals("server.invalid", dataSources().get(2).getName());
-        assertEquals("unknown", dataSources().getFirst().getName());
         assertEquals(3, dataSources.getList().size());
         assertEquals(3, dataSources.size());
         assertFalse(dataSources.isEmpty());

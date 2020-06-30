@@ -1,8 +1,8 @@
-# DataFrameTool
+## DataFrames
+
+A `DataFrame` allows declarative filtering and transformation of tabular data, i.e. less code to write. 
 
 The `DataFrameTool` uses [nRo/DataFrame](https://github.com/nRo/DataFrame) to convert tabular data into a `DataFrame`.
-
-A `DataFrame` allows declartive filtering and transformation of tabular data, i.e. little code to write.
 
 Currently the following sources are supported
 
@@ -10,7 +10,7 @@ Currently the following sources are supported
 * JSON arrays represented as collection of maps
 * Excel sheets represented as rows
 
-## CSV Examples
+### Working With CSV
 
 [nRo/DataFrame]("https://raw.githubusercontent.com/nRo/DataFrame/master/src/test/resources/users.csv") provides the following CSV file
 
@@ -27,15 +27,27 @@ Schmitt;30;Germany
 Meier;30;Germany
 ```
 
-and create a `DateFrame` using the following code
+and create a `DateFrame` using the following code snippet
 
 ```
-<#assign cvsFormat = CSVTool.formats["DEFAULT"].withHeader().withDelimiter(';')>
-<#assign csvParser = CSVTool.parse(DataSources.get(0), cvsFormat)>
-<#assign users = DataFrameTool.toDataFrame(csvParser)>
+<#assign dataSource = DataSources.get(0)>
+<#assign csvParser = CSVTool.parse(dataSource, CSVTool.formats["DATAFRAME"])>
+<#assign users = DataFrameTool.fromCSVParser(csvParser)>
 ```
 
-### Select By Age
+The example can be executed by running
+
+```
+bin/freemarker-cli -PCSV_SOURCE_FORMAT=DATAFRAME -t examples/templates/dataframe/example.ftl examples/data/csv/dataframe.csv
+```
+
+or
+
+```
+bin/freemarker-cli -PCSV_SOURCE_FORMAT=DATAFRAME -t examples/templates/dataframe/example.ftl https://raw.githubusercontent.com/nRo/DataFrame/master/src/test/resources/users.csv
+```
+
+#### Select By Age
 
 ```
 ${DataFrameTool.print(users.select("(age > 40)"))}
@@ -53,7 +65,7 @@ which shows
 └────────────┴────────────┴────────────┘
 ```
 
-### Complex Select & Sort
+#### Complex Select & Sort
 
 Now we want to create a new `DataFrame` by selecting `name` and `country`
 
@@ -82,7 +94,7 @@ which shows
 └────────────┴────────────┴────────────┘
 ```
 
-### Count Column Values
+#### Count Column Values
 
 Let's assume we want to count the records for each `country`
 
@@ -106,7 +118,7 @@ returns the following `DataFrame`
 └────────────┴────────────┘
 ```
 
-### Group By Age And Country
+#### Group By Age And Country
 
 Let's assume that we want to group the `DataFrame` by `age` and `country`
 
@@ -136,13 +148,14 @@ which results in
 └────────────┴────────────┘
 ```
 
-## JSON Examples
+### Working With JSON
 
-Here we load a `examples/data/json/github-users.json` which represents a tabular data be 
-being parsed as a list of maps and print the JSOB as dataframe
+Here we load a `examples/data/json/github-users.json` which represents a tabular 
+data being parsed as a list of maps and print the JSON as dataframe. Technically
+it is a list of maps hence we invoke `DataFrameTool.fromMaps()
 
 ```
-./bin/freemarker-cli \
+freemarker-cli \
   -i '${DataFrameTool.print(DataFrameTool.fromMaps(GsonTool.parse(DataSources.get(0))))}' \
   examples/data/json/github-users.json
 
@@ -165,7 +178,7 @@ being parsed as a list of maps and print the JSOB as dataframe
 └────────────┴────────────┴────────────┴────────────┴────────────┴────────────┴────────────┴────────────┴────────────┴────────────┴────────────┴────────────┴────────────┴────────────┴────────────┴────────────┴────────────┘
 ```
 
-## Excel Examples
+### Working With Excel
 
 Let's transform an Excel Sheet to a `DataFrame` being printed using the following template
 
@@ -182,7 +195,7 @@ Let's transform an Excel Sheet to a `DataFrame` being printed using the followin
 which is rendered by the following command line invocation
 
 ```
-./bin/freemarker-cli -t examples/templates/excel/dataframe/transform.ftl examples/data/excel/test.xls
+freemarker-cli -t examples/templates/excel/dataframe/transform.ftl examples/data/excel/test.xls
 
 ┌────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┐
 │#Text       │#Date       │#Number     │#Currency   │#Time       │#Percentag  │#Forumula   │

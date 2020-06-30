@@ -58,7 +58,10 @@ public class ListUtils {
      * @return copied array
      */
     public static <T> T coalesce(List<T> list) {
-        return list.stream().filter(Objects::nonNull).findFirst().orElseGet(() -> null);
+        return list.stream()
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(null);
     }
 
     /**

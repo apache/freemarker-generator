@@ -14,29 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.tools.grok;
+package org.apache.freemarker.generator.tools.dataframe.impl;
 
-import io.krakens.grok.api.Grok;
-import org.apache.freemarker.generator.base.util.StringUtils;
+import de.unknownreality.dataframe.DataFrame;
+import org.apache.freemarker.generator.base.table.Table;
 
-import java.util.Collections;
-import java.util.Map;
+import java.util.List;
 
-import static java.util.Objects.requireNonNull;
+public class ListConverter {
 
-public class GrokWrapper {
-
-    private final Grok grok;
-
-    public GrokWrapper(Grok grok) {
-        this.grok = requireNonNull(grok);
-    }
-
-    public Map<String, Object> match(String line) {
-        if (StringUtils.isEmpty(line)) {
-            return Collections.emptyMap();
-        }
-
-        return grok.match(line).capture();
+    /**
+     * Create a data frame from a list of rows. It is assumed
+     * that the rows represent tabular data.
+     *
+     * @param rows rows to build the data frame
+     * @param withFirstRowAsColumnNames column names as first row?
+     * @return <code>DataFrame</code>
+     */
+    public static DataFrame toDataFrame(List<List<Object>> rows, boolean withFirstRowAsColumnNames) {
+        final Table table = Table.fromRows(rows, withFirstRowAsColumnNames);
+        return ConverterUtils.toDataFrame(table);
     }
 }

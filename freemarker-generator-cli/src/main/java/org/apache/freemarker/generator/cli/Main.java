@@ -66,7 +66,7 @@ public class Main implements Callable<Integer> {
         public String interactiveTemplate;
     }
 
-    @Option(names = { "-b", "--basedir" }, description = "optional template base directory")
+    @Option(names = { "-b", "--basedir" }, description = "additional template base directory")
     String baseDir;
 
     @Option(names = { "-D", "--system-property" }, description = "set system property")
@@ -87,7 +87,7 @@ public class Main implements Callable<Integer> {
     @Option(names = { "-P", "--param" }, description = "set parameter")
     Map<String, String> parameters;
 
-    @Option(names = { "-s", "--data-source" }, description = "data source used for redering")
+    @Option(names = { "-s", "--data-source" }, description = "data source used for rendering")
     List<String> dataSources;
 
     @Option(names = { "--config" }, defaultValue = FREEMARKER_CLI_PROPERTY_FILE, description = "FreeMarker CLI configuration file")

@@ -14,27 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.tools.dataframe.converter;
+package org.apache.freemarker.generator.tools.grok.impl;
 
-import de.unknownreality.dataframe.DataFrame;
-import org.apache.freemarker.generator.base.table.Table;
+import io.krakens.grok.api.Grok;
+import org.apache.freemarker.generator.base.util.StringUtils;
 
-import java.util.Collection;
+import java.util.Collections;
 import java.util.Map;
 
-import static java.util.Collections.singletonList;
+import static java.util.Objects.requireNonNull;
 
-public class MapConverter {
+public class GrokWrapper {
 
-    /**
-     * Create a data frame from a list of maps. It is assumed
-     * that the map represent tabular data.
-     *
-     * @param maps list of map to build the data frame
-     * @return <code>DataFrame</code>
-     */
-    public static DataFrame toDataFrame(Collection<Map<String, Object>> maps) {
-        final Table table = Table.fromMaps(maps);
-        return ConverterUtils.toDataFrame(table);
+    private final Grok grok;
+
+    public GrokWrapper(Grok grok) {
+        this.grok = requireNonNull(grok);
+    }
+
+    public Map<String, Object> match(String line) {
+        if (StringUtils.isEmpty(line)) {
+            return Collections.emptyMap();
+        }
+
+        return grok.match(line).capture();
     }
 }

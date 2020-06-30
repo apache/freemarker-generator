@@ -19,7 +19,7 @@ package org.apache.freemarker.generator.base.util;
 import java.io.File;
 
 /**
- * Simple validation methods designed for interal use.
+ * Simple validation methods designed for internal use.
  */
 public final class Validate {
 

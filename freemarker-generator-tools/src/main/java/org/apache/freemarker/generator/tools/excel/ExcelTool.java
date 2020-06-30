@@ -53,7 +53,7 @@ public class ExcelTool {
             // make sure that the workbook is closed together with the data source
             return dataSource.addClosable(workbook);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to parse Ecxel data source: " + dataSource, e);
+            throw new RuntimeException("Failed to parse Excel data source: " + dataSource, e);
         }
     }
 
@@ -94,7 +94,7 @@ public class ExcelTool {
     /**
      * EXPERIMENTAL FEATURE
      * <p>
-     * Transform the sheet to table contaning raw Java objects, e.g. Date, Double, ...
+     * Transform the sheet to table containing raw Java objects, e.g. Date, Double, ...
      *
      * @param sheet Excel sheet
      * @return Table containing cells as raw Java objects
@@ -121,8 +121,8 @@ public class ExcelTool {
         final List<Object> columnValues = new ArrayList<>();
         for (int columnIndex = 0; columnIndex < row.getLastCellNum(); columnIndex++) {
             final Cell cell = row.getCell(columnIndex, CREATE_NULL_AS_BLANK);
-            final String formatedCellValue = dataFormatter.formatCellValue(cell).trim();
-            columnValues.add(formatedCellValue);
+            final String formattedCellValue = dataFormatter.formatCellValue(cell).trim();
+            columnValues.add(formattedCellValue);
         }
         return columnValues;
     }

@@ -21,6 +21,7 @@ import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
+import org.apache.freemarker.generator.tools.commonscsv.impl.CommonsCSVPrinterFacade;
 import org.junit.Test;
 
 import java.io.File;

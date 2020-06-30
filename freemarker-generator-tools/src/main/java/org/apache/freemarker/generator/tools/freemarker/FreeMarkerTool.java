@@ -22,11 +22,19 @@ import freemarker.template.Configuration;
 import freemarker.template.TemplateHashModel;
 import freemarker.template.utility.ObjectConstructor;
 
+/**
+ * Exposes useful Apache FreeMarker classes for advanced FTL usage.
+ */
 public class FreeMarkerTool {
 
-    private BeansWrapper beansWrapper;
-    private ObjectConstructor objectConstructor;
+    private volatile BeansWrapper beansWrapper;
+    private volatile ObjectConstructor objectConstructor;
 
+    /**
+     * See <a href="https://freemarker.apache.org/docs/api/freemarker/template/utility/ObjectConstructor.html">FreeMarker ObjectConstructor</a>.
+     *
+     * @return ObjectConstructor
+     */
     public synchronized ObjectConstructor getObjectConstructor() {
         if (objectConstructor == null) {
             objectConstructor = new ObjectConstructor();
@@ -34,6 +42,11 @@ public class FreeMarkerTool {
         return objectConstructor;
     }
 
+    /**
+     * See <a href="https://freemarker.apache.org/docs/api/freemarker/ext/beans/BeansWrapper.html">FreeMarker BeansWrapper</a>.
+     *
+     * @return BeansWrapper
+     */
     public synchronized BeansWrapper getBeansWrapper() {
         if (beansWrapper == null) {
             beansWrapper = new BeansWrapperBuilder(Configuration.VERSION_2_3_30).build();
@@ -51,7 +64,7 @@ public class FreeMarkerTool {
 
     @Override
     public String toString() {
-        return "Expose useful Apache FreeMarker classes";
+        return "Expose advanced Apache FreeMarker classes";
     }
 }
 

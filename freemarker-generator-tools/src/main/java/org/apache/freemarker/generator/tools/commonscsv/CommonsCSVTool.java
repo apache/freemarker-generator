@@ -22,6 +22,7 @@ import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.io.input.BOMInputStream;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.util.StringUtils;
+import org.apache.freemarker.generator.tools.commonscsv.impl.CommonsCSVPrinterFacade;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -72,7 +73,7 @@ public class CommonsCSVTool {
         }
 
         try {
-            // We don't need to close the underyling ByteArrayInputStream
+            // We don't need to close the underlying ByteArrayInputStream
             return parse(toInputStream(csv, UTF_8), UTF_8, format);
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse CSV", e);
@@ -115,7 +116,7 @@ public class CommonsCSVTool {
 
     /**
      * Map the given value of the CVS record into (key to record). If duplicates
-     * are encountered return the first occurence of the CVS record. The map
+     * are encountered return the first occurrence of the CVS record. The map
      * retains the insertion order of they keys.
      *
      * @param records records to process
@@ -128,7 +129,7 @@ public class CommonsCSVTool {
 
     /**
      * Map the given value of the CVS record into (key to record). If duplicates
-     * are encountered return the first occurence of the CVS record. The map
+     * are encountered return the first occurrence of the CVS record. The map
      * retains the insertion order of they keys.
      *
      * @param records records to process
@@ -162,8 +163,8 @@ public class CommonsCSVTool {
     }
 
     /**
-     * Maps the sybmolic name of a delimiter to a single character since it
-     * is not possible to define commony used delimiters on the command line.
+     * Maps the symbolic name of a delimiter to a single character since it
+     * is not possible to define commonly used delimiters on the command line.
      *
      * @param name symbolic name of delimiter
      * @return CSV delimiter
@@ -238,7 +239,7 @@ public class CommonsCSVTool {
     private static Map<String, CSVFormat> createCSVFormats() {
         final Map<String, CSVFormat> result = new HashMap<>();
         result.put("DEFAULT", CSVFormat.DEFAULT);
-        result.put("DATAFRAME", CSVFormat.DEFAULT.withDelimiter(';').withFirstRecordAsHeader());
+        result.put("DATAFRAME", CSVFormat.RFC4180.withDelimiter(';').withFirstRecordAsHeader());
         result.put("EXCEL", CSVFormat.EXCEL);
         result.put("INFORMIX_UNLOAD", CSVFormat.INFORMIX_UNLOAD);
         result.put("INFORMIX_UNLOAD_CSV", CSVFormat.INFORMIX_UNLOAD_CSV);

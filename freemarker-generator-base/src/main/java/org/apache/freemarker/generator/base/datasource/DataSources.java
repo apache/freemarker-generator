@@ -16,8 +16,10 @@
  */
 package org.apache.freemarker.generator.base.datasource;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.freemarker.generator.base.util.ClosableUtils;
 import org.apache.freemarker.generator.base.util.StringUtils;
+import org.apache.freemarker.generator.base.util.Validate;
 
 import java.io.Closeable;
 import java.util.ArrayList;
@@ -25,7 +27,6 @@ import java.util.Collection;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
-import static org.apache.commons.io.FilenameUtils.wildcardMatch;
 
 /**
  * Container for data sources with a couple of convenience functions to select
@@ -36,13 +37,14 @@ public class DataSources implements Closeable {
     private final List<DataSource> dataSources;
 
     public DataSources(Collection<DataSource> dataSources) {
+        Validate.notNull(dataSources, "No data sources provided");
         this.dataSources = new ArrayList<>(dataSources);
     }
 
     /**
      * Get the names of all data sources.
      *
-     * @return datas ource names
+     * @return data source names
      */
     public List<String> getNames() {
         return dataSources.stream()
@@ -109,24 +111,24 @@ public class DataSources implements Closeable {
     /**
      * Find data sources based on their name and globbing pattern.
      *
-     * @param wildcard globbing pattern
+     * @param wildcard the wildcard string to match against
      * @return list of matching data sources
      */
     public List<DataSource> find(String wildcard) {
         return dataSources.stream()
-                .filter(d -> wildcardMatch(d.getName(), wildcard))
+                .filter(d -> FilenameUtils.wildcardMatch(d.getName(), wildcard))
                 .collect(toList());
     }
 
     /**
      * Find data sources based on their group and and globbing pattern.
      *
-     * @param wildcard globbing pattern
+     * @param wildcard the wildcard string to match against
      * @return list of mathching data sources
      */
     public List<DataSource> findByGroup(String wildcard) {
         return dataSources.stream()
-                .filter(d -> wildcardMatch(d.getGroup(), wildcard))
+                .filter(d -> FilenameUtils.wildcardMatch(d.getGroup(), wildcard))
                 .collect(toList());
     }
 
@@ -139,9 +141,6 @@ public class DataSources implements Closeable {
     public String toString() {
         return "DataSource{" +
                 "dataSources=" + dataSources +
-                ", names=" + getNames() +
-                ", groups=" + getGroups() +
-                ", size=" + size() +
                 '}';
     }
 }

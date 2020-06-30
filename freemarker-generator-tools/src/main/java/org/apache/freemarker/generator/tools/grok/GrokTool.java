@@ -18,6 +18,7 @@ package org.apache.freemarker.generator.tools.grok;
 
 import io.krakens.grok.api.Grok;
 import io.krakens.grok.api.GrokCompiler;
+import org.apache.freemarker.generator.tools.grok.impl.GrokWrapper;
 
 public class GrokTool {
 

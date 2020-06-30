@@ -31,9 +31,8 @@ public class TemplateSourceFactoryTest {
 
     private static final String ANY_TEMPLATE_PATH = "any/template/path.ftl";
     private static final String ANY_FILE_NAME = "pom.xml";
-    private static final String ANY_URL = "https://jsonplaceholder.typicode.com/posts/2";
+    private static final String ANY_URL = "https://raw.githubusercontent.com/apache/freemarker-generator/master/freemarker-generator-cli/templates/info.ftl";
     private static final String ANY_ENVIRONMENT_VARIABLE = "env:///PWD";
-    private static final String ANY_NAMED_URI = "content:www=https://www.google.com?foo=bar#contenttype=application/json";
 
     @Test
     public void shouldCreateFromTemplatePath() {
@@ -66,7 +65,7 @@ public class TemplateSourceFactoryTest {
     }
 
     @Test
-    @Ignore("Requires internet access")
+    // @Ignore("Requires internet access")
     public void shouldCreateFromUrl() {
         final TemplateSource templateSource = TemplateSourceFactory.create(ANY_URL);
 
@@ -77,11 +76,11 @@ public class TemplateSourceFactoryTest {
     }
 
     @Test
-    @Ignore("Requires internet access")
+    // @Ignore("Requires internet access")
     public void shouldCreateFromNamedUri() {
-        final TemplateSource templateSource = TemplateSourceFactory.create(ANY_NAMED_URI);
+        final TemplateSource templateSource = TemplateSourceFactory.create("info=" + ANY_URL);
 
-        assertNotNull(templateSource.getName());
+        assertEquals("info", templateSource.getName());
         assertEquals(Origin.CODE, templateSource.getOrigin());
         assertNull(templateSource.getPath());
         assertFalse(templateSource.getCode().isEmpty());
