@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. We try to a
 ## 0.1.0-SNAPSHOT
 
 ### Added
+* [FREEMARKER-149] Support multiple template transformations on the command line
 * [FREEMARKER-144] Proof Of Concept for providing DataFrames
 * [FREEMARKER-142] Support Transformation Of Directories
 * [FREEMARKER-139] freemarker-cli: Provide GsonTool to align with Maven plugin
@@ -25,7 +26,7 @@ All notable changes to this project will be documented in this file. We try to a
 * [FREEMARKER-129] Use version "0.X.Y" to cater for API changes according to [Semantic Versioning](https://semver.org)
 
 ### Fixed 
-* [FREEMARKER-147] Complete Maven site documenation
+* [FREEMARKER-147] Complete Maven site documentation
 * [FREEMARKER-127] Site build fails with missing "org/apache/maven/doxia/siterenderer/DocumentContent"
 
 [FREEMARKER-127]: https://issues.apache.org/jira/browse/FREEMARKER-127
@@ -40,3 +41,4 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-144]: https://issues.apache.org/jira/browse/FREEMARKER-144
 [FREEMARKER-146]: https://issues.apache.org/jira/browse/FREEMARKER-146
 [FREEMARKER-147]: https://issues.apache.org/jira/browse/FREEMARKER-147
+[FREEMARKER-149]: https://issues.apache.org/jira/browse/FREEMARKER-149

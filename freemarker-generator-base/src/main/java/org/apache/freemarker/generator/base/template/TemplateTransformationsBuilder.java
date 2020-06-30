@@ -28,6 +28,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.singletonList;
@@ -50,7 +51,7 @@ public class TemplateTransformationsBuilder {
     private final List<String> excludes;
 
     /** Optional output file or directory */
-    private final List<File> outputs;
+    private final List<String> outputs;
 
     /** Optional user-supplied writer */
     private Writer writer;
@@ -73,12 +74,12 @@ public class TemplateTransformationsBuilder {
         final List<TemplateTransformation> result = new ArrayList<>();
 
         if (hasInteractiveTemplate()) {
-            final File outputFile = outputs.isEmpty() ? null : outputs.get(0);
+            final File outputFile = getOutputFile(0).orElse(null);
             result.add(resolveInteractiveTemplate(outputFile));
         } else {
             for (int i = 0; i < sources.size(); i++) {
                 final String source = sources.get(i);
-                final File output = i < outputs.size() ? outputs.get(i) : null;
+                final File output = getOutputFile(i).orElse(null);
                 result.addAll(resolve(source, output));
             }
         }
@@ -133,16 +134,23 @@ public class TemplateTransformationsBuilder {
         return this;
     }
 
+    public TemplateTransformationsBuilder addOutputs(List<String> outputs) {
+        if (outputs != null && !outputs.isEmpty()) {
+            this.outputs.addAll(outputs);
+        }
+        return this;
+    }
+
     public TemplateTransformationsBuilder addOutput(String output) {
         if (StringUtils.isNotEmpty(output)) {
-            this.outputs.add(new File(output));
+            this.outputs.add(output);
         }
         return this;
     }
 
     public TemplateTransformationsBuilder addOutput(File output) {
         if (output != null) {
-            this.outputs.add(output);
+            this.outputs.add(output.getAbsolutePath());
         }
         return this;
     }
@@ -250,6 +258,16 @@ public class TemplateTransformationsBuilder {
 
     private boolean hasInteractiveTemplate() {
         return template != null;
+    }
+
+    private Optional<File> getOutputFile(int i) {
+        if (outputs.isEmpty()) {
+            return Optional.empty();
+        } else if (i < outputs.size()) {
+            return Optional.of(new File(outputs.get(i)));
+        } else {
+            return Optional.of(new File(outputs.get(0)));
+        }
     }
 
     private static File getTemplateOutputFile(File templateDirectory, File templateFile, File outputDirectory) {
