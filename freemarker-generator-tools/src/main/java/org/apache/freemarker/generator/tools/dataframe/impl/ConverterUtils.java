@@ -30,15 +30,15 @@ public class ConverterUtils {
     }
 
     static String getAlphaColumnName(int num) {
-        String result = "";
+        final StringBuilder result = new StringBuilder();
         while (num > 0) {
             num--; // 1 => a, not 0 => a
             final int remainder = num % 26;
             final char digit = (char) (remainder + 65);
-            result = digit + result;
+            result.insert(0, digit);
             num = (num - remainder) / 26;
         }
-        return result;
+        return result.toString();
     }
 
     private static DataFrameBuilder addColumn(DataFrameBuilder builder, String columnName, Class<?> columnType) {
