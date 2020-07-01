@@ -8,7 +8,7 @@ This module provides provides the CLI for `Apache FreeMarker`.
 
 Now you can have a look at the command line options
 
-```
+```text
 freemarker-cli -h
 Usage: freemarker-cli (-t=<templates> [-t=<templates>]... |
                       -i=<interactiveTemplate>) [-hV] [--stdin] [-b=<baseDir>]
@@ -54,14 +54,14 @@ Apache FreeMarker CLI
 
 Check the version of the `Apache FreeMarker CLI`
 
-```
+```text
 freemarker-cli -V
 version=0.1.0-SNAPSHOT, time=2020-06-25T21:48:02+0200, commit=b320d00094be8789086ad6153d9d3fcaf4b8c75f
 ```
 
 Or run the examples 
 
-```
+```text
 ./run-examples.sh 
 templates/info.ftl
 examples/templates/demo.ftl
