@@ -134,8 +134,8 @@ public class TemplateTransformationsBuilder {
         return this;
     }
 
-    public TemplateTransformationsBuilder addOutputs(List<String> outputs) {
-        if (outputs != null && !outputs.isEmpty()) {
+    public TemplateTransformationsBuilder addOutputs(Collection<String> outputs) {
+        if (outputs != null) {
             this.outputs.addAll(outputs);
         }
         return this;
@@ -144,20 +144,6 @@ public class TemplateTransformationsBuilder {
     public TemplateTransformationsBuilder addOutput(String output) {
         if (StringUtils.isNotEmpty(output)) {
             this.outputs.add(output);
-        }
-        return this;
-    }
-
-    public TemplateTransformationsBuilder addOutput(File output) {
-        if (output != null) {
-            this.outputs.add(output.getAbsolutePath());
-        }
-        return this;
-    }
-
-    public TemplateTransformationsBuilder addOutputs(Collection<String> outputs) {
-        if (outputs != null) {
-            outputs.forEach(this::addOutput);
         }
         return this;
     }
