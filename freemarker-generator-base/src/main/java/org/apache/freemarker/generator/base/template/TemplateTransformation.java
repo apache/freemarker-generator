@@ -41,4 +41,12 @@ public class TemplateTransformation {
     public TemplateOutput getTemplateOutput() {
         return templateOutput;
     }
+
+    @Override
+    public String toString() {
+        return "TemplateTransformation{" +
+                "templateSource=" + templateSource +
+                ", templateOutput=" + templateOutput +
+                '}';
+    }
 }
