@@ -22,7 +22,7 @@ All notable changes to this project will be documented in this file. We try to a
 * [FREEMARKER-136] Fix broken `site:stage` build
 * [FREEMARKER-134] Rename `Document` to `Datasource` which also changes `--document` to `--datasource`
 * [FREEMARKER-129] Use `freemarker.configuration.setting` in `freemarker-cli.properties` to configure FreeMarker
-* [FREEMARKER-129] Provide a `toString()` metheod for all tools
+* [FREEMARKER-129] Provide a `toString()` method for all tools
 * [FREEMARKER-129] Use version "0.X.Y" to cater for API changes according to [Semantic Versioning](https://semver.org)
 
 ### Fixed 

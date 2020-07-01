@@ -53,7 +53,7 @@ public class RecursiveFileSupplier implements Supplier<List<File>> {
     /** File filter to apply */
     private final IOFileFilter fileFilter;
 
-    /** Diectory filter to apply */
+    /** Directory filter to apply */
     private final IOFileFilter directoryFilter;
 
     public RecursiveFileSupplier(Collection<String> sources, Collection<String> includes, Collection<String> excludes) {
@@ -119,10 +119,10 @@ public class RecursiveFileSupplier implements Supplier<List<File>> {
             return emptyList();
         }
 
-        return excludes.stream().map(RecursiveFileSupplier::exludeFilter).collect(toList());
+        return excludes.stream().map(RecursiveFileSupplier::excludeFilter).collect(toList());
     }
 
-    private static IOFileFilter exludeFilter(String exclude) {
+    private static IOFileFilter excludeFilter(String exclude) {
         return isEmpty(exclude) ?
                 VISIBLE :
                 new NotFileFilter(new OrFileFilter(new WildcardFileFilter(exclude), HIDDEN));

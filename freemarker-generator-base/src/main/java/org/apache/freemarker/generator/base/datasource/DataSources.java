@@ -124,7 +124,7 @@ public class DataSources implements Closeable {
      * Find data sources based on their group and and globbing pattern.
      *
      * @param wildcard the wildcard string to match against
-     * @return list of mathching data sources
+     * @return list of matching data sources
      */
     public List<DataSource> findByGroup(String wildcard) {
         return dataSources.stream()
