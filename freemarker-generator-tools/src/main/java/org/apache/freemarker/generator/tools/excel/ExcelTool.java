@@ -154,7 +154,7 @@ public class ExcelTool {
      * See https://stackoverflow.com/questions/15710888/reading-time-values-from-spreadsheet-using-poi-api.
      *
      * @param cell Cell containing some sort of date or time
-     * @return The corresponding Java istance
+     * @return The corresponding Java instance
      */
     private static synchronized Object toDateCellValue(Cell cell) {
         final Date date = cell.getDateCellValue();

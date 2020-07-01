@@ -40,7 +40,7 @@ Changing this file allows to tweak the underlying `Apache FreeMarker Configurati
 
 ### Storing User-Specific Templates
 
-Over the time you will accumalate more and more `Apache FreeMarker` templates - some of them are stored within a project but some of the more general might be free-floating and you don't want to store them in the installation directory.
+Over the time you will accumulate more and more `Apache FreeMarker` templates - some of them are stored within a project but some of the more general might be free-floating and you don't want to store them in the installation directory.
 
 To give those free-floating templates a home `Apache FreeMarker CLI` tries to read templates from `~/freemarker-cli`, e.g.
 

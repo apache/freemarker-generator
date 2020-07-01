@@ -18,7 +18,7 @@ package org.apache.freemarker.generator.cli;
 
 import org.apache.freemarker.generator.base.parameter.ParameterModelSupplier;
 import org.apache.freemarker.generator.base.util.ClosableUtils;
-import org.apache.freemarker.generator.base.util.StringUtils;
+import org.apache.freemarker.generator.base.util.ListUtils;
 import org.apache.freemarker.generator.cli.config.Settings;
 import org.apache.freemarker.generator.cli.picocli.GitVersionProvider;
 import org.apache.freemarker.generator.cli.task.FreeMarkerTask;
@@ -59,7 +59,7 @@ public class Main implements Callable<Integer> {
     TemplateSourceOptions templateSourceOptions;
 
     public static final class TemplateSourceOptions {
-        @Option(names = { "-t", "--template" }, description = "template to process")
+        @Option(names = { "-t", "--template" }, description = "templates to process")
         public List<String> templates;
 
         @Option(names = { "-i", "--interactive" }, description = "interactive template to process")
@@ -81,8 +81,8 @@ public class Main implements Callable<Integer> {
     @Option(names = { "-m", "--data-model" }, description = "data model used for rendering")
     List<String> dataModels;
 
-    @Option(names = { "-o", "--output" }, description = "output file or directory")
-    String outputFile;
+    @Option(names = { "-o", "--output" }, description = "output files or directories")
+    List<String> outputs;
 
     @Option(names = { "-P", "--param" }, description = "set parameter")
     Map<String, String> parameters;
@@ -94,10 +94,10 @@ public class Main implements Callable<Integer> {
     String configFile;
 
     @Option(names = { "--data-source-include" }, description = "file include pattern for data sources")
-    String include;
+    String dataSourceIncludePattern;
 
     @Option(names = { "--data-source-exclude" }, description = "file exclude pattern for data sources")
-    String exclude;
+    String dataSourceExcludePattern;
 
     @Option(names = { "--output-encoding" }, description = "encoding of output, e.g. UTF-8", defaultValue = "UTF-8")
     String outputEncoding;
@@ -174,19 +174,29 @@ public class Main implements Callable<Integer> {
             final FreeMarkerTask freeMarkerTask = new FreeMarkerTask(settings);
             return freeMarkerTask.call();
         } finally {
-            if (settings.hasOutputFile()) {
+            if (settings.hasOutputs()) {
                 ClosableUtils.closeQuietly(settings.getWriter());
             }
         }
     }
 
-    private void validate() {
+    void validate() {
         // "-d" or "--data-source" parameter shall not contain wildcard characters
         if (dataSources != null) {
             for (String source : dataSources) {
                 if (isFileSource(source) && (source.contains("*") || source.contains("?"))) {
                     throw new ParameterException(spec.commandLine(), "No wildcards supported for data source: " + source);
                 }
+            }
+        }
+
+        // does the templates match the expected outputs?!
+        // -) no output means it goes to stdout
+        // -) for each template there should be an output
+        final List<String> templates = templateSourceOptions.templates;
+        if (templates != null && templates.size() > 1) {
+            if (outputs != null && outputs.size() != templates.size()) {
+                throw new ParameterException(spec.commandLine(), "Template output does not match specified templates");
             }
         }
     }
@@ -198,28 +208,28 @@ public class Main implements Callable<Integer> {
                 .isReadFromStdin(readFromStdin)
                 .setArgs(args)
                 .setConfiguration(configuration)
-                .setDataSourceIncludePattern(include)
-                .setDataSourceExcludePattern(exclude)
+                .setDataModels(dataModels)
+                .setDataSources(getCombinedDataSources())
+                .setDataSourceIncludePattern(dataSourceIncludePattern)
+                .setDataSourceExcludePattern(dataSourceExcludePattern)
                 .setInputEncoding(inputEncoding)
                 .setInteractiveTemplate(templateSourceOptions.interactiveTemplate)
                 .setLocale(locale)
                 .setOutputEncoding(outputEncoding)
-                .setOutputFile(outputFile)
+                .setOutputs(outputs)
                 .setParameters(parameterModelSupplier.get())
-                .setDataSources(getCombinedDataSources())
-                .setDataModels(dataModels)
                 .setSystemProperties(systemProperties != null ? systemProperties : new Properties())
                 .setTemplateDirectories(templateDirectories)
                 .setTemplateNames(templateSourceOptions.templates)
-                .setWriter(writer(outputFile, outputEncoding))
+                .setWriter(writer(outputs, outputEncoding))
                 .build();
     }
 
-    private Writer writer(String outputFile, String outputEncoding) {
+    private Writer writer(List<String> outputFiles, String outputEncoding) {
         try {
             if (userSuppliedWriter != null) {
                 return userSuppliedWriter;
-            } else if (StringUtils.isEmpty(outputFile)) {
+            } else if (ListUtils.isNullOrEmpty(outputFiles)) {
                 return new BufferedWriter(new OutputStreamWriter(System.out, outputEncoding));
             } else {
                 return null;
