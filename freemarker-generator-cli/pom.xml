@@ -73,6 +73,8 @@
                             <target>
                                 <copy file="CHANGELOG.md" todir="./target/appassembler" />
                                 <copy file="README.md" todir="./target/appassembler" />
+                                <copy file="LICENSE" todir="./target/appassembler" />
+                                <copy file="NOTICE" todir="./target/appassembler" />
                                 <copy file="./src/main/scripts/run-examples.sh" todir="./target/appassembler" />
                                 <copy todir="./target/appassembler/templates">
                                     <fileset dir="templates" />

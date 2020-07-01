@@ -12,22 +12,23 @@ Now you can have a look at the command line options
 freemarker-cli -h
 Usage: freemarker-cli (-t=<templates> [-t=<templates>]... |
                       -i=<interactiveTemplate>) [-hV] [--stdin] [-b=<baseDir>]
-                      [--config=<configFile>] [--data-source-exclude=<exclude>]
-                      [--data-source-include=<include>] [-e=<inputEncoding>]
-                      [-l=<locale>] [-o=<outputFile>]
+                      [--config=<configFile>]
+                      [--data-source-exclude=<dataSourceExcludePattern>]
+                      [--data-source-include=<dataSourceIncludePattern>]
+                      [-e=<inputEncoding>] [-l=<locale>]
                       [--output-encoding=<outputEncoding>] [--times=<times>]
                       [-D=<String=String>]... [-m=<dataModels>]...
-                      [-P=<String=String>]... [-s=<dataSources>]...
-                      [<sources>...]
+                      [-o=<outputs>]... [-P=<String=String>]...
+                      [-s=<dataSources>]... [<sources>...]
 Apache FreeMarker CLI
       [<sources>...]        data source files and/or directories
-  -b, --basedir=<baseDir>   optional template base directory
+  -b, --basedir=<baseDir>   additional template base directory
       --config=<configFile> FreeMarker CLI configuration file
   -D, --system-property=<String=String>
                             set system property
-      --data-source-exclude=<exclude>
+      --data-source-exclude=<dataSourceExcludePattern>
                             file exclude pattern for data sources
-      --data-source-include=<include>
+      --data-source-include=<dataSourceIncludePattern>
                             file include pattern for data sources
   -e, --input-encoding=<inputEncoding>
                             encoding of data source
@@ -37,16 +38,16 @@ Apache FreeMarker CLI
   -l, --locale=<locale>     locale being used for the output, e.g. 'en_US'
   -m, --data-model=<dataModels>
                             data model used for rendering
-  -o, --output=<outputFile> output file or directory
+  -o, --output=<outputs>    output files or directories
       --output-encoding=<outputEncoding>
                             encoding of output, e.g. UTF-8
   -P, --param=<String=String>
                             set parameter
   -s, --data-source=<dataSources>
-                            data source used for redering
+                            data source used for rendering
       --stdin               read data source from stdin
   -t, --template=<templates>
-                            template to process
+                            templates to process
       --times=<times>       re-run X times for profiling
   -V, --version             Print version information and exit.
 ```
