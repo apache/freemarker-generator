@@ -91,7 +91,12 @@
         <developer>
             <name>Siegfried Goeschl</name>
             <organization>ASF</organization>
-            <organizationUrl>https://github.com/sgoeschl</organizationUrl>
+            <organizationUrl>https://www.apache.org</organizationUrl>
+        </developer>
+        <developer>
+            <name>Daniel Dekany</name>
+            <organization>ASF</organization>
+            <organizationUrl>https://www.apache.org</organizationUrl>
         </developer>
     </developers>
 
