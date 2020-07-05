@@ -40,7 +40,7 @@ and [Template Includes](https://freemarker.apache.org/docs/ref_directive_include
 
 ### Free-Style Template Loading
 
-The previosly described `Template Loaders` do not support absolute template files or arbitraRY URLS - this behaviour 
+The previosly described `Template Loaders` do not support absolute template files or arbitrary URLS - this behaviour 
 stems from security aspects when running `Apache FreeMarker` on the server side. For a command-line tool this is mostly
 irrelevant therefore any template file outside of the template loader directories can be loaded 
 

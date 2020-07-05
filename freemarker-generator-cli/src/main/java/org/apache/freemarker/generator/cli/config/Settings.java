@@ -17,6 +17,7 @@
 package org.apache.freemarker.generator.cli.config;
 
 import org.apache.freemarker.generator.base.FreeMarkerConstants.Model;
+import org.apache.freemarker.generator.base.util.ListUtils;
 import org.apache.freemarker.generator.base.util.LocaleUtils;
 import org.apache.freemarker.generator.base.util.NonClosableWriterWrapper;
 
@@ -74,8 +75,8 @@ public class Settings {
     /** Enable verbose mode (currently not used) **/
     private final boolean verbose;
 
-    /** Optional output file or directory if not written to stdout */
-    private final File output;
+    /** Optional output files or directories if not written to stdout */
+    private final List<String> outputs;
 
     /** Optional include pattern for recursive directly search of data source files */
     private final String dataSourceIncludePattern;
@@ -115,7 +116,7 @@ public class Settings {
             Charset inputEncoding,
             Charset outputEncoding,
             boolean verbose,
-            File output,
+            List<String> outputs,
             String dataSourceIncludePattern,
             String dataSourceExcludePattern,
             Locale locale,
@@ -138,7 +139,7 @@ public class Settings {
         this.inputEncoding = inputEncoding;
         this.outputEncoding = outputEncoding;
         this.verbose = verbose;
-        this.output = output;
+        this.outputs = outputs;
         this.dataSourceIncludePattern = dataSourceIncludePattern;
         this.dataSourceExcludePattern = dataSourceExcludePattern;
         this.locale = requireNonNull(locale);
@@ -199,8 +200,8 @@ public class Settings {
         return verbose;
     }
 
-    public File getOutput() {
-        return output;
+    public List<String> getOutputs() {
+        return outputs;
     }
 
     public String getDataSourceIncludePattern() {
@@ -235,8 +236,8 @@ public class Settings {
         return userSystemProperties;
     }
 
-    public boolean hasOutputFile() {
-        return output != null;
+    public boolean hasOutputs() {
+        return ListUtils.isNotEmpty(outputs);
     }
 
     public Writer getWriter() {
@@ -277,7 +278,7 @@ public class Settings {
                 ", inputEncoding=" + inputEncoding +
                 ", outputEncoding=" + outputEncoding +
                 ", verbose=" + verbose +
-                ", outputFile=" + output +
+                ", outputs=" + outputs +
                 ", include='" + dataSourceIncludePattern + '\'' +
                 ", exclude='" + dataSourceExcludePattern + '\'' +
                 ", locale=" + locale +
@@ -298,7 +299,7 @@ public class Settings {
         private String inputEncoding;
         private String outputEncoding;
         private boolean verbose;
-        private String outputFile;
+        private List<String> outputs;
         private String dataSourceIncludePattern;
         private String dataSourceExcludePattern;
         private String locale;
@@ -380,8 +381,10 @@ public class Settings {
             return this;
         }
 
-        public SettingsBuilder setOutputFile(String outputFile) {
-            this.outputFile = outputFile;
+        public SettingsBuilder setOutputs(List<String> outputs) {
+            if (outputs != null) {
+                this.outputs = outputs;
+            }
             return this;
         }
 
@@ -449,7 +452,6 @@ public class Settings {
             final Charset inputEncoding = Charset.forName(this.inputEncoding);
             final Charset outputEncoding = Charset.forName(this.outputEncoding);
             final String currLocale = locale != null ? locale : getDefaultLocale();
-            final File currOutputFile = outputFile != null ? new File(outputFile) : null;
 
             return new Settings(
                     configuration,
@@ -462,7 +464,7 @@ public class Settings {
                     inputEncoding,
                     outputEncoding,
                     verbose,
-                    currOutputFile,
+                    outputs,
                     dataSourceIncludePattern,
                     dataSourceExcludePattern,
                     LocaleUtils.parseLocale(currLocale),

@@ -75,6 +75,14 @@ public class TemplateOutput {
         return writer != null ? writer : fileWriter();
     }
 
+    @Override
+    public String toString() {
+        return "TemplateOutput{" +
+                "writer=" + writer +
+                ", file=" + file +
+                '}';
+    }
+
     private FileWriter fileWriter() {
         Validate.notNull(file, "Output file is null");
 

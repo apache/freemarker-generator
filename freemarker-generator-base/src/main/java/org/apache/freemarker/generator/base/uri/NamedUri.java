@@ -25,7 +25,7 @@ import static org.apache.freemarker.generator.base.util.StringUtils.emptyToNull;
 import static org.apache.freemarker.generator.base.util.StringUtils.isEmpty;
 
 /**
- * Caputeres the information of a user-supplied "named URI".
+ * Captures the information of a user-supplied "named URI".
  */
 public class NamedUri {
 

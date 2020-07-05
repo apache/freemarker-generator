@@ -73,7 +73,7 @@ public class Suppliers {
                 .addSources(settings.getTemplates())
                 .addInclude(settings.getTemplateFileIncludePattern())
                 .addExclude(settings.getTemplateFileExcludePattern())
-                .addOutput(settings.getOutput())
+                .addOutputs(settings.getOutputs())
                 .setWriter(settings.getWriter())
                 .build();
     }

@@ -20,6 +20,7 @@ import org.apache.freemarker.generator.cli.config.Settings.SettingsBuilder;
 import org.junit.Test;
 
 import java.io.StringWriter;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,7 @@ public class SettingsTest {
         assertEquals(ANY_INCLUDE, settings.getDataSourceIncludePattern());
         assertEquals(ANY_INPUT_ENCODING, settings.getInputEncoding().name());
         assertEquals(ANY_OUTPUT_ENCODING, settings.getOutputEncoding().name());
-        assertEquals(ANY_OUTPUT_FILE, settings.getOutput().getName());
+        assertEquals(ANY_OUTPUT_FILE, settings.getOutputs().get(0));
         assertEquals(ANY_TEMPLATE_NAME, settings.getTemplates().get(0));
         assertNotNull(settings.getDataSources());
         assertNotNull(settings.getUserParameters());
@@ -74,7 +75,7 @@ public class SettingsTest {
                 .setInteractiveTemplate(ANY_INTERACTIVE_TEMPLATE)
                 .setLocale(ANY_LOCALE)
                 .setOutputEncoding(ANY_OUTPUT_ENCODING)
-                .setOutputFile(ANY_OUTPUT_FILE)
+                .setOutputs(Collections.singletonList(ANY_OUTPUT_FILE))
                 .setParameters(ANY_USER_PARAMETERS)
                 .setDataSources(ANY_SOURCES)
                 .setSystemProperties(ANY_SYSTEM_PROPERTIES)

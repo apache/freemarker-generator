@@ -18,6 +18,7 @@ package org.apache.freemarker.generator.cli;
 
 import org.junit.Test;
 import picocli.CommandLine;
+import picocli.CommandLine.ParameterException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -109,6 +110,13 @@ public class PicocliTest {
         final Main main = parse("-i", INTERACTIVE_TEMPLATE);
 
         assertEquals(INTERACTIVE_TEMPLATE, main.templateSourceOptions.interactiveTemplate);
+    }
+
+    @Test(expected = ParameterException.class)
+    public void shouldThrowParameterExceptionForMismatchedTemplateOutput() {
+        final Main main = parse("-t", "foo.ftl", "-t", "bar.ftl", "-o", "foo.out");
+
+        main.validate();
     }
 
     private static Main parse(String... args) {

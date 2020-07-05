@@ -26,6 +26,10 @@ public class ListUtils {
         return list == null || list.isEmpty();
     }
 
+    public static <T> boolean isNotEmpty(final List<T> list) {
+        return !isNullOrEmpty(list);
+    }
+
     /**
      * Transposes the given tabular data, swapping rows with columns.
      *

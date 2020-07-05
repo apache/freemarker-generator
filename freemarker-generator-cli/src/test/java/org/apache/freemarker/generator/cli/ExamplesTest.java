@@ -121,9 +121,21 @@ public class ExamplesTest extends AbstractMainTest {
     }
 
     @Test
-    public void shouldTransformTemplateDirectory() throws IOException {
+    public void shouldTransformSingleTemplateDirectory() throws IOException {
         assertTrue(execute("-t examples/data/template").contains("server.name=127.0.0.1"));
         assertTrue(execute("-t examples/data/template -PNGINX_HOSTNAME=my.domain.com").contains("server.name=my.domain.com"));
+    }
+
+    @Test
+    public void shouldTransformMultipleTemplateDirectories() throws IOException {
+        assertValid(execute("-t examples/data/template -t examples/data/template"));
+        assertValid(execute("-t examples/data/template -o target/out/template1 -t examples/data/template -o target/out/template2"));
+    }
+
+    @Test
+    public void shouldTransformMultipleTemplates() throws IOException {
+        assertValid(execute("-t templates/csv/md/transform.ftl -t templates/csv/html/transform.ftl examples/data/csv/contract.csv"));
+        assertValid(execute("-t templates/csv/md/transform.ftl -o target/contract.md -t templates/csv/html/transform.ftl -o target/contract.html examples/data/csv/contract.csv"));
     }
 
     @Test
@@ -141,7 +153,8 @@ public class ExamplesTest extends AbstractMainTest {
             shouldRunXmlExamples();
             shouldRunGrokExamples();
             shouldRunInteractiveTemplateExamples();
-            shouldTransformTemplateDirectory();
+            shouldTransformSingleTemplateDirectory();
+            shouldTransformMultipleTemplates();
             shouldRunWithExposedEnvironmentVariableExamples();
         }
     }
