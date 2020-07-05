@@ -126,7 +126,7 @@ public class DataFrameToolTest {
         assertNotNull(dataFrame.getColumn("Time"));
         assertNotNull(dataFrame.getColumn("Percentage"));
         assertNotNull(dataFrame.getColumn("Forumula"));
-        assertEquals("Row 1", dataFrame.getValue(0,0));
+        assertEquals("Row 1", dataFrame.getValue(0, 0));
         assertEquals("C3*F3", dataFrame.getColumn("Forumula").get(1));
 
     }
