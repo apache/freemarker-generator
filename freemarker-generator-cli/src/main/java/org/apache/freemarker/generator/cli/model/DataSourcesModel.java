@@ -10,13 +10,22 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateSequenceModel;
 import org.apache.freemarker.generator.base.datasource.DataSources;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import static java.util.Objects.requireNonNull;
+
+/**
+ * Wraps an instance of <code>DataSources</code> into a more user-friendly <code>BeanModel</code>
+ * so the user can use FreeMarker directives and features instead of using the exposed methods.
+ */
 public class DataSourcesModel extends BeanModel implements TemplateSequenceModel, TemplateHashModel {
 
     private final DataSources dataSources;
     private final BeansWrapper objectWrapper;
 
     public DataSourcesModel(DataSources dataSources, BeansWrapper objectWrapper) {
-        super(dataSources, objectWrapper);
+        super(requireNonNull(dataSources), requireNonNull(objectWrapper));
         this.dataSources = dataSources;
         this.objectWrapper = objectWrapper;
     }
@@ -34,5 +43,15 @@ public class DataSourcesModel extends BeanModel implements TemplateSequenceModel
     @Override
     public int size() {
         return dataSources.size();
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return dataSources.isEmpty();
+    }
+
+    @Override
+    protected Set<Object> keySet() {
+        return new LinkedHashSet<Object>(dataSources.getNames());
     }
 }

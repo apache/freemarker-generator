@@ -160,6 +160,7 @@ public class ExamplesTest extends AbstractMainTest {
         assertEquals("false", execute(args + " -i ${DataSources.isEmpty()?c}"));
         assertEquals("2", execute(args + " -i ${DataSources.size()}"));
         assertEquals("worx", execute(args + " -i ${DataSources.close()}worx"));
+        assertEquals("text/csv", execute(args + " -i ${DataSources[1].contentType}"));
     }
 
     @Test
