@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. We try to a
 ## 0.1.0-SNAPSHOT
 
 ### Added
+* [FREEMARKER-148] Make usage of "DataSources" more "Freemarker" like
 * [FREEMARKER-149] Support multiple template transformations on the command line
 * [FREEMARKER-144] Proof Of Concept for providing DataFrames
 * [FREEMARKER-142] Support Transformation Of Directories
@@ -41,4 +42,5 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-144]: https://issues.apache.org/jira/browse/FREEMARKER-144
 [FREEMARKER-146]: https://issues.apache.org/jira/browse/FREEMARKER-146
 [FREEMARKER-147]: https://issues.apache.org/jira/browse/FREEMARKER-147
+[FREEMARKER-148]: https://issues.apache.org/jira/browse/FREEMARKER-148
 [FREEMARKER-149]: https://issues.apache.org/jira/browse/FREEMARKER-149

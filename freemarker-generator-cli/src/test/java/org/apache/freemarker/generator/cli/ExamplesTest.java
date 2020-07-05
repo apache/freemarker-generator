@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -136,6 +137,29 @@ public class ExamplesTest extends AbstractMainTest {
     public void shouldTransformMultipleTemplates() throws IOException {
         assertValid(execute("-t templates/csv/md/transform.ftl -t templates/csv/html/transform.ftl examples/data/csv/contract.csv"));
         assertValid(execute("-t templates/csv/md/transform.ftl -o target/contract.md -t templates/csv/html/transform.ftl -o target/contract.html examples/data/csv/contract.csv"));
+    }
+
+    @Test
+    public void shouldSupportDataSourcesAccessInFTL() throws IOException {
+        final String args = "examples/data/json/github-users.json examples/data/csv/contract.csv";
+
+        // check FreeMarker directives
+        assertEquals("true", execute(args + " -i ${DataSources?has_content?c}"));
+        assertEquals("2", execute(args + " -i ${DataSources?size}"));
+
+        // check FTL array-style access
+        assertEquals("github-users.json", execute(args + " -i ${DataSources[0].name}"));
+        assertEquals("github-users.json", execute(args + " -i ${DataSources.get(0).name}"));
+
+        // check FTL map-style access
+        assertEquals("github-users.json", execute(args + " -i ${DataSources[\"github-users.json\"].name}"));
+        assertEquals("github-users.json", execute(args + " -i ${DataSources.get(\"github-users.json\").name}"));
+
+        // check arbitrary methods
+        assertEquals("false", execute(args + " -i ${DataSources.empty?c}"));
+        assertEquals("false", execute(args + " -i ${DataSources.isEmpty()?c}"));
+        assertEquals("2", execute(args + " -i ${DataSources.size()}"));
+        assertEquals("worx", execute(args + " -i ${DataSources.close()}worx"));
     }
 
     @Test
