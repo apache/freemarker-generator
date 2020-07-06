@@ -156,14 +156,14 @@ public class DataSourceFactoryTest {
     }
 
     @Test
-    public void shouldCreateDataSourceFromEnviromentVariable() {
-        final NamedUri namedUri = NamedUriStringParser.parse("pwd=env:///PWD");
+    public void shouldCreateDataSourceFromEnvironmentVariable() {
+        final NamedUri namedUri = NamedUriStringParser.parse("pwd=env:///JAVA_HOME");
         final DataSource dataSource = DataSourceFactory.fromNamedUri(namedUri);
 
         assertEquals("pwd", dataSource.getName());
         assertEquals("default", dataSource.getGroup());
         assertEquals(UTF_8, dataSource.getCharset());
-        assertEquals("env:///PWD", dataSource.getUri().toString());
+        assertEquals("env:///JAVA_HOME", dataSource.getUri().toString());
         assertEquals("text/plain", dataSource.getContentType());
     }
 }
