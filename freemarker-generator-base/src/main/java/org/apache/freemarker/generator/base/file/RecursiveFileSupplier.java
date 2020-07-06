@@ -25,6 +25,7 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -71,7 +72,7 @@ public class RecursiveFileSupplier implements Supplier<List<File>> {
         return sources.stream()
                 .map(this::resolve)
                 .flatMap(Collection::stream)
-                .sorted()
+                .sorted(Comparator.comparing(File::getAbsolutePath))
                 .collect(toList());
     }
 

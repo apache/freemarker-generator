@@ -67,7 +67,7 @@ public class DataSourceTest {
             assertEquals("pom", dataSource.getBaseName());
             assertEquals("xml", dataSource.getExtension());
             assertEquals(ANY_FILE.toURI().toString(), dataSource.getUri().toString());
-            assertEquals(Charset.defaultCharset(), dataSource.getCharset());
+            assertEquals(ANY_CHAR_SET.name(), dataSource.getCharset().name());
             assertEquals("application/xml", dataSource.getContentType());
             assertTrue(dataSource.getLength() > 0);
             assertFalse(dataSource.getText().isEmpty());
