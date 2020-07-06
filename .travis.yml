@@ -1,4 +1,7 @@
 language: java
+os:
+  - windows
+  - linux
 jdk:
   - openjdk8
   - openjdk9
