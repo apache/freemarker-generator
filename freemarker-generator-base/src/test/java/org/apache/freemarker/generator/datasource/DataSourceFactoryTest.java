@@ -16,6 +16,7 @@
  */
 package org.apache.freemarker.generator.datasource;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.freemarker.generator.base.uri.NamedUri;
@@ -40,7 +41,7 @@ import static org.junit.Assert.assertEquals;
 
 public class DataSourceFactoryTest {
 
-    private static final String PWD = Paths.get(".").toAbsolutePath().normalize().toString();
+    private static final String PWD = FilenameUtils.separatorsToUnix(new File("").getAbsolutePath());
     private static final String ANY_TEXT = "Hello World";
     private static final String ANY_FILE_NAME = "pom.xml";
     private static final String ANY_FILE_URI = format("file:///%s/pom.xml", PWD);
