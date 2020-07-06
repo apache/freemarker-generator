@@ -32,7 +32,7 @@ public class TemplateSourceFactoryTest {
     private static final String ANY_TEMPLATE_PATH = "any/template/path.ftl";
     private static final String ANY_FILE_NAME = "pom.xml";
     private static final String ANY_URL = "https://raw.githubusercontent.com/apache/freemarker-generator/master/freemarker-generator-cli/templates/info.ftl";
-    private static final String ANY_ENVIRONMENT_VARIABLE = "env:///PWD";
+    private static final String ANY_ENVIRONMENT_VARIABLE = "env:///JAVA_HOME";
 
     @Test
     public void shouldCreateFromTemplatePath() {
@@ -58,7 +58,7 @@ public class TemplateSourceFactoryTest {
     public void shouldCreateFromEnvironmentVariable() {
         final TemplateSource templateSource = TemplateSourceFactory.create(ANY_ENVIRONMENT_VARIABLE);
 
-        assertEquals("PWD", templateSource.getName());
+        assertEquals("JAVA_HOME", templateSource.getName());
         assertEquals(Origin.CODE, templateSource.getOrigin());
         assertNull(templateSource.getPath());
         assertFalse(templateSource.getCode().isEmpty());
