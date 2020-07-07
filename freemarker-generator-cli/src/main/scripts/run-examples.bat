@@ -41,9 +41,9 @@ REM =========================================================================
 REM Interactive Mode
 REM =========================================================================
 
-%FREEMARKER_CMD% -i '${JsonPathTool.parse(DataSources.first).read("$.info.title")}' examples\data\json\swagger-spec.json > target\out\interactive-json.txt
-%FREEMARKER_CMD% -i '${XmlTool.parse(DataSources.first)["recipients\person[1]\name"]}' examples\data\xml\recipients.xml > target\out\interactive-xml.txt
-%FREEMARKER_CMD% -i '${JsoupTool.parse(DataSources.first).select("a")[0]}' examples\data\html\dependencies.html > target\out\interactive-html.txt
+%FREEMARKER_CMD% -i '${JsonPathTool.parse(DataSources.first).read("""$.info.title""")}' examples\data\json\swagger-spec.json > target\out\interactive-json.txt
+%FREEMARKER_CMD% -i '${XmlTool.parse(DataSources.first)["""recipients/person[1]/name"""]}' examples\data\xml\recipients.xml > target\out\interactive-xml.txt
+%FREEMARKER_CMD% -i '${JsoupTool.parse(DataSources.first).select("""a""")[0]}' examples\data\html\dependencies.html > target\out\interactive-html.txt
 %FREEMARKER_CMD% -i '${GsonTool.toJson(YamlTool.parse(DataSources.get(0)))}' examples\data\yaml\swagger-spec.yaml > target\out\interactive-swagger.json
 %FREEMARKER_CMD% -i '${YamlTool.toYaml(GsonTool.parse(DataSources.get(0)))}' examples\data\json\swagger-spec.json > target\out\interactive-swagger.yaml
 %FREEMARKER_CMD% -i '${DataFrameTool.print(DataFrameTool.fromMaps(GsonTool.parse(DataSources.get(0))))}' examples\data\json\github-users.json > target\out\interactive-dataframe.txt
@@ -133,10 +133,8 @@ echo "examples\templates\json\csv\swagger-endpoints.ftl"
 echo "templates\json\yaml\transform.ftl"
 %FREEMARKER_CMD% -t templates\json\yaml\transform.ftl examples\data\json\swagger-spec.json > target\out\swagger-spec.yaml
 
-if hash curl 2>\dev\null; then
 echo "examples\templates\json\md\github-users.ftl"
-%FREEMARKER_CMD% -t examples\templates\json\md\github-users.ftl examples\data\json\github-users.json > target\out\github-users-curl.md
-fi
+%FREEMARKER_CMD% -t examples\templates\json\md\github-users.ftl examples\data\json\github-users.json > target\out\github-users.md
 
 REM =========================================================================
 REM Properties

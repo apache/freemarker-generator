@@ -153,10 +153,8 @@ $FREEMARKER_CMD -t examples/templates/json/csv/swagger-endpoints.ftl examples/da
 echo "templates/json/yaml/transform.ftl"
 $FREEMARKER_CMD -t templates/json/yaml/transform.ftl examples/data/json/swagger-spec.json > target/out/swagger-spec.yaml || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
-if hash curl 2>/dev/null; then
 echo "examples/templates/json/md/github-users.ftl"
-$FREEMARKER_CMD -t examples/templates/json/md/github-users.ftl examples/data/json/github-users.json > target/out/github-users-curl.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
-fi
+$FREEMARKER_CMD -t examples/templates/json/md/github-users.ftl examples/data/json/github-users.json > target/out/github-users.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
 # Properties
