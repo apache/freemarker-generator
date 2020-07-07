@@ -69,10 +69,11 @@ public class RecursiveFileSupplier implements Supplier<List<File>> {
             return emptyList();
         }
 
+        // sort the result to have a reproducible order across OS
         return sources.stream()
                 .map(this::resolve)
                 .flatMap(Collection::stream)
-                .sorted(Comparator.comparing(File::getAbsolutePath))
+                .sorted(Comparator.comparing(File::getName))
                 .collect(toList());
     }
 
