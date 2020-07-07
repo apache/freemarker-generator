@@ -35,7 +35,7 @@ REM Demo
 REM =========================================================================
 
 echo "examples\templates\demo.ftl"
-%FREEMARKER_CMD% -t examples\templates\demo.ftl README.md > target\out\demo.txt
+%FREEMARKER_CMD% -t examples\templates\demo.ftl README.md --output-encoding CP1252 > target\out\demo.txt
 
 REM =========================================================================
 REM Interactive Mode
