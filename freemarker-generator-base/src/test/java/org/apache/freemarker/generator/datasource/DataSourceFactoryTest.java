@@ -30,7 +30,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.file.Paths;
 
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -47,6 +46,7 @@ public class DataSourceFactoryTest {
     private static final String ANY_FILE_URI = format("file:///%s/pom.xml", PWD);
     private static final Charset ANY_CHAR_SET = UTF_8;
     private static final File ANY_FILE = new File(ANY_FILE_NAME);
+    private static final String ANY_ENV_VARIABLE = "JAVA_HOME";
     private static final String ANY_NAMED_URL_STRING = "content:www=https://www.google.com?foo=bar#contenttype=application/json";
 
     @Test
@@ -158,13 +158,14 @@ public class DataSourceFactoryTest {
 
     @Test
     public void shouldCreateDataSourceFromEnvironmentVariable() {
-        final NamedUri namedUri = NamedUriStringParser.parse("pwd=env:///JAVA_HOME");
+        final String uri = "env:///" + ANY_ENV_VARIABLE;
+        final NamedUri namedUri = NamedUriStringParser.parse("myenv=" + uri);
         final DataSource dataSource = DataSourceFactory.fromNamedUri(namedUri);
 
-        assertEquals("pwd", dataSource.getName());
+        assertEquals("myenv", dataSource.getName());
         assertEquals("default", dataSource.getGroup());
         assertEquals(UTF_8, dataSource.getCharset());
-        assertEquals("env:///JAVA_HOME", dataSource.getUri().toString());
+        assertEquals(uri, dataSource.getUri().toString());
         assertEquals("text/plain", dataSource.getContentType());
     }
 }
