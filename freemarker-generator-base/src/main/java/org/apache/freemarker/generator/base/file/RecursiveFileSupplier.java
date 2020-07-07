@@ -72,7 +72,7 @@ public class RecursiveFileSupplier implements Supplier<List<File>> {
         return sources.stream()
                 .map(this::resolve)
                 .flatMap(Collection::stream)
-                .sorted(Comparator.comparing(File::getName))
+                .sorted(Comparator.comparing(File::getAbsolutePath))
                 .collect(toList());
     }
 
