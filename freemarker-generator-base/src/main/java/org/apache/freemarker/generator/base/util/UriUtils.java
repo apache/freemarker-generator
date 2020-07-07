@@ -16,6 +16,8 @@
  */
 package org.apache.freemarker.generator.base.util;
 
+import org.apache.commons.io.FilenameUtils;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -26,7 +28,7 @@ public class UriUtils {
 
     public static URI toURI(String str) {
         try {
-            return new URI(str);
+            return new URI(separatorsToUnix(str));
         } catch (URISyntaxException e) {
             throw new RuntimeException("Failed to create URI: " + str, e);
         }
@@ -63,5 +65,9 @@ public class UriUtils {
             return false;
         }
         return "env".equalsIgnoreCase(uri.getScheme());
+    }
+
+    private static String separatorsToUnix(String str) {
+        return FilenameUtils.separatorsToUnix(str);
     }
 }

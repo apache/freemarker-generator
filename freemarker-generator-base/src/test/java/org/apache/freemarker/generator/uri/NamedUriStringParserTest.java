@@ -63,8 +63,19 @@ public class NamedUriStringParserTest {
     }
 
     @Test
-    public void shouldParseAbsoluteFileName() {
+    public void shouldParseAbsoluteUnixFileName() {
         final NamedUri namedURI = parse("/data/users.csv");
+
+        assertNull(namedURI.getName());
+        assertNull(namedURI.getGroup());
+        assertEquals("/data/users.csv", namedURI.getUri().toString());
+        assertEquals("users.csv", namedURI.getFile().getName());
+        assertEquals(0, namedURI.getParameters().size());
+    }
+
+    @Test
+    public void shouldParseAbsoluteWindosFileName() {
+        final NamedUri namedURI = parse("\\data\\users.csv");
 
         assertNull(namedURI.getName());
         assertNull(namedURI.getGroup());
