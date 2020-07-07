@@ -360,7 +360,7 @@ public class FreeMarkerMojoTest extends Assert {
 
     private static String fixSeparators(String str) {
         if (OperatingSystem.isWindows()) {
-            return FilenameUtils.separatorsToUnix(str);
+            return FilenameUtils.separatorsToWindows(str);
         } else {
             return str;
         }
