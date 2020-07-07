@@ -105,13 +105,13 @@ public class FreeMarkerMojoTest extends Assert {
         assertThatExceptionOfType(MojoExecutionException.class).isThrownBy(() -> {
             mojo.execute();
         })
-                .withMessage(fixSeparators("Required directory does not exist: target/test-output/freemarker-mojo/executeTest/data"));
+                .withMessageStartingWith("Required directory does not exist");
 
         new File(testCaseOutputDir, "data").mkdirs();
         assertThatExceptionOfType(MojoExecutionException.class).isThrownBy(() -> {
             mojo.execute();
         })
-                .withMessage(fixSeparators("Required directory does not exist: target/test-output/freemarker-mojo/executeTest/template"));
+                .withMessageStartingWith("Required directory does not exist");
         new File(testCaseOutputDir, "template").mkdirs();
 
         // Validate minimum configuration.
@@ -221,7 +221,7 @@ public class FreeMarkerMojoTest extends Assert {
         assertThatExceptionOfType(MojoExecutionException.class).isThrownBy(() -> {
             mojo.execute();
         })
-                .withMessage(fixSeparators("Failed to process files in generator dir: target/test-output/freemarker-mojo/generateTestSourceTest/data"));
+                .withMessageStartingWith("Failed to process files in generator dir");
     }
 
     @Test
@@ -257,7 +257,7 @@ public class FreeMarkerMojoTest extends Assert {
         assertThatExceptionOfType(MojoExecutionException.class).isThrownBy(() -> {
             mojo.execute();
         })
-                .withMessage(fixSeparators("Could not establish file template loader for directory: target/test-output/freemarker-mojo/setTemplateLoaderException/template"));
+                .withMessageStartingWith("Could not establish file template loader for directory");
     }
 
     @Test
