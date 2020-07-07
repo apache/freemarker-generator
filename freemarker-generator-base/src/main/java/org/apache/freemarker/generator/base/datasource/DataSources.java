@@ -16,7 +16,6 @@
  */
 package org.apache.freemarker.generator.base.datasource;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.freemarker.generator.base.util.ClosableUtils;
 import org.apache.freemarker.generator.base.util.StringUtils;
 import org.apache.freemarker.generator.base.util.Validate;
@@ -34,6 +33,7 @@ import static java.util.stream.Collectors.toList;
  */
 public class DataSources implements Closeable {
 
+    /** The underlying list of data sources */
     private final List<DataSource> dataSources;
 
     public DataSources(Collection<DataSource> dataSources) {
@@ -75,10 +75,6 @@ public class DataSources implements Closeable {
         return dataSources.isEmpty();
     }
 
-    public DataSource getFirst() {
-        return dataSources.get(0);
-    }
-
     public List<DataSource> getList() {
         return new ArrayList<>(dataSources);
     }
@@ -109,26 +105,29 @@ public class DataSources implements Closeable {
     }
 
     /**
-     * Find data sources based on their name and globbing pattern.
+     * Find data sources based on their name and a wildcard.
      *
      * @param wildcard the wildcard string to match against
      * @return list of matching data sources
+     * @see <a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.7/org/apache/commons/io/FilenameUtils.html#wildcardMatch-java.lang.String-java.lang.String-">Apache Commons IO</a>
      */
     public List<DataSource> find(String wildcard) {
         return dataSources.stream()
-                .filter(d -> FilenameUtils.wildcardMatch(d.getName(), wildcard))
+                .filter(dataSource -> dataSource.match("name", wildcard))
                 .collect(toList());
     }
 
     /**
-     * Find data sources based on their group and and globbing pattern.
+     * Find data sources based on their metadata part and wildcard.
      *
+     * @param part part of metadata to match
      * @param wildcard the wildcard string to match against
      * @return list of matching data sources
+     * @see <a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.7/org/apache/commons/io/FilenameUtils.html#wildcardMatch-java.lang.String-java.lang.String-">Apache Commons IO</a>
      */
-    public List<DataSource> findByGroup(String wildcard) {
+    public List<DataSource> find(String part, String wildcard) {
         return dataSources.stream()
-                .filter(d -> FilenameUtils.wildcardMatch(d.getGroup(), wildcard))
+                .filter(dataSource -> dataSource.match(part, wildcard))
                 .collect(toList());
     }
 

@@ -30,10 +30,6 @@ public class StringUtils {
         return value != null && value.trim().isEmpty() ? null : value;
     }
 
-    public static String nullToEmpty(String value) {
-        return value == null ? "" : value;
-    }
-
     public static String firstNonEmpty(final String... values) {
         if (values != null) {
             for (final String value : values) {

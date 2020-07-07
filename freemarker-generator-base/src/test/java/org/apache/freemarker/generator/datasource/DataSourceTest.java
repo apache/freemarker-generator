@@ -31,7 +31,7 @@ import java.util.Iterator;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
-import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_APPLICATION_OCTET_STREAM;
+import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_TEXT_HTML;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -40,12 +40,12 @@ public class DataSourceTest {
 
     private static final String ANY_GROUP = "group";
     private static final String ANY_TEXT = "Hello World";
-    private static final String ANY_XML_FILE_NAME = "pom.xml";
+    private static final String ANY_FILE_NAME = "pom.xml";
     private static final Charset ANY_CHAR_SET = UTF_8;
-    private static final File ANY_FILE = new File(ANY_XML_FILE_NAME);
+    private static final File ANY_FILE = new File(ANY_FILE_NAME);
 
     @Test
-    public void shouldSupportTextDataSource() throws IOException {
+    public void shouldSupportTextDataSource() {
         try (DataSource dataSource = DataSourceFactory.fromString("stdin", ANY_GROUP, ANY_TEXT, Mimetypes.MIME_TEXT_PLAIN)) {
             assertEquals("stdin", dataSource.getName());
             assertEquals(ANY_GROUP, dataSource.getGroup());
@@ -56,13 +56,15 @@ public class DataSourceTest {
             assertEquals("text/plain", dataSource.getContentType());
             assertTrue(dataSource.getLength() > 0);
             assertEquals(ANY_TEXT, dataSource.getText());
+            assertTrue(dataSource.match("name", "stdin"));
+            assertTrue(dataSource.match("uri", "string:///*"));
         }
     }
 
     @Test
-    public void shouldSupportFileDataSource() throws IOException {
+    public void shouldSupportFileDataSource() {
         try (DataSource dataSource = DataSourceFactory.fromFile(ANY_FILE, ANY_CHAR_SET)) {
-            assertEquals(ANY_XML_FILE_NAME, dataSource.getName());
+            assertEquals(ANY_FILE_NAME, dataSource.getName());
             assertEquals(DEFAULT_GROUP, dataSource.getGroup());
             assertEquals("pom", dataSource.getBaseName());
             assertEquals("xml", dataSource.getExtension());
@@ -71,20 +73,25 @@ public class DataSourceTest {
             assertEquals("application/xml", dataSource.getContentType());
             assertTrue(dataSource.getLength() > 0);
             assertFalse(dataSource.getText().isEmpty());
+            assertTrue(dataSource.match("name", ANY_FILE_NAME));
+            assertTrue(dataSource.match("uri", "file:/*/pom.xml"));
+            assertTrue(dataSource.match("extension", "xml"));
+            assertTrue(dataSource.match("basename", "pom"));
+            assertTrue(dataSource.match("path", "*/pom.xml"));
         }
     }
 
-    @Ignore("Requires internet conenection")
+    @Ignore("Requires internet connection")
     @Test
-    public void shouldSupportUrlDataSource() throws IOException {
-        try (DataSource dataSource = DataSourceFactory.create("https://google.com?foo=bar")) {
-            assertEquals("google.com", dataSource.getName());
+    public void shouldSupportUrlDataSource() {
+        try (DataSource dataSource = DataSourceFactory.create("https://www.google.com/?foo=bar")) {
+            assertEquals("www.google.com", dataSource.getName());
             assertEquals(DEFAULT_GROUP, dataSource.getGroup());
-            assertEquals("google", dataSource.getBaseName());
+            assertEquals("www.google", dataSource.getBaseName());
             assertEquals("com", dataSource.getExtension());
-            assertEquals("https://google.com?foo=bar", dataSource.getUri().toString());
-            assertEquals(MIME_APPLICATION_OCTET_STREAM, dataSource.getContentType());
-            assertEquals(UTF_8, dataSource.getCharset());
+            assertEquals("https://www.google.com/?foo=bar", dataSource.getUri().toString());
+            assertEquals(MIME_TEXT_HTML, dataSource.getMimetype());
+            assertEquals("ISO-8859-1", dataSource.getCharset().name());
             assertEquals(-1, dataSource.getLength());
             assertFalse(dataSource.getText().isEmpty());
         }
@@ -93,14 +100,14 @@ public class DataSourceTest {
     @Test
     public void shouldSupportLineIterator() throws IOException {
         try (DataSource dataSource = textDataSource()) {
-            try (LineIterator iterator = dataSource.getLineIterator(ANY_CHAR_SET.name())) {
+            try (LineIterator iterator = dataSource.getLineIterator()) {
                 assertEquals(1, count(iterator));
             }
         }
     }
 
     @Test
-    public void shouldReadLines() throws IOException {
+    public void shouldReadLines() {
         try (DataSource dataSource = textDataSource()) {
             assertEquals(1, dataSource.getLines().size());
             assertEquals(ANY_TEXT, dataSource.getLines().get(0));
@@ -108,7 +115,7 @@ public class DataSourceTest {
     }
 
     @Test
-    public void shouldGetBytes() throws IOException {
+    public void shouldGetBytes() {
         try (DataSource dataSource = textDataSource()) {
             assertEquals(11, dataSource.getBytes().length);
         }
@@ -144,7 +151,7 @@ public class DataSourceTest {
         private boolean closed = false;
 
         @Override
-        public void close() throws IOException {
+        public void close() {
             closed = true;
         }
 

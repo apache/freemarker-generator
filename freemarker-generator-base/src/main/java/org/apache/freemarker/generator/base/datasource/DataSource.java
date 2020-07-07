@@ -23,11 +23,14 @@ import org.apache.freemarker.generator.base.activation.ByteArrayDataSource;
 import org.apache.freemarker.generator.base.activation.StringDataSource;
 import org.apache.freemarker.generator.base.mime.MimetypeParser;
 import org.apache.freemarker.generator.base.util.CloseableReaper;
+import org.apache.freemarker.generator.base.util.StringUtils;
+import org.apache.freemarker.generator.base.util.Validate;
 
 import javax.activation.FileDataSource;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.StringWriter;
 import java.net.URI;
 import java.nio.charset.Charset;
@@ -35,10 +38,8 @@ import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
-import static org.apache.commons.io.IOUtils.lineIterator;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DATASOURCE_UNKNOWN_LENGTH;
-import static org.apache.freemarker.generator.base.util.StringUtils.emptyToNull;
-import static org.apache.freemarker.generator.base.util.StringUtils.isNotEmpty;
+import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_APPLICATION_OCTET_STREAM;
 
 /**
  * Data source which encapsulates data to be used for rendering
@@ -49,7 +50,7 @@ import static org.apache.freemarker.generator.base.util.StringUtils.isNotEmpty;
  * the content type &amp; charset might be determined using a network
  * call.
  */
-public class DataSource implements Closeable {
+public class DataSource implements Closeable, javax.activation.DataSource {
 
     /** Human-readable name of the data source */
     private final String name;
@@ -63,7 +64,7 @@ public class DataSource implements Closeable {
     /** The underlying "javax.activation.DataSource" */
     private final javax.activation.DataSource dataSource;
 
-    /** Optional user-supplied content type */
+    /** Optional content type */
     private final String contentType;
 
     /** Optional charset for directly accessing text-based content */
@@ -80,7 +81,7 @@ public class DataSource implements Closeable {
             String contentType,
             Charset charset) {
         this.name = requireNonNull(name);
-        this.group = emptyToNull(group);
+        this.group = StringUtils.emptyToNull(group);
         this.uri = requireNonNull(uri);
         this.dataSource = requireNonNull(dataSource);
         this.contentType = contentType;
@@ -88,8 +89,39 @@ public class DataSource implements Closeable {
         this.closables = new CloseableReaper();
     }
 
+    @Override
     public String getName() {
         return name;
+    }
+
+    /**
+     * Get the content type.
+     *
+     * @return content type
+     */
+    @Override
+    public String getContentType() {
+        return contentType();
+    }
+
+    /**
+     * Get an input stream which is closed together with this data source.
+     *
+     * @return InputStream
+     */
+    @Override
+    public InputStream getInputStream() {
+        return closables.add(getUnsafeInputStream());
+    }
+
+    @Override
+    public OutputStream getOutputStream() {
+        throw new RuntimeException("No output stream supported");
+    }
+
+    @Override
+    public void close() {
+        closables.close();
     }
 
     public String getGroup() {
@@ -109,11 +141,11 @@ public class DataSource implements Closeable {
     }
 
     /**
-     * Get the content type without additional parameters, e.g. "charset".
+     * Get the mimetype , i.e. content type without additional charset parameter.
      *
-     * @return content type
+     * @return mimetype
      */
-    public String getContentType() {
+    public String getMimetype() {
         return MimetypeParser.getMimetype(contentType());
     }
 
@@ -139,15 +171,6 @@ public class DataSource implements Closeable {
     }
 
     /**
-     * Get an input stream which is closed together with this data source.
-     *
-     * @return InputStream
-     */
-    public InputStream getInputStream() {
-        return closables.add(getUnsafeInputStream());
-    }
-
-    /**
      * Get an input stream which needs to be closed by the caller.
      *
      * @return InputStream
@@ -165,6 +188,7 @@ public class DataSource implements Closeable {
     }
 
     public String getText(String charsetName) {
+        Validate.notEmpty(charsetName, "No charset name provided");
         final StringWriter writer = new StringWriter();
         try (InputStream is = getUnsafeInputStream()) {
             IOUtils.copy(is, writer, Charset.forName(charsetName));
@@ -192,6 +216,7 @@ public class DataSource implements Closeable {
      * @return the list of Strings, never null
      */
     public List<String> getLines(String charsetName) {
+        Validate.notEmpty(charsetName, "No charset name provided");
         try (InputStream inputStream = getUnsafeInputStream()) {
             return IOUtils.readLines(inputStream, charsetName);
         } catch (IOException e) {
@@ -218,8 +243,9 @@ public class DataSource implements Closeable {
      * @return line iterator
      */
     public LineIterator getLineIterator(String charsetName) {
+        Validate.notEmpty(charsetName, "No charset name provided");
         try {
-            return closables.add(lineIterator(getUnsafeInputStream(), Charset.forName(charsetName)));
+            return closables.add(IOUtils.lineIterator(getUnsafeInputStream(), Charset.forName(charsetName)));
         } catch (IOException e) {
             throw new RuntimeException("Failed to create line iterator: " + toString(), e);
         }
@@ -231,6 +257,19 @@ public class DataSource implements Closeable {
         } catch (IOException e) {
             throw new RuntimeException("Failed to get bytes: " + toString(), e);
         }
+    }
+
+    /**
+     * Matches a metadata entry with a wildcard expression.
+     *
+     * @param part     part, e.g. "name", "basename", "extension", "uri", "group"
+     * @param wildcard the wildcard string to match against
+     * @return true if the wildcard expression matches
+     * @see <a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.7/org/apache/commons/io/FilenameUtils.html#wildcardMatch-java.lang.String-java.lang.String-">Apache Commons IO</a>
+     */
+    public boolean match(String part, String wildcard) {
+        final String value = getPart(part);
+        return FilenameUtils.wildcardMatch(value, wildcard);
     }
 
     /**
@@ -247,11 +286,6 @@ public class DataSource implements Closeable {
     }
 
     @Override
-    public void close() {
-        closables.close();
-    }
-
-    @Override
     public String toString() {
         return "DataSource{" +
                 "name='" + name + '\'' +
@@ -260,7 +294,43 @@ public class DataSource implements Closeable {
                 '}';
     }
 
+    /**
+     * If there is no content type we ask the underlying data source. E.g. for
+     * an URL data source this information is fetched from the server.
+     *
+     * @return content type
+     */
     private String contentType() {
-        return isNotEmpty(contentType) ? contentType : dataSource.getContentType();
+        if (StringUtils.isNotEmpty(contentType)) {
+            return contentType;
+        } else {
+            return StringUtils.firstNonEmpty(dataSource.getContentType(), MIME_APPLICATION_OCTET_STREAM);
+        }
+    }
+
+    private String getPart(String part) {
+        Validate.notEmpty(part, "No metadata part provided");
+        switch (part.toLowerCase()) {
+            case "basename":
+                return getBaseName();
+            case "contenttype":
+                return getContentType();
+            case "extension":
+                return getExtension();
+            case "group":
+                return getGroup();
+            case "mimetype":
+                return getContentType();
+            case "name":
+                return getName();
+            case "path":
+                return uri.getPath();
+            case "scheme":
+                return uri.getScheme();
+            case "uri":
+                return uri.toASCIIString();
+            default:
+                throw new IllegalArgumentException("Unknown part: " + part);
+        }
     }
 }

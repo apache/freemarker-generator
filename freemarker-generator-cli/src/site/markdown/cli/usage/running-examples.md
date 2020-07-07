@@ -768,16 +768,16 @@ Sometime you need to apply a CSS, JSON or XPath query in ad ad-hoc way without i
 > bin/freemarker-cli -i 'Hello ${SystemTool.envs["USER"]}'; echo
 Hello sgoeschl
 
-> bin/freemarker-cli -i '${JsonPathTool.parse(DataSources.first).read("$.info.title")}' examples/data/json/swagger-spec.json; echo
+> bin/freemarker-cli -i '${JsonPathTool.parse(DataSources.get(0)).read("$.info.title")}' examples/data/json/swagger-spec.json; echo
 Swagger Petstore
 
-> bin/freemarker-cli -i 'Post Title : ${JsonPathTool.parse(DataSources.first).read("$.title")}' https://jsonplaceholder.typicode.com/posts/2; echo
+> bin/freemarker-cli -i 'Post Title : ${JsonPathTool.parse(DataSources.get(0)).read("$.title")}' https://jsonplaceholder.typicode.com/posts/2; echo
 Post Title : qui est esse
 
-> bin/freemarker-cli -i '${XmlTool.parse(DataSources.first)["recipients/person[1]/name"]}' examples/data/xml/recipients.xml; echo
+> bin/freemarker-cli -i '${XmlTool.parse(DataSources.get(0))["recipients/person[1]/name"]}' examples/data/xml/recipients.xml; echo
 John Smith
 
-> bin/freemarker-cli -i '${JsoupTool.parse(DataSources.first).select("a")[0]}' examples/data/html/dependencies.html; echo
+> bin/freemarker-cli -i '${JsoupTool.parse(DataSources.get(0)).select("a")[0]}' examples/data/html/dependencies.html; echo
 <a href="${project.url}" title="FreeMarker CLI">FreeMarker CLI</a>
 
 > freemarker-cli -i '<#list SystemTool.envs as name,value>${name} ==> ${value}${"\n"}</#list>'

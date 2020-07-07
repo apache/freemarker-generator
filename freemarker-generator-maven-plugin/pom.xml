@@ -167,6 +167,7 @@
                 <artifactId>apache-rat-plugin</artifactId>
                 <configuration>
                     <excludes>
+                        <exclude>CHANGELOG.md</exclude>
                         <exclude>README.md</exclude>
                         <exclude>src/site/markdown/**/*.md</exclude>
                         <excludde>**/*.json</excludde>

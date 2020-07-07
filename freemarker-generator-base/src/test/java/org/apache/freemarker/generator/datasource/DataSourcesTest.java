@@ -39,6 +39,7 @@ public class DataSourcesTest {
     private static final String ANY_FILE_EXTENSION = "xml";
     private static final File ANY_FILE = new File(ANY_FILE_NAME);
     private static final String ANY_URL = "https://server.invalid?foo=bar";
+    private static final String GROUP_PART = "group";
 
     @Test
     public void shouldFindByName() {
@@ -63,18 +64,18 @@ public class DataSourcesTest {
     }
 
     @Test
-    public void shouldFindByGroup() {
+    public void shouldFindByGroupPart() {
         final DataSources dataSources = dataSources();
 
-        assertEquals(0, dataSources.findByGroup(null).size());
-        assertEquals(0, dataSources.findByGroup("").size());
+        assertEquals(0, dataSources.find(GROUP_PART, null).size());
+        assertEquals(0, dataSources.find(GROUP_PART, "").size());
 
-        assertEquals(0, dataSources.findByGroup("unknown").size());
+        assertEquals(0, dataSources.find(GROUP_PART, "unknown").size());
 
-        assertEquals(3, dataSources.findByGroup("*").size());
-        assertEquals(3, dataSources.findByGroup("default").size());
-        assertEquals(3, dataSources.findByGroup("d*").size());
-        assertEquals(3, dataSources.findByGroup("d??????").size());
+        assertEquals(3, dataSources.find(GROUP_PART, "*").size());
+        assertEquals(3, dataSources.find(GROUP_PART, "default").size());
+        assertEquals(3, dataSources.find(GROUP_PART, "d*").size());
+        assertEquals(3, dataSources.find(GROUP_PART, "d??????").size());
 
     }
 

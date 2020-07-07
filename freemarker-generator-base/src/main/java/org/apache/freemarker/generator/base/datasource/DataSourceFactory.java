@@ -40,6 +40,7 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Properties;
+import java.util.UUID;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
@@ -120,7 +121,7 @@ public abstract class DataSourceFactory {
 
     public static DataSource fromString(String name, String group, String content, String contentType) {
         final StringDataSource dataSource = new StringDataSource(name, content, contentType, UTF_8);
-        final URI uri = UriUtils.toURI(Location.STRING, Integer.toString(content.hashCode()));
+        final URI uri = UriUtils.toURI(Location.STRING, UUID.randomUUID().toString());
         return create(name, group, uri, dataSource, contentType, UTF_8);
     }
 
@@ -185,11 +186,22 @@ public abstract class DataSourceFactory {
 
     // == General ===========================================================
 
-    public static DataSource create(String str) {
-        if (UriUtils.isUri(str)) {
-            return fromNamedUri(str);
+    /**
+     * Create a data source based on a
+     * <ul>
+     *  <li>URI</li>
+     *  <li>Named URI</li>
+     *  <li>file name</li>
+     * </ul>
+     *
+     * @param source source of the data source
+     * @return DataSource
+     */
+    public static DataSource create(String source) {
+        if (UriUtils.isUri(source)) {
+            return fromNamedUri(source);
         } else {
-            final File file = new File(str);
+            final File file = new File(source);
             return fromFile(file.getName(), DEFAULT_GROUP, file, UTF_8);
         }
     }

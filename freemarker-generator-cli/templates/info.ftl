@@ -49,7 +49,7 @@ FreeMarker CLI Data Model
 FreeMarker CLI DataSources
 ------------------------------------------------------------------------------
 <#list DataSources.list as dataSource>
-[#${dataSource?counter}], name=${dataSource.name}, group=${dataSource.group}, contentType=${dataSource.contentType}, charset=${dataSource.charset}, length=${dataSource.length} Bytes
+[#${dataSource?counter}], name=${dataSource.name}, group=${dataSource.group}, mimeType=${dataSource.mimetype}, charset=${dataSource.charset}, length=${dataSource.length} Bytes
 URI : ${dataSource.uri}
 </#list>
 </#if>

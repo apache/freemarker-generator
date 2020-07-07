@@ -91,7 +91,15 @@
         <developer>
             <name>Siegfried Goeschl</name>
             <organization>ASF</organization>
-            <organizationUrl>https://github.com/sgoeschl</organizationUrl>
+            <organizationUrl>https://www.apache.org</organizationUrl>
+        </developer>
+        <developer>
+            <name>Daniel Dekany</name>
+            <organization>ASF</organization>
+            <organizationUrl>https://www.apache.org</organizationUrl>
+        </developer>
+        <developer>
+            <name>Benjamin Jackson</name>
         </developer>
     </developers>
 
@@ -144,7 +152,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>3.2.0</version>                    
+                    <version>3.2.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
@@ -164,7 +172,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.1.1</version>
+                    <version>3.2.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-jxr-plugin</artifactId>
@@ -267,6 +275,17 @@
                 <configuration>
                     <linkXRef>false</linkXRef>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <reportSets>
+                    <reportSet>
+                        <id>default</id>
+                        <reports>
+                            <report>javadoc</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
             </plugin>
         </plugins>
     </reporting>
