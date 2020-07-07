@@ -136,8 +136,3 @@ Small Number :  ${smallNumber}
 Large Number :  ${largeNumber}
 Date         :  ${.now?date}
 Time         :  ${.now?time}
-
-17) Execute a program
----------------------------------------------------------------------------
-> date
-${ExecTool.execute("date")}

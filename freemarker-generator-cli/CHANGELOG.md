@@ -27,6 +27,7 @@ All notable changes to this project will be documented in this file. We try to a
 * [FREEMARKER-129] Use version "0.X.Y" to cater for API changes according to [Semantic Versioning](https://semver.org)
 
 ### Fixed 
+* [FREEMARKER-151] Ensure that build and and examples are running on Windows
 * [FREEMARKER-147] Complete Maven site documentation
 * [FREEMARKER-127] Site build fails with missing "org/apache/maven/doxia/siterenderer/DocumentContent"
 
@@ -44,3 +45,4 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-147]: https://issues.apache.org/jira/browse/FREEMARKER-147
 [FREEMARKER-148]: https://issues.apache.org/jira/browse/FREEMARKER-148
 [FREEMARKER-149]: https://issues.apache.org/jira/browse/FREEMARKER-149
+[FREEMARKER-151]: https://issues.apache.org/jira/browse/FREEMARKER-151

@@ -16,12 +16,13 @@
  */
 package org.apache.freemarker.generator.datasource;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourcesSupplier;
 import org.junit.Test;
 
+import java.io.File;
 import java.nio.charset.Charset;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class DataSourcesSupplierTest {
 
     private static final String NO_EXCLUDE = null;
     private static final String DATA_DIRECTORY = "./src/test/data";
-    private static final String PWD = Paths.get(".").toAbsolutePath().normalize().toString();
+    private static final String PWD = FilenameUtils.separatorsToUnix(new File("").getAbsolutePath());
 
     @Test
     public void shouldResolveSingleFile() {

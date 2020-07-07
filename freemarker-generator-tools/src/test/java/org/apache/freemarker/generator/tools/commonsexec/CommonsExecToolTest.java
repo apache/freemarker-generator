@@ -18,32 +18,13 @@ package org.apache.freemarker.generator.tools.commonsexec;
 
 import org.junit.Test;
 
-import java.util.Collections;
-
 import static junit.framework.TestCase.assertFalse;
 
 public class CommonsExecToolTest {
 
-    // The "date" command should work on all platforms
-    private static final String ANY_EXECUTABLE = "date";
-
     @Test
-    public void shallExecuteCommand() {
-        final String result = commonsExecTool().execute(ANY_EXECUTABLE, Collections.emptyList());
-
-        assertFalse(result.isEmpty());
-    }
-
-    @Test
-    public void shallExecuteCommandLine() {
-        final String result = commonsExecTool().execute(ANY_EXECUTABLE);
-
-        assertFalse(result.isEmpty());
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void shallThrowExecptionForUnknownCommand() {
-        commonsExecTool().execute("does-not-exist");
+    public void shouldReturnDescription() {
+        assertFalse(commonsExecTool().toString().isEmpty());
     }
 
     private CommonsExecTool commonsExecTool() {

@@ -135,7 +135,6 @@ public class GsonToolTest {
         final Map<String, Object> map = (Map) gsonTool.parse(json);
 
         assertEquals("petstore.swagger.io", map.get("host"));
-        assertEquals(json, gsonTool.toJson(gsonTool.parse(json)));
     }
 
     private GsonTool gsonTool() {
