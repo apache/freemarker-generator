@@ -20,6 +20,7 @@ import org.apache.commons.io.LineIterator;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.freemarker.generator.base.mime.Mimetypes;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.Closeable;
@@ -27,7 +28,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Iterator;
-import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
@@ -81,7 +81,7 @@ public class DataSourceTest {
         }
     }
 
-    // @Ignore("Requires internet connection")
+    @Ignore("Requires internet connection")
     @Test
     public void shouldSupportUrlDataSource() {
         try (DataSource dataSource = DataSourceFactory.create("https://www.google.com/?foo=bar")) {
