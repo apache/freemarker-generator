@@ -657,7 +657,7 @@ Think of `Grok` as modular regular expressions with a pre-defined functionality 
 QUOTEDSTRING (?>(?<!\\)(?>"(?>\\.|[^\\"]+)+"|""|(?>'(?>\\.|[^\\']+)+')|''|(?>`(?>\\.|[^\\`]+)+`)|``))
 ```
 
-And with `Grok` the `QUOTEDSTRING` is just a building block for an even more complex regular expession such as `COMBINEDAPACHELOG`
+And with `Grok` the `QUOTEDSTRING` is just a building block for an even more complex regular expression such as `COMBINEDAPACHELOG`
 
 > bin/freemarker-cli -t examples/templates/accesslog/combined-access.ftl examples/data/accesslog/combined-access.log 
 

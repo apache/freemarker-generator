@@ -4,7 +4,7 @@ A `DataModel` is an eagerly loaded `DataSource` available in Apache FreeMarker's
 
 * The content of the `DataSource` is parsed and a `Map` generated
 * The `Map` is either stored as variable in the model or all entries are copied into the FreeMarker model
-* The parsing is supported for  `JSON`, `YAML`, `Properties` and enviroment variables  
+* The parsing is supported for  `JSON`, `YAML`, `Properties` and environment variables  
 
 Expose the fields of the JSON data source in FreeMarker's model 
 
@@ -51,7 +51,7 @@ HOME=/Users/sgoeschl
 USER=sgoeschl
 ```
 
-Expose a single envionment variable in theFreeMarker model
+Expose a single environment variable in theFreeMarker model
 
 ```
 > freemarker-cli --data-model NAME=env:///USER -i 'Hello ${NAME}'; echo

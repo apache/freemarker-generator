@@ -21,7 +21,7 @@ import static java.util.Objects.requireNonNull;
 import static org.apache.freemarker.generator.base.util.StringUtils.isNotEmpty;
 
 /**
- * Caputeres the information of a user-supplied parameter.
+ * Captures the information of a user-supplied parameter.
  */
 public class Parameter {
 

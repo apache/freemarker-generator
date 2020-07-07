@@ -53,9 +53,9 @@ Add the following snippet within the `<plugins>` tag of your pom.xml:
                     <configuration>
                         <!-- Optional, defaults to src/main/freemarker/generator -->
                         <sourceDirectory>src/main/freemarker/generator</sourceDirectory>
-                        <!-- Optional, defaults to src/main/freemarker/generator/templatee -->
+                        <!-- Optional, defaults to src/main/freemarker/generator/template -->
                         <templateDirectory>src/main/freemarker/generator/template</templateDirectory>
-                        <!-- Optional, defaults to src/main/freemarker/generator/generatorr -->
+                        <!-- Optional, defaults to src/main/freemarker/generator/generator -->
                         <generatorDirectory>src/main/freemarker/generator/generator</generatorDirectory>
                         <!-- Optional, defaults to target/generated-sources/freemarker/generator -->
                         <outputDirectory>target/generated-sources/freemarker/generator</outputDirectory>
