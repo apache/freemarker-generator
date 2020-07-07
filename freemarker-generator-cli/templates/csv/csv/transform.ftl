@@ -16,7 +16,7 @@
   under the License.
 -->
 <#import "/templates/lib/commons-csv.ftl" as csv />
-<#assign dataSource = DataSources.get(0)>
+<#assign dataSource = dataSources.get(0)>
 <#assign csvParser = CSVTool.parse(dataSource, csv.sourceFormat())>
 <#assign csvTargetFormat = csv.targetFormat()>
 <#assign csvPrinter = CSVTool.printer(csvTargetFormat)>

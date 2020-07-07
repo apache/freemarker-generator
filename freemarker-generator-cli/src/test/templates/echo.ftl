@@ -15,7 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#list DataSources.list as dataSource>
+<#list dataSources.list as dataSource>
 ${dataSource.name}, ${dataSource.uri}
 =============================================================================
 ${dataSource.text}

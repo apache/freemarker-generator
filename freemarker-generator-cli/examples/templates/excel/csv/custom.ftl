@@ -18,7 +18,7 @@
 <#assign format = CSV_TARGET_FORMAT!"DEFAULT">
 <#assign salt = SystemTool.parameters["salt"]!"salt">
 <#-- Parse the first data source & sheet of the Excel document -->
-<#assign workbook = ExcelTool.parse(DataSources.get(0))>
+<#assign workbook = ExcelTool.parse(dataSources.get(0))>
 <#assign sheet = ExcelTool.getSheets(workbook)[0]>
 <#assign records = ExcelTool.toTable(sheet)>
 <#-- Setup CSVPrinter  -->

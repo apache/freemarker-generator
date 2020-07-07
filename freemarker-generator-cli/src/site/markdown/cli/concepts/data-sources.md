@@ -96,11 +96,11 @@ exposed in the data model provides
 A few FTL examples
 
 ```
-<#assign dataSource = DataSources.get(0)>
+<#assign dataSource = dataSources.get(0)>
 
-<#assign dataSource = DataSources.get("user.csv)>
+<#assign dataSource = dataSources.get("user.csv)>
 
-<#list DataSources.find("*.md") as dataSource>
+<#list dataSources.find("*.md") as dataSource>
 - ${dataSource.name}
 </#list>
 ```

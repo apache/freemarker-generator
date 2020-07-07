@@ -30,7 +30,7 @@ Meier;30;Germany
 and create a `DateFrame` using the following code snippet
 
 ```
-<#assign dataSource = DataSources.get(0)>
+<#assign dataSource = dataSources.get(0)>
 <#assign csvParser = CSVTool.parse(dataSource, CSVTool.formats["DATAFRAME"])>
 <#assign users = DataFrameTool.fromCSVParser(csvParser)>
 ```
@@ -156,7 +156,7 @@ it is a list of maps hence we invoke `DataFrameTool.fromMaps()
 
 ```
 freemarker-cli \
-  -i '${DataFrameTool.print(DataFrameTool.fromMaps(GsonTool.parse(DataSources.get(0))))}' \
+  -i '${DataFrameTool.print(DataFrameTool.fromMaps(GsonTool.parse(dataSources.get(0))))}' \
   examples/data/json/github-users.json
 
 ┌────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┐
@@ -183,7 +183,7 @@ freemarker-cli \
 Let's transform an Excel Sheet to a `DataFrame` being printed using the following template
 
 ```
-<#assign dataSource = DataSources.get(0)>
+<#assign dataSource = dataSources.get(0)>
 <#assign workbook = ExcelTool.parse(dataSource)>
 <#list ExcelTool.getSheets(workbook) as sheet>
     <#assign table = ExcelTool.toTable(sheet)>

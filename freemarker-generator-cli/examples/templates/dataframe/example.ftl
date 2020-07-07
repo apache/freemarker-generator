@@ -14,7 +14,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign dataSource = DataSources.get(0)>
+<#assign dataSource = dataSources.get(0)>
 <#assign csvParser = CSVTool.parse(dataSource, CSVTool.formats["DATAFRAME"])>
 <#assign users = DataFrameTool.fromCSVParser(csvParser)>
 

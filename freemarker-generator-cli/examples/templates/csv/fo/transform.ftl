@@ -17,7 +17,7 @@
 -->
 <#assign csvFormatName = CVS_IN_FORMAT!"DEFAULT">
 <#assign cvsFormat = CSVTool.formats[csvFormatName].withHeader()>
-<#assign csvParser = CSVTool.parse(DataSources.get(0), cvsFormat)>
+<#assign csvParser = CSVTool.parse(dataSources.get(0), cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderMap()?keys>
 <#assign csvRecords = csvParser.records>
 <#--------------------------------------------------------------------------->

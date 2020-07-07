@@ -14,7 +14,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign dataSource = DataSources.get(0)>
+<#assign dataSource = dataSources.get(0)>
 <#assign workbook = ExcelTool.parse(dataSource)>
 <#list ExcelTool.getSheets(workbook) as sheet>
     <#assign table = ExcelTool.toTable(sheet)>

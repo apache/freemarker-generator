@@ -45,10 +45,10 @@ FreeMarker CLI Data Model
 - ${key}<#lt>
 </#list>
 
-<#if DataSources.list?has_content>
+<#if dataSources.list?has_content>
 FreeMarker CLI DataSources
 ------------------------------------------------------------------------------
-<#list DataSources.list as dataSource>
+<#list dataSources.list as dataSource>
 [#${dataSource?counter}], name=${dataSource.name}, group=${dataSource.group}, mimeType=${dataSource.mimetype}, charset=${dataSource.charset}, length=${dataSource.length} Bytes
 URI : ${dataSource.uri}
 </#list>

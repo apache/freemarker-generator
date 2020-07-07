@@ -17,7 +17,7 @@
 -->
 <#compress>
     TENANT,SITE,USER_ID,DISPOSER_ID,PASSWORD,SMS_OTP,NAME,DESCRIPTION
-    <#list DataSources.list as dataSource>
+    <#list dataSources.list as dataSource>
         <#assign properties = PropertiesTool.parse(dataSource)>
         <#assign environments = properties["ENVIRONMENTS"]!"">
         <#assign tenant = extractTenant(environments)>

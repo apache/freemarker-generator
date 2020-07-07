@@ -17,12 +17,12 @@
 -->
 Support FreeMarker Directives
 ---------------------------------------------------------------------------
-Has Content: ${DataSources?has_content?c}
-Nr. of Documents: ${DataSources?size}
+Has Content: ${dataSources?has_content?c}
+Nr. of Documents: ${dataSources?size}
 
 Use FTL Array-style Access
 ---------------------------------------------------------------------------
-${DataSources[0].toString()}
+${dataSources[0].toString()}
 
 Use FTL Map-style access
 ---------------------------------------------------------------------------
@@ -43,23 +43,23 @@ Iterate Over Names & DataSources
 
 Find DataSources By Group
 ---------------------------------------------------------------------------
-<#list DataSources.findByGroup("default") as dataSource>
+<#list dataSources.findByGroup("default") as dataSource>
     ${dataSource}<#lt>
 </#list>
 
 Find DataSources By Wildcard
 ---------------------------------------------------------------------------
-<#list DataSources.find("*.csv") as dataSource>
+<#list dataSources.find("*.csv") as dataSource>
     ${dataSource}<#lt>
 </#list>
 
 Java Array-style access
 ---------------------------------------------------------------------------
-${DataSources.get(0).toString()}
+${dataSources.get(0).toString()}
 
 Invoke Arbitrary Methods On DataSources
 ---------------------------------------------------------------------------
-empty       : ${DataSources.empty?c}
-isEmpty()   : ${DataSources.isEmpty()?c}
-size()      : ${DataSources.size()}
-close()     : ${DataSources.close()}worx
+empty       : ${dataSources.empty?c}
+isEmpty()   : ${dataSources.isEmpty()?c}
+size()      : ${dataSources.size()}
+close()     : ${dataSources.close()}worx
