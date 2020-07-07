@@ -40,6 +40,7 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Properties;
+import java.util.UUID;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
@@ -120,7 +121,7 @@ public abstract class DataSourceFactory {
 
     public static DataSource fromString(String name, String group, String content, String contentType) {
         final StringDataSource dataSource = new StringDataSource(name, content, contentType, UTF_8);
-        final URI uri = UriUtils.toURI(Location.STRING, "string");
+        final URI uri = UriUtils.toURI(Location.STRING, UUID.randomUUID().toString());
         return create(name, group, uri, dataSource, contentType, UTF_8);
     }
 
