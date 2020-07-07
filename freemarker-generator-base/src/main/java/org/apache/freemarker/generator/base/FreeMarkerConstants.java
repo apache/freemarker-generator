@@ -78,6 +78,7 @@ public class FreeMarkerConstants {
         }
 
         public static final String DATASOURCES = "dataSources";
+        public static final String TOOLS = "tools";
 
         public static final String FREEMARKER_CLI_ARGS = "freemarker.cli.args";
         public static final String FREEMARKER_LOCALE = "freemarker.locale";

@@ -15,9 +15,9 @@
   under the License.
 -->
 <#assign dataSource = dataSources.get(0)>
-<#assign workbook = ExcelTool.parse(dataSource)>
-<#list ExcelTool.getSheets(workbook) as sheet>
-    <#assign table = ExcelTool.toTable(sheet)>
-    <#assign df = DataFrameTool.fromRows(table, true)>
-    ${DataFrameTool.print(df)}<#t>
+<#assign workbook = tools.excel.parse(dataSource)>
+<#list tools.excel.getSheets(workbook) as sheet>
+    <#assign table = tools.excel.toTable(sheet)>
+    <#assign df = tools.dataframe.fromRows(table, true)>
+    ${tools.dataframe.print(df)}<#t>
 </#list>

@@ -16,8 +16,11 @@
  */
 package org.apache.freemarker.generator.cli.config;
 
+import org.apache.freemarker.generator.base.FreeMarkerConstants.Model;
 import org.apache.freemarker.generator.base.tools.ToolsFactory;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Supplier;
@@ -50,6 +53,17 @@ public class ToolsSupplier implements Supplier<Map<String, Object>> {
 
     @Override
     public Map<String, Object> get() {
+        final Map<String, Object> result = new HashMap<>();
+        result.put(Model.TOOLS, tools());
+        return result;
+    }
+
+    /**
+     * Create a map of tools.
+     *
+     * @return tools
+     */
+    private Map<String, Object> tools() {
         final Properties properties = toolsProperties();
         return properties.stringPropertyNames().stream()
                 .filter(key -> toolExists(properties.getProperty(key)))

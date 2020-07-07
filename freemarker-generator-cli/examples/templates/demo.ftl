@@ -27,21 +27,21 @@ Output format          : ${.output_format}
 
 2) Invoke a constructor of a Java class
 ---------------------------------------------------------------------------
-<#assign date = FreeMarkerTool.objectConstructor("java.util.Date", 1000 * 3600 * 24)>
+<#assign date = tools.freemarker.objectConstructor("java.util.Date", 1000 * 3600 * 24)>
 new java.utilDate(1000 * 3600 * 24): ${date?datetime}
 
 3) Invoke a static method of an non-constructor class
 ---------------------------------------------------------------------------
-Random UUID              : ${FreeMarkerTool.statics["java.util.UUID"].randomUUID()}
-System.currentTimeMillis : ${FreeMarkerTool.statics["java.lang.System"].currentTimeMillis()}
+Random UUID              : ${tools.freemarker.statics["java.util.UUID"].randomUUID()}
+System.currentTimeMillis : ${tools.freemarker.statics["java.lang.System"].currentTimeMillis()}
 
 4) Access an Enumeration
 ---------------------------------------------------------------------------
-java.math.RoundingMode#UP: ${FreeMarkerTool.enums["java.math.RoundingMode"].UP}
+java.math.RoundingMode#UP: ${tools.freemarker.enums["java.math.RoundingMode"].UP}
 
 5) Loop Over The Values Of An Enumeration
 ---------------------------------------------------------------------------
-<#list FreeMarkerTool.enums["java.math.RoundingMode"]?values as roundingMode>
+<#list tools.freemarker.enums["java.math.RoundingMode"]?values as roundingMode>
 - java.math.RoundingMode.${roundingMode}<#lt>
 </#list>
 
@@ -54,32 +54,32 @@ List all data sources:
 
 7) SystemTool
 ---------------------------------------------------------------------------
-Host name       : ${SystemTool.getHostName()}
-Command line    : ${SystemTool.getCommandLineArgs()?join(", ")}
-System property : ${SystemTool.getSystemProperty("user.name", "N.A.")}
-Timestamp       : ${SystemTool.currentTimeMillis?c}
-Environment var : ${SystemTool.envs["USER"]!"N.A."}
+Host name       : ${tools.system.getHostName()}
+Command line    : ${tools.system.getCommandLineArgs()?join(", ")}
+System property : ${tools.system.getSystemProperty("user.name", "N.A.")}
+Timestamp       : ${tools.system.currentTimeMillis?c}
+Environment     : ${tools.system.envs["USER"]!"N.A."}
 
 8) Access System Properties
 ---------------------------------------------------------------------------
-app.dir      : ${SystemTool.systemProperties["app.dir"]!""}
-app.home     : ${SystemTool.systemProperties["app.home"]!""}
-app.pid      : ${SystemTool.systemProperties["app.pid"]!""}
-basedir      : ${SystemTool.systemProperties["basedir"]!""}
-java.version : ${SystemTool.systemProperties["java.version"]!""}
-user.name    : ${SystemTool.systemProperties["user.name"]!""}
-user.dir     : ${SystemTool.systemProperties["user.dir"]!""}
-user.home    : ${SystemTool.systemProperties["user.home"]!""}
+app.dir      : ${tools.system.systemProperties["app.dir"]!""}
+app.home     : ${tools.system.systemProperties["app.home"]!""}
+app.pid      : ${tools.system.systemProperties["app.pid"]!""}
+basedir      : ${tools.system.systemProperties["basedir"]!""}
+java.version : ${tools.system.systemProperties["java.version"]!""}
+user.name    : ${tools.system.systemProperties["user.name"]!""}
+user.dir     : ${tools.system.systemProperties["user.dir"]!""}
+user.home    : ${tools.system.systemProperties["user.home"]!""}
 
 9) List Environment Variables
 ---------------------------------------------------------------------------
-<#list SystemTool.envs as name,value>
+<#list tools.system.envs as name,value>
 - ${name} ==> ${value}<#lt>
 </#list>
 
 10) List System Properties
 ---------------------------------------------------------------------------
-<#list SystemTool.systemProperties as name,value>
+<#list tools.system.systemProperties as name,value>
 - ${name} ==> ${value}<#lt>
 </#list>
 
@@ -104,24 +104,22 @@ Get all documents
 - ${dataSource.name} => ${dataSource.uri}
 </#list>
 
-12) FreeMarker CLI Tools
----------------------------------------------------------------------------
-<#list .data_model?keys?sort as key>
-<#if key?ends_with("Tool")>
-- ${key?right_pad(20)} : ${.data_model[key]}
-</#if>
-</#list>
-
-13) Document Data Model
+12) Document Data Model
 ---------------------------------------------------------------------------
 <#list .data_model?keys?sort as key>
 - ${key}<#lt>
 </#list>
 
+13) FreeMarker CLI Tools
+---------------------------------------------------------------------------
+<#list .data_model.tools?keys?sort as key>
+- ${key?right_pad(20)} : ${.data_model.tools[key]}
+</#list>
+
 14) Create a UUID
 ---------------------------------------------------------------------------
-UUIDTool Random UUID  : ${UUIDTool.randomUUID()}
-UUIDTool Named UUID   : ${UUIDTool.namedUUID("value and salt")}
+UUIDTool Random UUID  : ${tools.uuid.randomUUID()}
+UUIDTool Named UUID   : ${tools.uuid.namedUUID("value and salt")}
 
 15) Printing Special Characters
 ---------------------------------------------------------------------------

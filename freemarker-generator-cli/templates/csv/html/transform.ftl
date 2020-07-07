@@ -17,7 +17,7 @@
 -->
 <#import "/templates/lib/commons-csv.ftl" as csv />
 <#assign dataSource = dataSources.get(0)>
-<#assign csvParser = CSVTool.parse(dataSource, csv.sourceFormat())>
+<#assign csvParser = tools.csv.parse(dataSource, csv.sourceFormat())>
 <#assign csvHeaders = csvParser.getHeaderNames()>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>

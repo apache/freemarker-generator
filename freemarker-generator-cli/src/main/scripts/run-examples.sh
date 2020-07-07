@@ -46,12 +46,12 @@ $FREEMARKER_CMD -t examples/templates/demo.ftl README.md > target/out/demo.txt |
 # Interactive Mode
 #############################################################################
 
-$FREEMARKER_CMD -i '${JsonPathTool.parse(dataSources.get(0)).read("$.info.title")}' examples/data/json/swagger-spec.json > target/out/interactive-json.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
-$FREEMARKER_CMD -i '${XmlTool.parse(dataSources.get(0))["recipients/person[1]/name"]}' examples/data/xml/recipients.xml > target/out/interactive-xml.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
-$FREEMARKER_CMD -i '${JsoupTool.parse(dataSources.get(0)).select("a")[0]}' examples/data/html/dependencies.html > target/out/interactive-html.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
-$FREEMARKER_CMD -i '${GsonTool.toJson(YamlTool.parse(dataSources.get(0)))}' examples/data/yaml/swagger-spec.yaml > target/out/interactive-swagger.json || { echo >&2 "Test failed.  Aborting."; exit 1; }
-$FREEMARKER_CMD -i '${YamlTool.toYaml(GsonTool.parse(dataSources.get(0)))}' examples/data/json/swagger-spec.json > target/out/interactive-swagger.yaml || { echo >&2 "Test failed.  Aborting."; exit 1; }
-$FREEMARKER_CMD -i '${DataFrameTool.print(DataFrameTool.fromMaps(GsonTool.parse(dataSources.get(0))))}' examples/data/json/github-users.json > target/out/interactive-dataframe.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -i '${tools.jsonpath.parse(dataSources.get(0)).read("$.info.title")}' examples/data/json/swagger-spec.json > target/out/interactive-json.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -i '${tools.xml.parse(dataSources.get(0))["recipients/person[1]/name"]}' examples/data/xml/recipients.xml > target/out/interactive-xml.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -i '${tools.jsoup.parse(dataSources.get(0)).select("a")[0]}' examples/data/html/dependencies.html > target/out/interactive-html.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -i '${tools.gson.toJson(tools.yaml.parse(dataSources.get(0)))}' examples/data/yaml/swagger-spec.yaml > target/out/interactive-swagger.json || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -i '${tools.yaml.toYaml(tools.gson.parse(dataSources.get(0)))}' examples/data/json/swagger-spec.json > target/out/interactive-swagger.yaml || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -i '${tools.dataframe.print(tools.dataframe.fromMaps(tools.gson.parse(dataSources.get(0))))}' examples/data/json/github-users.json > target/out/interactive-dataframe.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
 # CSV

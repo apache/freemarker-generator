@@ -55,6 +55,6 @@ freemarker-cli -t https://raw.githubusercontent.com/apache/freemarker-generator/
 The template can be defined directly on the command line in case of trivial transformations
 
 ```
-freemarker-cli -i '${GsonTool.toJson(yaml)}' -m yaml=examples/data/yaml/swagger-spec.yaml
+freemarker-cli -i '${tools.gson.toJson(yaml)}' -m yaml=examples/data/yaml/swagger-spec.yaml
 ```
 

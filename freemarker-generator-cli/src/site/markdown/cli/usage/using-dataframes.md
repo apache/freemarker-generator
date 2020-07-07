@@ -31,8 +31,8 @@ and create a `DateFrame` using the following code snippet
 
 ```
 <#assign dataSource = dataSources.get(0)>
-<#assign csvParser = CSVTool.parse(dataSource, CSVTool.formats["DATAFRAME"])>
-<#assign users = DataFrameTool.fromCSVParser(csvParser)>
+<#assign csvParser = tools.csv.parse(dataSource, tools.csv.formats["DATAFRAME"])>
+<#assign users = tools.dataframe.fromCSVParser(csvParser)>
 ```
 
 The example can be executed by running
@@ -50,7 +50,7 @@ bin/freemarker-cli -PCSV_SOURCE_FORMAT=DATAFRAME -t examples/templates/dataframe
 #### Select By Age
 
 ```
-${DataFrameTool.print(users.select("(age > 40)"))}
+${tools.dataframe.print(users.select("(age > 40)"))}
 ```
 
 which shows 
@@ -71,9 +71,9 @@ Now we want to create a new `DataFrame` by selecting `name` and `country`
 
 ```
 <#assign country = "Germany">
-${DataFrameTool.print(users
+${tools.dataframe.print(users
     .select("(name == 'Schmitt' || name == 'Meier') && country == '${country}'")
-    .sort("name", DataFrameTool.sortOrder["ASCENDING"]))}
+    .sort("name", tools.dataframe.sortOrder["ASCENDING"]))}
 ```
 
 which shows
@@ -99,7 +99,7 @@ which shows
 Let's assume we want to count the records for each `country`
 
 ```
-${DataFrameTool.print(users.getColumn("country").transform(DataFrameTool.transformer["COUNT"]))}
+${tools.dataframe.print(users.getColumn("country").transform(tools.dataframe.transformer["COUNT"]))}
 ```
 
 returns the following `DataFrame`
@@ -123,7 +123,7 @@ returns the following `DataFrame`
 Let's assume that we want to group the `DataFrame` by `age` and `country`
 
 ```
-${DataFrameTool.print(users.groupBy("age", "country").sort("age"))}
+${tools.dataframe.print(users.groupBy("age", "country").sort("age"))}
 ``` 
 
 which results in 
@@ -152,11 +152,11 @@ which results in
 
 Here we load a `examples/data/json/github-users.json` which represents a tabular 
 data being parsed as a list of maps and print the JSON as dataframe. Technically
-it is a list of maps hence we invoke `DataFrameTool.fromMaps()
+it is a list of maps hence we invoke `tools.dataframe.fromMaps()
 
 ```
 freemarker-cli \
-  -i '${DataFrameTool.print(DataFrameTool.fromMaps(GsonTool.parse(dataSources.get(0))))}' \
+  -i '${tools.dataframe.print(tools.dataframe.fromMaps(tools.gson.parse(dataSources.get(0))))}' \
   examples/data/json/github-users.json
 
 ┌────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┐
@@ -184,11 +184,11 @@ Let's transform an Excel Sheet to a `DataFrame` being printed using the followin
 
 ```
 <#assign dataSource = dataSources.get(0)>
-<#assign workbook = ExcelTool.parse(dataSource)>
-<#list ExcelTool.getSheets(workbook) as sheet>
-    <#assign table = ExcelTool.toTable(sheet)>
-    <#assign df = DataFrameTool.fromRows(table, true)>
-    ${DataFrameTool.print(df)}<#t>
+<#assign workbook = tools.excel.parse(dataSource)>
+<#list tools.excel.getSheets(workbook) as sheet>
+    <#assign table = tools.excel.toTable(sheet)>
+    <#assign df = tools.dataframe.fromRows(table, true)>
+    ${tools.dataframe.print(df)}<#t>
 </#list>
 ```
 

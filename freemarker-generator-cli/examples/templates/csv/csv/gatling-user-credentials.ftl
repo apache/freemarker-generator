@@ -16,8 +16,8 @@
   under the License.
 -->
 <#assign dataSource = dataSources.get(0)>
-<#assign cvsFormat = CSVTool.formats["DEFAULT"].withDelimiter(';')>
-<#assign csvParser = CSVTool.parse(dataSource, cvsFormat)>
+<#assign cvsFormat = tools.csv.formats["DEFAULT"].withDelimiter(';')>
+<#assign csvParser = tools.csv.parse(dataSource, cvsFormat)>
 <#assign csvRecords = csvParser.records>
 
 <#compress>

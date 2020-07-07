@@ -17,7 +17,7 @@
 -->
 <#assign dataSource = dataSources.get(0)>
 <#assign name = dataSource.name>
-<#assign html = JsoupTool.parse(dataSource)>
+<#assign html = tools.jsoup.parse(dataSource)>
 
 <#compress>
     <@writeHeader/>

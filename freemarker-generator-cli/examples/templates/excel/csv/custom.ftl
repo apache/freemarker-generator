@@ -16,14 +16,14 @@
   under the License.
 -->
 <#assign format = CSV_TARGET_FORMAT!"DEFAULT">
-<#assign salt = SystemTool.parameters["salt"]!"salt">
+<#assign salt = tools.system.parameters["salt"]!"salt">
 <#-- Parse the first data source & sheet of the Excel document -->
-<#assign workbook = ExcelTool.parse(dataSources.get(0))>
-<#assign sheet = ExcelTool.getSheets(workbook)[0]>
-<#assign records = ExcelTool.toTable(sheet)>
+<#assign workbook = tools.excel.parse(dataSources.get(0))>
+<#assign sheet = tools.excel.getSheets(workbook)[0]>
+<#assign records = tools.excel.toTable(sheet)>
 <#-- Setup CSVPrinter  -->
-<#assign cvsFormat = CSVTool.formats[format]>
-<#assign csvPrinter = CSVTool.printer(cvsFormat)>
+<#assign cvsFormat = tools.csv.formats[format]>
+<#assign csvPrinter = tools.csv.printer(cvsFormat)>
 <#--
     Transform an arbitrary Excel file and add addition columns using Commons CSV
     We are using an instance of CSVPrinter directly have proper quoting of the output
@@ -50,7 +50,7 @@
 <#--------------------------------------------------------------------------->
 <#function uuidFromValueAndSalt value salt>
     <#assign uuidSource = value + salt>
-    <#assign buffer = FreeMarkerTool.statics["java.nio.charset.Charset"].forName("UTF-8").encode(uuidSource).rewind()>
+    <#assign buffer = tools.freemarker.statics["java.nio.charset.Charset"].forName("UTF-8").encode(uuidSource).rewind()>
     <#assign bytes = buffer.array()[0..<buffer.limit()]>
-    <#return FreeMarkerTool.statics["java.util.UUID"].nameUUIDFromBytes(bytes)>
+    <#return tools.freemarker.statics["java.util.UUID"].nameUUIDFromBytes(bytes)>
 </#function>

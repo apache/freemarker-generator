@@ -27,22 +27,20 @@ Output format          : ${.output_format}
 
 FreeMarker CLI Template Loader Directories
 ------------------------------------------------------------------------------
-<#list SystemTool.getTemplateDirectories() as directory>
+<#list tools.system.getTemplateDirectories() as directory>
 [#${directory?counter}] ${directory}
-</#list>
-
-FreeMarker CLI Tools
-------------------------------------------------------------------------------
-<#list .data_model?keys?sort as key>
-<#if key?ends_with("Tool")>
-- ${key?right_pad(20)} : ${.data_model[key]}
-</#if>
 </#list>
 
 FreeMarker CLI Data Model
 ---------------------------------------------------------------------------
 <#list .data_model?keys?sort as key>
 - ${key}<#lt>
+</#list>
+
+FreeMarker CLI Tools
+------------------------------------------------------------------------------
+<#list .data_model.tools?keys?sort as key>
+- ${key?right_pad(20)} : ${.data_model.tools[key]}
 </#list>
 
 <#if dataSources.list?has_content>
@@ -54,10 +52,10 @@ URI : ${dataSource.uri}
 </#list>
 </#if>
 
-<#if SystemTool.parameters?has_content>
+<#if tools.system.parameters?has_content>
 FreeMarker CLI Parameters
 ------------------------------------------------------------------------------
-<#list SystemTool.parameters as key,value>
+<#list tools.system.parameters as key,value>
 <#if value?is_hash>
 - ${key} ==> { <#list value as name,value>${name}=${value} </#list>}
 <#else>

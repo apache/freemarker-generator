@@ -17,11 +17,11 @@
 -->
 <#-- Parse the first data source & sheet of the Excel document -->
 <#import "/templates/lib/commons-csv.ftl" as csv />
-<#assign workbook = ExcelTool.parse(dataSources.get(0))>
-<#assign sheet = ExcelTool.getSheets(workbook)[0]>
-<#assign records = ExcelTool.toTable(sheet)>
+<#assign workbook = tools.excel.parse(dataSources.get(0))>
+<#assign sheet = tools.excel.getSheets(workbook)[0]>
+<#assign records = tools.excel.toTable(sheet)>
 <#-- Setup CSVPrinter  -->
-<#assign csvPrinter = CSVTool.printer(csv.targetFormat())>
+<#assign csvPrinter = tools.csv.printer(csv.targetFormat())>
 <#-- Print each line of the Excel as CSV record -->
 <#compress>
     <#list records as record>
@@ -30,8 +30,8 @@
 </#compress>
 <#--------------------------------------------------------------------------->
 <#function csvOutFormat>
-    <#assign format = CSVTool.formats[CSV_TARGET_FORMAT!"DEFAULT"]>
-    <#assign delimiter = CSVTool.toDelimiter(CSV_TARGET_DELIMITER!format.getDelimiter())>
+    <#assign format = tools.csv.formats[CSV_TARGET_FORMAT!"DEFAULT"]>
+    <#assign delimiter = tools.csv.toDelimiter(CSV_TARGET_DELIMITER!format.getDelimiter())>
     <#assign withHeader = CSV_TARGET_WITH_HEADER!"false">
     <#assign format = format.withDelimiter(delimiter)>
     <#if withHeader?boolean>

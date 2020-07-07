@@ -111,14 +111,14 @@ public class ExamplesTest extends AbstractMainTest {
 
     @Test
     public void shouldRunInteractiveTemplateExamples() throws IOException {
-        assertValid(execute("-i ${JsonPathTool.parse(dataSources.get(0)).read(\"$.info.title\")} examples/data/json/swagger-spec.json"));
-        assertValid(execute("-i ${XmlTool.parse(dataSources.get(0))[\"recipients/person[1]/name\"]} examples/data/xml/recipients.xml"));
-        assertValid(execute("-i ${JsoupTool.parse(dataSources.get(0)).select(\"a\")[0]} examples/data/html/dependencies.html"));
-        assertValid(execute("-i ${GsonTool.toJson(YamlTool.parse(dataSources.get(0)))} examples/data/yaml/swagger-spec.yaml"));
-        assertValid(execute("-i ${GsonTool.toJson(yaml)} -m yaml=examples/data/yaml/swagger-spec.yaml"));
-        assertValid(execute("-i ${YamlTool.toYaml(GsonTool.parse(dataSources.get(0)))} examples/data/json/swagger-spec.json"));
-        assertValid(execute("-i ${YamlTool.toYaml(json)} -m json=examples/data/json/swagger-spec.json"));
-        assertValid(execute("-i ${DataFrameTool.print(DataFrameTool.fromMaps(GsonTool.parse(dataSources.get(0))))} examples/data/json/github-users.json"));
+        assertValid(execute("-i ${tools.jsonpath.parse(dataSources.get(0)).read(\"$.info.title\")} examples/data/json/swagger-spec.json"));
+        assertValid(execute("-i ${tools.xml.parse(dataSources.get(0))[\"recipients/person[1]/name\"]} examples/data/xml/recipients.xml"));
+        assertValid(execute("-i ${tools.jsoup.parse(dataSources.get(0)).select(\"a\")[0]} examples/data/html/dependencies.html"));
+        assertValid(execute("-i ${tools.gson.toJson(tools.yaml.parse(dataSources.get(0)))} examples/data/yaml/swagger-spec.yaml"));
+        assertValid(execute("-i ${tools.gson.toJson(yaml)} -m yaml=examples/data/yaml/swagger-spec.yaml"));
+        assertValid(execute("-i ${tools.yaml.toYaml(tools.gson.parse(dataSources.get(0)))} examples/data/json/swagger-spec.json"));
+        assertValid(execute("-i ${tools.yaml.toYaml(json)} -m json=examples/data/json/swagger-spec.json"));
+        assertValid(execute("-i ${tools.dataframe.print(tools.dataframe.fromMaps(tools.gson.parse(dataSources.get(0))))} examples/data/json/github-users.json"));
     }
 
     @Test

@@ -15,32 +15,32 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign records = CSVTool.parse(dataSources.get(0), CSVFormat.DEFAULT.withHeader()).records>
+<#assign records = tools.csv.parse(dataSources.get(0), CSVFormat.DEFAULT.withHeader()).records>
 
-CSVTool.toMap(name)
+tools.csv.toMap(name)
 =============================================================================
-<#assign map = CSVTool.toMap(records, "contract_id")>
+<#assign map = tools.csv.toMap(records, "contract_id")>
 <#list map as key, record>
 ${key} ==> ${record.get("customer_company_name")}
 </#list>
 
-CSVTool.toMap(index)
+tools.csv.toMap(index)
 =============================================================================
-<#assign map = CSVTool.toMap(records, 0)>
+<#assign map = tools.csv.toMap(records, 0)>
 <#list map as key, record>
 ${key} ==> ${record.get("customer_company_name")}
 </#list>
 
-CSVTool.toMultiMap(name)
+tools.csv.toMultiMap(name)
 =============================================================================
-<#assign map = CSVTool.toMultiMap(records, "contract_id")>
+<#assign map = tools.csv.toMultiMap(records, "contract_id")>
 <#list map as key, records>
 ${key} ==> Found ${records?size} records
 </#list>
 
-CSVTool.toMultiMap(index)
+tools.csv.toMultiMap(index)
 =============================================================================
-<#assign map = CSVTool.toMultiMap(records, 0)>
+<#assign map = tools.csv.toMultiMap(records, 0)>
 <#list map as key, records>
 ${key} ==> Found ${records?size} records
 </#list>
