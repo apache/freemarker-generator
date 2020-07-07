@@ -16,6 +16,7 @@
  */
 package org.apache.freemarker.generator.datasource;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.freemarker.generator.base.uri.NamedUri;
@@ -29,7 +30,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.file.Paths;
 
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -40,12 +40,13 @@ import static org.junit.Assert.assertEquals;
 
 public class DataSourceFactoryTest {
 
-    private static final String PWD = Paths.get(".").toAbsolutePath().normalize().toString();
+    private static final String PWD = FilenameUtils.separatorsToUnix(new File("").getAbsolutePath());
     private static final String ANY_TEXT = "Hello World";
     private static final String ANY_FILE_NAME = "pom.xml";
     private static final String ANY_FILE_URI = format("file:///%s/pom.xml", PWD);
     private static final Charset ANY_CHAR_SET = UTF_8;
     private static final File ANY_FILE = new File(ANY_FILE_NAME);
+    private static final String ANY_ENV_VARIABLE = "JAVA_HOME";
     private static final String ANY_NAMED_URL_STRING = "content:www=https://www.google.com?foo=bar#contenttype=application/json";
 
     @Test
@@ -156,14 +157,15 @@ public class DataSourceFactoryTest {
     }
 
     @Test
-    public void shouldCreateDataSourceFromEnviromentVariable() {
-        final NamedUri namedUri = NamedUriStringParser.parse("pwd=env:///PWD");
+    public void shouldCreateDataSourceFromEnvironmentVariable() {
+        final String uri = "env:///" + ANY_ENV_VARIABLE;
+        final NamedUri namedUri = NamedUriStringParser.parse("myenv=" + uri);
         final DataSource dataSource = DataSourceFactory.fromNamedUri(namedUri);
 
-        assertEquals("pwd", dataSource.getName());
+        assertEquals("myenv", dataSource.getName());
         assertEquals("default", dataSource.getGroup());
         assertEquals(UTF_8, dataSource.getCharset());
-        assertEquals("env:///PWD", dataSource.getUri().toString());
+        assertEquals(uri, dataSource.getUri().toString());
         assertEquals("text/plain", dataSource.getContentType());
     }
 }

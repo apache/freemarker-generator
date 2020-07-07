@@ -23,6 +23,7 @@ import freemarker.cache.FileTemplateLoader;
 import freemarker.template.Configuration;
 import mockit.Expectations;
 import mockit.Mocked;
+import org.apache.commons.io.FilenameUtils;
 import org.assertj.core.api.*;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -248,7 +249,7 @@ public class OutputGeneratorTest {
                 .isThrownBy(() -> {
                     generator.generate(config);
                 })
-                .withMessage("Could not process template associated with data file: src/test/data/generating-file-visitor/data/mydir/missing-var-test.txt.json");
+                .withMessageStartingWith("Could not process template associated with data file");
     }
 
     @Test

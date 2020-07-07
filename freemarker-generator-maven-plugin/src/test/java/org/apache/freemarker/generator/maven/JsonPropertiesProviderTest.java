@@ -99,7 +99,7 @@ public class JsonPropertiesProviderTest {
         assertThatExceptionOfType(RuntimeException.class).isThrownBy(() -> {
             toTest.providePropertiesFromFile(path, builder);
         })
-                .withMessage("Could not parse json data file: src/test/data/generating-file-visitor/data/mydir/success-test.txt.json");
+                .withMessageStartingWith("Could not parse json data file");
     }
 
     @Test
@@ -119,6 +119,6 @@ public class JsonPropertiesProviderTest {
         assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> {
             toTest.providePropertiesFromFile(path, builder);
         })
-                .withMessage("visitFile() given file not in sourceDirectory: src/test/data/generating-file-visitor/badPath/success-test.txt.json");
+                .withMessageStartingWith("visitFile() given file not in sourceDirectory");
     }
 }

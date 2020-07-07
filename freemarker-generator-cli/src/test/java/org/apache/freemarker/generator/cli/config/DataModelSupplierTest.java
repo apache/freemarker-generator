@@ -16,10 +16,11 @@
  */
 package org.apache.freemarker.generator.cli.config;
 
+import org.apache.commons.io.FilenameUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.nio.file.Paths;
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -30,8 +31,9 @@ import static org.junit.Assert.assertTrue;
 
 public class DataModelSupplierTest {
 
-    private static final String PWD = Paths.get(".").toAbsolutePath().normalize().toString();
-    private static final String PWD_VALUE = System.getenv("PWD");
+    private static final String PWD = FilenameUtils.separatorsToUnix(new File("").getAbsolutePath());
+    private static final String ANY_ENV_VARIABLE = "JAVA_HOME";
+    private static final String ANY_ENV_VARIABLE_VALUE = System.getenv(ANY_ENV_VARIABLE);
     private static final int NR_OF_ALL_ENV_VARIABLES = System.getenv().size();
 
     // === Environment Variables ===
@@ -43,7 +45,7 @@ public class DataModelSupplierTest {
         final Map<String, Object> model = supplier.get();
 
         assertEquals(NR_OF_ALL_ENV_VARIABLES, model.size());
-        assertEquals(PWD_VALUE, model.get("PWD"));
+        assertEquals(ANY_ENV_VARIABLE_VALUE, model.get(ANY_ENV_VARIABLE));
     }
 
     @Test
@@ -54,27 +56,27 @@ public class DataModelSupplierTest {
 
         assertEquals(1, model.size());
         assertEquals(NR_OF_ALL_ENV_VARIABLES, toMap(model, "myenv").size());
-        assertEquals(PWD_VALUE, toMap(model, "myenv").get("PWD"));
+        assertEquals(ANY_ENV_VARIABLE_VALUE, toMap(model, "myenv").get(ANY_ENV_VARIABLE));
     }
 
     @Test
     public void shouldCopySingleEnvironmentVariablesToTopLevelDataModel() {
-        final DataModelSupplier supplier = supplier("env:///PWD");
+        final DataModelSupplier supplier = supplier("env:///" + ANY_ENV_VARIABLE);
 
         final Map<String, Object> model = supplier.get();
 
         assertEquals(1, model.size());
-        assertEquals(PWD_VALUE, model.get("PWD"));
+        assertEquals(ANY_ENV_VARIABLE_VALUE, model.get(ANY_ENV_VARIABLE));
     }
 
     @Test
     public void shouldCopySingleEnvironmentVariableToDataModelVariable() {
-        final DataModelSupplier supplier = supplier("mypwd=env:///PWD");
+        final DataModelSupplier supplier = supplier("myenv=env:///" + ANY_ENV_VARIABLE);
 
         final Map<String, Object> model = supplier.get();
 
         assertEquals(1, model.size());
-        assertEquals(PWD_VALUE, model.get("mypwd"));
+        assertEquals(ANY_ENV_VARIABLE_VALUE, model.get("myenv"));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -137,8 +139,8 @@ public class DataModelSupplierTest {
         final Map<String, Object> model = supplier.get();
 
         assertEquals(1, model.size());
-        assertEquals("first", ((List)model.get("list")).get(0));
-        assertEquals("second", ((List)model.get("list")).get(1));
+        assertEquals("first", ((List) model.get("list")).get(0));
+        assertEquals("second", ((List) model.get("list")).get(1));
     }
 
     @Test(expected = Exception.class)
