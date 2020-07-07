@@ -185,11 +185,22 @@ public abstract class DataSourceFactory {
 
     // == General ===========================================================
 
-    public static DataSource create(String str) {
-        if (UriUtils.isUri(str)) {
-            return fromNamedUri(str);
+    /**
+     * Create a data source based on a
+     * <ul>
+     *  <li>URI</li>
+     *  <li>Named URI</li>
+     *  <li>file name</li>
+     * </ul>
+     *
+     * @param source source of the data source
+     * @return DataSource
+     */
+    public static DataSource create(String source) {
+        if (UriUtils.isUri(source)) {
+            return fromNamedUri(source);
         } else {
-            final File file = new File(str);
+            final File file = new File(source);
             return fromFile(file.getName(), DEFAULT_GROUP, file, UTF_8);
         }
     }

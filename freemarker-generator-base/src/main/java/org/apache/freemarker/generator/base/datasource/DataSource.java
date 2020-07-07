@@ -23,6 +23,8 @@ import org.apache.freemarker.generator.base.activation.ByteArrayDataSource;
 import org.apache.freemarker.generator.base.activation.StringDataSource;
 import org.apache.freemarker.generator.base.mime.MimetypeParser;
 import org.apache.freemarker.generator.base.util.CloseableReaper;
+import org.apache.freemarker.generator.base.util.StringUtils;
+import org.apache.freemarker.generator.base.util.Validate;
 
 import javax.activation.FileDataSource;
 import java.io.Closeable;
@@ -36,12 +38,8 @@ import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
-import static org.apache.commons.io.IOUtils.lineIterator;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DATASOURCE_UNKNOWN_LENGTH;
 import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_APPLICATION_OCTET_STREAM;
-import static org.apache.freemarker.generator.base.util.StringUtils.emptyToNull;
-import static org.apache.freemarker.generator.base.util.StringUtils.firstNonEmpty;
-import static org.apache.freemarker.generator.base.util.StringUtils.isNotEmpty;
 
 /**
  * Data source which encapsulates data to be used for rendering
@@ -83,7 +81,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
             String contentType,
             Charset charset) {
         this.name = requireNonNull(name);
-        this.group = emptyToNull(group);
+        this.group = StringUtils.emptyToNull(group);
         this.uri = requireNonNull(uri);
         this.dataSource = requireNonNull(dataSource);
         this.contentType = contentType;
@@ -190,6 +188,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     }
 
     public String getText(String charsetName) {
+        Validate.notEmpty(charsetName, "No charset name provided");
         final StringWriter writer = new StringWriter();
         try (InputStream is = getUnsafeInputStream()) {
             IOUtils.copy(is, writer, Charset.forName(charsetName));
@@ -217,6 +216,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
      * @return the list of Strings, never null
      */
     public List<String> getLines(String charsetName) {
+        Validate.notEmpty(charsetName, "No charset name provided");
         try (InputStream inputStream = getUnsafeInputStream()) {
             return IOUtils.readLines(inputStream, charsetName);
         } catch (IOException e) {
@@ -243,8 +243,9 @@ public class DataSource implements Closeable, javax.activation.DataSource {
      * @return line iterator
      */
     public LineIterator getLineIterator(String charsetName) {
+        Validate.notEmpty(charsetName, "No charset name provided");
         try {
-            return closables.add(lineIterator(getUnsafeInputStream(), Charset.forName(charsetName)));
+            return closables.add(IOUtils.lineIterator(getUnsafeInputStream(), Charset.forName(charsetName)));
         } catch (IOException e) {
             throw new RuntimeException("Failed to create line iterator: " + toString(), e);
         }
@@ -261,8 +262,9 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     /**
      * Matches a metadata entry with a wildcard expression.
      *
+     * @see <a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.7/org/apache/commons/io/FilenameUtils.html#wildcardMatch-java.lang.String-java.lang.String-">Apache Commons IO</a>
      * @param part     part, e.g. "name", "basename", "extension", "uri", "group"
-     * @param wildcard wildcard expression
+     * @param wildcard the wildcard string to match against
      * @return true if the wildcard expression matches
      */
     public boolean match(String part, String wildcard) {
@@ -299,15 +301,16 @@ public class DataSource implements Closeable, javax.activation.DataSource {
      * @return content type
      */
     private String contentType() {
-        if (isNotEmpty(contentType)) {
+        if (StringUtils.isNotEmpty(contentType)) {
             return contentType;
         } else {
-            return firstNonEmpty(dataSource.getContentType(), MIME_APPLICATION_OCTET_STREAM);
+            return StringUtils.firstNonEmpty(dataSource.getContentType(), MIME_APPLICATION_OCTET_STREAM);
         }
     }
 
     private String getPart(String part) {
-        switch (part) {
+        Validate.notEmpty(part, "No metadata part provided");
+        switch (part.toLowerCase()) {
             case "basename":
                 return getBaseName();
             case "contenttype":
