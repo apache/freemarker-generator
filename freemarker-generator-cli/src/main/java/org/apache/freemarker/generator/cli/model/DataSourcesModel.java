@@ -52,6 +52,6 @@ public class DataSourcesModel extends BeanModel implements TemplateSequenceModel
 
     @Override
     protected Set<Object> keySet() {
-        return new LinkedHashSet<Object>(dataSources.getNames());
+        return new LinkedHashSet<>(dataSources.getNames());
     }
 }

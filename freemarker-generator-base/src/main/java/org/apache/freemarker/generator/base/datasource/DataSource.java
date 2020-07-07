@@ -28,6 +28,7 @@ import javax.activation.FileDataSource;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.StringWriter;
 import java.net.URI;
 import java.nio.charset.Charset;
@@ -37,7 +38,9 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
 import static org.apache.commons.io.IOUtils.lineIterator;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DATASOURCE_UNKNOWN_LENGTH;
+import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_APPLICATION_OCTET_STREAM;
 import static org.apache.freemarker.generator.base.util.StringUtils.emptyToNull;
+import static org.apache.freemarker.generator.base.util.StringUtils.firstNonEmpty;
 import static org.apache.freemarker.generator.base.util.StringUtils.isNotEmpty;
 
 /**
@@ -49,7 +52,7 @@ import static org.apache.freemarker.generator.base.util.StringUtils.isNotEmpty;
  * the content type &amp; charset might be determined using a network
  * call.
  */
-public class DataSource implements Closeable {
+public class DataSource implements Closeable, javax.activation.DataSource {
 
     /** Human-readable name of the data source */
     private final String name;
@@ -63,7 +66,7 @@ public class DataSource implements Closeable {
     /** The underlying "javax.activation.DataSource" */
     private final javax.activation.DataSource dataSource;
 
-    /** Optional user-supplied content type */
+    /** Optional content type */
     private final String contentType;
 
     /** Optional charset for directly accessing text-based content */
@@ -88,8 +91,39 @@ public class DataSource implements Closeable {
         this.closables = new CloseableReaper();
     }
 
+    @Override
     public String getName() {
         return name;
+    }
+
+    /**
+     * Get the content type.
+     *
+     * @return content type
+     */
+    @Override
+    public String getContentType() {
+        return contentType();
+    }
+
+    /**
+     * Get an input stream which is closed together with this data source.
+     *
+     * @return InputStream
+     */
+    @Override
+    public InputStream getInputStream() {
+        return closables.add(getUnsafeInputStream());
+    }
+
+    @Override
+    public OutputStream getOutputStream() {
+        throw new RuntimeException("No output stream supported");
+    }
+
+    @Override
+    public void close() {
+        closables.close();
     }
 
     public String getGroup() {
@@ -109,11 +143,11 @@ public class DataSource implements Closeable {
     }
 
     /**
-     * Get the content type without additional parameters, e.g. "charset".
+     * Get the mimetype , i.e. content type without additional charset parameter.
      *
-     * @return content type
+     * @return mimetype
      */
-    public String getContentType() {
+    public String getMimetype() {
         return MimetypeParser.getMimetype(contentType());
     }
 
@@ -136,15 +170,6 @@ public class DataSource implements Closeable {
         } else {
             return DATASOURCE_UNKNOWN_LENGTH;
         }
-    }
-
-    /**
-     * Get an input stream which is closed together with this data source.
-     *
-     * @return InputStream
-     */
-    public InputStream getInputStream() {
-        return closables.add(getUnsafeInputStream());
     }
 
     /**
@@ -234,6 +259,18 @@ public class DataSource implements Closeable {
     }
 
     /**
+     * Matches a metadata entry with a wildcard expression.
+     *
+     * @param part     part, e.g. "name", "basename", "extension", "uri", "group"
+     * @param wildcard wildcard expression
+     * @return true if the wildcard expression matches
+     */
+    public boolean match(String part, String wildcard) {
+        final String value = getPart(part);
+        return FilenameUtils.wildcardMatch(value, wildcard);
+    }
+
+    /**
      * Some tools create a {@link java.io.Closeable} which can bound to the
      * lifecycle of the data source. When the data source is closed all the
      * associated {@link java.io.Closeable} are closed as well.
@@ -247,11 +284,6 @@ public class DataSource implements Closeable {
     }
 
     @Override
-    public void close() {
-        closables.close();
-    }
-
-    @Override
     public String toString() {
         return "DataSource{" +
                 "name='" + name + '\'' +
@@ -260,7 +292,42 @@ public class DataSource implements Closeable {
                 '}';
     }
 
+    /**
+     * If there is no content type we ask the underlying data source. E.g. for
+     * an URL data source this information is fetched from the server.
+     *
+     * @return content type
+     */
     private String contentType() {
-        return isNotEmpty(contentType) ? contentType : dataSource.getContentType();
+        if (isNotEmpty(contentType)) {
+            return contentType;
+        } else {
+            return firstNonEmpty(dataSource.getContentType(), MIME_APPLICATION_OCTET_STREAM);
+        }
+    }
+
+    private String getPart(String part) {
+        switch (part) {
+            case "basename":
+                return getBaseName();
+            case "contenttype":
+                return getContentType();
+            case "extension":
+                return getExtension();
+            case "group":
+                return getGroup();
+            case "mimetype":
+                return getContentType();
+            case "name":
+                return getName();
+            case "path":
+                return uri.getPath();
+            case "scheme":
+                return uri.getScheme();
+            case "uri":
+                return uri.toASCIIString();
+            default:
+                throw new IllegalArgumentException("Unknown part: " + part);
+        }
     }
 }

@@ -120,7 +120,7 @@ public abstract class DataSourceFactory {
 
     public static DataSource fromString(String name, String group, String content, String contentType) {
         final StringDataSource dataSource = new StringDataSource(name, content, contentType, UTF_8);
-        final URI uri = UriUtils.toURI(Location.STRING, Integer.toString(content.hashCode()));
+        final URI uri = UriUtils.toURI(Location.STRING, "string");
         return create(name, group, uri, dataSource, contentType, UTF_8);
     }
 

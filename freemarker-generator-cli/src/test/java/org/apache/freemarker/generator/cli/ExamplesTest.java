@@ -164,6 +164,21 @@ public class ExamplesTest extends AbstractMainTest {
     }
 
     @Test
+    public void shouldNotShadowDataSourcesInFTL() throws IOException {
+        final String args = "empty=examples/data/json/github-users.json";
+
+        // check shadowing of "isEmpty"
+        assertEquals("false", execute("empty=examples/data/json/github-users.json -i ${DataSources.empty?c}"));
+        // DataSources#isEmpty shadows the data source "empty"
+        // assertEquals("false", execute("empty=examples/data/json/github-users.json -i ${DataSources[\"empty\"]}"));
+        assertEquals("empty", execute("empty=examples/data/json/github-users.json -i ${DataSources.get(\"empty\").name}"));
+
+        // check shadowing of "find"
+        // assertEquals("find", execute("find=examples/data/json/github-users.json -i ${DataSources.find.name}"));
+        // assertEquals("find", execute("find=examples/data/json/github-users.json -i ${DataSources[\"find\"].name}"));
+    }
+
+    @Test
     @Ignore("Manual test to check memory consumption and resource handling")
     public void shouldCloseAllResources() throws IOException {
         for (int i = 0; i < 500; i++) {

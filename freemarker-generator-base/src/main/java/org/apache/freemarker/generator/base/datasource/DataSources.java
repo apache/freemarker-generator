@@ -16,7 +16,6 @@
  */
 package org.apache.freemarker.generator.base.datasource;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.freemarker.generator.base.util.ClosableUtils;
 import org.apache.freemarker.generator.base.util.StringUtils;
 import org.apache.freemarker.generator.base.util.Validate;
@@ -116,19 +115,19 @@ public class DataSources implements Closeable {
      */
     public List<DataSource> find(String wildcard) {
         return dataSources.stream()
-                .filter(d -> FilenameUtils.wildcardMatch(d.getName(), wildcard))
+                .filter(dataSource -> dataSource.match("name", wildcard))
                 .collect(toList());
     }
 
     /**
-     * Find data sources based on their group and and globbing pattern.
+     * Find data sources based on their metadata part and and globbing pattern.
      *
      * @param wildcard the wildcard string to match against
      * @return list of matching data sources
      */
-    public List<DataSource> findByGroup(String wildcard) {
+    public List<DataSource> find(String part, String wildcard) {
         return dataSources.stream()
-                .filter(d -> FilenameUtils.wildcardMatch(d.getGroup(), wildcard))
+                .filter(dataSource -> dataSource.match(part, wildcard))
                 .collect(toList());
     }
 
