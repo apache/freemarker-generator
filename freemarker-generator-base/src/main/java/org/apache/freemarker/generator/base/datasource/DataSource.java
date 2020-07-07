@@ -262,10 +262,10 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     /**
      * Matches a metadata entry with a wildcard expression.
      *
-     * @see <a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.7/org/apache/commons/io/FilenameUtils.html#wildcardMatch-java.lang.String-java.lang.String-">Apache Commons IO</a>
      * @param part     part, e.g. "name", "basename", "extension", "uri", "group"
      * @param wildcard the wildcard string to match against
      * @return true if the wildcard expression matches
+     * @see <a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.7/org/apache/commons/io/FilenameUtils.html#wildcardMatch-java.lang.String-java.lang.String-">Apache Commons IO</a>
      */
     public boolean match(String part, String wildcard) {
         final String value = getPart(part);

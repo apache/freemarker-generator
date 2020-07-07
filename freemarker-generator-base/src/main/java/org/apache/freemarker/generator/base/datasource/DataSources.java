@@ -107,9 +107,9 @@ public class DataSources implements Closeable {
     /**
      * Find data sources based on their name and a wildcard.
      *
-     * @see <a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.7/org/apache/commons/io/FilenameUtils.html#wildcardMatch-java.lang.String-java.lang.String-">Apache Commons IO</a>
      * @param wildcard the wildcard string to match against
      * @return list of matching data sources
+     * @see <a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.7/org/apache/commons/io/FilenameUtils.html#wildcardMatch-java.lang.String-java.lang.String-">Apache Commons IO</a>
      */
     public List<DataSource> find(String wildcard) {
         return dataSources.stream()
@@ -120,9 +120,10 @@ public class DataSources implements Closeable {
     /**
      * Find data sources based on their metadata part and wildcard.
      *
-     * @see <a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.7/org/apache/commons/io/FilenameUtils.html#wildcardMatch-java.lang.String-java.lang.String-">Apache Commons IO</a>
+     * @param part part of metadata to match
      * @param wildcard the wildcard string to match against
      * @return list of matching data sources
+     * @see <a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.7/org/apache/commons/io/FilenameUtils.html#wildcardMatch-java.lang.String-java.lang.String-">Apache Commons IO</a>
      */
     public List<DataSource> find(String part, String wildcard) {
         return dataSources.stream()
