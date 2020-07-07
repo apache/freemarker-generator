@@ -26,6 +26,7 @@ import mockit.Deencapsulation;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.Verifications;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -103,19 +104,21 @@ public class FreeMarkerMojoTest extends Assert {
         // Validate source directory.
         assertThatExceptionOfType(MojoExecutionException.class).isThrownBy(() -> {
             mojo.execute();
-        }).withMessage("Required directory does not exist: target/test-output/freemarker-mojo/executeTest/data");
+        })
+                .withMessage(fixSeparators("Required directory does not exist: target/test-output/freemarker-mojo/executeTest/data"));
 
         new File(testCaseOutputDir, "data").mkdirs();
         assertThatExceptionOfType(MojoExecutionException.class).isThrownBy(() -> {
             mojo.execute();
-        }).withMessage("Required directory does not exist: target/test-output/freemarker-mojo/executeTest/template");
+        })
+                .withMessage(fixSeparators("Required directory does not exist: target/test-output/freemarker-mojo/executeTest/template"));
         new File(testCaseOutputDir, "template").mkdirs();
 
         // Validate minimum configuration.
         mojo.execute();
 
         new Verifications() {{
-            project.addCompileSourceRoot("target/test-output/freemarker-mojo/executeTest/generated-files");
+            project.addCompileSourceRoot(fixSeparators("target/test-output/freemarker-mojo/executeTest/generated-files"));
             times = 1;
 
             Configuration config;
@@ -177,7 +180,7 @@ public class FreeMarkerMojoTest extends Assert {
         mojo.execute();
 
         new Verifications() {{
-            project.addTestCompileSourceRoot("target/test-output/freemarker-mojo/generateTestSourceTest/generated-files");
+            project.addTestCompileSourceRoot(fixSeparators("target/test-output/freemarker-mojo/generateTestSourceTest/generated-files"));
             times = 1;
         }};
     }
@@ -218,7 +221,7 @@ public class FreeMarkerMojoTest extends Assert {
         assertThatExceptionOfType(MojoExecutionException.class).isThrownBy(() -> {
             mojo.execute();
         })
-                .withMessage("Failed to process files in generator dir: target/test-output/freemarker-mojo/generateTestSourceTest/data");
+                .withMessage(fixSeparators("Failed to process files in generator dir: target/test-output/freemarker-mojo/generateTestSourceTest/data"));
     }
 
     @Test
@@ -254,7 +257,7 @@ public class FreeMarkerMojoTest extends Assert {
         assertThatExceptionOfType(MojoExecutionException.class).isThrownBy(() -> {
             mojo.execute();
         })
-                .withMessage("Could not establish file template loader for directory: target/test-output/freemarker-mojo/setTemplateLoaderException/template");
+                .withMessage(fixSeparators("Could not establish file template loader for directory: target/test-output/freemarker-mojo/setTemplateLoaderException/template"));
     }
 
     @Test
@@ -319,7 +322,7 @@ public class FreeMarkerMojoTest extends Assert {
         try {
             assertThatExceptionOfType(MojoExecutionException.class).isThrownBy(() -> {
                 mojo.execute();
-            }).withMessage("Failed to load src/test/data/freemarker-mojo/freemarker.properties");
+            }).withMessage(fixSeparators("Failed to load src/test/data/freemarker-mojo/freemarker.properties"));
         } catch (Throwable t) {
             t.printStackTrace();
         }
@@ -352,7 +355,14 @@ public class FreeMarkerMojoTest extends Assert {
 
         assertThatExceptionOfType(MojoExecutionException.class).isThrownBy(() -> {
             mojo.execute();
-        }).withMessage("Invalid setting(s) in src/test/data/freemarker-mojo/freemarker.properties");
+        }).withMessage(fixSeparators("Invalid setting(s) in src/test/data/freemarker-mojo/freemarker.properties"));
     }
 
+    private static String fixSeparators(String str) {
+        if (OperatingSystem.isWindows()) {
+            return FilenameUtils.separatorsToUnix(str);
+        } else {
+            return str;
+        }
+    }
 }
