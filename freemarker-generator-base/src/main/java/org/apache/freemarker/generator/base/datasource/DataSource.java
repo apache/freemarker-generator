@@ -21,7 +21,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.freemarker.generator.base.activation.ByteArrayDataSource;
 import org.apache.freemarker.generator.base.activation.StringDataSource;
-import org.apache.freemarker.generator.base.mime.MimetypeParser;
+import org.apache.freemarker.generator.base.mime.MimeTypeParser;
 import org.apache.freemarker.generator.base.util.CloseableReaper;
 import org.apache.freemarker.generator.base.util.StringUtils;
 import org.apache.freemarker.generator.base.util.Validate;
@@ -137,16 +137,16 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     }
 
     public Charset getCharset() {
-        return charset != null ? charset : MimetypeParser.getCharset(contentType(), UTF_8);
+        return charset != null ? charset : MimeTypeParser.getCharset(contentType(), UTF_8);
     }
 
     /**
-     * Get the mimetype , i.e. content type without additional charset parameter.
+     * Get the mime type , i.e. content type without additional charset parameter.
      *
-     * @return mimetype
+     * @return mime type
      */
-    public String getMimetype() {
-        return MimetypeParser.getMimetype(contentType());
+    public String getMimeType() {
+        return MimeTypeParser.getMimeType(contentType());
     }
 
     public URI getUri() {
@@ -320,7 +320,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
             case "group":
                 return getGroup();
             case "mimetype":
-                return getMimetype();
+                return getMimeType();
             case "name":
                 return getName();
             case "path":

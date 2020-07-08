@@ -36,7 +36,7 @@ or from an environment variable, e.g. `NGINX_CONF` having a JSON payload
 
 ```
 export NGINX_CONF='{"NGINX_PORT":"8443","NGINX_HOSTNAME":"localhost"}'
-freemarker-cli -t templates/info.ftl -s conf=env:///NGINX_CONF#mimetype=application/json
+freemarker-cli -t templates/info.ftl -s conf=env:///NGINX_CONF#mimeType=application/json
 
 FreeMarker CLI DataSources
 ------------------------------------------------------------------------------

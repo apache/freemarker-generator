@@ -68,13 +68,13 @@ Hello sgoeschl!
 The following snippet shows a more advanced example
 
 * The environment variable `DB_CONFIG` holds JSON data
-* Use the `config=env:///DB_CONFIG#mimetype=application/json` to parse JSON payload from `DB_CONFIG` into the data model `config`
+* Use the `config=env:///DB_CONFIG#mimetType=application/json` to parse JSON payload from `DB_CONFIG` into the data model `config`
 
 ```
 > export DB_CONFIG='{"db_default_user":"scott","db_default_password":"tiger"}'
 > echo $DB_CONFIG 
 {"db_default_user":"scott","db_default_password":"tiger"}
-> freemarker-cli -m config=env:///DB_CONFIG#mimetype=application/json  -i '<#list config as name,value>${name}=${value}${"\n"}</#list>'
+> freemarker-cli -m config=env:///DB_CONFIG#mimeType=application/json  -i '<#list config as name,value>${name}=${value}${"\n"}</#list>'
 db_default_user=scott
 db_default_password=tiger
 ```

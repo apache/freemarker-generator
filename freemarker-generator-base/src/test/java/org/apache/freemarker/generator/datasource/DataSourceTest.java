@@ -90,7 +90,7 @@ public class DataSourceTest {
             assertEquals("www.google", dataSource.getBaseName());
             assertEquals("com", dataSource.getExtension());
             assertEquals("https://www.google.com/?foo=bar", dataSource.getUri().toString());
-            assertEquals(MIME_TEXT_HTML, dataSource.getMimetype());
+            assertEquals(MIME_TEXT_HTML, dataSource.getMimeType());
             assertEquals("ISO-8859-1", dataSource.getCharset().name());
             assertEquals(-1, dataSource.getLength());
             assertFalse(dataSource.getText().isEmpty());

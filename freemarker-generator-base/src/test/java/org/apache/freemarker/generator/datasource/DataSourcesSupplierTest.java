@@ -43,9 +43,9 @@ public class DataSourcesSupplierTest {
         assertEquals(1, supplier("./pom.xml", "*", NO_EXCLUDE).get().size());
         assertEquals(1, supplier("pom=pom.xml", "*", NO_EXCLUDE).get().size());
         assertEquals(1, supplier("pom=./pom.xml", "*", NO_EXCLUDE).get().size());
-        assertEquals(1, supplier("pom=./pom.xml#mimetype=application/xml", "*", NO_EXCLUDE).get().size());
+        assertEquals(1, supplier("pom=./pom.xml#mimeType=application/xml", "*", NO_EXCLUDE).get().size());
         assertEquals(1, supplier("pom=" + PWD + "/pom.xml", "*", NO_EXCLUDE).get().size());
-        assertEquals(1, supplier("pom=file:///" + PWD + "/pom.xml#mimetype=application/xml", "*", NO_EXCLUDE).get()
+        assertEquals(1, supplier("pom=file:///" + PWD + "/pom.xml#mimeType=application/xml", "*", NO_EXCLUDE).get()
                 .size());
     }
 

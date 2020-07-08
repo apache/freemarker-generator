@@ -178,14 +178,14 @@ public class NamedUriStringParserTest {
 
     @Test
     public void shouldParseNamedFileUriWithFragment() {
-        final NamedUri namedURI = parse("users=file:///users.csv#charset=UTF-16&mimetype=text/csv");
+        final NamedUri namedURI = parse("users=file:///users.csv#charset=UTF-16&mimeType=text/csv");
 
         assertEquals("users", namedURI.getName());
         assertNull(namedURI.getGroup());
-        assertEquals("file:///users.csv#charset=UTF-16&mimetype=text/csv", namedURI.getUri().toString());
+        assertEquals("file:///users.csv#charset=UTF-16&mimeType=text/csv", namedURI.getUri().toString());
         assertEquals(2, namedURI.getParameters().size());
         assertEquals("UTF-16", namedURI.getParameters().get("charset"));
-        assertEquals("text/csv", namedURI.getParameters().get("mimetype"));
+        assertEquals("text/csv", namedURI.getParameters().get("mimeType"));
     }
 
     @Test

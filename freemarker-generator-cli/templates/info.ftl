@@ -47,7 +47,7 @@ FreeMarker CLI Tools
 FreeMarker CLI DataSources
 ------------------------------------------------------------------------------
 <#list dataSources.list as ds>
-[#${ds?counter}]: name=${ds.name}, group=${ds.group}, mimeType=${ds.mimetype}, charset=${ds.charset}, length=${ds.length} Bytes
+[#${ds?counter}]: name=${ds.name}, group=${ds.group}, mimeType=${ds.mimeType}, charset=${ds.charset}, length=${ds.length} Bytes
 URI : ${ds.uri}
 </#list>
 </#if>
