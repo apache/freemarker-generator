@@ -49,7 +49,7 @@ java.math.RoundingMode#UP: ${tools.freemarker.enums["java.math.RoundingMode"].UP
 ---------------------------------------------------------------------------
 List all data sources:
 <#list dataSources.list as dataSource>
-- Document: name=${dataSource.name} uri=${dataSource.uri} length=${dataSource.length} encoding=${dataSource.encoding!""}
+- Document: name=${dataSource.name} uri=${dataSource.uri} length=${dataSource.length} charset=${dataSource.charset}
 </#list>
 
 7) SystemTool

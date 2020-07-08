@@ -320,7 +320,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
             case "group":
                 return getGroup();
             case "mimetype":
-                return getContentType();
+                return getMimetype();
             case "name":
                 return getName();
             case "path":

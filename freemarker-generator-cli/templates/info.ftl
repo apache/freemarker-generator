@@ -39,16 +39,16 @@ FreeMarker CLI Data Model
 
 FreeMarker CLI Tools
 ------------------------------------------------------------------------------
-<#list .data_model.tools?keys?sort as key>
-- ${key?right_pad(20)} : ${.data_model.tools[key]}
+<#list tools?keys?sort as name>
+- ${name?right_pad(20)} : ${tools[name]}
 </#list>
 
 <#if dataSources.list?has_content>
 FreeMarker CLI DataSources
 ------------------------------------------------------------------------------
-<#list dataSources.list as dataSource>
-[#${dataSource?counter}], name=${dataSource.name}, group=${dataSource.group}, mimeType=${dataSource.mimetype}, charset=${dataSource.charset}, length=${dataSource.length} Bytes
-URI : ${dataSource.uri}
+<#list dataSources.list as ds>
+[#${ds?counter}]: name=${ds.name}, group=${ds.group}, mimeType=${ds.mimetype}, charset=${ds.charset}, length=${ds.length} Bytes
+URI : ${ds.uri}
 </#list>
 </#if>
 

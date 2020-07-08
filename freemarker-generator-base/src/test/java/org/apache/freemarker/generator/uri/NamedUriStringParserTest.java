@@ -74,7 +74,7 @@ public class NamedUriStringParserTest {
     }
 
     @Test
-    public void shouldParseAbsoluteWindosFileName() {
+    public void shouldParseAbsoluteWindowsFileName() {
         final NamedUri namedURI = parse("\\data\\users.csv");
 
         assertNull(namedURI.getName());
