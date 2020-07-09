@@ -154,20 +154,19 @@ public class ExamplesTest extends AbstractMainTest {
     }
 
     /**
-    @Test
-    public void shouldNotShadowDataSourcesInFTL() throws IOException {
-        final String args = "empty=examples/data/json/github-users.json";
-
-        // check shadowing of "isEmpty"
-        assertEquals("false", execute("empty=examples/data/json/github-users.json -i ${dataSources.empty?c}"));
-        // DataSources#isEmpty shadows the data source "empty"
-        // assertEquals("false", execute("empty=examples/data/json/github-users.json -i ${DataSources[\"empty\"]}"));
-        assertEquals("empty", execute("empty=examples/data/json/github-users.json -i ${dataSources.get(\"empty\").name}"));
-
-        // check shadowing of "find"
-        // assertEquals("find", execute("find=examples/data/json/github-users.json -i ${dataSources.find.name}"));
-        // assertEquals("find", execute("find=examples/data/json/github-users.json -i ${DataSources[\"find\"].name}"));
-    }
+     * @Test public void shouldNotShadowDataSourcesInFTL() throws IOException {
+     * final String args = "empty=examples/data/json/github-users.json";
+     * <p>
+     * // check shadowing of "isEmpty"
+     * assertEquals("false", execute("empty=examples/data/json/github-users.json -i ${dataSources.empty?c}"));
+     * // DataSources#isEmpty shadows the data source "empty"
+     * // assertEquals("false", execute("empty=examples/data/json/github-users.json -i ${DataSources[\"empty\"]}"));
+     * assertEquals("empty", execute("empty=examples/data/json/github-users.json -i ${dataSources.get(\"empty\").name}"));
+     * <p>
+     * // check shadowing of "find"
+     * // assertEquals("find", execute("find=examples/data/json/github-users.json -i ${dataSources.find.name}"));
+     * // assertEquals("find", execute("find=examples/data/json/github-users.json -i ${DataSources[\"find\"].name}"));
+     * }
      */
 
     @Test

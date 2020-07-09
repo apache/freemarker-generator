@@ -214,4 +214,4 @@ server {
 }
 ```
 
-Please note that this only works for "top-level" variables, i.e. mimicking enviroment variables or property files. 
+Please note that this only works for "top-level" variables, i.e. mimicking environment variables or property files. 

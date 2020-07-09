@@ -5,9 +5,6 @@ import freemarker.ext.beans.BeansWrapper;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSources;
 
-import java.util.Map;
-import java.util.Set;
-
 import static java.util.Objects.requireNonNull;
 
 /**

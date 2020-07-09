@@ -27,7 +27,7 @@ public class ListConverter {
      * Create a data frame from a list of rows. It is assumed
      * that the rows represent tabular data.
      *
-     * @param rows rows to build the data frame
+     * @param rows                      rows to build the data frame
      * @param withFirstRowAsColumnNames column names as first row?
      * @return <code>DataFrame</code>
      */
