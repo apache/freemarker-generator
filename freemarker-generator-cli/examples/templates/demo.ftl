@@ -48,7 +48,7 @@ java.math.RoundingMode#UP: ${tools.freemarker.enums["java.math.RoundingMode"].UP
 6) Display list of data sources
 ---------------------------------------------------------------------------
 List all data sources:
-<#list dataSources.list as dataSource>
+<#list dataSources?values as dataSource>
 - Document: name=${dataSource.name} uri=${dataSource.uri} length=${dataSource.length} charset=${dataSource.charset}
 </#list>
 
@@ -86,22 +86,14 @@ user.home    : ${tools.system.systemProperties["user.home"]!""}
 11) Access DataSources
 ---------------------------------------------------------------------------
 Get the number of documents:
-- ${dataSources.size()}
-<#if !dataSources.isEmpty()>
+- ${dataSources?size}
+<#if dataSources?has_content>
 Get the first document
-- ${dataSources.get(0)!"NA"}
+- ${dataSources?values[0]!"NA"}
 </#if>
-List all files containing "README" in the name
-<#list dataSources.find("*README*") as dataSource>
-- ${dataSource.name}
-</#list>
-List all files having "md" extension
-<#list dataSources.find("*.md") as dataSource>
-- ${dataSource.name}
-</#list>
 Get all documents
-<#list dataSources.list as dataSource>
-- ${dataSource.name} => ${dataSource.uri}
+<#list dataSources as name, ds>
+- ${name} => ${ds.uri}
 </#list>
 
 12) Document Data Model

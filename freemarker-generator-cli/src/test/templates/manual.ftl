@@ -55,7 +55,7 @@ Find DataSources By Wildcard
 
 Java Array-style access
 ---------------------------------------------------------------------------
-${dataSources.get(0).toString()}
+${dataSources?values[0].toString()}
 
 Invoke Arbitrary Methods On DataSources
 ---------------------------------------------------------------------------

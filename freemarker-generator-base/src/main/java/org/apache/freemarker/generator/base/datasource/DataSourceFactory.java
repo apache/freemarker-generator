@@ -77,11 +77,11 @@ public abstract class DataSourceFactory {
 
         if (UriUtils.isHttpURI(uri)) {
             final URL url = toURL(uri);
-            final String name = namedUri.getNameOrElse(url.getHost());
+            final String name = namedUri.getNameOrElse(UriUtils.toName(uri));
             return fromUrl(name, group, url, mimeType, charset);
         } else if (UriUtils.isFileUri(uri)) {
             final File file = namedUri.getFile();
-            final String name = namedUri.getNameOrElse(file.getName());
+            final String name = namedUri.getNameOrElse(UriUtils.toName(file.toURI()));
             return fromFile(name, group, file, charset);
         } else if (UriUtils.isEnvUri(uri)) {
             // environment variables come with a leading "/" to be removed
@@ -96,16 +96,12 @@ public abstract class DataSourceFactory {
         } else {
             // handle things such as "foo=some.file"
             final File file = namedUri.getFile();
-            final String name = namedUri.getNameOrElse(file.getName());
+            final String name = namedUri.getNameOrElse(UriUtils.toName(file.toURI()));
             return fromFile(name, group, file, charset);
         }
     }
 
     // == URL ===============================================================
-
-    public static DataSource fromUrl(String name, String group, URL url, Charset charset) {
-        return fromUrl(name, group, url, NO_MIME_TYPE, charset);
-    }
 
     public static DataSource fromUrl(String name, String group, URL url, String contentType, Charset charset) {
         final URLDataSource dataSource = new CachingUrlDataSource(url);
@@ -114,10 +110,6 @@ public abstract class DataSourceFactory {
     }
 
     // == String ============================================================
-
-    public static DataSource fromString(String content, String contentType) {
-        return fromString(Location.STRING, DEFAULT_GROUP, content, contentType);
-    }
 
     public static DataSource fromString(String name, String group, String content, String contentType) {
         final StringDataSource dataSource = new StringDataSource(name, content, contentType, UTF_8);
@@ -128,7 +120,7 @@ public abstract class DataSourceFactory {
     // == File ==============================================================
 
     public static DataSource fromFile(File file, Charset charset) {
-        return fromFile(file.getName(), DEFAULT_GROUP, file, charset);
+        return fromFile(UriUtils.toName(file.toURI()), DEFAULT_GROUP, file, charset);
     }
 
     public static DataSource fromFile(String name, String group, File file, Charset charset) {

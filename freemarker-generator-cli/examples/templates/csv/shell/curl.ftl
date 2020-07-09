@@ -16,7 +16,7 @@
   under the License.
 -->
 <#assign cvsFormat = tools.csv.formats["DEFAULT"].withHeader()>
-<#assign csvParser = tools.csv.parse(dataSources.get(0), cvsFormat)>
+<#assign csvParser = tools.csv.parse(dataSources?values[0], cvsFormat)>
 <#assign records = csvParser.records>
 <#assign csvMap = tools.csv.toMap(records, "disposer")>
 <#--------------------------------------------------------------------------->

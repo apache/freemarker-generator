@@ -16,6 +16,8 @@
  */
 package org.apache.freemarker.generator.base.util;
 
+import org.apache.commons.io.FilenameUtils;
+
 public class StringUtils {
 
     public static boolean isEmpty(String value) {
@@ -52,4 +54,7 @@ public class StringUtils {
         return count;
     }
 
+    private static String separatorsToUnix(String str) {
+        return FilenameUtils.separatorsToUnix(str);
+    }
 }

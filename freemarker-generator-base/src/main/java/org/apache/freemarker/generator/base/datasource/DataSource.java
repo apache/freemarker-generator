@@ -132,6 +132,10 @@ public class DataSource implements Closeable, javax.activation.DataSource {
         return FilenameUtils.getBaseName(name);
     }
 
+    public String getFileName() {
+        return FilenameUtils.getName(name);
+    }
+
     public String getExtension() {
         return FilenameUtils.getExtension(name);
     }
@@ -260,6 +264,40 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     }
 
     /**
+     * Expose various parts of the metadata as simple strings to cater for filtering in  a script.
+     *
+     * @param name name part name
+     * @return value
+     */
+    public String getPart(String name) {
+        Validate.notEmpty(name, "No part name provided");
+        switch (name.toLowerCase()) {
+            case "basename":
+                return getBaseName();
+            case "charset":
+                return getCharset().name();
+            case "extension":
+                return getExtension();
+            case "filename":
+                return getFileName();
+            case "group":
+                return getGroup();
+            case "mimetype":
+                return getMimeType();
+            case "name":
+                return getName();
+            case "path":
+                return uri.getPath();
+            case "scheme":
+                return uri.getScheme();
+            case "uri":
+                return uri.toString();
+            default:
+                throw new IllegalArgumentException("Unknown name: " + name);
+        }
+    }
+
+    /**
      * Matches a metadata entry with a wildcard expression.
      *
      * @param part     part, e.g. "name", "basename", "extension", "uri", "group"
@@ -305,32 +343,6 @@ public class DataSource implements Closeable, javax.activation.DataSource {
             return contentType;
         } else {
             return StringUtils.firstNonEmpty(dataSource.getContentType(), MIME_APPLICATION_OCTET_STREAM);
-        }
-    }
-
-    private String getPart(String part) {
-        Validate.notEmpty(part, "No metadata part provided");
-        switch (part.toLowerCase()) {
-            case "basename":
-                return getBaseName();
-            case "contenttype":
-                return getContentType();
-            case "extension":
-                return getExtension();
-            case "group":
-                return getGroup();
-            case "mimetype":
-                return getMimeType();
-            case "name":
-                return getName();
-            case "path":
-                return uri.getPath();
-            case "scheme":
-                return uri.getScheme();
-            case "uri":
-                return uri.toASCIIString();
-            default:
-                throw new IllegalArgumentException("Unknown part: " + part);
         }
     }
 }

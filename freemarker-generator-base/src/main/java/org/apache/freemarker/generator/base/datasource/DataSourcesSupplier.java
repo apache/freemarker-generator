@@ -137,7 +137,7 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
         if (namedUri.hasName()) {
             return namedUri.getName();
         } else {
-            return file.getName();
+            return UriUtils.toName(file.toURI());
         }
     }
 }

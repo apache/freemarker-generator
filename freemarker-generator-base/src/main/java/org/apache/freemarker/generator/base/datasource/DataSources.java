@@ -23,8 +23,12 @@ import org.apache.freemarker.generator.base.util.Validate;
 import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -49,7 +53,18 @@ public class DataSources implements Closeable {
     public List<String> getNames() {
         return dataSources.stream()
                 .map(DataSource::getName)
-                .filter(StringUtils::isNotEmpty)
+                .collect(toList());
+    }
+
+    /**
+     * Get the file names of all data sources.
+     *
+     * @param partName name of the metadata part
+     * @return data source names
+     */
+    public List<String> getParts(String partName) {
+        return dataSources.stream()
+                .map(ds -> ds.getPart(partName))
                 .collect(toList());
     }
 
@@ -73,6 +88,13 @@ public class DataSources implements Closeable {
 
     public boolean isEmpty() {
         return dataSources.isEmpty();
+    }
+
+    public Map<String, DataSource> getMap() {
+        return dataSources.stream().collect(Collectors.toMap(DataSource::getName,
+                identity(),
+                (v1, v2) -> v1,
+                LinkedHashMap::new));
     }
 
     public List<DataSource> getList() {
@@ -120,7 +142,7 @@ public class DataSources implements Closeable {
     /**
      * Find data sources based on their metadata part and wildcard.
      *
-     * @param part part of metadata to match
+     * @param part     part of metadata to match
      * @param wildcard the wildcard string to match against
      * @return list of matching data sources
      * @see <a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.7/org/apache/commons/io/FilenameUtils.html#wildcardMatch-java.lang.String-java.lang.String-">Apache Commons IO</a>

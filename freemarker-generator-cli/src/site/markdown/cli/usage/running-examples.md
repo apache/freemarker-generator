@@ -92,7 +92,7 @@ Below you see the Apache FreeMarker Template
 
 ```text
 <#ftl output_format="plainText" >
-<#assign json = tools.jsonpath.parse(dataSources.get(0))>
+<#assign json = tools.jsonpath.parse(dataSources?values[0])>
 <#assign users = json.read("$[*]")>
 <#--------------------------------------------------------------------------->
 # GitHub Users
@@ -130,7 +130,7 @@ The FreeMarker template is shown below
 ```text
 <#ftl output_format="plainText">
 <#assign cvsFormat = tools.csv.formats["DEFAULT"].withHeader()>
-<#assign csvParser = tools.csv.parse(dataSources.get(0), cvsFormat)>
+<#assign csvParser = tools.csv.parse(dataSources?values[0], cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderMap()?keys>
 <#assign csvRecords = csvParser.records>
 <#--------------------------------------------------------------------------->
@@ -167,7 +167,7 @@ using the following template
 
 ```text
 <#ftl output_format="plainText" >
-<#assign xml = tools.xml.parse(dataSources.get(0))>
+<#assign xml = tools.xml.parse(dataSources?values[0])>
 <#list xml.recipients.person as recipient>
 To: ${recipient.name}
 ${recipient.address}
@@ -214,7 +214,7 @@ One day I was asked a to prepare a CSV files containing REST endpoints described
 
 ```text
 <#ftl output_format="plainText" strip_text="true">
-<#assign json = tools.jsonpath.parse(dataSources.get(0))>
+<#assign json = tools.jsonpath.parse(dataSources?values[0])>
 <#assign basePath = json.read("$.basePath")>
 <#assign paths = json.read("$.paths")>
 
@@ -276,7 +276,7 @@ The provided FTL transforms an Excel into a HTML document supporting multiple Ex
 
 ```text
 <#ftl output_format="HTML" >
-<#assign dataSource = dataSources.get(0)>
+<#assign dataSource = dataSources?values[0]>
 <#assign name = dataSource.name>
 <#assign workbook = tools.excel.parse(dataSource)>
 <#assign date = .now?iso_utc>
@@ -402,7 +402,7 @@ For a POC (proof of concept) I created a sample transformation from CSV to XML-F
 
 ```text
 <#ftl output_format="XML" >
-<#assign dataSource = dataSources.get(0)>
+<#assign dataSource = dataSources?values[0]>
 <#assign name = dataSource.name>
 <#assign cvsFormat = tools.csv.formats.DEFAULT.withDelimiter('\t').withHeader()>
 <#assign csvParser = tools.csv.parse(dataSource, cvsFormat)>
@@ -523,7 +523,7 @@ Recently I got the rather unusual question how to determine the list of dependen
 
 ```text
 <#ftl output_format="plainText" strip_text="true">
-<#assign dataSource = dataSources.get(0)>
+<#assign dataSource = dataSources?values[0]>
 <#assign html = tools.jsoup.parse(dataSource)>
 
 <#compress>
@@ -598,7 +598,7 @@ and the final FTL is found below
 ```text
 <#ftl output_format="plainText">
 <#assign cvsFormat = tools.csv.formats["DEFAULT"].withHeader()>
-<#assign csvParser = tools.csv.parse(dataSources.get(0), cvsFormat)>
+<#assign csvParser = tools.csv.parse(dataSources?values[0], cvsFormat)>
 <#assign records = csvParser.records>
 <#assign csvMap = tools.csv.toMap(records, "disposer")>
 <#--------------------------------------------------------------------------->
@@ -682,7 +682,7 @@ using the following FreeMarker template
 ```text
 <#ftl output_format="plainText" strip_whitespace=true>
 <#assign grok = tools.grok.compile("%{COMBINEDAPACHELOG}")>
-<#assign dataSource = dataSources.get(0)>
+<#assign dataSource = dataSources?values[0]>
 <#assign lines = dataSource.getLineIterator()>
 
 <#compress>
@@ -768,16 +768,16 @@ Sometime you need to apply a CSS, JSON or XPath query in ad ad-hoc way without i
 > bin/freemarker-cli -i 'Hello ${tools.system.envs["USER"]}'; echo
 Hello sgoeschl
 
-> bin/freemarker-cli -i '${tools.jsonpath.parse(dataSources.get(0)).read("$.info.title")}' examples/data/json/swagger-spec.json; echo
+> bin/freemarker-cli -i '${tools.jsonpath.parse(dataSources?values[0]).read("$.info.title")}' examples/data/json/swagger-spec.json; echo
 Swagger Petstore
 
-> bin/freemarker-cli -i 'Post Title : ${tools.jsonpath.parse(dataSources.get(0)).read("$.title")}' https://jsonplaceholder.typicode.com/posts/2; echo
+> bin/freemarker-cli -i 'Post Title : ${tools.jsonpath.parse(dataSources?values[0]).read("$.title")}' https://jsonplaceholder.typicode.com/posts/2; echo
 Post Title : qui est esse
 
-> bin/freemarker-cli -i '${tools.xml.parse(dataSources.get(0))["recipients/person[1]/name"]}' examples/data/xml/recipients.xml; echo
+> bin/freemarker-cli -i '${tools.xml.parse(dataSources?values[0])["recipients/person[1]/name"]}' examples/data/xml/recipients.xml; echo
 John Smith
 
-> bin/freemarker-cli -i '${tools.jsoup.parse(dataSources.get(0)).select("a")[0]}' examples/data/html/dependencies.html; echo
+> bin/freemarker-cli -i '${tools.jsoup.parse(dataSources?values[0]).select("a")[0]}' examples/data/html/dependencies.html; echo
 <a href="${project.url}" title="FreeMarker CLI">FreeMarker CLI</a>
 
 > freemarker-cli -i '<#list tools.system.envs as name,value>${name} ==> ${value}${"\n"}</#list>'
@@ -804,7 +804,7 @@ and Apache FreeMarker template
 
 ```text
 <#ftl output_format="plainText" strip_text="true">
-<#assign dataSource = dataSources.get(0)>
+<#assign dataSource = dataSources?values[0]>
 <#assign parser = parser(dataSource)>
 <#assign headers = parser.getHeaderNames()>
 <#assign column = tools.system.getParameter("column")>
@@ -890,11 +890,11 @@ Sometimes we simply need to transform a JSON into an equivalent YAML or the othe
 
 ```
 > freemarker-cli -t templates/yaml/json/transform.ftl examples/data/yaml/swagger-spec.yaml 
-> freemarker-cli -i '${tools.gson.toJson(tools.yaml.parse(dataSources.get(0)))}' examples/data/yaml/swagger-spec.yaml
+> freemarker-cli -i '${tools.gson.toJson(tools.yaml.parse(dataSources?values[0]))}' examples/data/yaml/swagger-spec.yaml
 > freemarker-cli -i '${tools.gson.toJson(yaml)}' -m yaml=examples/data/yaml/swagger-spec.yaml
 
 > freemarker-cli -t templates/json/yaml/transform.ftl examples/data/json/swagger-spec.json
-> freemarker-cli -i '${tools.yaml.toYaml(tools.gson.parse(dataSources.get(0)))}' examples/data/json/swagger-spec.json
+> freemarker-cli -i '${tools.yaml.toYaml(tools.gson.parse(dataSources?values[0]))}' examples/data/json/swagger-spec.json
 > freemarker-cli -i '${tools.yaml.toYaml(json)}' -m json=examples/data/json/swagger-spec.json
 ```
 

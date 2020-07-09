@@ -43,11 +43,11 @@ FreeMarker CLI Tools
 - ${name?right_pad(20)} : ${tools[name]}
 </#list>
 
-<#if dataSources.list?has_content>
+<#if dataSources?has_content>
 FreeMarker CLI DataSources
 ------------------------------------------------------------------------------
-<#list dataSources.list as ds>
-[#${ds?counter}]: name=${ds.name}, group=${ds.group}, mimeType=${ds.mimeType}, charset=${ds.charset}, length=${ds.length} Bytes
+<#list dataSources?values as ds>
+[#${ds?counter}]: name=${ds.name}, group=${ds.group}, fileName=${ds.fileName} mimeType=${ds.mimeType}, charset=${ds.charset}, length=${ds.length} Bytes
 URI : ${ds.uri}
 </#list>
 </#if>

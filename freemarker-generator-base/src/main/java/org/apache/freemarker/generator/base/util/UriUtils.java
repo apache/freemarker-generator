@@ -22,6 +22,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
+import static org.apache.commons.io.FilenameUtils.separatorsToUnix;
 import static org.apache.freemarker.generator.base.util.StringUtils.isNotEmpty;
 
 public class UriUtils {
@@ -40,6 +41,12 @@ public class UriUtils {
 
     public static URI toURI(URL url) {
         return toURI(url.toString());
+    }
+
+    public static String toName(URI uri) {
+        final String scheme = uri.getScheme();
+        final String schemeSpecificPart = uri.getSchemeSpecificPart();
+        return scheme + schemeSpecificPart;
     }
 
     public static boolean isUri(String str) {
@@ -65,9 +72,5 @@ public class UriUtils {
             return false;
         }
         return "env".equalsIgnoreCase(uri.getScheme());
-    }
-
-    private static String separatorsToUnix(String str) {
-        return FilenameUtils.separatorsToUnix(str);
     }
 }

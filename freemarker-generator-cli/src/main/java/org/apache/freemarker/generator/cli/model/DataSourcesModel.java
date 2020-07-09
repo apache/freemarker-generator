@@ -1,16 +1,11 @@
 package org.apache.freemarker.generator.cli.model;
 
-import freemarker.ext.beans.ArrayModel;
 import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
-import freemarker.template.TemplateCollectionModel;
-import freemarker.template.TemplateHashModel;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
-import freemarker.template.TemplateSequenceModel;
+import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSources;
 
-import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
@@ -19,39 +14,30 @@ import static java.util.Objects.requireNonNull;
  * Wraps an instance of <code>DataSources</code> into a more user-friendly <code>BeanModel</code>
  * so the user can use FreeMarker directives and features instead of using the exposed methods.
  */
-public class DataSourcesModel extends BeanModel implements TemplateSequenceModel, TemplateHashModel {
-
-    private final DataSources dataSources;
-    private final BeansWrapper objectWrapper;
+public class DataSourcesModel extends BeanModel {
 
     public DataSourcesModel(DataSources dataSources, BeansWrapper objectWrapper) {
-        super(requireNonNull(dataSources), requireNonNull(objectWrapper));
-        this.dataSources = dataSources;
-        this.objectWrapper = objectWrapper;
+        super(new SimpleDataSourcesAdapter(dataSources), requireNonNull(objectWrapper));
     }
 
-    @Override
-    public TemplateModel get(int index) throws TemplateModelException {
-        return wrap(dataSources.get(index));
-    }
+    private static final class SimpleDataSourcesAdapter {
 
-    @Override
-    public TemplateCollectionModel keys() {
-        return new ArrayModel(dataSources.getNames().toArray(), objectWrapper);
-    }
+        private final DataSources dataSources;
 
-    @Override
-    public int size() {
-        return dataSources.size();
-    }
+        public SimpleDataSourcesAdapter(DataSources dataSources) {
+            this.dataSources = dataSources;
+        }
 
-    @Override
-    public boolean isEmpty() {
-        return dataSources.isEmpty();
-    }
+        public DataSource get(int index) {
+            return dataSources.get(index);
+        }
 
-    @Override
-    protected Set<Object> keySet() {
-        return new LinkedHashSet<>(dataSources.getNames());
+        public DataSource get(String name) {
+            return dataSources.get(name);
+        }
+
+        public int size() {
+            return dataSources.size();
+        }
     }
 }

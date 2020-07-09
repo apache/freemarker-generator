@@ -1,5 +1,6 @@
 package org.apache.freemarker.generator.cli.model;
 
+import freemarker.template.DefaultMapAdapter;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
@@ -15,7 +16,7 @@ public class GeneratorObjectWrapper extends DefaultObjectWrapper {
     @Override
     protected TemplateModel handleUnknownType(Object obj) throws TemplateModelException {
         if (obj instanceof DataSources) {
-            return new DataSourcesModel((DataSources) obj, this);
+            return DefaultMapAdapter.adapt(((DataSources) obj).getMap(), this);
         }
 
         return super.handleUnknownType(obj);

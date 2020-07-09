@@ -96,7 +96,7 @@ exposed in the data model provides
 A few FTL examples
 
 ```
-<#assign dataSource = dataSources.get(0)>
+<#assign dataSource = dataSources?values[0]>
 
 <#assign dataSource = dataSources["user.csv"]>
 

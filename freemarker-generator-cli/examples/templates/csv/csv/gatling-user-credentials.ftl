@@ -15,7 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign dataSource = dataSources.get(0)>
+<#assign dataSource = dataSources?values[0]>
 <#assign cvsFormat = tools.csv.formats["DEFAULT"].withDelimiter(';')>
 <#assign csvParser = tools.csv.parse(dataSource, cvsFormat)>
 <#assign csvRecords = csvParser.records>

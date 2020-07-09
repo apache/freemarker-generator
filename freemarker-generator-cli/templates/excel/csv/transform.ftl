@@ -17,7 +17,7 @@
 -->
 <#-- Parse the first data source & sheet of the Excel document -->
 <#import "/templates/lib/commons-csv.ftl" as csv />
-<#assign workbook = tools.excel.parse(dataSources.get(0))>
+<#assign workbook = tools.excel.parse(dataSources?values[0])>
 <#assign sheet = tools.excel.getSheets(workbook)[0]>
 <#assign records = tools.excel.toTable(sheet)>
 <#-- Setup CSVPrinter  -->

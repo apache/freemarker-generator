@@ -14,7 +14,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign dataSource = dataSources.get(0)>
+<#assign dataSource = dataSources?values[0]>
 <#assign workbook = tools.excel.parse(dataSource)>
 <#list tools.excel.getSheets(workbook) as sheet>
     <#assign table = tools.excel.toTable(sheet)>

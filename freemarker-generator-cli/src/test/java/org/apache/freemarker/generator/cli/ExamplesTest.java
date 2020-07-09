@@ -111,14 +111,14 @@ public class ExamplesTest extends AbstractMainTest {
 
     @Test
     public void shouldRunInteractiveTemplateExamples() throws IOException {
-        assertValid(execute("-i ${tools.jsonpath.parse(dataSources.get(0)).read(\"$.info.title\")} examples/data/json/swagger-spec.json"));
-        assertValid(execute("-i ${tools.xml.parse(dataSources.get(0))[\"recipients/person[1]/name\"]} examples/data/xml/recipients.xml"));
-        assertValid(execute("-i ${tools.jsoup.parse(dataSources.get(0)).select(\"a\")[0]} examples/data/html/dependencies.html"));
-        assertValid(execute("-i ${tools.gson.toJson(tools.yaml.parse(dataSources.get(0)))} examples/data/yaml/swagger-spec.yaml"));
+        assertValid(execute("-i ${tools.jsonpath.parse(dataSources?values[0]).read(\"$.info.title\")} examples/data/json/swagger-spec.json"));
+        assertValid(execute("-i ${tools.xml.parse(dataSources?values[0])[\"recipients/person[1]/name\"]} examples/data/xml/recipients.xml"));
+        assertValid(execute("-i ${tools.jsoup.parse(dataSources?values[0]).select(\"a\")[0]} examples/data/html/dependencies.html"));
+        assertValid(execute("-i ${tools.gson.toJson(tools.yaml.parse(dataSources?values[0]))} examples/data/yaml/swagger-spec.yaml"));
         assertValid(execute("-i ${tools.gson.toJson(yaml)} -m yaml=examples/data/yaml/swagger-spec.yaml"));
-        assertValid(execute("-i ${tools.yaml.toYaml(tools.gson.parse(dataSources.get(0)))} examples/data/json/swagger-spec.json"));
+        assertValid(execute("-i ${tools.yaml.toYaml(tools.gson.parse(dataSources?values[0]))} examples/data/json/swagger-spec.json"));
         assertValid(execute("-i ${tools.yaml.toYaml(json)} -m json=examples/data/json/swagger-spec.json"));
-        assertValid(execute("-i ${tools.dataframe.print(tools.dataframe.fromMaps(tools.gson.parse(dataSources.get(0))))} examples/data/json/github-users.json"));
+        assertValid(execute("-i ${tools.dataframe.print(tools.dataframe.fromMaps(tools.gson.parse(dataSources?values[0])))} examples/data/json/github-users.json"));
     }
 
     @Test
@@ -139,31 +139,19 @@ public class ExamplesTest extends AbstractMainTest {
         assertValid(execute("-t templates/csv/md/transform.ftl -o target/contract.md -t templates/csv/html/transform.ftl -o target/contract.html examples/data/csv/contract.csv"));
     }
 
-    /**
     @Test
     public void shouldSupportDataSourcesAccessInFTL() throws IOException {
-        final String args = "examples/data/json/github-users.json examples/data/csv/contract.csv";
+        final String args = "users=examples/data/json/github-users.json contract=examples/data/csv/contract.csv";
 
         // check FreeMarker directives
-        assertEquals("true", execute(args + " -i ${DataSources?has_content?c}"));
-        assertEquals("2", execute(args + " -i ${DataSources?size}"));
-
-        // check FTL array-style access
-        assertEquals("github-users.json", execute(args + " -i ${DataSources[0].name}"));
-        assertEquals("github-users.json", execute(args + " -i ${dataSources.get(0).name}"));
+        assertEquals("true", execute(args + " -i ${dataSources?has_content?c}"));
+        assertEquals("2", execute(args + " -i ${dataSources?size}"));
 
         // check FTL map-style access
-        assertEquals("github-users.json", execute(args + " -i ${DataSources[\"github-users.json\"].name}"));
-        assertEquals("github-users.json", execute(args + " -i ${dataSources.get(\"github-users.json\").name}"));
-
-        // check arbitrary methods
-        assertEquals("false", execute(args + " -i ${dataSources.empty?c}"));
-        assertEquals("false", execute(args + " -i ${dataSources.isEmpty()?c}"));
-        assertEquals("2", execute(args + " -i ${dataSources.size()}"));
-        assertEquals("worx", execute(args + " -i ${dataSources.close()}worx"));
-        assertEquals("text/csv", execute(args + " -i ${DataSources[1].contentType}"));
+        assertEquals("users", execute(args + " -i ${dataSources.users.name}"));
+        assertEquals("users", execute(args + " -i ${dataSources[\"users\"].name}"));
+        assertEquals("application/json", execute(args + " -i ${dataSources[\"users\"].mimeType}"));
     }
-     */
 
     /**
     @Test

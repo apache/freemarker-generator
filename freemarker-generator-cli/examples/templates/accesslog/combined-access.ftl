@@ -16,7 +16,7 @@
   under the License.
 -->
 <#assign grok = tools.grok.compile("%{COMBINEDAPACHELOG}")>
-<#assign dataSource = dataSources.get(0)>
+<#assign dataSource = dataSources?values[0]>
 <#assign lines = dataSource.getLineIterator()>
 
 <#compress>
