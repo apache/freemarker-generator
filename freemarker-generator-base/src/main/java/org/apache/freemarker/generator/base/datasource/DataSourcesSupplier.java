@@ -16,9 +16,11 @@
  */
 package org.apache.freemarker.generator.base.datasource;
 
+import jdk.nashorn.internal.runtime.URIUtils;
 import org.apache.freemarker.generator.base.file.RecursiveFileSupplier;
 import org.apache.freemarker.generator.base.uri.NamedUri;
 import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
+import org.apache.freemarker.generator.base.util.UriUtils;
 import org.apache.freemarker.generator.base.util.Validate;
 
 import java.io.File;

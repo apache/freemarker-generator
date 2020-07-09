@@ -98,7 +98,7 @@ A few FTL examples
 ```
 <#assign dataSource = dataSources.get(0)>
 
-<#assign dataSource = dataSources.get("user.csv)>
+<#assign dataSource = dataSources["user.csv"]>
 
 <#list dataSources.find("*.md") as dataSource>
 - ${dataSource.name}
