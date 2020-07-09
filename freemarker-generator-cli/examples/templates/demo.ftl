@@ -85,15 +85,31 @@ user.home    : ${tools.system.systemProperties["user.home"]!""}
 
 11) Access DataSources
 ---------------------------------------------------------------------------
-Get the number of documents:
+Get the number of data sources:
 - ${dataSources?size}
 <#if dataSources?has_content>
-Get the first document
-- ${dataSources?values[0]!"NA"}
+Get the first data source:
+- ${dataSources?values[0].name!"No data sources provided"}
 </#if>
-Get all documents
+Get all documents as map:
 <#list dataSources as name, ds>
-- ${name} => ${ds.uri}
+- ${name} => ${ds.mimeType}
+</#list>
+List all data sources containing "test" in the name
+<#list dataSources?values?filter(ds -> ds.match("name", "*test*")) as ds>
+- ${ds.name}
+</#list>
+List all data sources having "json" extension
+<#list dataSources?values?filter(ds -> ds.match("extension", "json")) as ds>
+- ${ds.name}
+</#list>
+List all data sources having "list" base name
+<#list dataSources?values?filter(ds -> ds.match("parent", "list")) as ds>
+- ${ds.name}
+</#list>
+List all files having HTTP/HTTPS URLs
+<#list dataSources?values?filter(ds -> ds.match("scheme", "http*")) as ds>
+- ${ds.getMetadata("filename")}
 </#list>
 
 12) Document Data Model

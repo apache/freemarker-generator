@@ -54,7 +54,16 @@ public class StringUtils {
         return count;
     }
 
-    private static String separatorsToUnix(String str) {
-        return FilenameUtils.separatorsToUnix(str);
+    public static String getParentPart(String str, String separator) {
+        if (isEmpty(str) || !str.contains(separator)) {
+            return null;
+        }
+        final String[] parts = str.split(separator);
+        if(parts.length > 1) {
+            return parts[parts.length-2];
+        }
+        else {
+            return null;
+        }
     }
 }

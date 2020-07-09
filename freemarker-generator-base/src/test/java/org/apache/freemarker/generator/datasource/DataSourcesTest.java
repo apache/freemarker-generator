@@ -96,12 +96,12 @@ public class DataSourcesTest {
 
     @Test
     public void shouldGetParts() {
-        assertEquals(3, dataSources().getParts("name").size());
+        assertEquals(3, dataSources().getMetadata("name").size());
     }
 
     @Test
     public void shouldGetFileNamePart() {
-        assertEquals(asList("unknown", "pom.xml", "server.invalid?foo=bar"), dataSources().getParts("filename"));
+        assertEquals(asList("unknown", "pom.xml", "server.invalid?foo=bar"), dataSources().getMetadata("filename"));
     }
 
     @Test

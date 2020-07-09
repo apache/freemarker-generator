@@ -269,7 +269,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
      * @param name name part name
      * @return value
      */
-    public String getPart(String name) {
+    public String getMetadata(String name) {
         Validate.notEmpty(name, "No part name provided");
         switch (name.toLowerCase()) {
             case "basename":
@@ -288,6 +288,8 @@ public class DataSource implements Closeable, javax.activation.DataSource {
                 return getName();
             case "path":
                 return uri.getPath();
+            case "parent":
+                return StringUtils.getParentPart(getName(), "/");
             case "scheme":
                 return uri.getScheme();
             case "uri":
@@ -306,7 +308,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
      * @see <a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.7/org/apache/commons/io/FilenameUtils.html#wildcardMatch-java.lang.String-java.lang.String-">Apache Commons IO</a>
      */
     public boolean match(String part, String wildcard) {
-        final String value = getPart(part);
+        final String value = getMetadata(part);
         return FilenameUtils.wildcardMatch(value, wildcard);
     }
 

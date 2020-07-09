@@ -75,7 +75,7 @@ public abstract class DataSourceFactory {
         final Charset charset = getCharsetOrElse(namedUri, NO_CHARSET);
         final String mimeType = getMimeTypeOrElse(namedUri, NO_MIME_TYPE);
 
-        if (UriUtils.isHttpURI(uri)) {
+        if (UriUtils.isHttpUri(uri)) {
             final URL url = toURL(uri);
             final String name = namedUri.getNameOrElse(UriUtils.toName(uri));
             return fromUrl(name, group, url, mimeType, charset);
@@ -105,7 +105,7 @@ public abstract class DataSourceFactory {
 
     public static DataSource fromUrl(String name, String group, URL url, String contentType, Charset charset) {
         final URLDataSource dataSource = new CachingUrlDataSource(url);
-        final URI uri = UriUtils.toURI(url);
+        final URI uri = UriUtils.toUri(url);
         return create(name, group, uri, dataSource, contentType, charset);
     }
 
@@ -113,7 +113,7 @@ public abstract class DataSourceFactory {
 
     public static DataSource fromString(String name, String group, String content, String contentType) {
         final StringDataSource dataSource = new StringDataSource(name, content, contentType, UTF_8);
-        final URI uri = UriUtils.toURI(Location.STRING, UUID.randomUUID().toString());
+        final URI uri = UriUtils.toUri(Location.STRING, UUID.randomUUID().toString());
         return create(name, group, uri, dataSource, contentType, UTF_8);
     }
 
@@ -136,7 +136,7 @@ public abstract class DataSourceFactory {
 
     public static DataSource fromBytes(String name, String group, byte[] content, String contentType) {
         final ByteArrayDataSource dataSource = new ByteArrayDataSource(name, content);
-        final URI uri = UriUtils.toURI(Location.BYTES + ":///");
+        final URI uri = UriUtils.toUri(Location.BYTES + ":///");
         return create(name, group, uri, dataSource, contentType, UTF_8);
     }
 
@@ -144,7 +144,7 @@ public abstract class DataSourceFactory {
 
     public static DataSource fromInputStream(String name, String group, InputStream is, String contentType, Charset charset) {
         final InputStreamDataSource dataSource = new InputStreamDataSource(name, is);
-        final URI uri = UriUtils.toURI(Location.INPUTSTREAM + ":///");
+        final URI uri = UriUtils.toUri(Location.INPUTSTREAM + ":///");
         return create(name, group, uri, dataSource, contentType, charset);
     }
 
@@ -161,7 +161,7 @@ public abstract class DataSourceFactory {
             final StringWriter writer = new StringWriter();
             properties.store(writer, null);
             final StringDataSource dataSource = new StringDataSource(name, writer.toString(), contentType, UTF_8);
-            final URI uri = UriUtils.toURI(Location.ENVIRONMENT, "");
+            final URI uri = UriUtils.toUri(Location.ENVIRONMENT, "");
             return create(name, group, uri, dataSource, contentType, UTF_8);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -172,7 +172,7 @@ public abstract class DataSourceFactory {
         Validate.notEmpty(System.getenv(key), "Environment variable not found: " + key);
 
         final StringDataSource dataSource = new StringDataSource(name, System.getenv(key), contentType, UTF_8);
-        final URI uri = UriUtils.toURI(Location.ENVIRONMENT, key);
+        final URI uri = UriUtils.toUri(Location.ENVIRONMENT, key);
         return create(name, group, uri, dataSource, contentType, UTF_8);
     }
 

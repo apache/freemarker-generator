@@ -16,8 +16,6 @@
  */
 package org.apache.freemarker.generator.base.util;
 
-import org.apache.commons.io.FilenameUtils;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -27,7 +25,7 @@ import static org.apache.freemarker.generator.base.util.StringUtils.isNotEmpty;
 
 public class UriUtils {
 
-    public static URI toURI(String str) {
+    public static URI toUri(String str) {
         try {
             return new URI(separatorsToUnix(str));
         } catch (URISyntaxException e) {
@@ -35,25 +33,30 @@ public class UriUtils {
         }
     }
 
-    public static URI toURI(String scheme, String path) {
-        return toURI(scheme + ":///" + path);
+    public static URI toUri(String scheme, String path) {
+        return toUri(scheme + ":///" + path);
     }
 
-    public static URI toURI(URL url) {
-        return toURI(url.toString());
+    public static URI toUri(URL url) {
+        return toUri(url.toString());
     }
 
+    /**
+     * Return the URI string representation without fragment part.
+     * @param uri uri
+     * @return name
+     */
     public static String toName(URI uri) {
-        final String scheme = uri.getScheme();
-        final String schemeSpecificPart = uri.getSchemeSpecificPart();
-        return scheme + schemeSpecificPart;
+        final String str = uri.toString();
+        final int index = str.indexOf('#');
+        return (index > 0) ? str.substring(0, index) : str;
     }
 
     public static boolean isUri(String str) {
         return isNotEmpty(str) && str.contains("://");
     }
 
-    public static boolean isHttpURI(URI uri) {
+    public static boolean isHttpUri(URI uri) {
         if (uri == null) {
             return false;
         }

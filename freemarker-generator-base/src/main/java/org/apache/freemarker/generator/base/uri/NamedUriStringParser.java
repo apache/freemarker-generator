@@ -52,10 +52,10 @@ public class NamedUriStringParser {
         if (matcher.matches()) {
             final String name = matcher.group(NAME);
             final String group = matcher.group(GROUP);
-            final URI uri = UriUtils.toURI(matcher.group(URI));
+            final URI uri = UriUtils.toUri(matcher.group(URI));
             return new NamedUri(name, group, uri, parameters(uri));
         } else {
-            final URI uri = UriUtils.toURI(value);
+            final URI uri = UriUtils.toUri(value);
             return new NamedUri(uri, parameters(uri));
         }
     }

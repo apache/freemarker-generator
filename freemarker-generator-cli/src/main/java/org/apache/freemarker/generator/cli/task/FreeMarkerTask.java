@@ -133,7 +133,7 @@ public class FreeMarkerTask implements Callable<Integer> {
         // Add optional data source from STDIN at the start of the list since
         // this allows easy sequence slicing in FreeMarker.
         if (settings.isReadFromStdin()) {
-            final URI uri = UriUtils.toURI(Location.SYSTEM, "in");
+            final URI uri = UriUtils.toUri(Location.SYSTEM, "in");
             dataSources.add(0, DataSourceFactory.fromInputStream(STDIN, DEFAULT_GROUP, uri, System.in, MIME_TEXT_PLAIN, UTF_8));
         }
 

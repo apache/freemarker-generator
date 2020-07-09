@@ -57,19 +57,19 @@ public class DataSources implements Closeable {
     }
 
     /**
-     * Get the file names of all data sources.
+     * Get the given metadata value for all data sources.
      *
-     * @param partName name of the metadata part
-     * @return data source names
+     * @param name name of the metadata part
+     * @return list of metadata values
      */
-    public List<String> getParts(String partName) {
+    public List<String> getMetadata(String name) {
         return dataSources.stream()
-                .map(ds -> ds.getPart(partName))
+                .map(ds -> ds.getMetadata(name))
                 .collect(toList());
     }
 
     /**
-     * Get the groups of all data sources.
+     * Get the unique groups of all data sources.
      *
      * @return data source names
      */
