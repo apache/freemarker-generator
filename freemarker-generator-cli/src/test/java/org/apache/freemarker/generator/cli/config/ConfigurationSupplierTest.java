@@ -43,7 +43,7 @@ public class ConfigurationSupplierTest {
         assertTrue(configuration.isOutputEncodingSet());
 
         assertFalse(configuration.isCacheStorageExplicitlySet());
-        assertFalse(configuration.isObjectWrapperExplicitlySet());
+        assertTrue(configuration.isObjectWrapperExplicitlySet());
         assertFalse(configuration.isOutputFormatExplicitlySet());
         assertFalse(configuration.isTemplateExceptionHandlerExplicitlySet());
         assertFalse(configuration.isTimeZoneExplicitlySet());
