@@ -101,7 +101,7 @@ public class DataSourcesTest {
 
     @Test
     public void shouldGetFileNamePart() {
-        assertEquals(asList("unknown", "pom.xml", "server.invalid?foo=bar"), dataSources().getMetadata("filename"));
+        assertEquals(asList("unknown", "pom.xml", "server.invalid?foo=bar"), dataSources().getMetadata("fileName"));
     }
 
     @Test

@@ -16,8 +16,6 @@
  */
 package org.apache.freemarker.generator.base.util;
 
-import org.apache.commons.io.FilenameUtils;
-
 public class StringUtils {
 
     public static boolean isEmpty(String value) {
@@ -52,18 +50,5 @@ public class StringUtils {
             }
         }
         return count;
-    }
-
-    public static String getParentPart(String str, String separator) {
-        if (isEmpty(str) || !str.contains(separator)) {
-            return null;
-        }
-        final String[] parts = str.split(separator);
-        if(parts.length > 1) {
-            return parts[parts.length-2];
-        }
-        else {
-            return null;
-        }
     }
 }

@@ -49,8 +49,20 @@ import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_APPLICATI
  * There is also special support of <code>UrlDataSource</code> since
  * the content type &amp; charset might be determined using a network
  * call.
+ * <br>
+ * The implementation makes no assumption if the underlying input
+ * stream can be consumed more than once.
  */
 public class DataSource implements Closeable, javax.activation.DataSource {
+
+    public static final String METADATA_BASE_NAME = "baseName";
+    public static final String METADATA_EXTENSION = "extension";
+    public static final String METADATA_FILE_NAME = "fileName";
+    public static final String METADATA_FILE_PATH = "filePath";
+    public static final String METADATA_GROUP = "group";
+    public static final String METADATA_NAME = "name";
+    public static final String METADATA_URI = "uri";
+    public static final String METADATA_URI_PATH = "uriPath";
 
     /** Human-readable name of the data source */
     private final String name;
@@ -64,14 +76,14 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     /** The underlying "javax.activation.DataSource" */
     private final javax.activation.DataSource dataSource;
 
-    /** Optional content type */
+    /** Content type of data source either provided by the user or fetched directly from the data source */
     private final String contentType;
 
-    /** Optional charset for directly accessing text-based content */
+    /** Charset for directly accessing text-based content */
     private final Charset charset;
 
-    /** Collect all closables handed out to the caller to be closed when the data source is closed itself */
-    private final CloseableReaper closables;
+    /** Collect all closeables handed out to the caller to be closed when the data source is closed itself */
+    private final CloseableReaper closeables;
 
     public DataSource(
             String name,
@@ -86,7 +98,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
         this.dataSource = requireNonNull(dataSource);
         this.contentType = contentType;
         this.charset = charset;
-        this.closables = new CloseableReaper();
+        this.closeables = new CloseableReaper();
     }
 
     @Override
@@ -111,7 +123,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
      */
     @Override
     public InputStream getInputStream() {
-        return closables.add(getUnsafeInputStream());
+        return closeables.add(getUnsafeInputStream());
     }
 
     @Override
@@ -121,25 +133,30 @@ public class DataSource implements Closeable, javax.activation.DataSource {
 
     @Override
     public void close() {
-        closables.close();
+        closeables.close();
     }
 
     public String getGroup() {
         return group;
     }
 
-    public String getBaseName() {
-        return FilenameUtils.getBaseName(name);
-    }
-
     public String getFileName() {
         return FilenameUtils.getName(name);
     }
 
-    public String getExtension() {
-        return FilenameUtils.getExtension(name);
+    public String getBaseName() {
+        return FilenameUtils.getBaseName(getFileName());
     }
 
+    public String getExtension() {
+        return FilenameUtils.getExtension(getFileName());
+    }
+
+    /**
+     * Get the charset. If no charset can be detected UTF-8 is assumed.
+     *
+     * @return charset
+     */
     public Charset getCharset() {
         return charset != null ? charset : MimeTypeParser.getCharset(contentType(), UTF_8);
     }
@@ -230,8 +247,8 @@ public class DataSource implements Closeable, javax.activation.DataSource {
 
     /**
      * Returns an Iterator for the lines in an <code>InputStream</code>, using
-     * the default character encoding specified. The caller is responsible to close
-     * the line iterator.
+     * the default character encoding specified. The exposed iterator is closed
+     * by the <code>DataSource</code>.
      *
      * @return line iterator
      */
@@ -241,7 +258,8 @@ public class DataSource implements Closeable, javax.activation.DataSource {
 
     /**
      * Returns an Iterator for the lines in an <code>InputStream</code>, using
-     * the character encoding specified.
+     * the character encoding specified. The exposed iterator is closed
+     * by the <code>DataSource</code>.
      *
      * @param charsetName The name of the requested charset
      * @return line iterator
@@ -249,7 +267,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     public LineIterator getLineIterator(String charsetName) {
         Validate.notEmpty(charsetName, "No charset name provided");
         try {
-            return closables.add(IOUtils.lineIterator(getUnsafeInputStream(), Charset.forName(charsetName)));
+            return closeables.add(IOUtils.lineIterator(getUnsafeInputStream(), Charset.forName(charsetName)));
         } catch (IOException e) {
             throw new RuntimeException("Failed to create line iterator: " + toString(), e);
         }
@@ -266,43 +284,37 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     /**
      * Expose various parts of the metadata as simple strings to cater for filtering in  a script.
      *
-     * @param name name part name
+     * @param key key part key
      * @return value
      */
-    public String getMetadata(String name) {
-        Validate.notEmpty(name, "No part name provided");
-        switch (name.toLowerCase()) {
-            case "basename":
+    public String getMetadata(String key) {
+        Validate.notEmpty(key, "No key provided");
+        switch (key) {
+            case METADATA_BASE_NAME:
                 return getBaseName();
-            case "charset":
-                return getCharset().name();
-            case "extension":
+            case METADATA_EXTENSION:
                 return getExtension();
-            case "filename":
+            case METADATA_FILE_NAME:
                 return getFileName();
-            case "group":
+            case METADATA_FILE_PATH:
+                return FilenameUtils.getFullPathNoEndSeparator(uri.getPath());
+            case METADATA_GROUP:
                 return getGroup();
-            case "mimetype":
-                return getMimeType();
-            case "name":
+            case METADATA_NAME:
                 return getName();
-            case "path":
+            case METADATA_URI_PATH:
                 return uri.getPath();
-            case "parent":
-                return StringUtils.getParentPart(getName(), "/");
-            case "scheme":
-                return uri.getScheme();
-            case "uri":
+            case METADATA_URI:
                 return uri.toString();
             default:
-                throw new IllegalArgumentException("Unknown name: " + name);
+                throw new IllegalArgumentException("Unknown key: " + key);
         }
     }
 
     /**
-     * Matches a metadata entry with a wildcard expression.
+     * Matches a metadata part with a wildcard expression.
      *
-     * @param part     part, e.g. "name", "basename", "extension", "uri", "group"
+     * @param part     part, e.g. "name", "fileName", "baseName", "extension", "uri", "group"
      * @param wildcard the wildcard string to match against
      * @return true if the wildcard expression matches
      * @see <a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.7/org/apache/commons/io/FilenameUtils.html#wildcardMatch-java.lang.String-java.lang.String-">Apache Commons IO</a>
@@ -322,7 +334,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
      * @return Closable
      */
     public <T extends Closeable> T addClosable(T closeable) {
-        return closables.add(closeable);
+        return closeables.add(closeable);
     }
 
     @Override
@@ -336,7 +348,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
 
     /**
      * If there is no content type we ask the underlying data source. E.g. for
-     * an URL data source this information is fetched from the server.
+     * an URL data source this information is fetched from the remote server.
      *
      * @return content type
      */

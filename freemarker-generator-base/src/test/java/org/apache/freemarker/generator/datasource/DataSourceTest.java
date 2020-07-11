@@ -76,8 +76,7 @@ public class DataSourceTest {
             assertTrue(dataSource.match("name", "*" + ANY_FILE_NAME));
             assertTrue(dataSource.match("uri", "file:/*/pom.xml"));
             assertTrue(dataSource.match("extension", "xml"));
-            assertTrue(dataSource.match("basename", "pom"));
-            assertTrue(dataSource.match("path", "*/pom.xml"));
+            assertTrue(dataSource.match("baseName", "pom"));
         }
     }
 

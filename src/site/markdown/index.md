@@ -1,4 +1,4 @@
-The Apache FreeMarker Generator projects provides additional tools to generate textual ouptut using [Apache FreeMarker](https://freemarker.apache.org).
+The Apache FreeMarker Generator projects provides additional tools to generate textual output using [Apache FreeMarker](https://freemarker.apache.org).
 
 | Name                                                          | Description                                                       |
 | ------------------------------------------------------------- | ----------------------------------------------------------------- |

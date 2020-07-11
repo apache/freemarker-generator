@@ -103,13 +103,9 @@ List all data sources having "json" extension
 <#list dataSources?values?filter(ds -> ds.match("extension", "json")) as ds>
 - ${ds.name}
 </#list>
-List all data sources having "list" base name
-<#list dataSources?values?filter(ds -> ds.match("parent", "list")) as ds>
+List all data sources having "src/test/data/properties" in their directory name
+<#list dataSources?values?filter(ds -> ds.match("filePath", "*/src/test/data/properties")) as ds>
 - ${ds.name}
-</#list>
-List all files having HTTP/HTTPS URLs
-<#list dataSources?values?filter(ds -> ds.match("scheme", "http*")) as ds>
-- ${ds.getMetadata("filename")}
 </#list>
 
 12) Document Data Model
