@@ -78,7 +78,7 @@ public class TemplateSource {
     /**
      * Template will be loaded from path using a file-base template loader.
      *
-     * @param path template path
+     * @param path     template path
      * @param encoding character encoding og template
      * @return file-based template source
      */

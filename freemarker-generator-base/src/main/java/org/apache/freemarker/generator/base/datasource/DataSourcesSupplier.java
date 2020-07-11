@@ -16,7 +16,6 @@
  */
 package org.apache.freemarker.generator.base.datasource;
 
-import jdk.nashorn.internal.runtime.URIUtils;
 import org.apache.freemarker.generator.base.file.RecursiveFileSupplier;
 import org.apache.freemarker.generator.base.uri.NamedUri;
 import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
@@ -137,7 +136,7 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
         if (namedUri.hasName()) {
             return namedUri.getName();
         } else {
-            return UriUtils.toName(file.toURI());
+            return UriUtils.toStringWithoutFragment(file.toURI());
         }
     }
 }

@@ -24,7 +24,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Keeps track of all transformations being executed.
- */ 
+ */
 public class TemplateTransformations {
 
     private final List<TemplateTransformation> templateTransformations;

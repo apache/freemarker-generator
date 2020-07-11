@@ -41,7 +41,7 @@ public class FreeMarkerConstants {
 
     /* Default group name for data sources */
     public static final String DEFAULT_GROUP = "default";
-    
+
     public static class Configuration {
 
         private Configuration() {

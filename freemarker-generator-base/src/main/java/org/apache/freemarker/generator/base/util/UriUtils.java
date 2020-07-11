@@ -43,10 +43,11 @@ public class UriUtils {
 
     /**
      * Return the URI string representation without fragment part.
+     *
      * @param uri uri
-     * @return name
+     * @return string representation of URI without fragment part
      */
-    public static String toName(URI uri) {
+    public static String toStringWithoutFragment(URI uri) {
         final String str = uri.toString();
         final int index = str.indexOf('#');
         return (index > 0) ? str.substring(0, index) : str;

@@ -77,11 +77,11 @@ public abstract class DataSourceFactory {
 
         if (UriUtils.isHttpUri(uri)) {
             final URL url = toUrl(uri);
-            final String name = namedUri.getNameOrElse(UriUtils.toName(uri));
+            final String name = namedUri.getNameOrElse(UriUtils.toStringWithoutFragment(uri));
             return fromUrl(name, group, url, mimeType, charset);
         } else if (UriUtils.isFileUri(uri)) {
             final File file = namedUri.getFile();
-            final String name = namedUri.getNameOrElse(UriUtils.toName(file.toURI()));
+            final String name = namedUri.getNameOrElse(UriUtils.toStringWithoutFragment(file.toURI()));
             return fromFile(name, group, file, charset);
         } else if (UriUtils.isEnvUri(uri)) {
             // environment variables come with a leading "/" to be removed
@@ -96,7 +96,7 @@ public abstract class DataSourceFactory {
         } else {
             // handle things such as "foo=some.file"
             final File file = namedUri.getFile();
-            final String name = namedUri.getNameOrElse(UriUtils.toName(file.toURI()));
+            final String name = namedUri.getNameOrElse(UriUtils.toStringWithoutFragment(file.toURI()));
             return fromFile(name, group, file, charset);
         }
     }
@@ -120,7 +120,7 @@ public abstract class DataSourceFactory {
     // == File ==============================================================
 
     public static DataSource fromFile(File file, Charset charset) {
-        return fromFile(UriUtils.toName(file.toURI()), DEFAULT_GROUP, file, charset);
+        return fromFile(UriUtils.toStringWithoutFragment(file.toURI()), DEFAULT_GROUP, file, charset);
     }
 
     public static DataSource fromFile(String name, String group, File file, Charset charset) {
