@@ -76,7 +76,7 @@ public abstract class DataSourceFactory {
         final String mimeType = getMimeTypeOrElse(namedUri, NO_MIME_TYPE);
 
         if (UriUtils.isHttpUri(uri)) {
-            final URL url = toURL(uri);
+            final URL url = toUrl(uri);
             final String name = namedUri.getNameOrElse(UriUtils.toName(uri));
             return fromUrl(name, group, url, mimeType, charset);
         } else if (UriUtils.isFileUri(uri)) {
@@ -217,7 +217,7 @@ public abstract class DataSourceFactory {
         return StringUtils.isEmpty(charsetName) ? def : Charset.forName(charsetName);
     }
 
-    private static URL toURL(URI uri) {
+    private static URL toUrl(URI uri) {
         try {
             return uri.toURL();
         } catch (MalformedURLException e) {

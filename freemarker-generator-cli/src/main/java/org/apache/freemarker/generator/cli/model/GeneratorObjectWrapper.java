@@ -16,7 +16,8 @@ public class GeneratorObjectWrapper extends DefaultObjectWrapper {
     @Override
     protected TemplateModel handleUnknownType(Object obj) throws TemplateModelException {
         if (obj instanceof DataSources) {
-            return DefaultMapAdapter.adapt(((DataSources) obj).getMap(), this);
+            final DataSources dataSources = (DataSources) obj;
+            return DefaultMapAdapter.adapt((dataSources).toMap(), this);
         }
 
         return super.handleUnknownType(obj);

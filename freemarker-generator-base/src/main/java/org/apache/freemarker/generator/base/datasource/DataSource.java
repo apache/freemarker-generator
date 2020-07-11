@@ -312,15 +312,15 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     }
 
     /**
-     * Matches a metadata part with a wildcard expression.
+     * Matches a metadata key with a wildcard expression.
      *
-     * @param part     part, e.g. "name", "fileName", "baseName", "extension", "uri", "group"
+     * @param key      metadata key, e.g. "name", "fileName", "baseName", "extension", "uri", "group"
      * @param wildcard the wildcard string to match against
      * @return true if the wildcard expression matches
      * @see <a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.7/org/apache/commons/io/FilenameUtils.html#wildcardMatch-java.lang.String-java.lang.String-">Apache Commons IO</a>
      */
-    public boolean match(String part, String wildcard) {
-        final String value = getMetadata(part);
+    public boolean match(String key, String wildcard) {
+        final String value = getMetadata(key);
         return FilenameUtils.wildcardMatch(value, wildcard);
     }
 
