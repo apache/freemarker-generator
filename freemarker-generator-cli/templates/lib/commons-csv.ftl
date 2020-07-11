@@ -25,8 +25,8 @@
     * CSV_SOURCE_WITH_HEADER - whether the first rows are headers
 -->
 <#function sourceFormat>
-    <#assign format = CSVTool.formats[CSV_SOURCE_FORMAT!"DEFAULT"]>
-    <#assign delimiter = CSVTool.toDelimiter(CSV_SOURCE_DELIMITER!format.getDelimiter())>
+    <#assign format = tools.csv.formats[CSV_SOURCE_FORMAT!"DEFAULT"]>
+    <#assign delimiter = tools.csv.toDelimiter(CSV_SOURCE_DELIMITER!format.getDelimiter())>
     <#assign withHeader = CSV_SOURCE_WITH_HEADER!"true">
     <#assign format = format.withDelimiter(delimiter)>
     <#if withHeader?boolean>
@@ -44,8 +44,8 @@
     * CSV_TARGET_WITH_HEADER - whether the first rows are headers
 -->
 <#function targetFormat>
-    <#assign format = CSVTool.formats[CSV_TARGET_FORMAT!"DEFAULT"]>
-    <#assign delimiter = CSVTool.toDelimiter(CSV_TARGET_DELIMITER!format.getDelimiter())>
+    <#assign format = tools.csv.formats[CSV_TARGET_FORMAT!"DEFAULT"]>
+    <#assign delimiter = tools.csv.toDelimiter(CSV_TARGET_DELIMITER!format.getDelimiter())>
     <#assign withHeader = CSV_TARGET_WITH_HEADER!"true">
     <#assign format = format.withDelimiter(delimiter)>
     <#if withHeader?boolean>

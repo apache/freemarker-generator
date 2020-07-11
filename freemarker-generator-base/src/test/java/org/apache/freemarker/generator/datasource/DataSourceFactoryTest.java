@@ -53,7 +53,7 @@ public class DataSourceFactoryTest {
     public void shouldCreateDataSourceFromFile() {
         final DataSource dataSource = DataSourceFactory.fromFile(ANY_FILE, ANY_CHAR_SET);
 
-        assertEquals(ANY_FILE_NAME, dataSource.getName());
+        assertEquals(ANY_FILE_NAME, dataSource.getFileName());
         assertEquals(UTF_8, dataSource.getCharset());
         assertEquals(MIME_APPLICATION_XML, dataSource.getContentType());
         assertEquals(ANY_FILE.toURI(), dataSource.getUri());
@@ -64,7 +64,7 @@ public class DataSourceFactoryTest {
     public void shouldCreateDataSourceFromFileUri() {
         final DataSource dataSource = DataSourceFactory.create(ANY_FILE_URI);
 
-        assertEquals(ANY_FILE_NAME, dataSource.getName());
+        assertEquals(ANY_FILE_NAME, dataSource.getFileName());
         assertEquals(UTF_8, dataSource.getCharset());
         assertEquals(MIME_APPLICATION_XML, dataSource.getContentType());
         assertEquals(ANY_FILE.toURI(), dataSource.getUri());
@@ -133,7 +133,7 @@ public class DataSourceFactoryTest {
     }
 
     @Test
-    public void shouldCreateDataSourceFromEnviroment() {
+    public void shouldCreateDataSourceFromEnvironment() {
         final NamedUri namedUri = NamedUriStringParser.parse("env:///");
         final DataSource dataSource = DataSourceFactory.fromNamedUri(namedUri);
 
@@ -145,7 +145,7 @@ public class DataSourceFactoryTest {
     }
 
     @Test
-    public void shouldCreateDataSourceFromNamedEnviroment() {
+    public void shouldCreateDataSourceFromNamedEnvironment() {
         final NamedUri namedUri = NamedUriStringParser.parse("config=env:///");
         final DataSource dataSource = DataSourceFactory.fromNamedUri(namedUri);
 

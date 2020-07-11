@@ -27,16 +27,8 @@ Output format          : ${.output_format}
 
 FreeMarker CLI Template Loader Directories
 ------------------------------------------------------------------------------
-<#list SystemTool.getTemplateDirectories() as directory>
+<#list tools.system.getTemplateDirectories() as directory>
 [#${directory?counter}] ${directory}
-</#list>
-
-FreeMarker CLI Tools
-------------------------------------------------------------------------------
-<#list .data_model?keys?sort as key>
-<#if key?ends_with("Tool")>
-- ${key?right_pad(20)} : ${.data_model[key]}
-</#if>
 </#list>
 
 FreeMarker CLI Data Model
@@ -45,19 +37,25 @@ FreeMarker CLI Data Model
 - ${key}<#lt>
 </#list>
 
-<#if DataSources.list?has_content>
+FreeMarker CLI Tools
+------------------------------------------------------------------------------
+<#list tools?keys?sort as name>
+- ${name?right_pad(20)} : ${tools[name]}
+</#list>
+
+<#if dataSources?has_content>
 FreeMarker CLI DataSources
 ------------------------------------------------------------------------------
-<#list DataSources.list as dataSource>
-[#${dataSource?counter}], name=${dataSource.name}, group=${dataSource.group}, mimeType=${dataSource.mimetype}, charset=${dataSource.charset}, length=${dataSource.length} Bytes
-URI : ${dataSource.uri}
+<#list dataSources?values as ds>
+[#${ds?counter}]: name=${ds.name}, group=${ds.group}, fileName=${ds.fileName} mimeType=${ds.mimeType}, charset=${ds.charset}, length=${ds.length} Bytes
+URI : ${ds.uri}
 </#list>
 </#if>
 
-<#if SystemTool.parameters?has_content>
+<#if tools.system.parameters?has_content>
 FreeMarker CLI Parameters
 ------------------------------------------------------------------------------
-<#list SystemTool.parameters as key,value>
+<#list tools.system.parameters as key,value>
 <#if value?is_hash>
 - ${key} ==> { <#list value as name,value>${name}=${value} </#list>}
 <#else>

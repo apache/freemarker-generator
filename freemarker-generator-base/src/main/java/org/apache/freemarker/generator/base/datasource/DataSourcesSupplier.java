@@ -19,6 +19,7 @@ package org.apache.freemarker.generator.base.datasource;
 import org.apache.freemarker.generator.base.file.RecursiveFileSupplier;
 import org.apache.freemarker.generator.base.uri.NamedUri;
 import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
+import org.apache.freemarker.generator.base.util.UriUtils;
 import org.apache.freemarker.generator.base.util.Validate;
 
 import java.io.File;
@@ -135,7 +136,7 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
         if (namedUri.hasName()) {
             return namedUri.getName();
         } else {
-            return file.getName();
+            return UriUtils.toStringWithoutFragment(file.toURI());
         }
     }
 }

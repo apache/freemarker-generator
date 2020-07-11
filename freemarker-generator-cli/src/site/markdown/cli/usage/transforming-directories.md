@@ -176,11 +176,11 @@ server {
 In the cloud it is common to pass JSON configuration as environment variable
 
 * `env:///NGINX_CONF` selects the `NGINX_CONF` environment variable
-* `#mimetype=application/json` defines that JSON content is parsed
+* `#mimeType=application/json` defines that JSON content is parsed
 
 ```
 export NGINX_CONF='{"NGINX_PORT":"8443","NGINX_HOSTNAME":"localhost"}'
-freemarker-cli -t examples/data/template/ -m env:///NGINX_CONF#mimetype=application/json
+freemarker-cli -t examples/data/template/ -m env:///NGINX_CONF#mimeType=application/json
 # == application.properties ==================================================
 server.name=localhost
 server.logs=/var/log/nginx
@@ -200,7 +200,7 @@ For testing purpose it is useful to override certain settings
 
 ```
 export NGINX_CONF='{"NGINX_PORT":"8443","NGINX_HOSTNAME":"localhost"}'
-freemarker-cli -t examples/data/template/ -PNGINX_HOSTNAME=www.mydomain.com -m env:///NGINX_CONF#mimetype=application/json
+freemarker-cli -t examples/data/template/ -PNGINX_HOSTNAME=www.mydomain.com -m env:///NGINX_CONF#mimeType=application/json
 # == application.properties ==================================================
 server.name=www.mydomain.com
 server.logs=/var/log/nginx
@@ -214,4 +214,4 @@ server {
 }
 ```
 
-Please note that this only works for "top-level" variables, i.e. mimicking enviroment variables or property files. 
+Please note that this only works for "top-level" variables, i.e. mimicking environment variables or property files. 

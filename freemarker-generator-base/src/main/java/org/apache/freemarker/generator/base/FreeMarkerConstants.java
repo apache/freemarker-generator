@@ -41,7 +41,7 @@ public class FreeMarkerConstants {
 
     /* Default group name for data sources */
     public static final String DEFAULT_GROUP = "default";
-    
+
     public static class Configuration {
 
         private Configuration() {
@@ -77,7 +77,8 @@ public class FreeMarkerConstants {
         private Model() {
         }
 
-        public static final String DATASOURCES = "DataSources";
+        public static final String DATASOURCES = "dataSources";
+        public static final String TOOLS = "tools";
 
         public static final String FREEMARKER_CLI_ARGS = "freemarker.cli.args";
         public static final String FREEMARKER_LOCALE = "freemarker.locale";

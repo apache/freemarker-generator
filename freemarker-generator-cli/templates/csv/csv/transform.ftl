@@ -16,10 +16,10 @@
   under the License.
 -->
 <#import "/templates/lib/commons-csv.ftl" as csv />
-<#assign dataSource = DataSources.get(0)>
-<#assign csvParser = CSVTool.parse(dataSource, csv.sourceFormat())>
+<#assign dataSource = dataSources?values[0]>
+<#assign csvParser = tools.csv.parse(dataSource, csv.sourceFormat())>
 <#assign csvTargetFormat = csv.targetFormat()>
-<#assign csvPrinter = CSVTool.printer(csvTargetFormat)>
+<#assign csvPrinter = tools.csv.printer(csvTargetFormat)>
 <#assign csvHeaders = (csvParser.getHeaderMap()!{})?keys>
 <#if csvHeaders?has_content && csvTargetFormat.getSkipHeaderRecord()>
     ${csvPrinter.printRecord(csvHeaders)}<#t>

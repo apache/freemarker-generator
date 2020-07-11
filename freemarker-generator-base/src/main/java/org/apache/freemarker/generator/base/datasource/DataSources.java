@@ -23,9 +23,12 @@ import org.apache.freemarker.generator.base.util.Validate;
 import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.function.Function.identity;
 
 /**
  * Container for data sources with a couple of convenience functions to select
@@ -49,12 +52,23 @@ public class DataSources implements Closeable {
     public List<String> getNames() {
         return dataSources.stream()
                 .map(DataSource::getName)
-                .filter(StringUtils::isNotEmpty)
-                .collect(toList());
+                .collect(Collectors.toList());
     }
 
     /**
-     * Get the groups of all data sources.
+     * Get the given metadata value for all data sources.
+     *
+     * @param key key of the metadata part
+     * @return list of metadata values
+     */
+    public List<String> getMetadata(String key) {
+        return dataSources.stream()
+                .map(ds -> ds.getMetadata(key))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Get the unique groups of all data sources.
      *
      * @return data source names
      */
@@ -64,7 +78,7 @@ public class DataSources implements Closeable {
                 .filter(StringUtils::isNotEmpty)
                 .sorted()
                 .distinct()
-                .collect(toList());
+                .collect(Collectors.toList());
     }
 
     public int size() {
@@ -75,8 +89,25 @@ public class DataSources implements Closeable {
         return dataSources.isEmpty();
     }
 
-    public List<DataSource> getList() {
+    /**
+     * Get a list representation of the underlying data sources.
+     *
+     * @return list of data sources
+     */
+    public List<DataSource> toList() {
         return new ArrayList<>(dataSources);
+    }
+
+    /**
+     * Get a map representation of the underlying data sources.
+     *
+     * @return map of data sources
+     */
+    public Map<String, DataSource> toMap() {
+        return dataSources.stream().collect(Collectors.toMap(DataSource::getName,
+                identity(),
+                (v1, v2) -> v1,
+                LinkedHashMap::new));
     }
 
     public DataSource get(int index) {
@@ -105,7 +136,7 @@ public class DataSources implements Closeable {
     }
 
     /**
-     * Find data sources based on their name and a wildcard.
+     * Find data sources based on their name using a wildcard string..
      *
      * @param wildcard the wildcard string to match against
      * @return list of matching data sources
@@ -114,21 +145,21 @@ public class DataSources implements Closeable {
     public List<DataSource> find(String wildcard) {
         return dataSources.stream()
                 .filter(dataSource -> dataSource.match("name", wildcard))
-                .collect(toList());
+                .collect(Collectors.toList());
     }
 
     /**
-     * Find data sources based on their metadata part and wildcard.
+     * Find data sources based on their metadata key and wildcard string.
      *
-     * @param part part of metadata to match
+     * @param key      metadata key to match
      * @param wildcard the wildcard string to match against
      * @return list of matching data sources
      * @see <a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.7/org/apache/commons/io/FilenameUtils.html#wildcardMatch-java.lang.String-java.lang.String-">Apache Commons IO</a>
      */
-    public List<DataSource> find(String part, String wildcard) {
+    public List<DataSource> find(String key, String wildcard) {
         return dataSources.stream()
-                .filter(dataSource -> dataSource.match(part, wildcard))
-                .collect(toList());
+                .filter(dataSource -> dataSource.match(key, wildcard))
+                .collect(Collectors.toList());
     }
 
     @Override

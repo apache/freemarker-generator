@@ -92,7 +92,7 @@ Below you see the Apache FreeMarker Template
 
 ```text
 <#ftl output_format="plainText" >
-<#assign json = JsonPathTool.parse(DataSources.get(0))>
+<#assign json = tools.jsonpath.parse(dataSources?values[0])>
 <#assign users = json.read("$[*]")>
 <#--------------------------------------------------------------------------->
 # GitHub Users
@@ -129,8 +129,8 @@ The FreeMarker template is shown below
 
 ```text
 <#ftl output_format="plainText">
-<#assign cvsFormat = CSVTool.formats["DEFAULT"].withHeader()>
-<#assign csvParser = CSVTool.parse(DataSources.get(0), cvsFormat)>
+<#assign cvsFormat = tools.csv.formats["DEFAULT"].withHeader()>
+<#assign csvParser = tools.csv.parse(dataSources?values[0], cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderMap()?keys>
 <#assign csvRecords = csvParser.records>
 <#--------------------------------------------------------------------------->
@@ -167,7 +167,7 @@ using the following template
 
 ```text
 <#ftl output_format="plainText" >
-<#assign xml = XmlTool.parse(DataSources.get(0))>
+<#assign xml = tools.xml.parse(dataSources?values[0])>
 <#list xml.recipients.person as recipient>
 To: ${recipient.name}
 ${recipient.address}
@@ -214,7 +214,7 @@ One day I was asked a to prepare a CSV files containing REST endpoints described
 
 ```text
 <#ftl output_format="plainText" strip_text="true">
-<#assign json = JsonPathTool.parse(DataSources.get(0))>
+<#assign json = tools.jsonpath.parse(dataSources?values[0])>
 <#assign basePath = json.read("$.basePath")>
 <#assign paths = json.read("$.paths")>
 
@@ -276,9 +276,9 @@ The provided FTL transforms an Excel into a HTML document supporting multiple Ex
 
 ```text
 <#ftl output_format="HTML" >
-<#assign dataSource = DataSources.get(0)>
+<#assign dataSource = dataSources?values[0]>
 <#assign name = dataSource.name>
-<#assign workbook = ExcelTool.parse(dataSource)>
+<#assign workbook = tools.excel.parse(dataSource)>
 <#assign date = .now?iso_utc>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>
@@ -303,7 +303,7 @@ The provided FTL transforms an Excel into a HTML document supporting multiple Ex
 <#-- writeSheets                                                           -->
 <#--------------------------------------------------------------------------->
 <#macro writeSheets workbook>
-    <#assign sheets = ExcelTool.getSheets(workbook)>
+    <#assign sheets = tools.excel.getSheets(workbook)>
     <#list sheets as sheet>
         <@writeSheet sheet/>
     </#list>
@@ -313,7 +313,7 @@ The provided FTL transforms an Excel into a HTML document supporting multiple Ex
 <#-- writeSheet                                                            -->
 <#--------------------------------------------------------------------------->
 <#macro writeSheet sheet>
-    <#assign rows = ExcelTool.toTable(sheet)>
+    <#assign rows = tools.excel.toTable(sheet)>
     <h2>${sheet.getSheetName()}</h2>
     <@writeRows rows/>
 </#macro>
@@ -372,8 +372,8 @@ The FTL uses a couple of interesting features
 <#ftl output_format="plainText" strip_text="true">
 <#compress>
     TENANT,SITE,USER_ID,DISPOSER_ID,PASSWORD,SMS_OTP,NAME,DESCRIPTION
-    <#list DataSources.list as dataSource>
-        <#assign properties = PropertiesTool.parse(dataSource)>
+    <#list dataSources.list as dataSource>
+        <#assign properties = tools.properties.parse(dataSource)>
         <#assign environments = properties["ENVIRONMENTS"]!"">
         <#assign tenant = extractTenant(environments)>
         <#assign site = extractSite(environments)>
@@ -402,10 +402,10 @@ For a POC (proof of concept) I created a sample transformation from CSV to XML-F
 
 ```text
 <#ftl output_format="XML" >
-<#assign dataSource = DataSources.get(0)>
+<#assign dataSource = dataSources?values[0]>
 <#assign name = dataSource.name>
-<#assign cvsFormat = CSVTool.formats.DEFAULT.withDelimiter('\t').withHeader()>
-<#assign csvParser = CSVTool.parse(dataSource, cvsFormat)>
+<#assign cvsFormat = tools.csv.formats.DEFAULT.withDelimiter('\t').withHeader()>
+<#assign csvParser = tools.csv.parse(dataSource, cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderMap()?keys>
 <#assign csvRecords = csvParser.records>
 <#--------------------------------------------------------------------------->
@@ -523,8 +523,8 @@ Recently I got the rather unusual question how to determine the list of dependen
 
 ```text
 <#ftl output_format="plainText" strip_text="true">
-<#assign dataSource = DataSources.get(0)>
-<#assign html = JsoupTool.parse(dataSource)>
+<#assign dataSource = dataSources?values[0]>
+<#assign html = tools.jsoup.parse(dataSource)>
 
 <#compress>
     <@writeHeader/>
@@ -597,10 +597,10 @@ and the final FTL is found below
 
 ```text
 <#ftl output_format="plainText">
-<#assign cvsFormat = CSVTool.formats["DEFAULT"].withHeader()>
-<#assign csvParser = CSVTool.parse(DataSources.get(0), cvsFormat)>
+<#assign cvsFormat = tools.csv.formats["DEFAULT"].withHeader()>
+<#assign csvParser = tools.csv.parse(dataSources?values[0], cvsFormat)>
 <#assign records = csvParser.records>
-<#assign csvMap = CSVTool.toMap(records, "disposer")>
+<#assign csvMap = tools.csv.toMap(records, "disposer")>
 <#--------------------------------------------------------------------------->
 #!/bin/sh
 
@@ -657,7 +657,7 @@ Think of `Grok` as modular regular expressions with a pre-defined functionality 
 QUOTEDSTRING (?>(?<!\\)(?>"(?>\\.|[^\\"]+)+"|""|(?>'(?>\\.|[^\\']+)+')|''|(?>`(?>\\.|[^\\`]+)+`)|``))
 ```
 
-And with `Grok` the `QUOTEDSTRING` is just a building block for an even more complex regular expession such as `COMBINEDAPACHELOG`
+And with `Grok` the `QUOTEDSTRING` is just a building block for an even more complex regular expression such as `COMBINEDAPACHELOG`
 
 > bin/freemarker-cli -t examples/templates/accesslog/combined-access.ftl examples/data/accesslog/combined-access.log 
 
@@ -681,8 +681,8 @@ using the following FreeMarker template
 
 ```text
 <#ftl output_format="plainText" strip_whitespace=true>
-<#assign grok = GrokTool.compile("%{COMBINEDAPACHELOG}")>
-<#assign dataSource = DataSources.get(0)>
+<#assign grok = tools.grok.compile("%{COMBINEDAPACHELOG}")>
+<#assign dataSource = dataSources?values[0]>
 <#assign lines = dataSource.getLineIterator()>
 
 <#compress>
@@ -700,7 +700,7 @@ using the following FreeMarker template
 
 While this looks small and tidy there are some nifty features
 
-* `GrokTool.compile("%{COMBINEDAPACHELOG}")` builds the `Grok` instance to parse access logs in `Combined Format`
+* `tools.grok.compile("%{COMBINEDAPACHELOG}")` builds the `Grok` instance to parse access logs in `Combined Format`
 * The data source is streamed line by line and not loaded into memory in one piece
 * This also works for using `stdin` so are able to parse GB of access log or other files
 
@@ -712,7 +712,7 @@ A few snippets to illustrate the points
 
 ```text
 <#ftl output_format="plainText" strip_whitespace="true">
-<#assign profile = SystemTool.getProperty("profile", "default")>
+<#assign profile = tools.system.getProperty("profile", "default")>
 <#assign ec2Instances = ec2Instances()/>
 
 h3. AWS EC2 Instance
@@ -725,8 +725,8 @@ h3. AWS EC2 Instance
 </#function>
 
 <#function awsCliToJson line>
-    <#local output = ExecTool.execute(line)>
-    <#return JsonPathTool.parse(output)>
+    <#local output = tools.exec.execute(line)>
+    <#return tools.jsonpath.parse(output)>
 </#function>
 
 <#function getAwsEc2InstanceTag tags name>
@@ -765,22 +765,22 @@ h3. AWS EC2 Instance
 Sometime you need to apply a CSS, JSON or XPath query in ad ad-hoc way without installing `xmllint`, `jq` or `pup` - in this case you can pass a FreeMarker template in an interactive fashion
 
 ```text
-> bin/freemarker-cli -i 'Hello ${SystemTool.envs["USER"]}'; echo
+> bin/freemarker-cli -i 'Hello ${tools.system.envs["USER"]}'; echo
 Hello sgoeschl
 
-> bin/freemarker-cli -i '${JsonPathTool.parse(DataSources.get(0)).read("$.info.title")}' examples/data/json/swagger-spec.json; echo
+> bin/freemarker-cli -i '${tools.jsonpath.parse(dataSources?values[0]).read("$.info.title")}' examples/data/json/swagger-spec.json; echo
 Swagger Petstore
 
-> bin/freemarker-cli -i 'Post Title : ${JsonPathTool.parse(DataSources.get(0)).read("$.title")}' https://jsonplaceholder.typicode.com/posts/2; echo
+> bin/freemarker-cli -i 'Post Title : ${tools.jsonpath.parse(dataSources?values[0]).read("$.title")}' https://jsonplaceholder.typicode.com/posts/2; echo
 Post Title : qui est esse
 
-> bin/freemarker-cli -i '${XmlTool.parse(DataSources.get(0))["recipients/person[1]/name"]}' examples/data/xml/recipients.xml; echo
+> bin/freemarker-cli -i '${tools.xml.parse(dataSources?values[0])["recipients/person[1]/name"]}' examples/data/xml/recipients.xml; echo
 John Smith
 
-> bin/freemarker-cli -i '${JsoupTool.parse(DataSources.get(0)).select("a")[0]}' examples/data/html/dependencies.html; echo
+> bin/freemarker-cli -i '${tools.jsoup.parse(dataSources?values[0]).select("a")[0]}' examples/data/html/dependencies.html; echo
 <a href="${project.url}" title="FreeMarker CLI">FreeMarker CLI</a>
 
-> freemarker-cli -i '<#list SystemTool.envs as name,value>${name} ==> ${value}${"\n"}</#list>'
+> freemarker-cli -i '<#list tools.system.envs as name,value>${name} ==> ${value}${"\n"}</#list>'
 TERM ==> xterm-256color
 LANG ==> en_US
 DISPLAY ==> :0.0
@@ -804,11 +804,11 @@ and Apache FreeMarker template
 
 ```text
 <#ftl output_format="plainText" strip_text="true">
-<#assign dataSource = DataSources.get(0)>
+<#assign dataSource = dataSources?values[0]>
 <#assign parser = parser(dataSource)>
 <#assign headers = parser.getHeaderNames()>
-<#assign column = SystemTool.getParameter("column")>
-<#assign values = SystemTool.getParameter("values")?split(",")>
+<#assign column = tools.system.getParameter("column")>
+<#assign values = tools.system.getParameter("values")?split(",")>
 
 <#compress>
     <@writePageHeader dataSource/>
@@ -821,9 +821,9 @@ and Apache FreeMarker template
 </#compress>
 
 <#function parser dataSource>
-    <#assign format = CSVTool.formats[SystemTool.getParameter("format", "DEFAULT")]>
-    <#assign delimiter = CSVTool.toDelimiter(SystemTool.getParameter("delimiter", format.getDelimiter()))>
-    <#return CSVTool.parse(dataSource, format.withFirstRecordAsHeader().withDelimiter(delimiter))>
+    <#assign format = tools.csv.formats[tools.system.getParameter("format", "DEFAULT")]>
+    <#assign delimiter = tools.csv.toDelimiter(tools.system.getParameter("delimiter", format.getDelimiter()))>
+    <#return tools.csv.parse(dataSource, format.withFirstRecordAsHeader().withDelimiter(delimiter))>
 </#function>
 
 <#function filter record>
@@ -890,12 +890,12 @@ Sometimes we simply need to transform a JSON into an equivalent YAML or the othe
 
 ```
 > freemarker-cli -t templates/yaml/json/transform.ftl examples/data/yaml/swagger-spec.yaml 
-> freemarker-cli -i '${GsonTool.toJson(YamlTool.parse(DataSources.get(0)))}' examples/data/yaml/swagger-spec.yaml
-> freemarker-cli -i '${GsonTool.toJson(yaml)}' -m yaml=examples/data/yaml/swagger-spec.yaml
+> freemarker-cli -i '${tools.gson.toJson(tools.yaml.parse(dataSources?values[0]))}' examples/data/yaml/swagger-spec.yaml
+> freemarker-cli -i '${tools.gson.toJson(yaml)}' -m yaml=examples/data/yaml/swagger-spec.yaml
 
 > freemarker-cli -t templates/json/yaml/transform.ftl examples/data/json/swagger-spec.json
-> freemarker-cli -i '${YamlTool.toYaml(GsonTool.parse(DataSources.get(0)))}' examples/data/json/swagger-spec.json
-> freemarker-cli -i '${YamlTool.toYaml(json)}' -m json=examples/data/json/swagger-spec.json
+> freemarker-cli -i '${tools.yaml.toYaml(tools.gson.parse(dataSources?values[0]))}' examples/data/json/swagger-spec.json
+> freemarker-cli -i '${tools.yaml.toYaml(json)}' -m json=examples/data/json/swagger-spec.json
 ```
 
 ### 15. Using Advanced FreeMarker Features
@@ -1033,40 +1033,27 @@ List all files containing "README" in the name
 List all files having "md" extension
 Get all documents
 
-12) FreeMarker CLI Tools
+12) Document Data Model
 ---------------------------------------------------------------------------
-- CSVTool              : Process CSV files using Apache Commons CSV (see https://commons.apache.org/proper/commons-csv/)
-- DataFrameTool        : Bridge to nRo/DataFrame (see https://github.com/nRo/DataFrame)
-- ExcelTool            : Process Excels files (XLS, XLSX) using Apache POI (see https://poi.apache.org)
-- ExecTool             : Execute command line tools using Apache Commons Exec (see https://commons.apache.org/proper/commons-exec/)
-- FreeMarkerTool       : Expose useful Apache FreeMarker classes
-- GrokTool             : Process text files using Grok expressions (see https://github.com/thekrakken/java-grok)
-- GsonTool             : Process JSON files using GSON (see https://github.com/google/gson)
-- JsonPathTool         : Process JSON files using Java JSON Path (see https://github.com/json-path/JsonPath)
-- JsoupTool            : Process  HTML files using Jsoup (see https://jsoup.org)
-- PropertiesTool       : Process JDK properties files
-- SystemTool           : Expose System-related utility methods
-- UUIDTool             : Create UUIDs
-- XmlTool              : Process XML files using Apache FreeMarker (see https://freemarker.apache.org/docs/xgui.html)
-- YamlTool             : Process YAML files using SnakeYAML(see https://bitbucket.org/asomov/snakeyaml/wiki/Home)
+- dataSources
+- tools
 
-13) Document Data Model
+13) FreeMarker CLI Tools
 ---------------------------------------------------------------------------
-- CSVTool
-- DataFrameTool
-- DataSources
-- ExcelTool
-- ExecTool
-- FreeMarkerTool
-- GrokTool
-- GsonTool
-- JsonPathTool
-- JsoupTool
-- PropertiesTool
-- SystemTool
-- UUIDTool
-- XmlTool
-- YamlTool
+- csv                  : Process CSV files using Apache Commons CSV (see https://commons.apache.org/proper/commons-csv/)
+- dataframe            : Bridge to [nRo/DataFrame](https://github.com/nRo/DataFrame)
+- excel                : Process Excels files (XLS, XLSX) using Apache POI (see https://poi.apache.org)
+- exec                 : Execute command line tools using Apache Commons Exec (see https://commons.apache.org/proper/commons-exec/)
+- freemarker           : Expose advanced Apache FreeMarker classes
+- grok                 : Process text files using Grok expressions (see https://github.com/thekrakken/java-grok)
+- gson                 : Process JSON files using GSON (see https://github.com/google/gson)
+- jsonpath             : Process JSON files using Java JSON Path (see https://github.com/json-path/JsonPath)
+- jsoup                : Process  HTML files using Jsoup (see https://jsoup.org)
+- properties           : Process JDK properties files
+- system               : Expose System-related utility methods
+- uuid                 : Create UUIDs
+- xml                  : Process XML files using Apache FreeMarker (see https://freemarker.apache.org/docs/xgui.html)
+- yaml                 : Process YAML files using SnakeYAML(see https://bitbucket.org/asomov/snakeyaml/wiki/Home)
 
 14) Create a UUID
 ---------------------------------------------------------------------------

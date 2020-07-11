@@ -4,7 +4,7 @@ A `DataModel` is an eagerly loaded `DataSource` available in Apache FreeMarker's
 
 * The content of the `DataSource` is parsed and a `Map` generated
 * The `Map` is either stored as variable in the model or all entries are copied into the FreeMarker model
-* The parsing is supported for  `JSON`, `YAML`, `Properties` and enviroment variables  
+* The parsing is supported for  `JSON`, `YAML`, `Properties` and environment variables  
 
 Expose the fields of the JSON data source in FreeMarker's model 
 
@@ -51,7 +51,7 @@ HOME=/Users/sgoeschl
 USER=sgoeschl
 ```
 
-Expose a single envionment variable in theFreeMarker model
+Expose a single environment variable in theFreeMarker model
 
 ```
 > freemarker-cli --data-model NAME=env:///USER -i 'Hello ${NAME}'; echo
@@ -68,13 +68,13 @@ Hello sgoeschl!
 The following snippet shows a more advanced example
 
 * The environment variable `DB_CONFIG` holds JSON data
-* Use the `config=env:///DB_CONFIG#mimetype=application/json` to parse JSON payload from `DB_CONFIG` into the data model `config`
+* Use the `config=env:///DB_CONFIG#mimetType=application/json` to parse JSON payload from `DB_CONFIG` into the data model `config`
 
 ```
 > export DB_CONFIG='{"db_default_user":"scott","db_default_password":"tiger"}'
 > echo $DB_CONFIG 
 {"db_default_user":"scott","db_default_password":"tiger"}
-> freemarker-cli -m config=env:///DB_CONFIG#mimetype=application/json  -i '<#list config as name,value>${name}=${value}${"\n"}</#list>'
+> freemarker-cli -m config=env:///DB_CONFIG#mimeType=application/json  -i '<#list config as name,value>${name}=${value}${"\n"}</#list>'
 db_default_user=scott
 db_default_password=tiger
 ```

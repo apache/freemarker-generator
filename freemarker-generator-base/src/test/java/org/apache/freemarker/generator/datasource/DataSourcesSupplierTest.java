@@ -43,9 +43,9 @@ public class DataSourcesSupplierTest {
         assertEquals(1, supplier("./pom.xml", "*", NO_EXCLUDE).get().size());
         assertEquals(1, supplier("pom=pom.xml", "*", NO_EXCLUDE).get().size());
         assertEquals(1, supplier("pom=./pom.xml", "*", NO_EXCLUDE).get().size());
-        assertEquals(1, supplier("pom=./pom.xml#mimetype=application/xml", "*", NO_EXCLUDE).get().size());
+        assertEquals(1, supplier("pom=./pom.xml#mimeType=application/xml", "*", NO_EXCLUDE).get().size());
         assertEquals(1, supplier("pom=" + PWD + "/pom.xml", "*", NO_EXCLUDE).get().size());
-        assertEquals(1, supplier("pom=file:///" + PWD + "/pom.xml#mimetype=application/xml", "*", NO_EXCLUDE).get()
+        assertEquals(1, supplier("pom=file:///" + PWD + "/pom.xml#mimeType=application/xml", "*", NO_EXCLUDE).get()
                 .size());
     }
 
@@ -101,7 +101,7 @@ public class DataSourcesSupplierTest {
         final DataSource dataSource = dataSources.get(0);
 
         assertEquals(1, dataSources.size());
-        assertEquals("test.properties", dataSource.getName());
+        assertEquals("test.properties", dataSource.getFileName());
         assertTrue(dataSource.getUri().getPath().contains("src/test/data/properties/test.properties"));
     }
 
@@ -130,9 +130,9 @@ public class DataSourcesSupplierTest {
 
     @Test
     public void shouldNormalizeDataSourceNameBasedOnFilePath() {
-        assertEquals("pom.xml", supplier("pom.xml", "*", NO_EXCLUDE).get().get(0).getName());
-        assertEquals("pom.xml", supplier("./pom.xml", "*", NO_EXCLUDE).get().get(0).getName());
-        assertEquals("pom.xml", supplier("file:///" + PWD + "/pom.xml", "*", NO_EXCLUDE).get().get(0).getName());
+        assertEquals("pom.xml", supplier("pom.xml", "*", NO_EXCLUDE).get().get(0).getFileName());
+        assertEquals("pom.xml", supplier("./pom.xml", "*", NO_EXCLUDE).get().get(0).getFileName());
+        assertEquals("pom.xml", supplier("file:///" + PWD + "/pom.xml", "*", NO_EXCLUDE).get().get(0).getFileName());
     }
 
     private static DataSourcesSupplier supplier(String directory, String include, String exclude) {

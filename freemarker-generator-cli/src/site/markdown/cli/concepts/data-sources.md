@@ -36,7 +36,7 @@ or from an environment variable, e.g. `NGINX_CONF` having a JSON payload
 
 ```
 export NGINX_CONF='{"NGINX_PORT":"8443","NGINX_HOSTNAME":"localhost"}'
-freemarker-cli -t templates/info.ftl -s conf=env:///NGINX_CONF#mimetype=application/json
+freemarker-cli -t templates/info.ftl -s conf=env:///NGINX_CONF#mimeType=application/json
 
 FreeMarker CLI DataSources
 ------------------------------------------------------------------------------
@@ -86,26 +86,27 @@ FreeMarker CLI DataSources
 
 ### Selecting A DataSource
 
-After loading one or more `DataSource` it needs to be selected for template processing - the `DataSources` instance 
-exposed in the data model provides
+After loading one or more `DataSource` they are accessible as `dataSource` map in the FreeMarker model
 
-* Selecting by index  
-* Selecting by name
-* Filter by the globbing pattern (see [Apache Commons IO](https://commons.apache.org/proper/commons-io/javadocs/api-release/org/apache/commons/io/filefilter/WildcardFileFilter.html))
+* `dataSources?values[0]` selects the first data source
+* `dataSources["user.csv"]` selects the data source with the name "user.csv"
 
-A few FTL examples
+Combining FreeMarker's `filter` built-in  with the `DataSource#match` methods allows more advanced 
+selection of data sources (using Apache Commons IO wildcard matching)
 
 ```
-<#assign dataSource = DataSources.get(0)>
+<#-- List all data sources containing "test" in the name -->
+<#list dataSources?values?filter(ds -> ds.match("name", "*test*")) as ds>
+- ${ds.name}
+</#list>
 
-<#assign dataSource = DataSources.get("user.csv)>
+<#-- List all data sources having "json" extension -->
+<#list dataSources?values?filter(ds -> ds.match("extension", "json")) as ds>
+- ${ds.name}
+</#list>
 
-<#list DataSources.find("*.md") as dataSource>
-- ${dataSource.name}
+<#-- List all data sources having "src/test/data/properties" in their file path -->
+<#list dataSources?values?filter(ds -> ds.match("filePath", "*/src/test/data/properties")) as ds>
+- ${ds.name}
 </#list>
 ```
-
-
-
- 
-

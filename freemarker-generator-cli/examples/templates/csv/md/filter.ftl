@@ -15,11 +15,11 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign dataSource = DataSources.get(0)>
+<#assign dataSource = dataSources?values[0]>
 <#assign parser = parser(dataSource)>
 <#assign headers = parser.getHeaderNames()>
-<#assign column = SystemTool.getParameter("column")>
-<#assign values = SystemTool.getParameter("values")?split(",")>
+<#assign column = tools.system.getParameter("column")>
+<#assign values = tools.system.getParameter("values")?split(",")>
 
 <#compress>
     <@writePageHeader dataSource/>
@@ -32,9 +32,9 @@
 </#compress>
 
 <#function parser dataSource>
-    <#assign format = CSVTool.formats[SystemTool.getParameter("format", "DEFAULT")]>
-    <#assign delimiter = CSVTool.toDelimiter(SystemTool.getParameter("delimiter", format.getDelimiter()))>
-    <#return CSVTool.parse(dataSource, format.withFirstRecordAsHeader().withDelimiter(delimiter))>
+    <#assign format = tools.csv.formats[tools.system.getParameter("format", "DEFAULT")]>
+    <#assign delimiter = tools.csv.toDelimiter(tools.system.getParameter("delimiter", format.getDelimiter()))>
+    <#return tools.csv.parse(dataSource, format.withFirstRecordAsHeader().withDelimiter(delimiter))>
 </#function>
 
 <#function filter record>

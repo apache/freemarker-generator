@@ -15,7 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign xml = XmlTool.parse(DataSources.get(0))>
+<#assign xml = tools.xml.parse(dataSources?values[0])>
 <#list xml.recipients.person as recipient>
 To: ${recipient.name}
 ${recipient.address}

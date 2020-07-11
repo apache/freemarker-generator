@@ -15,6 +15,51 @@
   specific language governing permissions and limitations
   under the License.
 -->
-Manual Test
+Support FreeMarker Directives
 ---------------------------------------------------------------------------
-<#assign df=DataFrameTool.fromMaps(GsonTool.parse(DataSources.get(0)))>${DataFrameTool.print(df)}
+Has Content: ${dataSources?has_content?c}
+Nr. of Documents: ${dataSources?size}
+
+Use FTL Array-style Access
+---------------------------------------------------------------------------
+${dataSources[0].toString()}
+
+Use FTL Map-style access
+---------------------------------------------------------------------------
+${DataSources["github-users.json"].toString()}
+${DataSources["github-users.json"].name}
+
+Get Document Names As Keys
+---------------------------------------------------------------------------
+<#list DataSources?keys as name>
+    ${name}<#lt>
+</#list>
+
+Iterate Over Names & DataSources
+---------------------------------------------------------------------------
+<#list DataSources as name, dataSource>
+    ${name} => ${dataSource}<#lt>
+</#list>
+
+Find DataSources By Group
+---------------------------------------------------------------------------
+<#list dataSources.findByGroup("default") as dataSource>
+    ${dataSource}<#lt>
+</#list>
+
+Find DataSources By Wildcard
+---------------------------------------------------------------------------
+<#list dataSources.find("*.csv") as dataSource>
+    ${dataSource}<#lt>
+</#list>
+
+Java Array-style access
+---------------------------------------------------------------------------
+${dataSources?values[0].toString()}
+
+Invoke Arbitrary Methods On DataSources
+---------------------------------------------------------------------------
+empty       : ${dataSources.empty?c}
+isEmpty()   : ${dataSources.isEmpty()?c}
+size()      : ${dataSources.size()}
+close()     : ${dataSources.close()}worx

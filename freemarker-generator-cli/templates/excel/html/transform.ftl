@@ -15,9 +15,9 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign dataSource = DataSources.get(0)>
+<#assign dataSource = dataSources?values[0]>
 <#assign name = dataSource.name>
-<#assign workbook = ExcelTool.parse(dataSource)>
+<#assign workbook = tools.excel.parse(dataSource)>
 <#assign date = .now?iso_utc>
 <#--------------------------------------------------------------------------->
 <!DOCTYPE html>
@@ -42,7 +42,7 @@
 <#-- writeSheets                                                           -->
 <#--------------------------------------------------------------------------->
 <#macro writeSheets workbook>
-    <#assign sheets = ExcelTool.getSheets(workbook)>
+    <#assign sheets = tools.excel.getSheets(workbook)>
     <#list sheets as sheet>
         <@writeSheet sheet/>
     </#list>
@@ -52,7 +52,7 @@
 <#-- writeSheet                                                            -->
 <#--------------------------------------------------------------------------->
 <#macro writeSheet sheet>
-    <#assign rows = ExcelTool.toTable(sheet)>
+    <#assign rows = tools.excel.toTable(sheet)>
     <h2>${sheet.getSheetName()}</h2>
     <@writeRows rows/>
 </#macro>

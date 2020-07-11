@@ -14,33 +14,33 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign dataSource = DataSources.get(0)>
-<#assign csvParser = CSVTool.parse(dataSource, CSVTool.formats["DATAFRAME"])>
-<#assign users = DataFrameTool.fromCSVParser(csvParser)>
+<#assign dataSource = dataSources?values[0]>
+<#assign csvParser = tools.csv.parse(dataSource, tools.csv.formats["DATAFRAME"])>
+<#assign users = tools.dataframe.fromCSVParser(csvParser)>
 
 Original Data
 =============================================================================
-${DataFrameTool.print(users)}
+${tools.dataframe.print(users)}
 
 Select By Age
 =============================================================================
-${DataFrameTool.print(users.select("(age > 40)"))}
+${tools.dataframe.print(users.select("(age > 40)"))}
 
 Select By Name & Country
 =============================================================================
 <#assign country = "Germany">
-${DataFrameTool.print(users
+${tools.dataframe.print(users
 .select("(name == 'Schmitt' || name == 'Meier') && country == '${country}'")
-.sort("name", DataFrameTool.sortOrder["ASCENDING"]))}
+.sort("name", tools.dataframe.sortOrder["ASCENDING"]))}
 
 Head of Users
 =============================================================================
-${DataFrameTool.print(users.head(2))}
+${tools.dataframe.print(users.head(2))}
 
 Count Column Values
 =============================================================================
-${DataFrameTool.print(users.getColumn("country").transform(DataFrameTool.transformer["COUNT"]))}
+${tools.dataframe.print(users.getColumn("country").transform(tools.dataframe.transformer["COUNT"]))}
 
 Group By Age & Country
 =============================================================================
-${DataFrameTool.print(users.groupBy("country", "age").sort("country"))}
+${tools.dataframe.print(users.groupBy("country", "age").sort("country"))}

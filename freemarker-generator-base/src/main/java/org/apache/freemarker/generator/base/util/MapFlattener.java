@@ -108,7 +108,7 @@ public abstract class MapFlattener {
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     private static void flattenElement(String propertyPrefix, Object source,
                                        Map<String, ?> resultMap, Function<Object, Object> valueTransformer) {
 

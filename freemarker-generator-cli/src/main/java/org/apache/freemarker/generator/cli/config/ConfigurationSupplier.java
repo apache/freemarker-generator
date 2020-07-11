@@ -19,6 +19,7 @@ package org.apache.freemarker.generator.cli.config;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Version;
+import org.apache.freemarker.generator.cli.model.GeneratorObjectWrapper;
 
 import java.util.Properties;
 import java.util.function.Supplier;
@@ -57,6 +58,9 @@ public class ConfigurationSupplier implements Supplier<Configuration> {
 
             // apply all "freemarker.configuration.setting" values
             configuration.setSettings(freeMarkerConfigurationSettings());
+
+            // provide custom models for "DataSources"
+            configuration.setObjectWrapper(new GeneratorObjectWrapper(FREEMARKER_VERSION));
 
             // override current configuration with caller-provided settings
             configuration.setDefaultEncoding(settings.getTemplateEncoding().name());

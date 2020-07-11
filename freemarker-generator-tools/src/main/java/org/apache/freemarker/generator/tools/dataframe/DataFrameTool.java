@@ -99,6 +99,7 @@ public class DataFrameTool {
      *
      * @return available transformers
      */
+    @SuppressWarnings("rawtypes")
     public Map<String, ColumnDataFrameTransform> getTransformer() {
         final Map<String, ColumnDataFrameTransform> result = new HashMap<>();
         result.put("COUNT", countTransformer(false));

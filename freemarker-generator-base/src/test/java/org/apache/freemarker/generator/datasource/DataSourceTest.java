@@ -64,7 +64,7 @@ public class DataSourceTest {
     @Test
     public void shouldSupportFileDataSource() {
         try (DataSource dataSource = DataSourceFactory.fromFile(ANY_FILE, ANY_CHAR_SET)) {
-            assertEquals(ANY_FILE_NAME, dataSource.getName());
+            assertEquals(ANY_FILE_NAME, dataSource.getFileName());
             assertEquals(DEFAULT_GROUP, dataSource.getGroup());
             assertEquals("pom", dataSource.getBaseName());
             assertEquals("xml", dataSource.getExtension());
@@ -73,11 +73,10 @@ public class DataSourceTest {
             assertEquals("application/xml", dataSource.getContentType());
             assertTrue(dataSource.getLength() > 0);
             assertFalse(dataSource.getText().isEmpty());
-            assertTrue(dataSource.match("name", ANY_FILE_NAME));
+            assertTrue(dataSource.match("name", "*" + ANY_FILE_NAME));
             assertTrue(dataSource.match("uri", "file:/*/pom.xml"));
             assertTrue(dataSource.match("extension", "xml"));
-            assertTrue(dataSource.match("basename", "pom"));
-            assertTrue(dataSource.match("path", "*/pom.xml"));
+            assertTrue(dataSource.match("baseName", "pom"));
         }
     }
 
@@ -90,7 +89,7 @@ public class DataSourceTest {
             assertEquals("www.google", dataSource.getBaseName());
             assertEquals("com", dataSource.getExtension());
             assertEquals("https://www.google.com/?foo=bar", dataSource.getUri().toString());
-            assertEquals(MIME_TEXT_HTML, dataSource.getMimetype());
+            assertEquals(MIME_TEXT_HTML, dataSource.getMimeType());
             assertEquals("ISO-8859-1", dataSource.getCharset().name());
             assertEquals(-1, dataSource.getLength());
             assertFalse(dataSource.getText().isEmpty());

@@ -28,7 +28,8 @@ public class ManualTest {
     // private static final String CMD = "-PCSV_SOURCE_FORMAT=DATAFRAME -t examples/templates/dataframe/example.ftl https://raw.githubusercontent.com/nRo/DataFrame/master/src/test/resources/users.csv";
     // private static final String CMD = "-PCSV_SOURCE_WITH_HEADER=false -PCSV_SOURCE_FORMAT=DEFAULT -PCSV_TARGET_FORMAT=EXCEL -PCSV_TARGET_WITH_HEADER=true -t templates/csv/csv/transform.ftl examples/data/csv/contract.csv";
     // private static final String CMD = "-t examples/templates/json/dataframe/github-users.ftl examples/data/json/github-users.json";
-    private static final String CMD = "-t templates/csv/md/transform.ftl -o target/contract.md -t templates/csv/html/transform.ftl examples/data/csv/contract.csv";
+    // private static final String CMD = "-t templates/csv/md/transform.ftl -o target/contract.md -t templates/csv/html/transform.ftl examples/data/csv/contract.csv";
+    private static final String CMD = "-t examples/templates/demo.ftl src/test/data";
 
 
     public static void main(String[] args) {

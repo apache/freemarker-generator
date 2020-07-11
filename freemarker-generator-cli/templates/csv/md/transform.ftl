@@ -15,8 +15,8 @@
   under the License.
 -->
 <#import "/templates/lib/commons-csv.ftl" as csv />
-<#assign dataSource = DataSources.get(0)>
-<#assign csvParser = CSVTool.parse(dataSource, csv.sourceFormat())>
+<#assign dataSource = dataSources?values[0]>
+<#assign csvParser = tools.csv.parse(dataSource, csv.sourceFormat())>
 <#assign headers = (csvParser.getHeaderMap()!{})?keys>
 <#assign records = csvParser.records>
 <#--------------------------------------------------------------------------->

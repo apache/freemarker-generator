@@ -26,8 +26,8 @@ freemarker-cli \
 The command line invocation seems a bit complex at first so let's look at it more closely
 
 * `CSV_SOURCE_FORMAT` defines the CSV source format for reading the CSV
-* `CSV_TARGET_FORMAT` defines the CSV tagrte format for writing the CSV
-* `CSV_TARGET_DELIMITER` explicitely sets the delimiter of the target CSV to a semicolon since this expected by Excel for my current locale
+* `CSV_TARGET_FORMAT` defines the CSV target format for writing the CSV
+* `CSV_TARGET_DELIMITER` explicitly sets the delimiter of the target CSV to a semicolon since this expected by Excel for my current locale
 
 ### Convert CSV To Markdown
 
@@ -65,7 +65,7 @@ The following options can be passed to template (as user-supplied parameters)
 | CSV_SOURCE_FORMAT         | DEFAULT           | Source CSV format                                         |
 | CSV_SOURCE_DELIMITER      | COMMA             | Symbolic name of delimiter, e.g. "COLON" or "SEMICOLON"   |
 | CSV_SOURCE_WITH_HEADER    | true              | Whether the first rows are headers                        |
-| CSV_TAGRGET_FORMAT        | DEFAULT           | Target CSV format                                         |
+| CSV_TARGET_FORMAT         | DEFAULT           | Target CSV format                                         |
 | CSV_TARGET_DELIMITER      | COMMA             | Symbolic name of delimiter, e.g. "COLON" or "SEMICOLON"   |
 | CSV_TARGET_WITH_HEADER    | true              | Whether the first rows are headers                        |
                                                             

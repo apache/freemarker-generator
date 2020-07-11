@@ -21,7 +21,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.freemarker.generator.base.activation.ByteArrayDataSource;
 import org.apache.freemarker.generator.base.activation.StringDataSource;
-import org.apache.freemarker.generator.base.mime.MimetypeParser;
+import org.apache.freemarker.generator.base.mime.MimeTypeParser;
 import org.apache.freemarker.generator.base.util.CloseableReaper;
 import org.apache.freemarker.generator.base.util.StringUtils;
 import org.apache.freemarker.generator.base.util.Validate;
@@ -49,8 +49,20 @@ import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_APPLICATI
  * There is also special support of <code>UrlDataSource</code> since
  * the content type &amp; charset might be determined using a network
  * call.
+ * <br>
+ * The implementation makes no assumption if the underlying input
+ * stream can be consumed more than once.
  */
 public class DataSource implements Closeable, javax.activation.DataSource {
+
+    public static final String METADATA_BASE_NAME = "baseName";
+    public static final String METADATA_EXTENSION = "extension";
+    public static final String METADATA_FILE_NAME = "fileName";
+    public static final String METADATA_FILE_PATH = "filePath";
+    public static final String METADATA_GROUP = "group";
+    public static final String METADATA_NAME = "name";
+    public static final String METADATA_URI = "uri";
+    public static final String METADATA_URI_PATH = "uriPath";
 
     /** Human-readable name of the data source */
     private final String name;
@@ -64,14 +76,14 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     /** The underlying "javax.activation.DataSource" */
     private final javax.activation.DataSource dataSource;
 
-    /** Optional content type */
+    /** Content type of data source either provided by the user or fetched directly from the data source */
     private final String contentType;
 
-    /** Optional charset for directly accessing text-based content */
+    /** Charset for directly accessing text-based content */
     private final Charset charset;
 
-    /** Collect all closables handed out to the caller to be closed when the data source is closed itself */
-    private final CloseableReaper closables;
+    /** Collect all closeables handed out to the caller to be closed when the data source is closed itself */
+    private final CloseableReaper closeables;
 
     public DataSource(
             String name,
@@ -86,7 +98,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
         this.dataSource = requireNonNull(dataSource);
         this.contentType = contentType;
         this.charset = charset;
-        this.closables = new CloseableReaper();
+        this.closeables = new CloseableReaper();
     }
 
     @Override
@@ -111,7 +123,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
      */
     @Override
     public InputStream getInputStream() {
-        return closables.add(getUnsafeInputStream());
+        return closeables.add(getUnsafeInputStream());
     }
 
     @Override
@@ -121,32 +133,41 @@ public class DataSource implements Closeable, javax.activation.DataSource {
 
     @Override
     public void close() {
-        closables.close();
+        closeables.close();
     }
 
     public String getGroup() {
         return group;
     }
 
+    public String getFileName() {
+        return FilenameUtils.getName(name);
+    }
+
     public String getBaseName() {
-        return FilenameUtils.getBaseName(name);
+        return FilenameUtils.getBaseName(getFileName());
     }
 
     public String getExtension() {
-        return FilenameUtils.getExtension(name);
-    }
-
-    public Charset getCharset() {
-        return charset != null ? charset : MimetypeParser.getCharset(contentType(), UTF_8);
+        return FilenameUtils.getExtension(getFileName());
     }
 
     /**
-     * Get the mimetype , i.e. content type without additional charset parameter.
+     * Get the charset. If no charset can be detected UTF-8 is assumed.
      *
-     * @return mimetype
+     * @return charset
      */
-    public String getMimetype() {
-        return MimetypeParser.getMimetype(contentType());
+    public Charset getCharset() {
+        return charset != null ? charset : MimeTypeParser.getCharset(contentType(), UTF_8);
+    }
+
+    /**
+     * Get the mime type , i.e. content type without additional charset parameter.
+     *
+     * @return mime type
+     */
+    public String getMimeType() {
+        return MimeTypeParser.getMimeType(contentType());
     }
 
     public URI getUri() {
@@ -226,8 +247,8 @@ public class DataSource implements Closeable, javax.activation.DataSource {
 
     /**
      * Returns an Iterator for the lines in an <code>InputStream</code>, using
-     * the default character encoding specified. The caller is responsible to close
-     * the line iterator.
+     * the default character encoding specified. The exposed iterator is closed
+     * by the <code>DataSource</code>.
      *
      * @return line iterator
      */
@@ -237,7 +258,8 @@ public class DataSource implements Closeable, javax.activation.DataSource {
 
     /**
      * Returns an Iterator for the lines in an <code>InputStream</code>, using
-     * the character encoding specified.
+     * the character encoding specified. The exposed iterator is closed
+     * by the <code>DataSource</code>.
      *
      * @param charsetName The name of the requested charset
      * @return line iterator
@@ -245,7 +267,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     public LineIterator getLineIterator(String charsetName) {
         Validate.notEmpty(charsetName, "No charset name provided");
         try {
-            return closables.add(IOUtils.lineIterator(getUnsafeInputStream(), Charset.forName(charsetName)));
+            return closeables.add(IOUtils.lineIterator(getUnsafeInputStream(), Charset.forName(charsetName)));
         } catch (IOException e) {
             throw new RuntimeException("Failed to create line iterator: " + toString(), e);
         }
@@ -260,15 +282,45 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     }
 
     /**
-     * Matches a metadata entry with a wildcard expression.
+     * Expose various parts of the metadata as simple strings to cater for filtering in  a script.
      *
-     * @param part     part, e.g. "name", "basename", "extension", "uri", "group"
+     * @param key key part key
+     * @return value
+     */
+    public String getMetadata(String key) {
+        Validate.notEmpty(key, "No key provided");
+        switch (key) {
+            case METADATA_BASE_NAME:
+                return getBaseName();
+            case METADATA_EXTENSION:
+                return getExtension();
+            case METADATA_FILE_NAME:
+                return getFileName();
+            case METADATA_FILE_PATH:
+                return FilenameUtils.getFullPathNoEndSeparator(uri.getPath());
+            case METADATA_GROUP:
+                return getGroup();
+            case METADATA_NAME:
+                return getName();
+            case METADATA_URI_PATH:
+                return uri.getPath();
+            case METADATA_URI:
+                return uri.toString();
+            default:
+                throw new IllegalArgumentException("Unknown key: " + key);
+        }
+    }
+
+    /**
+     * Matches a metadata key with a wildcard expression.
+     *
+     * @param key      metadata key, e.g. "name", "fileName", "baseName", "extension", "uri", "group"
      * @param wildcard the wildcard string to match against
      * @return true if the wildcard expression matches
      * @see <a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.7/org/apache/commons/io/FilenameUtils.html#wildcardMatch-java.lang.String-java.lang.String-">Apache Commons IO</a>
      */
-    public boolean match(String part, String wildcard) {
-        final String value = getPart(part);
+    public boolean match(String key, String wildcard) {
+        final String value = getMetadata(key);
         return FilenameUtils.wildcardMatch(value, wildcard);
     }
 
@@ -282,7 +334,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
      * @return Closable
      */
     public <T extends Closeable> T addClosable(T closeable) {
-        return closables.add(closeable);
+        return closeables.add(closeable);
     }
 
     @Override
@@ -296,7 +348,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
 
     /**
      * If there is no content type we ask the underlying data source. E.g. for
-     * an URL data source this information is fetched from the server.
+     * an URL data source this information is fetched from the remote server.
      *
      * @return content type
      */
@@ -305,32 +357,6 @@ public class DataSource implements Closeable, javax.activation.DataSource {
             return contentType;
         } else {
             return StringUtils.firstNonEmpty(dataSource.getContentType(), MIME_APPLICATION_OCTET_STREAM);
-        }
-    }
-
-    private String getPart(String part) {
-        Validate.notEmpty(part, "No metadata part provided");
-        switch (part.toLowerCase()) {
-            case "basename":
-                return getBaseName();
-            case "contenttype":
-                return getContentType();
-            case "extension":
-                return getExtension();
-            case "group":
-                return getGroup();
-            case "mimetype":
-                return getContentType();
-            case "name":
-                return getName();
-            case "path":
-                return uri.getPath();
-            case "scheme":
-                return uri.getScheme();
-            case "uri":
-                return uri.toASCIIString();
-            default:
-                throw new IllegalArgumentException("Unknown part: " + part);
         }
     }
 }

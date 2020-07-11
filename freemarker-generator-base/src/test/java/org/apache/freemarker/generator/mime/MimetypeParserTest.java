@@ -16,7 +16,7 @@
  */
 package org.apache.freemarker.generator.mime;
 
-import org.apache.freemarker.generator.base.mime.MimetypeParser;
+import org.apache.freemarker.generator.base.mime.MimeTypeParser;
 import org.junit.Test;
 
 import java.nio.charset.StandardCharsets;
@@ -28,32 +28,32 @@ public class MimetypeParserTest {
 
     @Test
     public void shouldHandleMissingMimeType() {
-        assertNull(MimetypeParser.getMimetype(null));
-        assertNull(MimetypeParser.getMimetype(""));
-        assertNull(MimetypeParser.getMimetype(" "));
+        assertNull(MimeTypeParser.getMimeType(null));
+        assertNull(MimeTypeParser.getMimeType(""));
+        assertNull(MimeTypeParser.getMimeType(" "));
     }
 
     @Test
     public void shouldGetMimetype() {
-        assertEquals("text/html", MimetypeParser.getMimetype("text/html"));
-        assertEquals("text/html", MimetypeParser.getMimetype("text/html;charset=utf-8"));
+        assertEquals("text/html", MimeTypeParser.getMimeType("text/html"));
+        assertEquals("text/html", MimeTypeParser.getMimeType("text/html;charset=utf-8"));
     }
 
     @Test
     public void shouldHandleMissingContentType() {
-        assertNull(MimetypeParser.getCharset(null));
-        assertNull(MimetypeParser.getCharset(""));
-        assertNull(MimetypeParser.getCharset(" "));
-        assertNull(MimetypeParser.getCharset("text/html"));
-        assertNull(MimetypeParser.getCharset("text/html;something=utf-8"));
+        assertNull(MimeTypeParser.getCharset(null));
+        assertNull(MimeTypeParser.getCharset(""));
+        assertNull(MimeTypeParser.getCharset(" "));
+        assertNull(MimeTypeParser.getCharset("text/html"));
+        assertNull(MimeTypeParser.getCharset("text/html;something=utf-8"));
     }
 
     @Test
     public void shouldGetCharset() {
-        assertEquals(StandardCharsets.UTF_8, MimetypeParser.getCharset("text/html;charset=utf-8"));
-        assertEquals(StandardCharsets.UTF_8, MimetypeParser.getCharset("text/html;charset=UTF-8"));
-        assertEquals(StandardCharsets.UTF_8, MimetypeParser.getCharset("text/html; charset=utf-8"));
-        assertEquals(StandardCharsets.UTF_8, MimetypeParser.getCharset("text/html; charset=UTF-8"));
-        assertEquals(StandardCharsets.UTF_8, MimetypeParser.getCharset("text/html;Charset=UTF-8"));
+        assertEquals(StandardCharsets.UTF_8, MimeTypeParser.getCharset("text/html;charset=utf-8"));
+        assertEquals(StandardCharsets.UTF_8, MimeTypeParser.getCharset("text/html;charset=UTF-8"));
+        assertEquals(StandardCharsets.UTF_8, MimeTypeParser.getCharset("text/html; charset=utf-8"));
+        assertEquals(StandardCharsets.UTF_8, MimeTypeParser.getCharset("text/html; charset=UTF-8"));
+        assertEquals(StandardCharsets.UTF_8, MimeTypeParser.getCharset("text/html;Charset=UTF-8"));
     }
 }

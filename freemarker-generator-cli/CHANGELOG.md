@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. We try to a
 ## 0.1.0-SNAPSHOT
 
 ### Added
+* [FREEMARKER-148] Make usage of "DataSources" more "Freemarker" like
 * [FREEMARKER-149] Support multiple template transformations on the command line
 * [FREEMARKER-144] Proof Of Concept for providing DataFrames
 * [FREEMARKER-142] Support Transformation Of Directories
@@ -16,7 +17,7 @@ All notable changes to this project will be documented in this file. We try to a
 * [FREEMARKER-129] Migrate `freemarker-cli` into `freemarker-generator` project (see [https://github.com/sgoeschl/freemarker-cli](https://github.com/sgoeschl/freemarker-cli))
 
 ### Changed
-* Removing `DataSources.first` and use `DataSources.get(0)` instead
+* Removing `DataSources.first` and use `dataSources.get(0)` instead
 * [FREEMARKER-146] Cleanly separate example templates and data from user-supplied content
 * `DataSource` use `uri` instead of `location`
 * [FREEMARKER-138] freemarker-generator: Rename `Datasource` to `DataSource`
@@ -43,5 +44,6 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-144]: https://issues.apache.org/jira/browse/FREEMARKER-144
 [FREEMARKER-146]: https://issues.apache.org/jira/browse/FREEMARKER-146
 [FREEMARKER-147]: https://issues.apache.org/jira/browse/FREEMARKER-147
+[FREEMARKER-148]: https://issues.apache.org/jira/browse/FREEMARKER-148
 [FREEMARKER-149]: https://issues.apache.org/jira/browse/FREEMARKER-149
 [FREEMARKER-151]: https://issues.apache.org/jira/browse/FREEMARKER-151

@@ -15,8 +15,8 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign grok = GrokTool.compile("%{COMBINEDAPACHELOG}")>
-<#assign dataSource = DataSources.get(0)>
+<#assign grok = tools.grok.compile("%{COMBINEDAPACHELOG}")>
+<#assign dataSource = dataSources?values[0]>
 <#assign lines = dataSource.getLineIterator()>
 
 <#compress>

@@ -29,7 +29,7 @@ Currently it can be invoked as a
 Building Apache FreeMarker Generator
 -----------------------------------------------------------------------------
 
-To create the artefacts locally run
+To create the artifacts locally run
 
 > mvn clean install
 

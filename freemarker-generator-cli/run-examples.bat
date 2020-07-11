@@ -41,12 +41,12 @@ REM =========================================================================
 REM Interactive Mode
 REM =========================================================================
 
-%FREEMARKER_CMD% -i '${JsonPathTool.parse(DataSources.get(0)).read("""$.info.title""")}' examples\data\json\swagger-spec.json > target\out\interactive-json.txt
-%FREEMARKER_CMD% -i '${XmlTool.parse(DataSources.get(0))["""recipients/person[1]/name"""]}' examples\data\xml\recipients.xml > target\out\interactive-xml.txt
-%FREEMARKER_CMD% -i '${JsoupTool.parse(DataSources.get(0)).select("""a""")[0]}' examples\data\html\dependencies.html > target\out\interactive-html.txt
-%FREEMARKER_CMD% -i '${GsonTool.toJson(YamlTool.parse(DataSources.get(0)))}' examples\data\yaml\swagger-spec.yaml > target\out\interactive-swagger.json
-%FREEMARKER_CMD% -i '${YamlTool.toYaml(GsonTool.parse(DataSources.get(0)))}' examples\data\json\swagger-spec.json > target\out\interactive-swagger.yaml
-%FREEMARKER_CMD% -i '${DataFrameTool.print(DataFrameTool.fromMaps(GsonTool.parse(DataSources.get(0))))}' examples\data\json\github-users.json > target\out\interactive-dataframe.txt
+%FREEMARKER_CMD% -i '${tools.jsonpath.parse(dataSources?values[0]).read("""$.info.title""")}' examples\data\json\swagger-spec.json > target\out\interactive-json.txt
+%FREEMARKER_CMD% -i '${tools.xml.parse(dataSources?values[0])["""recipients/person[1]/name"""]}' examples\data\xml\recipients.xml > target\out\interactive-xml.txt
+%FREEMARKER_CMD% -i '${tools.jsoup.parse(dataSources?values[0]).select("""a""")[0]}' examples\data\html\dependencies.html > target\out\interactive-html.txt
+%FREEMARKER_CMD% -i '${tools.gson.toJson(tools.yaml.parse(dataSources?values[0]))}' examples\data\yaml\swagger-spec.yaml > target\out\interactive-swagger.json
+%FREEMARKER_CMD% -i '${tools.yaml.toYaml(tools.gson.parse(dataSources?values[0]))}' examples\data\json\swagger-spec.json > target\out\interactive-swagger.yaml
+%FREEMARKER_CMD% -i '${tools.dataframe.print(tools.dataframe.fromMaps(tools.gson.parse(dataSources?values[0])))}' examples\data\json\github-users.json > target\out\interactive-dataframe.txt
 
 REM =========================================================================
 REM CSV

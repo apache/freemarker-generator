@@ -21,7 +21,7 @@ import java.nio.charset.Charset;
 import static org.apache.freemarker.generator.base.util.StringUtils.isEmpty;
 
 /**
- * Parse a mimetype.
+ * Parse a mime type.
  * <p>
  * Some examples
  * <ul>
@@ -29,9 +29,9 @@ import static org.apache.freemarker.generator.base.util.StringUtils.isEmpty;
  *     <li>text/html;charset=windows-1252</li>
  * </ul>
  */
-public class MimetypeParser {
+public class MimeTypeParser {
 
-    public static String getMimetype(String raw) {
+    public static String getMimeType(String raw) {
         if (isEmpty(raw)) {
             return null;
         }

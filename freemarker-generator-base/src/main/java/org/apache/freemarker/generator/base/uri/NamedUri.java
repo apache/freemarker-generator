@@ -30,7 +30,7 @@ import static org.apache.freemarker.generator.base.util.StringUtils.isEmpty;
 public class NamedUri {
 
     public static final String CHARSET = "charset";
-    public static final String MIMETYPE = "mimetype";
+    public static final String MIMETYPE = "mimeType";
 
     /** User-supplied name */
     private final String name;

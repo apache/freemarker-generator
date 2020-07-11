@@ -15,9 +15,9 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign dataSource = DataSources.get(0)>
+<#assign dataSource = dataSources?values[0]>
 <#assign name = dataSource.name>
-<#assign html = JsoupTool.parse(dataSource)>
+<#assign html = tools.jsoup.parse(dataSource)>
 
 <#compress>
     <@writeHeader/>
