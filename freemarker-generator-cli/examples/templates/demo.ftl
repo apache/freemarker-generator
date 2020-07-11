@@ -103,7 +103,7 @@ List all data sources having "json" extension
 <#list dataSources?values?filter(ds -> ds.match("extension", "json")) as ds>
 - ${ds.name}
 </#list>
-List all data sources having "src/test/data/properties" in their directory name
+List all data sources having "src/test/data/properties" in their file path
 <#list dataSources?values?filter(ds -> ds.match("filePath", "*/src/test/data/properties")) as ds>
 - ${ds.name}
 </#list>
