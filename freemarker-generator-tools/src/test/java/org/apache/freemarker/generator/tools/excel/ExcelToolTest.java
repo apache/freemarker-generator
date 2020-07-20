@@ -20,10 +20,13 @@ import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static junit.framework.TestCase.assertEquals;
@@ -33,6 +36,19 @@ public class ExcelToolTest {
     private final File TEST_XLS = new File("./src/test/data/excel/test.xls");
     private final File TEST_XLSX = new File("./src/test/data/excel/test.xlsx");
     private final File MULTIPLE_SHEETS_XSLX_FILE = new File("./src/test/data/excel/test-multiple-sheets.xlsx");
+
+    private Locale previousLocale;
+
+    @Before
+    public void before() {
+        previousLocale = Locale.getDefault();
+        Locale.setDefault(Locale.US);
+    }
+
+    @After
+    public void after() {
+        Locale.setDefault(previousLocale);
+    }
 
     @Test
     public void shallParseXlsFile() {
