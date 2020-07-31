@@ -246,7 +246,6 @@
             <plugin>
                 <artifactId>maven-release-plugin</artifactId>
                 <configuration>
-                    <arguments>-Dmaven.javadoc.skip=true</arguments>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                     <localCheckout>true</localCheckout>
                     <releaseProfiles>release</releaseProfiles>
