@@ -151,6 +151,13 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <!-- Otherwise Maven plugin tests are failing -->
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <useSystemClassLoader>false</useSystemClassLoader>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
