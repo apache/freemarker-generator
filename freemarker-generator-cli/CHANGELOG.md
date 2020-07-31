@@ -32,6 +32,9 @@ All notable changes to this project will be documented in this file. We try to a
 * [FREEMARKER-147] Complete Maven site documentation
 * [FREEMARKER-127] Site build fails with missing "org/apache/maven/doxia/siterenderer/DocumentContent"
 
+### Internal
+* [FREEMARKER-153] FreeMarker Generator release preparations
+
 [FREEMARKER-127]: https://issues.apache.org/jira/browse/FREEMARKER-127
 [FREEMARKER-128]: https://issues.apache.org/jira/browse/FREEMARKER-128
 [FREEMARKER-129]: https://issues.apache.org/jira/browse/FREEMARKER-129
@@ -47,3 +50,4 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-148]: https://issues.apache.org/jira/browse/FREEMARKER-148
 [FREEMARKER-149]: https://issues.apache.org/jira/browse/FREEMARKER-149
 [FREEMARKER-151]: https://issues.apache.org/jira/browse/FREEMARKER-151
+[FREEMARKER-153]: https://issues.apache.org/jira/browse/FREEMARKER-151

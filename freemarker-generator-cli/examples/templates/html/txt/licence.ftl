@@ -1,3 +1,79 @@
+<#--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+    http://www.apache.org/licenses/LICENSE-2.0
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<#assign dataSource = dataSources?values[0]>
+<#assign html = tools.jsoup.parse(dataSource)>
+<#assign dataframe = tools.dataframe.create()
+    .addStringColumn("GroupId")
+    .addStringColumn("ArtifactId")
+    .addStringColumn("Version")
+    .addStringColumn("Type")
+    .addStringColumn("License")
+>
+<@parseDependencies dataframe "Project_Dependencies_compile"/>
+<@parseDependencies dataframe "Project_Transitive_Dependencies_compile"/>
+<@parseDependencies dataframe "Project_Transitive_Dependencies_runtime"/>
+<@parseDependencies dataframe "Project_Transitive_Dependencies_provided"/>
+<@writeApacheLicence/>
+<#list dataframe.iterator() as dependency>
+<#assign licence = dependency.get("License")>
+<#assign file = getLicenceFile(licence)>
+==============================================================================
+
+Binary distributions of this product bundles ${dependency.get("ArtifactId")} which
+is available under ${licence}.
+See ${file} for more information ...
+
+</#list>
+
+<#macro parseDependencies dataframe section>
+    <#assign selection = html.select("a[name=${section}]")>
+    <#if selection?has_content>
+        <#assign table = selection[0].nextElementSibling().child(2).child(0)>
+        <#assign rows = table.children()>
+        <#list rows as row>
+            <#if !row?is_first>
+                <#assign groupId = row.child(0).text()>
+                <#assign artificatId = row.child(1).text()>
+                <#assign version = row.child(2).text()>
+                <#assign type = row.child(3).text()>
+                <#assign licence = row.child(4).text()?replace(",", "")>
+                <#assign temp = dataframe.append(groupId, artificatId, version, type, licence)>
+            </#if>
+        </#list>
+    </#if>
+</#macro>
+
+<#function getLicenceFile licence>
+    <#if (licence)?contains("BSD")>
+        <#return "licences/LICENCE_BSD.txt">
+    <#elseif (licence)?contains("Apache")>
+        <#return "licencens/LICENSE_ASL-2.0.txt">
+    <#elseif (licence)?contains("COMMON DEVELOPMENT AND DISTRIBUTION")>
+        <#return "licences/LICENCE_CDDL-1.0.txt">
+    <#elseif (licence)?contains("MIT")>
+        <#return "licences/LICENCE_MIT.txt">
+    <#elseif (licence)?contains("Eclipse Public License 1.0")>
+        <#return "licences/LICENCE_EPL-1.0.txt">
+    <#else>
+        <#return "???">
+    </#if>
+</#function>
+
+<#macro writeApacheLicence>
 
                                  Apache License
                            Version 2.0, January 2004
@@ -201,184 +277,4 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 
-==============================================================================
-
-Binary distributions of this product bundles picocli which
-is available under The Apache Software License version 2.0.
-See licencens/LICENSE_ASL-2.0.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles freemarker-generator-tools which
-is available under Apache License Version 2.0.
-See licencens/LICENSE_ASL-2.0.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles slf4j-api which
-is available under MIT License.
-See licences/LICENCE_MIT.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles slf4j-nop which
-is available under MIT License.
-See licences/LICENCE_MIT.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles curvesapi which
-is available under BSD License.
-See licences/LICENCE_BSD.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles gson which
-is available under Apache 2.0.
-See licencens/LICENSE_ASL-2.0.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles json-path which
-is available under The Apache Software License Version 2.0.
-See licencens/LICENSE_ASL-2.0.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles commons-codec which
-is available under Apache License Version 2.0.
-See licencens/LICENSE_ASL-2.0.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles commons-io which
-is available under Apache License Version 2.0.
-See licencens/LICENSE_ASL-2.0.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles dataframe which
-is available under MIT License.
-See licences/LICENCE_MIT.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles java-grok which
-is available under The Apache License Version 2.0.
-See licencens/LICENSE_ASL-2.0.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles activation which
-is available under COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0.
-See licences/LICENCE_CDDL-1.0.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles accessors-smart which
-is available under The Apache Software License Version 2.0.
-See licencens/LICENSE_ASL-2.0.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles json-smart which
-is available under The Apache Software License Version 2.0.
-See licencens/LICENSE_ASL-2.0.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles antlr4-runtime which
-is available under The BSD License.
-See licences/LICENCE_BSD.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles commons-collections4 which
-is available under Apache License Version 2.0.
-See licencens/LICENSE_ASL-2.0.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles commons-compress which
-is available under Apache License Version 2.0.
-See licencens/LICENSE_ASL-2.0.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles commons-csv which
-is available under Apache License Version 2.0.
-See licencens/LICENSE_ASL-2.0.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles commons-exec which
-is available under Apache License Version 2.0.
-See licencens/LICENSE_ASL-2.0.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles commons-lang3 which
-is available under Apache License Version 2.0.
-See licencens/LICENSE_ASL-2.0.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles commons-math3 which
-is available under Apache License Version 2.0.
-See licencens/LICENSE_ASL-2.0.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles freemarker-generator-base which
-is available under Apache License Version 2.0.
-See licencens/LICENSE_ASL-2.0.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles poi which
-is available under Apache License Version 2.0.
-See licencens/LICENSE_ASL-2.0.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles poi-ooxml which
-is available under Apache License Version 2.0.
-See licencens/LICENSE_ASL-2.0.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles poi-ooxml-schemas which
-is available under Apache License Version 2.0.
-See licencens/LICENSE_ASL-2.0.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles xmlbeans which
-is available under The Apache Software License Version 2.0.
-See licencens/LICENSE_ASL-2.0.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles freemarker which
-is available under Apache License Version 2.0.
-See licencens/LICENSE_ASL-2.0.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles jsoup which
-is available under The MIT License.
-See licences/LICENCE_MIT.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles asm which
-is available under BSD.
-See licences/LICENCE_BSD.txt for more information ...
-
-==============================================================================
-
-Binary distributions of this product bundles snakeyaml which
-is available under Apache License Version 2.0.
-See licencens/LICENSE_ASL-2.0.txt for more information ...
-
-
+</#macro>
