@@ -123,6 +123,9 @@ REM =========================================================================
 echo "examples\templates\html\csv\dependencies.ftl"
 %FREEMARKER_CMD% -t examples\templates\html\csv\dependencies.ftl examples\data\html\dependencies.html > target\out\dependencies.csv
 
+echo "examples\templates\html\txt\licence.ftl"
+%FREEMARKER_CMD% -t examples\templates\html\txt\licence.ftl examples\data\html\dependencies.html > target\out\licence.txt
+
 REM =========================================================================
 REM JSON
 REM =========================================================================

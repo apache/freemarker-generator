@@ -18,7 +18,6 @@
 # Check that java is on the path
 
 hash java 2>/dev/null || { echo >&2 "I require JDK but it's not installed.  Aborting."; exit 1; }
-hash mvn 2>/dev/null || { echo >&2 "I require Maven but it's not installed.  Aborting."; exit 1; }
 
 # Run all the samples being documented
 
@@ -143,6 +142,9 @@ $FREEMARKER_CMD -t examples/templates/excel/csv/custom.ftl -Pcsv.format=MYSQL ex
 echo "examples/templates/html/csv/dependencies.ftl"
 $FREEMARKER_CMD -t examples/templates/html/csv/dependencies.ftl examples/data/html/dependencies.html > target/out/dependencies.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
+echo "examples/templates/html/txt/licence.ftl"
+$FREEMARKER_CMD -t examples/templates/html/txt/licence.ftl examples/data/html/dependencies.html > target/out/licence.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
 #############################################################################
 # JSON
 #############################################################################
@@ -153,10 +155,8 @@ $FREEMARKER_CMD -t examples/templates/json/csv/swagger-endpoints.ftl examples/da
 echo "templates/json/yaml/transform.ftl"
 $FREEMARKER_CMD -t templates/json/yaml/transform.ftl examples/data/json/swagger-spec.json > target/out/swagger-spec.yaml || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
-if hash curl 2>/dev/null; then
 echo "examples/templates/json/md/github-users.ftl"
-$FREEMARKER_CMD -t examples/templates/json/md/github-users.ftl examples/data/json/github-users.json > target/out/github-users-curl.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
-fi
+$FREEMARKER_CMD -t examples/templates/json/md/github-users.ftl examples/data/json/github-users.json > target/out/github-users.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
 # Properties

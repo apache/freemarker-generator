@@ -69,6 +69,7 @@ public class ExamplesTest extends AbstractMainTest {
     @Test
     public void shouldRunHtmlExamples() throws IOException {
         assertValid(execute("-t examples/templates/html/csv/dependencies.ftl examples/data/html/dependencies.html"));
+        assertValid(execute("-t examples/templates/html/txt/licence.ftl examples/data/html/dependencies.html"));
     }
 
     @Test
