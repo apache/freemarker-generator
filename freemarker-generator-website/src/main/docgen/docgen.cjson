@@ -1,0 +1,97 @@
+﻿//charset: UTF-8
+
+// Licensed to the Apache Software Foundation (ASF) under one
+// or more contributor license agreements.  See the NOTICE file
+// distributed with this work for additional information
+// regarding copyright ownership.  The ASF licenses this file
+// to you under the Apache License, Version 2.0 (the
+// "License"); you may not use this file except in compliance
+// with the License.  You may obtain a copy of the License at
+// 
+//   http://www.apache.org/licenses/LICENSE-2.0
+// 
+// Unless required by applicable law or agreed to in writing,
+// software distributed under the License is distributed on an
+// "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+// KIND, either express or implied.  See the License for the
+// specific language governing permissions and limitations
+// under the License.
+
+deployUrl: "https://freemarker.apache.org/generator/"
+onlineTrackerHTML: "docgen-misc/googleAnalytics.html"
+cookieConsentScriptURL: "https://cdn.jsdelivr.net/npm/cookie-bar/cookiebar-latest.min.js"
+searchKey: "003127866208504630097:arjqbv_znfw" // TODO Creat a seach key for the subdirectory
+validation: {
+  programlistingsRequireRole
+  // programlistingsRequireLanguage
+  maximumProgramlistingWidth: 100
+}
+showXXELogo
+
+copyrightHolder: "The Apache Software Foundation"
+copyrightHolderSite: "https://apache.org/"
+copyrightSuffix: "Apache FreeMarker Generator, FreeMarker Generator, Apache FreeMarker, FreeMarker, Apache Incubator, Apache, the Apache FreeMarker logo are trademarks of The Apache Software Foundation. All other marks mentioned may be trademarks or registered trademarks of their respective owners."
+copyrightStartYear: 2020
+
+logo: {
+  href: "https://freemarker.apache.org"
+  src: logo.png,
+  alt: "FreeMarker"
+}
+
+olinks: {
+  freemarkerHome: "https://freemarker.apache.org/"
+  freemarkerManual: "https://freemarker.apache.org/docs/"
+  
+  mailing-lists: "https://freemarker.apache.org/mailing-lists.html"
+  githubProject: "https://github.com/apache/freemarker-generator"
+  
+  // External URL-s:
+  onlineTemplateTester: "http://try.freemarker.org/"
+  twitter: "https://twitter.com/freemarker"
+  newBugReport: "https://issues.apache.org/jira/browse/FREEMARKER/"
+  newStackOverflowQuestion: "https://stackoverflow.com/questions/ask?tags=freemarker-generator"  // TODO Create SO tag if when we get to release
+  devMailingList: "mailto:dev@freemarker.apache.org"
+}
+
+internalBookmarks: {
+  // May will add some as the manual becomes more complex.
+}
+
+tabs: {
+  "FreeMarker Home": "olink:freemarkerHome"
+  "Generator Manual": ""  // Empty => We are here
+}
+
+secondaryTabs: {
+  // TODO "Contribute": { class: "icon-heart", href: "olink:contribute" }
+  "Report a Bug": { class: "icon-bug", href: "olink:newBugReport" } // TODO Can w pre-fill component
+  "Download": { class: "icon-download", href: "id:download" }
+}
+
+footerSiteMap: {
+  "Frequently used": {
+    "Download": "id:download"
+    "Version history": "id:versionsHistory"
+    "FreeMarker Manual": "olink:freemarkerManual"
+    "Try template online": "olink:onlineTemplateTester"
+  }
+  "Community": {
+    "FreeMarker on Github": "olink:githubProject"
+    "Follow us on Twitter": "olink:twitter"
+    "Report a bug": "olink:newBugReport"
+    "Ask a question": "olink:newStackOverflowQuestion"
+    "Mailing lists": "olink:mailing-lists"
+  }
+}
+
+socialLinks: {
+  "Github": { class: "github", href: "olink:githubProject" }
+  "Twitter": { class: "twitter", href: "olink:twitter" }
+  "Stack Overflow": { class: "stack-overflow", href: "olink:newStackOverflowQuestion" }
+}
+
+validation: { 
+  // TODO: Remove this later, as we don't want autoid_${n}.html-s as output.
+  outputFilesCanUseAutoID
+}
