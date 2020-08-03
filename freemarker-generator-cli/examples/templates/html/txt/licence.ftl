@@ -14,6 +14,9 @@
   specific language governing permissions and limitations
   under the License.
 -->
+<#--
+FreeMarker template to create a LICENCE file.
+-->
 <#assign dataSource = dataSources?values[0]>
 <#assign html = tools.jsoup.parse(dataSource)>
 <#assign dataframe = tools.dataframe.create()
@@ -29,8 +32,9 @@
 <@parseDependencies dataframe "Project_Transitive_Dependencies_provided"/>
 <@writeApacheLicence/>
 <#list dataframe.iterator() as dependency>
+<#assign artifactId = dependency.get("ArtifactId")>
 <#assign licence = dependency.get("License")>
-<#assign file = getLicenceFile(licence)>
+<#assign file = getLicenceFile(licence, artifactId)>
 ==============================================================================
 
 Binary distributions of this product bundles ${dependency.get("ArtifactId")} which
@@ -47,29 +51,30 @@ See ${file} for more information ...
         <#list rows as row>
             <#if !row?is_first>
                 <#assign groupId = row.child(0).text()>
-                <#assign artificatId = row.child(1).text()>
+                <#assign artifactId = row.child(1).text()>
                 <#assign version = row.child(2).text()>
                 <#assign type = row.child(3).text()>
                 <#assign licence = row.child(4).text()?replace(",", "")>
-                <#assign temp = dataframe.append(groupId, artificatId, version, type, licence)>
+                <#assign temp = dataframe.append(groupId, artifactId, version, type, licence)>
             </#if>
         </#list>
     </#if>
 </#macro>
 
-<#function getLicenceFile licence>
-    <#if (licence)?contains("BSD")>
-        <#return "licences/LICENCE_BSD.txt">
-    <#elseif (licence)?contains("Apache")>
+<#function getLicenceFile licence artifactId>
+    <#assign bsdArtifactId=["antlr4-runtime", "asm", "curvesapi", "hamcrest"]>
+    <#if licence?contains("BSD")>
+        <#if bsdArtifactId?seq_contains(artifactId)>
+            <#return "licences/LICENCE_${artifactId}.txt">
+         </#if>
+    <#elseif licence?contains("Apache")>
         <#return "licencens/LICENSE_ASL-2.0.txt">
-    <#elseif (licence)?contains("COMMON DEVELOPMENT AND DISTRIBUTION")>
+    <#elseif licence?contains("COMMON DEVELOPMENT AND DISTRIBUTION")>
         <#return "licences/LICENCE_CDDL-1.0.txt">
-    <#elseif (licence)?contains("MIT")>
+    <#elseif licence?contains("MIT")>
         <#return "licences/LICENCE_MIT.txt">
-    <#elseif (licence)?contains("Eclipse Public License 1.0")>
+    <#elseif licence?contains("Eclipse Public License 1.0")>
         <#return "licences/LICENCE_EPL-1.0.txt">
-    <#else>
-        <#return "???">
     </#if>
 </#function>
 
