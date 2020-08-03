@@ -15,7 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#import "/templates/lib/commons-csv.ftl" as csv />
+<#import "/src/templates/lib/commons-csv.ftl" as csv />
 <#assign dataSource = dataSources?values[0]>
 <#assign csvParser = tools.csv.parse(dataSource, csv.sourceFormat())>
 <#assign csvTargetFormat = csv.targetFormat()>

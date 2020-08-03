@@ -26,7 +26,7 @@ import static org.junit.Assert.assertEquals;
 public class TemplateLoadingTest extends AbstractMainTest {
 
     private static final int SUCCESS = 0;
-    private static final String ANY_TEMPLATE_NAME = "templates/info.ftl";
+    private static final String ANY_TEMPLATE_NAME = "src/templates/info.ftl";
     private static final String CURR_DIR = System.getProperty("user.dir", ".");
 
     @Test

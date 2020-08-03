@@ -1,3 +1,4 @@
+<#ftl output_format="HTML" strip_whitespace=true>
 <#--
   Licensed to the Apache Software Foundation (ASF) under one
   or more contributor license agreements.  See the NOTICE file
@@ -14,28 +15,45 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#import "/templates/lib/commons-csv.ftl" as csv />
+<#import "/src/templates/lib/commons-csv.ftl" as csv />
 <#assign dataSource = dataSources?values[0]>
 <#assign csvParser = tools.csv.parse(dataSource, csv.sourceFormat())>
-<#assign headers = (csvParser.getHeaderMap()!{})?keys>
-<#assign records = csvParser.records>
+<#assign csvHeaders = csvParser.getHeaderNames()>
 <#--------------------------------------------------------------------------->
-<#compress>
-    <@writeHeaders headers/>
-    <@writeColums records/>
-</#compress>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>${dataSource.name}</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+</head>
+<body>
+<table class="table table-striped">
+    <@writeHeaders csvParser.getHeaderNames()/>
+    <#list csvParser.iterator() as record>
+        <@writeColumns record/>
+    </#list>
+</table>
+</body>
+</html>
 <#--------------------------------------------------------------------------->
 <#macro writeHeaders headers>
     <#if headers?has_content>
-        | ${headers?join(" | ", "")} |
-        <#list headers as header>| --------</#list>|
+        <tr>
+            <#list headers as header>
+                <th>${header}</th>
+            </#list>
+        </tr>
     </#if>
 </#macro>
 <#--------------------------------------------------------------------------->
-<#macro writeColums columns>
-    <#if columns?has_content>
-        <#list columns as column>
-            | ${column.iterator()?join(" | ", "")} |
-        </#list>
+<#macro writeColumns record>
+    <#if record?has_content>
+        <tr>
+            <#list record.iterator() as field>
+                <td>${field}</td>
+            </#list>
+        </tr>
     </#if>
 </#macro>
