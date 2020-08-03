@@ -81,7 +81,7 @@
                                     <fileset dir="templates" />
                                 </copy>
                                 <copy todir="./target/appassembler/examples">
-                                    <fileset dir="examples" />
+                                    <fileset dir="src/examples" />
                                 </copy>
                                 <chmod file="./target/appassembler/run-examples.sh" perm="a+x" />
                             </target>
