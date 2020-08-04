@@ -26,7 +26,7 @@ hash java 2>/dev/null || { echo >&2 "I require JDK but it's not installed.  Abor
 mkdir target 2>/dev/null
 mkdir target/out 2>/dev/null
 
-FREEMARKER_CMD=./bin/freemarker-cli
+FREEMARKER_CMD=./bin/freemarker-generator
 
 #############################################################################
 # Info

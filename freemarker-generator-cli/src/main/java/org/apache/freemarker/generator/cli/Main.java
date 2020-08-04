@@ -50,10 +50,10 @@ import static java.util.Objects.requireNonNull;
 import static org.apache.freemarker.generator.cli.config.Suppliers.propertiesSupplier;
 import static org.apache.freemarker.generator.cli.config.Suppliers.templateDirectorySupplier;
 
-@Command(description = "Apache FreeMarker CLI", name = "freemarker-cli", mixinStandardHelpOptions = true, versionProvider = GitVersionProvider.class)
+@Command(description = "Apache FreeMarker Generator", name = "freemarker-generator", mixinStandardHelpOptions = true, versionProvider = GitVersionProvider.class)
 public class Main implements Callable<Integer> {
 
-    private static final String FREEMARKER_CLI_PROPERTY_FILE = "freemarker-cli.properties";
+    private static final String FREEMARKER_GENERATOR_CLI_PROPERTY_FILE = "freemarker-generator.properties";
 
     @ArgGroup(multiplicity = "1")
     TemplateSourceOptions templateSourceOptions;
@@ -90,7 +90,7 @@ public class Main implements Callable<Integer> {
     @Option(names = { "-s", "--data-source" }, description = "data source used for rendering")
     List<String> dataSources;
 
-    @Option(names = { "--config" }, defaultValue = FREEMARKER_CLI_PROPERTY_FILE, description = "FreeMarker CLI configuration file")
+    @Option(names = { "--config" }, defaultValue = FREEMARKER_GENERATOR_CLI_PROPERTY_FILE, description = "FreeMarker CLI configuration file")
     String configFile;
 
     @Option(names = { "--data-source-include" }, description = "file include pattern for data sources")

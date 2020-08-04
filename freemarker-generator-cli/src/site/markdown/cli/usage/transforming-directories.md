@@ -1,6 +1,6 @@
 ## Transforming Directories
 
-`Apache FreeMarker CLI` supports the transformation of directories
+`Apache FreeMarker Generator` supports the transformation of directories
 
 * Transform an input directory recursively into an output directory
 * If a template has a ".ftl" extension this extension will be removed after processing
@@ -39,7 +39,7 @@ server {
 If no output directory is provided all output is written to `stdout`
 
 ```
-freemarker-cli -t examples/data/template/
+freemarker-generator -t examples/data/template/
 # == application.properties ==================================================
 server.name=localhost
 server.logs=/var/log/nginx
@@ -60,7 +60,7 @@ The transformed templates are written to an `out` directory
 * `nginx.conf.ftl` was changed to `nginx.conf" during the transformation
 
 ```
-freemarker-cli -t examples/data/template/ -o out; tree out
+freemarker-generator -t examples/data/template/ -o out; tree out
 out
 |-- application.properties
 `-- nginx
@@ -74,7 +74,7 @@ out
 A user-supplied parameter `NGINX_HOSTNAME` is used to render the templates
 
 ```
-freemarker-cli -t examples/data/template/ -P NGINX_HOSTNAME=localhost
+freemarker-generator -t examples/data/template/ -P NGINX_HOSTNAME=localhost
 # == application.properties ==================================================
 server.name=localhost
 server.logs=/var/log/nginx
@@ -97,7 +97,7 @@ All environment variables can be copied to the top-level data model by providing
 
 ```
 export NGINX_PORT=8080
-freemarker-cli -t examples/data/template/ -m env:///
+freemarker-generator -t examples/data/template/ -m env:///
 # == application.properties ==================================================
 server.name=localhost
 server.logs=/var/log/nginx
@@ -117,7 +117,7 @@ Instead of environment variables an environment file (aka properties file) can b
 
 ```
 echo "NGINX_PORT=8080" > nginx.env
-freemarker-cli -t examples/data/template/ -m nginx.env 
+freemarker-generator -t examples/data/template/ -m nginx.env 
 # == application.properties ==================================================
 server.name=localhost
 server.logs=/var/log/nginx
@@ -137,7 +137,7 @@ Another option is passing the information as JSON file
 
 ```
 echo '{"NGINX_PORT":"8443","NGINX_HOSTNAME":"localhost"}' > nginx.json
-freemarker-cli -t examples/data/template/ -m nginx.json 
+freemarker-generator -t examples/data/template/ -m nginx.json 
 # == application.properties ==================================================
 server.name=localhost
 server.logs=/var/log/nginx
@@ -157,7 +157,7 @@ Yet another option is using a YAML file
 
 ```
 echo -e "- NGINX_PORT": "\"8443\"\n- NGINX_HOSTNAME": "localhost" > nginx.yaml
-freemarker-cli -t examples/data/template/ -m nginx.yaml 
+freemarker-generator -t examples/data/template/ -m nginx.yaml 
 # == application.properties ==================================================
 server.name=localhost
 server.logs=/var/log/nginx
@@ -180,7 +180,7 @@ In the cloud it is common to pass JSON configuration as environment variable
 
 ```
 export NGINX_CONF='{"NGINX_PORT":"8443","NGINX_HOSTNAME":"localhost"}'
-freemarker-cli -t examples/data/template/ -m env:///NGINX_CONF#mimeType=application/json
+freemarker-generator -t examples/data/template/ -m env:///NGINX_CONF#mimeType=application/json
 # == application.properties ==================================================
 server.name=localhost
 server.logs=/var/log/nginx
@@ -200,7 +200,7 @@ For testing purpose it is useful to override certain settings
 
 ```
 export NGINX_CONF='{"NGINX_PORT":"8443","NGINX_HOSTNAME":"localhost"}'
-freemarker-cli -t examples/data/template/ -PNGINX_HOSTNAME=www.mydomain.com -m env:///NGINX_CONF#mimeType=application/json
+freemarker-generator -t examples/data/template/ -PNGINX_HOSTNAME=www.mydomain.com -m env:///NGINX_CONF#mimeType=application/json
 # == application.properties ==================================================
 server.name=www.mydomain.com
 server.logs=/var/log/nginx

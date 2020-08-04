@@ -21,7 +21,7 @@ REM  Run all the samples being documented
 mkdir target 2>NULL
 mkdir target\out 2>NULL
 
-SET FREEMARKER_CMD=CALL .\bin\freemarker-cli.bat
+SET FREEMARKER_CMD=CALL .\bin\freemarker-generator.bat
 
 REM =========================================================================
 REM Info

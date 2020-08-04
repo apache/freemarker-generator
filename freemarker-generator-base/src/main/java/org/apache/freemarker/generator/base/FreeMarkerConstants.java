@@ -47,13 +47,13 @@ public class FreeMarkerConstants {
         private Configuration() {
         }
 
-        /** Prefix to extract tools from 'freemarker-cli.properties' */
+        /** Prefix to extract tools from 'freemarker-generator.properties' */
         public static final String TOOLS_PREFIX = "freemarker.tools.";
 
-        /** Key for reading the configured locale from 'freemarker-cli.properties' */
+        /** Key for reading the configured locale from 'freemarker-generator.properties' */
         public static final String LOCALE_KEY = "freemarker.configuration.setting.locale";
 
-        /** Prefix to extract FreeMarker configuration settings from 'freemarker-cli.properties' */
+        /** Prefix to extract FreeMarker configuration settings from 'freemarker-generator.properties' */
         public static final String SETTING_PREFIX = "freemarker.configuration.setting.";
     }
 

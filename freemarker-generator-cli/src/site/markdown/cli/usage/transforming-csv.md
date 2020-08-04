@@ -1,6 +1,6 @@
 ## Transforming CSV
 
-A common task is changing the output format of a CSV file therefore `Apache FreeMarker CLI` ships with a ready-to-use
+A common task is changing the output format of a CSV file therefore `Apache FreeMarker Generator` ships with a ready-to-use
 templates to convert CSVs
 
 * Convert a CSV into a different format
@@ -15,7 +15,7 @@ This allows opening the CSV directly in Excel without going to the tedious CSV i
 The following command line prints the converted CSV to `stdout`
 
 ```
-freemarker-cli \
+freemarker-generator \
  -PCSV_SOURCE_FORMAT=DEFAULT \
  -PCSV_TARGET_FORMAT=EXCEL \
  -PCSV_TARGET_DELIMITER=SEMICOLON \
@@ -37,7 +37,7 @@ actually allows including CSV directly)
 The following command line prints the resulting MarkDown to `stdout`
 
 ```
-freemarker-cli \
+freemarker-generator \
  -PCSV_SOURCE_FORMAT=DEFAULT \
  -t templates/csv/md/transform.ftl \
  https://raw.githubusercontent.com/apache/freemarker-generator/master/freemarker-generator-cli/examples/data/csv/contract.csv 
@@ -50,7 +50,7 @@ Please note that most MarkDown tools expect a header row (see [Create a table wi
 Of course it is possible to convert a CSV to HTML as well
 
 ```
-freemarker-cli \
+freemarker-generator \
  -PCSV_SOURCE_FORMAT=DEFAULT \
  -t templates/csv/html/transform.ftl \
  https://raw.githubusercontent.com/apache/freemarker-generator/master/freemarker-generator-cli/examples/data/csv/contract.csv 

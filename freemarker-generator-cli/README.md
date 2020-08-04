@@ -4,13 +4,13 @@ Apache FreeMarker Generator CLI
 This module provides provides the CLI for `Apache FreeMarker`.
 
 * Requires JDK 1.8+ on Linux, Mac OSX and Windows
-* Add the bin/freemarker-cli or bin/freemarker-cli.bat to your PATH variable
+* Add the bin/freemarker-generator or bin/freemarker-generator.bat to your PATH variable
 
 Now you can have a look at the command line options
 
 ```text
-freemarker-cli -h
-Usage: freemarker-cli (-t=<templates> [-t=<templates>]... |
+freemarker-generator -h
+Usage: freemarker-generator (-t=<templates> [-t=<templates>]... |
                       -i=<interactiveTemplate>) [-hV] [--stdin] [-b=<baseDir>]
                       [--config=<configFile>]
                       [--data-source-exclude=<dataSourceExcludePattern>]
@@ -20,10 +20,10 @@ Usage: freemarker-cli (-t=<templates> [-t=<templates>]... |
                       [-D=<String=String>]... [-m=<dataModels>]...
                       [-o=<outputs>]... [-P=<String=String>]...
                       [-s=<dataSources>]... [<sources>...]
-Apache FreeMarker CLI
+Apache FreeMarker Generator
       [<sources>...]        data source files and/or directories
   -b, --basedir=<baseDir>   additional template base directory
-      --config=<configFile> FreeMarker CLI configuration file
+      --config=<configFile> FreeMarker Generator configuration file
   -D, --system-property=<String=String>
                             set system property
       --data-source-exclude=<dataSourceExcludePattern>
@@ -52,10 +52,10 @@ Apache FreeMarker CLI
   -V, --version             Print version information and exit.
 ```
 
-Check the version of the `Apache FreeMarker CLI`
+Check the version of the `Apache FreeMarker Generator`
 
 ```text
-freemarker-cli -V
+freemarker-generator -V
 version=0.1.0-SNAPSHOT, time=2020-06-25T21:48:02+0200, commit=b320d00094be8789086ad6153d9d3fcaf4b8c75f
 ```
 

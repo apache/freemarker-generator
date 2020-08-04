@@ -58,7 +58,7 @@
                                 <platform>unix</platform>
                             </platforms>
                             <mainClass>org.apache.freemarker.generator.cli.Main</mainClass>
-                            <id>freemarker-cli</id>
+                            <id>freemarker-generator</id>
                         </program>
                     </programs>
                 </configuration>

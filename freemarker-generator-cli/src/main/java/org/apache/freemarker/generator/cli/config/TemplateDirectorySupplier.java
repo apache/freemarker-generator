@@ -32,13 +32,13 @@ import static java.util.stream.Collectors.toList;
  * <ol>
  *    <li>User-defined template directory</li>
  *    <li>Current working directory</li>
- *    <li>~/.freemarker-cli</li>
+ *    <li>~/.freemarker-generator</li>
  *    <li>Application installation directory</li>
  * </ol>
  */
 public class TemplateDirectorySupplier implements Supplier<List<File>> {
 
-    /** Installation directory of "freemarker-cli" when invoked with shell wrapper */
+    /** Installation directory of "freemarker-generator" when invoked with shell wrapper */
     private static final String APP_HOME = "app.home";
 
     /** Current working directory when invoked with shell wrapper */
@@ -47,8 +47,8 @@ public class TemplateDirectorySupplier implements Supplier<List<File>> {
     /** Home directory of the user */
     private static final String USER_HOME = "user.home";
 
-    /** The user's optional "freemarker-cli" directory */
-    private static final String USER_CONFIGURATION_DIR_NAME = ".freemarker-cli";
+    /** The user's optional "freemarker-generator" directory */
+    private static final String USER_CONFIGURATION_DIR_NAME = ".freemarker-generator";
 
     /** User-defined template directory */
     private final String userDefinedTemplateDir;
