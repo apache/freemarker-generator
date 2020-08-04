@@ -30,7 +30,8 @@
 
     <titleabbrev>FreeMarker Generator Manual</titleabbrev>
 
-    <productname>Apache FreeMarker Generator 0.1.0</productname>
+    <productname>Apache FreeMarker Generator
+    [docgen.customVariables.version]</productname>
   </info>
 
   <chapter role="index.html" xml:id="about">

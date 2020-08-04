@@ -54,6 +54,10 @@
                 <configuration>
                     <sourceDirectory>src/main/docgen</sourceDirectory>
                     <outputDirectory>${websiteOutputDirectory}</outputDirectory>
+                    <customVariables>
+                      <version>${project.version}</version>
+                    </customVariables>
+                    <!-- TODO set it back to false before release -->
                     <offline>true</offline>
                 </configuration>
             </plugin>
