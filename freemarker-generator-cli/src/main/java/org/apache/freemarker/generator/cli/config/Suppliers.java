@@ -17,6 +17,7 @@
 package org.apache.freemarker.generator.cli.config;
 
 import freemarker.cache.TemplateLoader;
+import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.datasource.DataSourcesSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesClassPathSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesFileSystemSupplier;
@@ -69,7 +70,7 @@ public class Suppliers {
 
     public static TemplateTransformationsSupplier templateTransformationsSupplier(Settings settings) {
         return () -> TemplateTransformationsBuilder.builder()
-                .setTemplate("interactive", settings.getInteractiveTemplate())
+                .setTemplate(Location.INTERACTIVE, settings.getInteractiveTemplate())
                 .addSources(settings.getTemplates())
                 .addInclude(settings.getTemplateFileIncludePattern())
                 .addExclude(settings.getTemplateFileExcludePattern())
