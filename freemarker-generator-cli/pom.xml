@@ -78,7 +78,7 @@
                                 <copy file="./src/main/scripts/run-examples.bat" todir="./target/appassembler" />
                                 <copy file="./src/main/scripts/run-examples.sh" todir="./target/appassembler" />
                                 <copy todir="./target/appassembler/templates">
-                                    <fileset dir="src/templates" />
+                                    <fileset dir="templates" />
                                 </copy>
                                 <copy todir="./target/appassembler/examples">
                                     <fileset dir="src/examples" />

@@ -38,8 +38,8 @@ public class TemplateDirectorySupplierTest {
 
     @Test
     public void shouldAddTemplateDirectory() throws IOException {
-        assertEquals(nrOfDefaultTemplateDirectories + 1, templateDirectories("src/templates").size());
-        assertEquals(nrOfDefaultTemplateDirectories + 1, templateDirectories("./src/templates").size());
+        assertEquals(nrOfDefaultTemplateDirectories + 1, templateDirectories("templates").size());
+        assertEquals(nrOfDefaultTemplateDirectories + 1, templateDirectories("./templates").size());
     }
 
     @Test
