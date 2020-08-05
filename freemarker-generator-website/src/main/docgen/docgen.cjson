@@ -22,9 +22,11 @@ onlineTrackerHTML: "docgen-misc/googleAnalytics.html"
 cookieConsentScriptURL: "https://cdn.jsdelivr.net/npm/cookie-bar/cookiebar-latest.min.js"
 searchKey: "003127866208504630097:arjqbv_znfw" // TODO Creat a seach key for the subdirectory
 validation: {
-  programlistingsRequireRole
+  // programlistingsRequireRole
   // programlistingsRequireLanguage
-  maximumProgramlistingWidth: 100
+  // maximumProgramlistingWidth: 100
+  // TODO: Remove this later, as we don't want autoid_${n}.html-s as output.
+  outputFilesCanUseAutoID
 }
 showXXELogo
 
@@ -91,7 +93,11 @@ socialLinks: {
   "Stack Overflow": { class: "stack-overflow", href: "olink:newStackOverflowQuestion" }
 }
 
-validation: { 
-  // TODO: Remove this later, as we don't want autoid_${n}.html-s as output.
-  outputFilesCanUseAutoID
+customVariables: {
+  version: null // Must be set by the caller
+}
+
+customVariablesFromFiles: {
+  cliHelpOutput: cli-help-output.txt
+  infoTemplateOutput: info-template-output.txt
 }

@@ -35,16 +35,68 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         
         <websiteOutputDirectory>${project.build.directory}/website</websiteOutputDirectory>
+        <docgenCustomVariableFileDirectory>${project.build.directory}/docgen-custom-variable-files</docgenCustomVariableFileDirectory>
+        <generatorTemplateDirectory>${project.basedir}/../freemarker-generator-cli/templates</generatorTemplateDirectory>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.freemarker.generator</groupId>
+            <artifactId>freemarker-generator-cli</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generateCliHelp</id>
+                        <phase>package</phase>
+                        <goals>
+                          <goal>exec</goal>
+                        </goals>
+                        <configuration>   
+                          <executable>java</executable>
+                          <arguments>
+                              <argument>-classpath</argument>
+                              <classpath/>
+                              <argument>org.apache.freemarker.generator.cli.Main</argument>
+                              <argument>--help</argument>
+                          </arguments>
+                          <outputFile>${docgenCustomVariableFileDirectory}/cli-help-output.txt</outputFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>generateInfoTemplateOutput</id>
+                        <phase>package</phase>
+                        <goals>
+                          <goal>exec</goal>
+                        </goals>
+                        <configuration>   
+                          <executable>java</executable>
+                          <arguments>
+                              <argument>-classpath</argument>
+                              <classpath/>
+                              <argument>org.apache.freemarker.generator.cli.Main</argument>
+                              <argument>-t</argument>
+                              <argument>${generatorTemplateDirectory}/info.ftl</argument>
+                          </arguments>
+                          <outputFile>${docgenCustomVariableFileDirectory}/info-template-output.txt</outputFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.freemarker.docgen</groupId>
                 <artifactId>freemarker-docgen-maven</artifactId>
                 <version>0.0.2-SNAPSHOT</version>
                 <executions>
                     <execution>
+                        <id>docgen-transform</id>
                         <phase>package</phase>
                         <goals>
                             <goal>transform</goal>
@@ -54,6 +106,7 @@
                 <configuration>
                     <sourceDirectory>src/main/docgen</sourceDirectory>
                     <outputDirectory>${websiteOutputDirectory}</outputDirectory>
+                    <customVariableFileDirectory>${docgenCustomVariableFileDirectory}</customVariableFileDirectory>
                     <customVariables>
                       <version>${project.version}</version>
                     </customVariables>

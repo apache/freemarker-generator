@@ -156,47 +156,7 @@ version=0.1.0-SNAPSHOT, time=2020-06-25T21:48:02+0200, commit=b320d00094be878908
         below:</para>
 
         <programlisting>&gt; freemarker-cli -h
-  Usage: freemarker-cli (-t=&lt;templates&gt; [-t=&lt;templates&gt;]... |
-                        -i=&lt;interactiveTemplate&gt;) [-hV] [--stdin] [-b=&lt;baseDir&gt;]
-                        [--config=&lt;configFile&gt;]
-                        [--data-source-exclude=&lt;dataSourceExcludePattern&gt;]
-                        [--data-source-include=&lt;dataSourceIncludePattern&gt;]
-                        [-e=&lt;inputEncoding&gt;] [-l=&lt;locale&gt;]
-                        [--output-encoding=&lt;outputEncoding&gt;] [--times=&lt;times&gt;]
-                        [-D=&lt;String=String&gt;]... [-m=&lt;dataModels&gt;]...
-                        [-o=&lt;outputs&gt;]... [-P=&lt;String=String&gt;]...
-                        [-s=&lt;dataSources&gt;]... [&lt;sources&gt;...]
-  Apache FreeMarker CLI
-        [&lt;sources&gt;...]        data source files and/or directories
-    -b, --basedir=&lt;baseDir&gt;   additional template base directory
-        --config=&lt;configFile&gt; FreeMarker CLI configuration file
-    -D, --system-property=&lt;String=String&gt;
-                              set system property
-        --data-source-exclude=&lt;dataSourceExcludePattern&gt;
-                              file exclude pattern for data sources
-        --data-source-include=&lt;dataSourceIncludePattern&gt;
-                              file include pattern for data sources
-    -e, --input-encoding=&lt;inputEncoding&gt;
-                              encoding of data source
-    -h, --help                Show this help message and exit.
-    -i, --interactive=&lt;interactiveTemplate&gt;
-                              interactive template to process
-    -l, --locale=&lt;locale&gt;     locale being used for the output, e.g. 'en_US'
-    -m, --data-model=&lt;dataModels&gt;
-                              data model used for rendering
-    -o, --output=&lt;outputs&gt;    output files or directories
-        --output-encoding=&lt;outputEncoding&gt;
-                              encoding of output, e.g. UTF-8
-    -P, --param=&lt;String=String&gt;
-                              set parameter
-    -s, --data-source=&lt;dataSources&gt;
-                              data source used for rendering
-        --stdin               read data source from stdin
-    -t, --template=&lt;templates&gt;
-                              templates to process
-        --times=&lt;times&gt;       re-run X times for profiling
-    -V, --version             Print version information and exit.
-</programlisting>
+[docgen.customVariables.cliHelpOutput]</programlisting>
       </simplesect>
 
       <simplesect>
@@ -207,56 +167,7 @@ version=0.1.0-SNAPSHOT, time=2020-06-25T21:48:02+0200, commit=b320d00094be878908
         better understand Apache FreeMarker CLI.</para>
 
         <programlisting>&gt; freemarker-cli -t templates/info.ftl
-FreeMarker CLI Information
-------------------------------------------------------------------------------
-FreeMarker version     : 2.3.30
-Template name          : templates/info.ftl
-Language               : en
-Locale                 : en_US
-Timestamp              : Jun 26, 2020 10:44:15 AM
-Output encoding        : UTF-8
-Output format          : plainText
-
-FreeMarker CLI Template Loader Directories
-------------------------------------------------------------------------------
-[#1] /Users/sgoeschl/work/github/apache/freemarker-generator
-[#2] /Users/sgoeschl/.freemarker-cli
-[#3] /Applications/Java/freemarker-cli-2.0.0
-
-FreeMarker CLI Tools
-------------------------------------------------------------------------------
-- CSVTool              : Process CSV files using Apache Commons CSV (see https://commons.apache.org/proper/commons-csv/)
-- DataFrameTool        : Bridge to [nRo/DataFrame](https://github.com/nRo/DataFrame)
-- ExcelTool            : Process Excels files (XLS, XLSX) using Apache POI (see https://poi.apache.org)
-- ExecTool             : Execute command line tools using Apache Commons Exec (see https://commons.apache.org/proper/commons-exec/)
-- FreeMarkerTool       : Expose advanced Apache FreeMarker classes
-- GrokTool             : Process text files using Grok expressions (see https://github.com/thekrakken/java-grok)
-- GsonTool             : Process JSON files using GSON (see https://github.com/google/gson)
-- JsonPathTool         : Process JSON files using Java JSON Path (see https://github.com/json-path/JsonPath)
-- JsoupTool            : Process  HTML files using Jsoup (see https://jsoup.org)
-- PropertiesTool       : Process JDK properties files
-- SystemTool           : Expose System-related utility methods
-- UUIDTool             : Create UUIDs
-- XmlTool              : Process XML files using Apache FreeMarker (see https://freemarker.apache.org/docs/xgui.html)
-- YamlTool             : Process YAML files using SnakeYAML(see https://bitbucket.org/asomov/snakeyaml/wiki/Home)
-
-FreeMarker CLI Data Model
----------------------------------------------------------------------------
-- CSVTool
-- DataFrameTool
-- DataSources
-- ExcelTool
-- ExecTool
-- FreeMarkerTool
-- GrokTool
-- GsonTool
-- JsonPathTool
-- JsoupTool
-- PropertiesTool
-- SystemTool
-- UUIDTool
-- XmlTool
-- YamlTool</programlisting>
+[docgen.customVariables.infoTemplateOutput]</programlisting>
 
         <para>Above:</para>
 
@@ -443,7 +354,7 @@ FreeMarker CLI Data Model
     </section>
 
     <section xml:id="legal">
-      <title>Legal matters</title>
+      <title>Legal</title>
 
       <section xml:id="license">
         <title>License</title>
