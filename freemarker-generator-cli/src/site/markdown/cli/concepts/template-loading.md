@@ -19,7 +19,7 @@ You can check the currently used template loader directories easily on the comma
 ```
 freemarker-generator -t templates/info.ftl
 
-FreeMarker CLI Template Loader Directories
+FreeMarker Generator Template Loader Directories
 ------------------------------------------------------------------------------
 [#1] /Users/sgoeschl/work/github/apache/freemarker-generator
 [#2] /Users/sgoeschl/.freemarker-generator

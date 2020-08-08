@@ -33,4 +33,4 @@
 
 ### Advanced Topics
 
-* [FreeMarker CLI Configuration](cli/advanced/cli-configuration.html)
+* [FreeMarker Generator Configuration](cli/advanced/cli-configuration.html)

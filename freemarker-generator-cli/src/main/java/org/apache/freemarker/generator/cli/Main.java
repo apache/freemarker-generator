@@ -53,7 +53,7 @@ import static org.apache.freemarker.generator.cli.config.Suppliers.templateDirec
 @Command(description = "Apache FreeMarker Generator", name = "freemarker-generator", mixinStandardHelpOptions = true, versionProvider = GitVersionProvider.class)
 public class Main implements Callable<Integer> {
 
-    private static final String FREEMARKER_GENERATOR_CLI_PROPERTY_FILE = "freemarker-generator.properties";
+    private static final String FREEMARKER_GENERATOR_PROPERTY_FILE = "freemarker-generator.properties";
 
     @ArgGroup(multiplicity = "1")
     TemplateSourceOptions templateSourceOptions;
@@ -90,7 +90,7 @@ public class Main implements Callable<Integer> {
     @Option(names = { "-s", "--data-source" }, description = "data source used for rendering")
     List<String> dataSources;
 
-    @Option(names = { "--config" }, defaultValue = FREEMARKER_GENERATOR_CLI_PROPERTY_FILE, description = "FreeMarker CLI configuration file")
+    @Option(names = { "--config" }, defaultValue = FREEMARKER_GENERATOR_PROPERTY_FILE, description = "FreeMarker Generator configuration file")
     String configFile;
 
     @Option(names = { "--data-source-include" }, description = "file include pattern for data sources")
@@ -267,7 +267,7 @@ public class Main implements Callable<Integer> {
         if (properties != null) {
             return properties;
         } else {
-            throw new RuntimeException("FreeMarker CLI configuration file not found: " + fileName);
+            throw new RuntimeException("FreeMarker Generator configuration file not found: " + fileName);
         }
     }
 

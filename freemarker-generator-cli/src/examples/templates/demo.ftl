@@ -114,7 +114,7 @@ List all data sources having "src/test/data/properties" in their file path
 - ${key}<#lt>
 </#list>
 
-13) FreeMarker CLI Tools
+13) FreeMarker Generator Tools
 ---------------------------------------------------------------------------
 <#list .data_model.tools?keys?sort as key>
 - ${key?right_pad(20)} : ${.data_model.tools[key]}

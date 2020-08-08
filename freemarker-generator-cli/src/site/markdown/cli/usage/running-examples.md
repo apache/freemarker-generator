@@ -778,7 +778,7 @@ Post Title : qui est esse
 John Smith
 
 > bin/freemarker-generator -i '${tools.jsoup.parse(dataSources?values[0]).select("a")[0]}' examples/data/html/dependencies.html; echo
-<a href="${project.url}" title="FreeMarker CLI">FreeMarker CLI</a>
+<a href="${project.url}" title="FreeMarker Generator">FreeMarker Generator</a>
 
 > freemarker-generator -i '<#list tools.system.envs as name,value>${name} ==> ${value}${"\n"}</#list>'
 TERM ==> xterm-256color
@@ -1038,7 +1038,7 @@ Get all documents
 - dataSources
 - tools
 
-13) FreeMarker CLI Tools
+13) FreeMarker Generator Tools
 ---------------------------------------------------------------------------
 - csv                  : Process CSV files using Apache Commons CSV (see https://commons.apache.org/proper/commons-csv/)
 - dataframe            : Bridge to [nRo/DataFrame](https://github.com/nRo/DataFrame)

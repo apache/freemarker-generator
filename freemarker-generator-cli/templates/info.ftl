@@ -15,7 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-FreeMarker CLI Information
+FreeMarker Generator Information
 ------------------------------------------------------------------------------
 FreeMarker version     : ${.version}
 Template name          : ${.current_template_name}
@@ -25,26 +25,26 @@ Timestamp              : ${.now}
 Output encoding        : ${.output_encoding}
 Output format          : ${.output_format}
 
-FreeMarker CLI Template Loader Directories
+FreeMarker Generator Template Loader Directories
 ------------------------------------------------------------------------------
 <#list tools.system.getTemplateDirectories() as directory>
 [#${directory?counter}] ${directory}
 </#list>
 
-FreeMarker CLI Data Model
+FreeMarker Generator Data Model
 ---------------------------------------------------------------------------
 <#list .data_model?keys?sort as key>
 - ${key}<#lt>
 </#list>
 
-FreeMarker CLI Tools
+FreeMarker Generator Tools
 ------------------------------------------------------------------------------
 <#list tools?keys?sort as name>
 - ${name?right_pad(20)} : ${tools[name]}
 </#list>
 
 <#if dataSources?has_content>
-FreeMarker CLI DataSources
+FreeMarker Generator DataSources
 ------------------------------------------------------------------------------
 <#list dataSources?values as ds>
 [#${ds?counter}]: name=${ds.name}, group=${ds.group}, fileName=${ds.fileName} mimeType=${ds.mimeType}, charset=${ds.charset}, length=${ds.length} Bytes
@@ -53,7 +53,7 @@ URI : ${ds.uri}
 </#if>
 
 <#if tools.system.parameters?has_content>
-FreeMarker CLI Parameters
+FreeMarker Generator Parameters
 ------------------------------------------------------------------------------
 <#list tools.system.parameters as key,value>
 <#if value?is_hash>

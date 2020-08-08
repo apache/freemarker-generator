@@ -49,7 +49,7 @@ version=0.1.0-SNAPSHOT, time=2020-06-25T21:48:02+0200, commit=b320d00094be878908
   Apache FreeMarker Generator
         [<sources>...]        data source files and/or directories
     -b, --basedir=<baseDir>   additional template base directory
-        --config=<configFile> FreeMarker CLI configuration file
+        --config=<configFile> FreeMarker Generator configuration file
     -D, --system-property=<String=String>
                               set system property
         --data-source-exclude=<dataSourceExcludePattern>
@@ -85,7 +85,7 @@ to better understand `Apache FreeMarker Generator`
 
 ```
 > freemarker-generator -t templates/info.ftl
-FreeMarker CLI Information
+FreeMarker Generator Information
 ------------------------------------------------------------------------------
 FreeMarker version     : 2.3.30
 Template name          : templates/info.ftl
@@ -95,13 +95,13 @@ Timestamp              : Jun 26, 2020 10:44:15 AM
 Output encoding        : UTF-8
 Output format          : plainText
 
-FreeMarker CLI Template Loader Directories
+FreeMarker Generator Template Loader Directories
 ------------------------------------------------------------------------------
 [#1] /Users/sgoeschl/work/github/apache/freemarker-generator
 [#2] /Users/sgoeschl/.freemarker-generator
 [#3] /Applications/Java/freemarker-generator-2.0.0
 
-FreeMarker CLI Tools
+FreeMarker Generator Tools
 ------------------------------------------------------------------------------
 - CSVTool              : Process CSV files using Apache Commons CSV (see https://commons.apache.org/proper/commons-csv/)
 - DataFrameTool        : Bridge to [nRo/DataFrame](https://github.com/nRo/DataFrame)
@@ -118,7 +118,7 @@ FreeMarker CLI Tools
 - XmlTool              : Process XML files using Apache FreeMarker (see https://freemarker.apache.org/docs/xgui.html)
 - YamlTool             : Process YAML files using SnakeYAML(see https://bitbucket.org/asomov/snakeyaml/wiki/Home)
 
-FreeMarker CLI Data Model
+FreeMarker Generator Data Model
 ---------------------------------------------------------------------------
 - CSVTool
 - DataFrameTool
@@ -137,7 +137,7 @@ FreeMarker CLI Data Model
 - YamlTool
 ```
 
-* The "FreeMarker CLI Information" section provides insights into configuration and currently processed template.
-* The "FreeMarker CLI Template Loader Directories" shows the template directories being searched to resolve a template path
-* The "FreeMarker CLI Tools" section list the available tools
-* The "FreeMarker CLI Data Model" section shows all available entries in the current FreeMarker context 
+* The "FreeMarker Generator Information" section provides insights into configuration and currently processed template.
+* The "FreeMarker Generator Template Loader Directories" shows the template directories being searched to resolve a template path
+* The "FreeMarker Generator Tools" section list the available tools
+* The "FreeMarker Generator Data Model" section shows all available entries in the current FreeMarker context 
