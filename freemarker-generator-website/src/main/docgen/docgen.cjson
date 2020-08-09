@@ -94,10 +94,10 @@ socialLinks: {
 }
 
 customVariables: {
-  version: null // Must be set by the caller
+  version: null // Must be overridden by the caller
 }
 
-customVariablesFromFiles: {
-  cliHelpOutput: cli-help-output.txt
-  infoTemplateOutput: info-template-output.txt
+insertableFiles: {
+  outputs: null // Must be overridden by the caller
+  examples: null // Must be overridden by the caller
 }

@@ -45,8 +45,8 @@
       FreeMarker Generator is in early stage of development, and so new
       versions can break backward compatibility. However, the template engine
       itself (FreeMarker) keeps backward compatibility, so hopefully the bulk
-      of your work can be migrated to a future versions of FreeMarker
-      Generator, should you decide to upgrade.</para>
+      of your work can be still used in a future versions of FreeMarker
+      Generator, should you decide to upgrade it.</para>
     </warning>
 
     <para>FreeMarker Generator is a command line tool that generates files
@@ -71,12 +71,12 @@
       </listitem>
 
       <listitem>
-        <para>Provides JSONPath, XPath and DataFrames for advanced data
+        <para>Provides JSONPath, XPath and DataFrame-s for advanced data
         manipulation</para>
       </listitem>
 
       <listitem>
-        <para>Transform a directory with a single command-line
+        <para>Can transform a whole directory with a single command-line
         invocation</para>
       </listitem>
 
@@ -133,30 +133,34 @@
         <para>On my local box (Mac OS 10.15.5) I use the following
         setup:</para>
 
-        <programlisting>export FREEMARKER_CLI_HOME=/Applications/Java/freemarker-cli-2.0.0
-export PATH=$PATH:$FREEMARKER_CLI_HOME/bin</programlisting>
+        <remark>This above have used export FREEMARKER_CLI_HOME=..., but I
+        found that to be confusing, as one my thinks FREEMARKER_CLI_HOME is
+        recognized by the launcher script something (like JAVA_HOME, ANT_HOME,
+        etc).</remark>
 
-        <para>Afterwards Apache FreeMarker CLI can be executed from the
+        <programlisting>export PATH=$PATH:/Applications/Java/freemarker-generator-[docgen.customVariables.version]/bin</programlisting>
+
+        <para>Afterwards Apache FreeMarker Generator can be executed from the
         command line:</para>
 
-        <programlisting>&gt; which freemarker-cli
-/Applications/Java/freemarker-cli-2.0.0/bin/freemarker-cli</programlisting>
+        <programlisting>&gt; which freemarker-generator
+/Applications/Java/freemarker-generator-[docgen.customVariables.version]/bin/freemarker-generator</programlisting>
 
         <para>and check the version of Apache FreeMarker CLI</para>
 
-        <programlisting>&gt; freemarker-cli -V
-version=0.1.0-SNAPSHOT, time=2020-06-25T21:48:02+0200, commit=b320d00094be8789086ad6153d9d3fcaf4b8c75f
+        <programlisting>&gt; freemarker-generator -V
+version=[docgen.customVariables.version], time=2020-06-25T21:48:02+0200, commit=b320d00094be8789086ad6153d9d3fcaf4b8c75f
 </programlisting>
       </simplesect>
 
       <simplesect>
         <title>Command Line Options</title>
 
-        <para>Apache FreeMarker CLI provides command line help as shown
+        <para>Apache FreeMarker Generator provides command line help as shown
         below:</para>
 
-        <programlisting>&gt; freemarker-cli -h
-[docgen.customVariables.cliHelpOutput]</programlisting>
+        <programlisting>&gt; freemarker-generator -h
+[docgen.insertFile "@outputs/cli-help-output.txt"]</programlisting>
       </simplesect>
 
       <simplesect>
@@ -166,32 +170,33 @@ version=0.1.0-SNAPSHOT, time=2020-06-25T21:48:02+0200, commit=b320d00094be878908
         the <literal>templates/info.ftl</literal> is particularly helpful to
         better understand Apache FreeMarker CLI.</para>
 
-        <programlisting>&gt; freemarker-cli -t templates/info.ftl
-[docgen.customVariables.infoTemplateOutput]</programlisting>
+        <programlisting>&gt; freemarker-generator -t templates/info.ftl
+[docgen.insertFile "@outputs/info-template-output.txt"]</programlisting>
 
         <para>Above:</para>
 
         <itemizedlist>
           <listitem>
-            <para>The <quote>FreeMarker CLI Information</quote> section
+            <para>The <quote>FreeMarker Generator Information</quote> section
             provides insights into configuration and currently processed
             template.</para>
           </listitem>
 
           <listitem>
-            <para>The <quote>FreeMarker CLI Template Loader
+            <para>The <quote>FreeMarker Generator Template Loader
             Directories</quote> shows the template directories being searched
             to resolve a template path</para>
           </listitem>
 
           <listitem>
-            <para>The <quote>FreeMarker CLI Tools</quote> section list the
-            available tools</para>
+            <para>The <quote>FreeMarker Generator Tools</quote> section list
+            the available tools</para>
           </listitem>
 
           <listitem>
-            <para>The <quote>FreeMarker CLI Data Model</quote> section shows
-            all available entries in the current FreeMarker context </para>
+            <para>The <quote>FreeMarker Generator Data Model</quote> section
+            shows all available entries in the current FreeMarker
+            context</para>
           </listitem>
         </itemizedlist>
       </simplesect>
@@ -200,7 +205,102 @@ version=0.1.0-SNAPSHOT, time=2020-06-25T21:48:02+0200, commit=b320d00094be878908
     <section>
       <title>Running the examples</title>
 
-      <para>TODO</para>
+      <para>There a many examples (see below) available you can execute - The
+      examples were tested with Java 1.8 on Mac OS X.</para>
+
+      <para>Run <literal>run-examples.sh</literal> or
+      <literal>run-examples.bat</literal> in the Apache FreeMarker Generator
+      installation directory, and have a look at the generated output.</para>
+
+      <programlisting>./run-examples.sh 
+templates/info.ftl
+examples/templates/demo.ftl
+templates/csv/html/transform.ftl
+templates/csv/md/transform.ftl
+examples/templates/csv/shell/curl.ftl
+examples/templates/csv/md/filter.ftl
+examples/templates/csv/fo/transform.ftl
+fop -fo target/out/locker-test-users.fo target/out/locker-test-users.pdf
+examples/templates/csv/fo/transactions.ftl
+fop -fo target/out/transactions.fo target/out/transactions-fo.pdf
+templates/csv/html/transform.ftl
+wkhtmltopdf -O landscape target/out/transactions.html target/out/transactions-html.pdf
+examples/templates/dataframe/example.ftl
+examples/templates/accesslog/combined-access.ftl
+examples/templates/excel/dataframe/transform.ftl
+templates/excel/html/transform.ftl
+templates/excel/md/transform.ftl
+templates/excel/csv/transform.ftl
+examples/templates/excel/csv/custom.ftl
+examples/templates/html/csv/dependencies.ftl
+examples/templates/json/csv/swagger-endpoints.ftl
+templates/json/yaml/transform.ftl
+examples/templates/json/md/github-users.ftl
+examples/templates/properties/csv/locker-test-users.ftl
+examples/data/template
+examples/templates/yaml/txt/transform.ftl
+templates/yaml/json/transform.ftl
+examples/templates/xml/txt/recipients.ftl
+Created the following sample files in ./target/out
+total 1464
+-rw-r--r--  1 sgoeschl  staff     646 Jun 27 16:38 combined-access.log.txt
+-rw-r--r--  1 sgoeschl  staff   25676 Jun 27 16:38 contract.html
+-rw-r--r--  1 sgoeschl  staff    7933 Jun 27 16:38 contract.md
+-rw-r--r--  1 sgoeschl  staff     784 Jun 27 16:38 curl.sh
+-rw-r--r--  1 sgoeschl  staff     232 Jun 27 16:38 customer.txt
+-rw-r--r--  1 sgoeschl  staff    6486 Jun 27 16:38 dataframe.txt
+-rw-r--r--  1 sgoeschl  staff   15613 Jun 27 16:38 demo.txt
+-rw-r--r--  1 sgoeschl  staff    1310 Jun 27 16:38 dependencies.csv
+-rw-r--r--  1 sgoeschl  staff    2029 Jun 27 16:38 github-users-curl.md
+-rw-r--r--  1 sgoeschl  staff    2627 Jun 27 16:38 info.txt
+-rw-r--r--  1 sgoeschl  staff    8075 Jun 27 16:38 interactive-dataframe.txt
+-rw-r--r--  1 sgoeschl  staff      66 Jun 27 16:38 interactive-html.txt
+-rw-r--r--  1 sgoeschl  staff      16 Jun 27 16:38 interactive-json.txt
+-rw-r--r--  1 sgoeschl  staff   25090 Jun 27 16:38 interactive-swagger.json
+-rw-r--r--  1 sgoeschl  staff   16870 Jun 27 16:38 interactive-swagger.yaml
+-rw-r--r--  1 sgoeschl  staff      10 Jun 27 16:38 interactive-xml.txt
+-rw-r--r--  1 sgoeschl  staff     285 Jun 27 16:38 locker-test-users.csv
+-rw-r--r--  1 sgoeschl  staff    6341 Jun 27 16:38 locker-test-users.fo
+-rw-r--r--  1 sgoeschl  staff    5526 Jun 27 16:38 locker-test-users.pdf
+-rw-r--r--  1 sgoeschl  staff     921 Jun 27 16:38 recipients.txt
+-rw-r--r--  1 sgoeschl  staff     910 Jun 27 16:38 sales-records.md
+-rw-r--r--  1 sgoeschl  staff    2453 Jun 27 16:38 swagger-spec.csv
+-rw-r--r--  1 sgoeschl  staff   25090 Jun 27 16:38 swagger-spec.json
+-rw-r--r--  1 sgoeschl  staff   16870 Jun 27 16:38 swagger-spec.yaml
+drwxr-xr-x  4 sgoeschl  staff     128 Jun 27 16:38 template
+-rw-r--r--  1 sgoeschl  staff     154 Jun 27 16:38 test-multiple-sheets.xlsx.csv
+-rw-r--r--  1 sgoeschl  staff    1917 Jun 27 16:38 test-multiple-sheets.xlsx.html
+-rw-r--r--  1 sgoeschl  staff     389 Jun 27 16:38 test-multiple-sheets.xlsx.md
+-rw-r--r--  1 sgoeschl  staff     155 Jun 27 16:38 test-transform-xls.csv
+-rw-r--r--  1 sgoeschl  staff    1439 Jun 27 16:38 test.xls.dataframe.txt
+-rw-r--r--  1 sgoeschl  staff    1556 Jun 27 16:38 test.xls.html
+-rw-r--r--  1 sgoeschl  staff    1558 Jun 27 16:38 test.xslx.html
+-rw-r--r--  1 sgoeschl  staff   25757 Jun 27 16:38 transactions-fo.pdf
+-rw-r--r--  1 sgoeschl  staff   66016 Jun 27 16:38 transactions-html.pdf
+-rw-r--r--  1 sgoeschl  staff  330128 Jun 27 16:38 transactions.fo
+-rw-r--r--  1 sgoeschl  staff   51008 Jun 27 16:38 transactions.html</programlisting>
+
+      <para>Please note that generated PDF files are very likely not found
+      since they require wkhtmltopdf and Apache FOP installation.</para>
+
+      <section>
+        <title>Transforming GitHub JSON To Markdown</title>
+
+        <para>A simple example with real JSON data to be transformed into
+        Markdown.</para>
+
+        <para>You can either use the existing JSON sample</para>
+
+        <programlisting>&gt; freemarker-generator -t examples/templates/json/md/github-users.ftl examples/data/json/github-users.json</programlisting>
+
+        <para>or pipe a cURL response</para>
+
+        <programlisting>&gt; curl -s https://api.github.com/users | freemarker-generator -t examples/templates/json/md/github-users.ftl --stdin</programlisting>
+
+        <para>Below you see the Apache FreeMarker Template</para>
+
+        <programlisting role="template">[docgen.insertFile "@examples/templates/json/md/github-users.ftl"]</programlisting>
+      </section>
     </section>
   </chapter>
 

@@ -35,8 +35,9 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         
         <websiteOutputDirectory>${project.build.directory}/website</websiteOutputDirectory>
-        <docgenCustomVariableFileDirectory>${project.build.directory}/docgen-custom-variable-files</docgenCustomVariableFileDirectory>
-        <generatorTemplateDirectory>${project.basedir}/../freemarker-generator-cli/templates</generatorTemplateDirectory>
+        <freemarkerGeneratorBaseDirectory>${project.basedir}/../freemarker-generator-cli</freemarkerGeneratorBaseDirectory>
+        <docgenInsertedOutputsDirectory>${project.build.directory}/docgen-insertable-outputs</docgenInsertedOutputsDirectory>
+        <docgenInsertedExamplesDirectory>${freemarkerGeneratorBaseDirectory}/examples</docgenInsertedExamplesDirectory>
     </properties>
 
     <dependencies>
@@ -67,7 +68,7 @@
                               <argument>org.apache.freemarker.generator.cli.Main</argument>
                               <argument>--help</argument>
                           </arguments>
-                          <outputFile>${docgenCustomVariableFileDirectory}/cli-help-output.txt</outputFile>
+                          <outputFile>${docgenInsertedOutputsDirectory}/cli-help-output.txt</outputFile>
                         </configuration>
                     </execution>
                     <execution>
@@ -82,10 +83,12 @@
                               <argument>-classpath</argument>
                               <classpath/>
                               <argument>org.apache.freemarker.generator.cli.Main</argument>
+                              <argument>-b</argument>
+                              <argument>${freemarkerGeneratorBaseDirectory}</argument>
                               <argument>-t</argument>
-                              <argument>${generatorTemplateDirectory}/info.ftl</argument>
+                              <argument>templates/info.ftl</argument>
                           </arguments>
-                          <outputFile>${docgenCustomVariableFileDirectory}/info-template-output.txt</outputFile>
+                          <outputFile>${docgenInsertedOutputsDirectory}/info-template-output.txt</outputFile>
                         </configuration>
                     </execution>
                 </executions>
@@ -106,7 +109,10 @@
                 <configuration>
                     <sourceDirectory>src/main/docgen</sourceDirectory>
                     <outputDirectory>${websiteOutputDirectory}</outputDirectory>
-                    <customVariableFileDirectory>${docgenCustomVariableFileDirectory}</customVariableFileDirectory>
+                    <insertableFiles>
+                        <outputs>${docgenInsertedOutputsDirectory}/**</outputs>
+                        <examples>${docgenInsertedExamplesDirectory}/**</examples>
+                    </insertableFiles>
                     <customVariables>
                       <version>${project.version}</version>
                     </customVariables>
