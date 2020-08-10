@@ -33,7 +33,7 @@ FREEMARKER_CMD=./bin/freemarker-generator
 #############################################################################
 
 echo "templates/info.ftl"
-$FREEMARKER_CMD -t templates/info.ftl README.md > target/out/info.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -t info.ftl README.md > target/out/info.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
 # Demo
@@ -58,10 +58,10 @@ $FREEMARKER_CMD -i '${tools.dataframe.print(tools.dataframe.fromMaps(tools.gson.
 #############################################################################
 
 echo "templates/csv/html/transform.ftl"
-$FREEMARKER_CMD -t templates/csv/html/transform.ftl examples/data/csv/contract.csv > target/out/contract.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -t csv/html/transform.ftl examples/data/csv/contract.csv > target/out/contract.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 echo "templates/csv/md/transform.ftl"
-$FREEMARKER_CMD -t templates/csv/md/transform.ftl examples/data/csv/contract.csv > target/out/contract.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -t csv/md/transform.ftl examples/data/csv/contract.csv > target/out/contract.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 echo "examples/templates/csv/shell/curl.ftl"
 $FREEMARKER_CMD -t ./examples/templates/csv/shell/curl.ftl examples/data/csv/user.csv > target/out/curl.sh || { echo >&2 "Test failed.  Aborting."; exit 1; }
@@ -123,15 +123,15 @@ echo "examples/templates/excel/dataframe/transform.ftl"
 $FREEMARKER_CMD -t examples/templates/excel/dataframe/transform.ftl examples/data/excel/test.xls > target/out/test.xls.dataframe.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 echo "templates/excel/html/transform.ftl"
-$FREEMARKER_CMD -t templates/excel/html/transform.ftl examples/data/excel/test.xls > target/out/test.xls.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
-$FREEMARKER_CMD -t templates/excel/html/transform.ftl examples/data/excel/test.xlsx > target/out/test.xslx.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
-$FREEMARKER_CMD -t templates/excel/html/transform.ftl examples/data/excel/test-multiple-sheets.xlsx > target/out/test-multiple-sheets.xlsx.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -t excel/html/transform.ftl examples/data/excel/test.xls > target/out/test.xls.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -t excel/html/transform.ftl examples/data/excel/test.xlsx > target/out/test.xslx.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -t excel/html/transform.ftl examples/data/excel/test-multiple-sheets.xlsx > target/out/test-multiple-sheets.xlsx.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 echo "templates/excel/md/transform.ftl"
-$FREEMARKER_CMD -t templates/excel/md/transform.ftl examples/data/excel/test-multiple-sheets.xlsx > target/out/test-multiple-sheets.xlsx.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -t excel/md/transform.ftl examples/data/excel/test-multiple-sheets.xlsx > target/out/test-multiple-sheets.xlsx.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 echo "templates/excel/csv/transform.ftl"
-$FREEMARKER_CMD -t templates/excel/csv/transform.ftl examples/data/excel/test-multiple-sheets.xlsx > target/out/test-multiple-sheets.xlsx.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -t excel/csv/transform.ftl examples/data/excel/test-multiple-sheets.xlsx > target/out/test-multiple-sheets.xlsx.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 echo "examples/templates/excel/csv/custom.ftl"
 $FREEMARKER_CMD -t examples/templates/excel/csv/custom.ftl -Pcsv.format=MYSQL examples/data/excel/test.xls > target/out/test-transform-xls.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
@@ -154,7 +154,7 @@ echo "examples/templates/json/csv/swagger-endpoints.ftl"
 $FREEMARKER_CMD -t examples/templates/json/csv/swagger-endpoints.ftl examples/data/json/swagger-spec.json > target/out/swagger-spec.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 echo "templates/json/yaml/transform.ftl"
-$FREEMARKER_CMD -t templates/json/yaml/transform.ftl examples/data/json/swagger-spec.json > target/out/swagger-spec.yaml || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -t json/yaml/transform.ftl examples/data/json/swagger-spec.json > target/out/swagger-spec.yaml || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 echo "examples/templates/json/md/github-users.ftl"
 $FREEMARKER_CMD -t examples/templates/json/md/github-users.ftl examples/data/json/github-users.json > target/out/github-users.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
@@ -181,7 +181,7 @@ echo "examples/templates/yaml/txt/transform.ftl"
 $FREEMARKER_CMD -t examples/templates/yaml/txt/transform.ftl examples/data/yaml/customer.yaml > target/out/customer.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 echo "templates/yaml/json/transform.ftl"
-$FREEMARKER_CMD -t templates/yaml/json/transform.ftl examples/data/yaml/swagger-spec.yaml > target/out/swagger-spec.json || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -t yaml/json/transform.ftl examples/data/yaml/swagger-spec.yaml > target/out/swagger-spec.json || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
 # XML

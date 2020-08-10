@@ -28,7 +28,7 @@ REM Info
 REM =========================================================================
 
 echo "templates\info.ftl"
-%FREEMARKER_CMD% -t templates\info.ftl README.md > target\out\info.txt
+%FREEMARKER_CMD% -t info.ftl README.md > target\out\info.txt
 
 REM =========================================================================
 REM Demo
@@ -53,10 +53,10 @@ REM CSV
 REM =========================================================================
 
 echo "templates\csv\html\transform.ftl"
-%FREEMARKER_CMD% -t templates\csv\html\transform.ftl examples\data\csv\contract.csv > target\out\contract.html
+%FREEMARKER_CMD% -t csv\html\transform.ftl examples\data\csv\contract.csv > target\out\contract.html
 
 echo "templates\csv\md\transform.ftl"
-%FREEMARKER_CMD% -t templates\csv\md\transform.ftl examples\data\csv\contract.csv > target\out\contract.md
+%FREEMARKER_CMD% -t csv\md\transform.ftl examples\data\csv\contract.csv > target\out\contract.md
 
 echo "examples\templates\csv\shell\curl.ftl"
 %FREEMARKER_CMD% -t .\examples\templates\csv\shell\curl.ftl examples\data\csv\user.csv > target\out\curl.sh
@@ -103,15 +103,15 @@ echo "examples\templates\excel\dataframe\transform.ftl"
 %FREEMARKER_CMD% -t examples\templates\excel\dataframe\transform.ftl examples\data\excel\test.xls > target\out\test.xls.dataframe.txt
 
 echo "templates\excel\html\transform.ftl"
-%FREEMARKER_CMD% -t templates\excel\html\transform.ftl examples\data\excel\test.xls > target\out\test.xls.html
-%FREEMARKER_CMD% -t templates\excel\html\transform.ftl examples\data\excel\test.xlsx > target\out\test.xslx.html
-%FREEMARKER_CMD% -t templates\excel\html\transform.ftl examples\data\excel\test-multiple-sheets.xlsx > target\out\test-multiple-sheets.xlsx.html
+%FREEMARKER_CMD% -t excel\html\transform.ftl examples\data\excel\test.xls > target\out\test.xls.html
+%FREEMARKER_CMD% -t excel\html\transform.ftl examples\data\excel\test.xlsx > target\out\test.xslx.html
+%FREEMARKER_CMD% -t excel\html\transform.ftl examples\data\excel\test-multiple-sheets.xlsx > target\out\test-multiple-sheets.xlsx.html
 
 echo "templates\excel\md\transform.ftl"
-%FREEMARKER_CMD% -t templates\excel\md\transform.ftl examples\data\excel\test-multiple-sheets.xlsx > target\out\test-multiple-sheets.xlsx.md
+%FREEMARKER_CMD% -t excel\md\transform.ftl examples\data\excel\test-multiple-sheets.xlsx > target\out\test-multiple-sheets.xlsx.md
 
 echo "templates\excel\csv\transform.ftl"
-%FREEMARKER_CMD% -t templates\excel\csv\transform.ftl examples\data\excel\test-multiple-sheets.xlsx > target\out\test-multiple-sheets.xlsx.csv
+%FREEMARKER_CMD% -t excel\csv\transform.ftl examples\data\excel\test-multiple-sheets.xlsx > target\out\test-multiple-sheets.xlsx.csv
 
 echo "examples\templates\excel\csv\custom.ftl"
 %FREEMARKER_CMD% -t examples\templates\excel\csv\custom.ftl -Pcsv.format=MYSQL examples\data\excel\test.xls > target\out\test-transform-xls.csv
@@ -134,7 +134,7 @@ echo "examples\templates\json\csv\swagger-endpoints.ftl"
 %FREEMARKER_CMD% -t examples\templates\json\csv\swagger-endpoints.ftl examples\data\json\swagger-spec.json > target\out\swagger-spec.csv
 
 echo "templates\json\yaml\transform.ftl"
-%FREEMARKER_CMD% -t templates\json\yaml\transform.ftl examples\data\json\swagger-spec.json > target\out\swagger-spec.yaml
+%FREEMARKER_CMD% -t json\yaml\transform.ftl examples\data\json\swagger-spec.json > target\out\swagger-spec.yaml
 
 echo "examples\templates\json\md\github-users.ftl"
 %FREEMARKER_CMD% -t examples\templates\json\md\github-users.ftl examples\data\json\github-users.json > target\out\github-users.md
@@ -161,7 +161,7 @@ echo "examples\templates\yaml\txt\transform.ftl"
 %FREEMARKER_CMD% -t examples\templates\yaml\txt\transform.ftl examples\data\yaml\customer.yaml > target\out\customer.txt
 
 echo "templates\yaml\json\transform.ftl"
-%FREEMARKER_CMD% -t templates\yaml\json\transform.ftl examples\data\yaml\swagger-spec.yaml > target\out\swagger-spec.json
+%FREEMARKER_CMD% -t yaml\json\transform.ftl examples\data\yaml\swagger-spec.yaml > target\out\swagger-spec.json
 
 REM =========================================================================
 REM XML

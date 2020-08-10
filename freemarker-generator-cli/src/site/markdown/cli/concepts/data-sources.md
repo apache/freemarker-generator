@@ -13,7 +13,7 @@ A `DataSource` consists of lazy-loaded data available in Apache FreeMarker's mod
 A `DataSource` can be loaded from the file system, e.g. as positional command line argument
 
 ```
-freemarker-cli -t templates/info.ftl README.md
+freemarker-cli -t info.ftl README.md
 
 FreeMarker Generator DataSources
 ------------------------------------------------------------------------------
@@ -24,7 +24,7 @@ FreeMarker Generator DataSources
 from an URL
 
 ```
-freemarker-cli --data-source xkcd=https://xkcd.com/info.0.json -t templates/info.ftl
+freemarker-cli --data-source xkcd=https://xkcd.com/info.0.json -t info.ftl
 
 FreeMarker Generator DataSources
 ------------------------------------------------------------------------------
@@ -36,7 +36,7 @@ or from an environment variable, e.g. `NGINX_CONF` having a JSON payload
 
 ```
 export NGINX_CONF='{"NGINX_PORT":"8443","NGINX_HOSTNAME":"localhost"}'
-freemarker-cli -t templates/info.ftl -s conf=env:///NGINX_CONF#mimeType=application/json
+freemarker-cli -t info.ftl -s conf=env:///NGINX_CONF#mimeType=application/json
 
 FreeMarker Generator DataSources
 ------------------------------------------------------------------------------
@@ -47,7 +47,7 @@ FreeMarker Generator DataSources
 Of course you can load multiple `DataSources` directly
 
 ```
-freemarker-cli -t templates/info.ftl README.md xkcd=https://xkcd.com/info.0.json
+freemarker-cli -t info.ftl README.md xkcd=https://xkcd.com/info.0.json
  
 FreeMarker Generator DataSources
 ------------------------------------------------------------------------------
@@ -60,7 +60,7 @@ FreeMarker Generator DataSources
 or load them from a directory
 
 ```
-freemarker-cli -t templates/info.ftl -s examples/data
+freemarker-cli -t info.ftl -s examples/data
 FreeMarker Generator DataSources
 ------------------------------------------------------------------------------
     [#1], name=combined-access.log, group=default, contentType=text/plain, charset=UTF-8, length=2,068 Bytes
@@ -74,7 +74,7 @@ FreeMarker Generator DataSources
 which can be combined with `include` and `exclude` filters
 
 ```
-freemarker-cli -t templates/info.ftl -s examples/data --data-source-include=*.json
+freemarker-cli -t info.ftl -s examples/data --data-source-include=*.json
 
 FreeMarker Generator DataSources
 ------------------------------------------------------------------------------

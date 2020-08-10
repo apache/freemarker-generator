@@ -16,7 +16,7 @@
   under the License.
 -->
 <#-- Parse the first data source & sheet of the Excel document -->
-<#import "/templates/lib/commons-csv.ftl" as csv />
+<#import "/lib/commons-csv.ftl" as csv />
 <#assign workbook = tools.excel.parse(dataSources?values[0])>
 <#assign sheet = tools.excel.getSheets(workbook)[0]>
 <#assign records = tools.excel.toTable(sheet)>

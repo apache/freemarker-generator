@@ -19,7 +19,7 @@ Transforming a single template to a single output file
 
 ```
 freemarker-generator \
--t templates/csv/md/transform.ftl examples/data/csv/contract.csv \
+-t csv/md/transform.ftl examples/data/csv/contract.csv \
 -o target/contract.md
 ```
 
@@ -27,8 +27,8 @@ Transforming multiple templates to multiple output files (1:1 mapping between te
 
 ```
 > freemarker-generator \
--t templates/csv/md/transform.ftl -o target/contract.md \
--t templates/csv/html/transform.ftl -o target/contract.html \
+-t csv/md/transform.ftl -o target/contract.md \
+-t csv/html/transform.ftl -o target/contract.html \
 examples/data/csv/contract.csv
 
 > tree target 

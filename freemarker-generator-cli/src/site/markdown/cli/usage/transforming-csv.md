@@ -19,7 +19,7 @@ freemarker-generator \
  -PCSV_SOURCE_FORMAT=DEFAULT \
  -PCSV_TARGET_FORMAT=EXCEL \
  -PCSV_TARGET_DELIMITER=SEMICOLON \
- -t templates/csv/csv/transform.ftl \
+ -t csv/csv/transform.ftl \
  https://raw.githubusercontent.com/apache/freemarker-generator/master/freemarker-generator-cli/examples/data/csv/contract.csv 
 ```  
 
@@ -39,7 +39,7 @@ The following command line prints the resulting MarkDown to `stdout`
 ```
 freemarker-generator \
  -PCSV_SOURCE_FORMAT=DEFAULT \
- -t templates/csv/md/transform.ftl \
+ -t csv/md/transform.ftl \
  https://raw.githubusercontent.com/apache/freemarker-generator/master/freemarker-generator-cli/examples/data/csv/contract.csv 
 ```  
 
@@ -52,7 +52,7 @@ Of course it is possible to convert a CSV to HTML as well
 ```
 freemarker-generator \
  -PCSV_SOURCE_FORMAT=DEFAULT \
- -t templates/csv/html/transform.ftl \
+ -t csv/html/transform.ftl \
  https://raw.githubusercontent.com/apache/freemarker-generator/master/freemarker-generator-cli/examples/data/csv/contract.csv 
 ```  
 

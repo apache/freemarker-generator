@@ -67,7 +67,7 @@ If a  `~/freemarker-generator` is found it will be automatically added to the `F
 You can easily check this, e.g.  
 
 ```
-> freemarker-generator -t templates/info.ftl
+> freemarker-generator -t info.ftl
 
 FreeMarker Generator Template Loader Directories
 ------------------------------------------------------------------------------

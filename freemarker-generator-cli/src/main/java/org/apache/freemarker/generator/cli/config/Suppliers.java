@@ -41,8 +41,8 @@ public class Suppliers {
         return new ConfigurationSupplier(settings, templateLoader);
     }
 
-    public static TemplateDirectorySupplier templateDirectorySupplier(String userDefinedTemplateDir) {
-        return new TemplateDirectorySupplier(userDefinedTemplateDir);
+    public static TemplateDirectorySupplier templateDirectorySupplier(String additionalTemplateDirName) {
+        return new TemplateDirectorySupplier(additionalTemplateDirName);
     }
 
     public static TemplateLoaderSupplier templateLoaderSupplier(Settings settings) {

@@ -21,18 +21,26 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Arrays;
 
+/**
+ * Run unit tests with local templates directory.
+ */
 abstract class AbstractMainTest {
 
     private static final String SPACE = " ";
+    private static final String TEST_TEMPLATES_DIRECTORY = "./src/templates";
 
     String execute(String commandLine) throws IOException {
         try (Writer writer = new StringWriter()) {
-            final String[] args = commandLine.split(SPACE);
+            final String[] args = buildFinalCommandLine(commandLine).split(SPACE);
             if (Main.execute(args, writer) == 0) {
                 return writer.toString();
             } else {
                 throw new RuntimeException("Executing freemarker-cli failed: " + Arrays.toString(args));
             }
         }
+    }
+
+    private String buildFinalCommandLine(String commandLine) {
+        return String.format("--basedir %s %s", TEST_TEMPLATES_DIRECTORY, commandLine);
     }
 }
