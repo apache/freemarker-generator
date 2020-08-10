@@ -78,7 +78,7 @@ REM =========================================================================
 REM CSV to HTML & PDF
 REM =========================================================================
 
-echo "templates\csv\html\transform.ftl"
+echo "examples\templates\csv\html\transform.ftl"
 %FREEMARKER_CMD% -t examples\templates\csv\html\transactions.ftl examples\data\csv\transactions.csv > target\out\transactions.html
 
 REM =========================================================================
@@ -168,7 +168,7 @@ REM XML
 REM =========================================================================
 
 echo "examples\templates\xml\txt\recipients.ftl"
-%FREEMARKER_CMD% -t .\examples\templates\xml\txt\recipients.ftl examples\data\xml\recipients.xml > target\out\recipients.txt
+%FREEMARKER_CMD% -t examples\templates\xml\txt\recipients.ftl examples\data\xml\recipients.xml > target\out\recipients.txt
 
 echo "Created the following sample files in .\target\out"
 dir .\target\out
