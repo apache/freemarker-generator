@@ -27,8 +27,8 @@ REM =========================================================================
 REM Info
 REM =========================================================================
 
-echo "templates\info.ftl"
-%FREEMARKER_CMD% -t info.ftl README.md > target\out\info.txt
+echo "templates\freemarker-generator\info.ftl"
+%FREEMARKER_CMD% -t freemarker-generator\info.ftl README.md > target\out\info.txt
 
 REM =========================================================================
 REM Demo
@@ -52,11 +52,11 @@ REM =========================================================================
 REM CSV
 REM =========================================================================
 
-echo "templates\csv\html\transform.ftl"
-%FREEMARKER_CMD% -t csv\html\transform.ftl examples\data\csv\contract.csv > target\out\contract.html
+echo "templates\freemarker-generator\csv\html\transform.ftl"
+%FREEMARKER_CMD% -t freemarker-generator\csv\html\transform.ftl examples\data\csv\contract.csv > target\out\contract.html
 
-echo "templates\csv\md\transform.ftl"
-%FREEMARKER_CMD% -t csv\md\transform.ftl examples\data\csv\contract.csv > target\out\contract.md
+echo "templates\freemarker-generator\csv\md\transform.ftl"
+%FREEMARKER_CMD% -t freemarker-generator\csv\md\transform.ftl examples\data\csv\contract.csv > target\out\contract.md
 
 echo "examples\templates\csv\shell\curl.ftl"
 %FREEMARKER_CMD% -t .\examples\templates\csv\shell\curl.ftl examples\data\csv\user.csv > target\out\curl.sh
@@ -102,16 +102,16 @@ REM =========================================================================
 echo "examples\templates\excel\dataframe\transform.ftl"
 %FREEMARKER_CMD% -t examples\templates\excel\dataframe\transform.ftl examples\data\excel\test.xls > target\out\test.xls.dataframe.txt
 
-echo "templates\excel\html\transform.ftl"
-%FREEMARKER_CMD% -t excel\html\transform.ftl examples\data\excel\test.xls > target\out\test.xls.html
-%FREEMARKER_CMD% -t excel\html\transform.ftl examples\data\excel\test.xlsx > target\out\test.xslx.html
-%FREEMARKER_CMD% -t excel\html\transform.ftl examples\data\excel\test-multiple-sheets.xlsx > target\out\test-multiple-sheets.xlsx.html
+echo "templates\freemarker-generator\excel\html\transform.ftl"
+%FREEMARKER_CMD% -t freemarker-generator\excel\html\transform.ftl examples\data\excel\test.xls > target\out\test.xls.html
+%FREEMARKER_CMD% -t freemarker-generator\excel\html\transform.ftl examples\data\excel\test.xlsx > target\out\test.xslx.html
+%FREEMARKER_CMD% -t freemarker-generator\excel\html\transform.ftl examples\data\excel\test-multiple-sheets.xlsx > target\out\test-multiple-sheets.xlsx.html
 
-echo "templates\excel\md\transform.ftl"
-%FREEMARKER_CMD% -t excel\md\transform.ftl examples\data\excel\test-multiple-sheets.xlsx > target\out\test-multiple-sheets.xlsx.md
+echo "templates\freemarker-generator\excel\md\transform.ftl"
+%FREEMARKER_CMD% -t freemarker-generator\excel\md\transform.ftl examples\data\excel\test-multiple-sheets.xlsx > target\out\test-multiple-sheets.xlsx.md
 
-echo "templates\excel\csv\transform.ftl"
-%FREEMARKER_CMD% -t excel\csv\transform.ftl examples\data\excel\test-multiple-sheets.xlsx > target\out\test-multiple-sheets.xlsx.csv
+echo "templates\freemarker-generator\excel\csv\transform.ftl"
+%FREEMARKER_CMD% -t freemarker-generator\excel\csv\transform.ftl examples\data\excel\test-multiple-sheets.xlsx > target\out\test-multiple-sheets.xlsx.csv
 
 echo "examples\templates\excel\csv\custom.ftl"
 %FREEMARKER_CMD% -t examples\templates\excel\csv\custom.ftl -Pcsv.format=MYSQL examples\data\excel\test.xls > target\out\test-transform-xls.csv
@@ -133,8 +133,8 @@ REM =========================================================================
 echo "examples\templates\json\csv\swagger-endpoints.ftl"
 %FREEMARKER_CMD% -t examples\templates\json\csv\swagger-endpoints.ftl examples\data\json\swagger-spec.json > target\out\swagger-spec.csv
 
-echo "templates\json\yaml\transform.ftl"
-%FREEMARKER_CMD% -t json\yaml\transform.ftl examples\data\json\swagger-spec.json > target\out\swagger-spec.yaml
+echo "templates\freemarker-generator\json\yaml\transform.ftl"
+%FREEMARKER_CMD% -t freemarker-generator\json\yaml\transform.ftl examples\data\json\swagger-spec.json > target\out\swagger-spec.yaml
 
 echo "examples\templates\json\md\github-users.ftl"
 %FREEMARKER_CMD% -t examples\templates\json\md\github-users.ftl examples\data\json\github-users.json > target\out\github-users.md
@@ -154,21 +154,21 @@ echo "examples\data\template"
 %FREEMARKER_CMD% -t examples\data\template -PNGINX_HOSTNAME=localhost -o target\out\template
 
 REM =========================================================================
+REM XML
+REM =========================================================================
+
+echo "examples\templates\xml\txt\recipients.ftl"
+%FREEMARKER_CMD% -t examples\templates\xml\txt\recipients.ftl examples\data\xml\recipients.xml > target\out\recipients.txt
+
+REM =========================================================================
 REM YAML
 REM =========================================================================
 
 echo "examples\templates\yaml\txt\transform.ftl"
 %FREEMARKER_CMD% -t examples\templates\yaml\txt\transform.ftl examples\data\yaml\customer.yaml > target\out\customer.txt
 
-echo "templates\yaml\json\transform.ftl"
-%FREEMARKER_CMD% -t yaml\json\transform.ftl examples\data\yaml\swagger-spec.yaml > target\out\swagger-spec.json
-
-REM =========================================================================
-REM XML
-REM =========================================================================
-
-echo "examples\templates\xml\txt\recipients.ftl"
-%FREEMARKER_CMD% -t examples\templates\xml\txt\recipients.ftl examples\data\xml\recipients.xml > target\out\recipients.txt
+echo "templates\freemarker-generator\yaml\json\transform.ftl"
+%FREEMARKER_CMD% -t freemarker-generator\yaml\json\transform.ftl examples\data\yaml\swagger-spec.yaml > target\out\swagger-spec.json
 
 echo "Created the following sample files in .\target\out"
 dir .\target\out

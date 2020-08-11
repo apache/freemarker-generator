@@ -1,3 +1,4 @@
+<#ftl output_format="plainText" strip_whitespace=true>
 <#--
   Licensed to the Apache Software Foundation (ASF) under one
   or more contributor license agreements.  See the NOTICE file
@@ -14,28 +15,15 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#import "/lib/commons-csv.ftl" as csv />
+<#import "/freemarker-generator/lib/commons-csv.ftl" as csv />
 <#assign dataSource = dataSources?values[0]>
 <#assign csvParser = tools.csv.parse(dataSource, csv.sourceFormat())>
-<#assign headers = (csvParser.getHeaderMap()!{})?keys>
-<#assign records = csvParser.records>
-<#--------------------------------------------------------------------------->
-<#compress>
-    <@writeHeaders headers/>
-    <@writeColums records/>
-</#compress>
-<#--------------------------------------------------------------------------->
-<#macro writeHeaders headers>
-    <#if headers?has_content>
-        | ${headers?join(" | ", "")} |
-        <#list headers as header>| --------</#list>|
-    </#if>
-</#macro>
-<#--------------------------------------------------------------------------->
-<#macro writeColums columns>
-    <#if columns?has_content>
-        <#list columns as column>
-            | ${column.iterator()?join(" | ", "")} |
-        </#list>
-    </#if>
-</#macro>
+<#assign csvTargetFormat = csv.targetFormat()>
+<#assign csvPrinter = tools.csv.printer(csvTargetFormat)>
+<#assign csvHeaders = (csvParser.getHeaderMap()!{})?keys>
+<#if csvHeaders?has_content && csvTargetFormat.getSkipHeaderRecord()>
+    ${csvPrinter.printRecord(csvHeaders)}<#t>
+</#if>
+<#list csvParser.iterator() as record>
+    ${csvPrinter.printRecord(record)}<#t>
+</#list>

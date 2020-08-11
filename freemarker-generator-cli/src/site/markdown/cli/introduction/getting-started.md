@@ -84,7 +84,7 @@ The distribution ships with a couple of FreeMarker templates and the `templates/
 to better understand `Apache FreeMarker Generator`
 
 ```
-> freemarker-generator -t info.ftl
+> freemarker-generator -t freemarker-generator/info.ftl
 FreeMarker Generator Information
 ------------------------------------------------------------------------------
 FreeMarker version     : 2.3.30

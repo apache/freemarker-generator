@@ -121,8 +121,8 @@ creates the following output
 Sometimes you have a CSV file which needs to be translated in Markdown or HTML - there are on-line solutions available such as [CSV To Markdown Table Generator](https://donatstudios.com/CsvToMarkdownTable) but having a local solution gives you more flexibility.
 
 ```text
-> freemarker-generator -t csv/md/transform.ftl examples/data/csv/contract.csv
-> freemarker-generator -t csv/html/transform.ftl examples/data/csv/contract.csv
+> freemarker-generator -t freemarker-generator/csv/md/transform.ftl examples/data/csv/contract.csv
+> freemarker-generator -t freemarker-generator/csv/html/transform.ftl examples/data/csv/contract.csv
 ```
 
 The FreeMarker template is shown below
@@ -266,10 +266,10 @@ ENDPOINT;METHOD;CONSUMES;PRODUCES;SUMMARY;DESCRIPTION
 Another day my project management asked me to create a CSV configuration file based on an Excel documents - as usual manual copying was not an option due to required data cleanup and data transformation. So I thought about Apache POI which support XLS and XLSX documents - integration of Apache POI was a breeze but the resulting code was not particularly useful example. So a more generic transformation was provided to show the transformation of Excel documents ...
 
 ```text
-> freemarker-generator -t excel/html/transform.ftl examples/data/excel/test.xls
-> freemarker-generator -t excel/html/transform.ftl examples/data/excel/test.xlsx
-> freemarker-generator -t excel/html/transform.ftl examples/data/excel/test-multiple-sheets.xlsx
-> freemarker-generator -t excel/md/transform.ftl examples/data/excel/test-multiple-sheets.xlsx
+> freemarker-generator -t freemarker-generator/excel/html/transform.ftl examples/data/excel/test.xls
+> freemarker-generator -t freemarker-generator/excel/html/transform.ftl examples/data/excel/test.xlsx
+> freemarker-generator -t freemarker-generator/excel/html/transform.ftl examples/data/excel/test-multiple-sheets.xlsx
+> freemarker-generator -t freemarker-generator/excel/md/transform.ftl examples/data/excel/test-multiple-sheets.xlsx
 ```
 
 The provided FTL transforms an Excel into a HTML document supporting multiple Excel sheets
@@ -617,7 +617,7 @@ date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',${record.disposer},%{http_c
 Rendering the FreeMarker template 
 
 ```
-> freemarker-generator -t ./examples/templates/csv/shell/curl.ftl examples/data/csv/user.csv
+> freemarker-generator -t examples/templates/csv/shell/curl.ftl examples/data/csv/user.csv
 ```
 
 generates the following shell script
@@ -889,11 +889,11 @@ yields
 Sometimes we simply need to transform a JSON into an equivalent YAML or the other way around
 
 ```
-> freemarker-generator -t yaml/json/transform.ftl examples/data/yaml/swagger-spec.yaml 
+> freemarker-generator -t freemarker-generator/yaml/json/transform.ftl examples/data/yaml/swagger-spec.yaml 
 > freemarker-generator -i '${tools.gson.toJson(tools.yaml.parse(dataSources?values[0]))}' examples/data/yaml/swagger-spec.yaml
 > freemarker-generator -i '${tools.gson.toJson(yaml)}' -m yaml=examples/data/yaml/swagger-spec.yaml
 
-> freemarker-generator -t json/yaml/transform.ftl examples/data/json/swagger-spec.json
+> freemarker-generator -t freemarker-generator/json/yaml/transform.ftl examples/data/json/swagger-spec.json
 > freemarker-generator -i '${tools.yaml.toYaml(tools.gson.parse(dataSources?values[0]))}' examples/data/json/swagger-spec.json
 > freemarker-generator -i '${tools.yaml.toYaml(json)}' -m json=examples/data/json/swagger-spec.json
 ```

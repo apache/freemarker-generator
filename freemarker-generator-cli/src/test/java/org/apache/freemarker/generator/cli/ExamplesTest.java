@@ -31,12 +31,13 @@ public class ExamplesTest extends AbstractMainTest {
 
     @Test
     public void shouldRunInfo() throws IOException {
-        assertValid(execute("-t info.ftl README.md"));
+        assertValid(execute("-t freemarker-generator/info.ftl README.md"));
+        assertValid(execute("-t /freemarker-generator/info.ftl README.md"));
     }
 
     @Test
     public void shouldRunMultipleTimes() throws IOException {
-        assertValid(execute("--times=2 -t info.ftl README.md"));
+        assertValid(execute("--times=2 -t freemarker-generator/info.ftl README.md"));
     }
 
     @Test
@@ -46,22 +47,22 @@ public class ExamplesTest extends AbstractMainTest {
 
     @Test
     public void shouldRunCsvExamples() throws IOException {
-        assertValid(execute("-t csv/html/transform.ftl src/examples/data/csv/contract.csv"));
-        assertValid(execute("-t csv/md/transform.ftl src/examples/data/csv/contract.csv"));
+        assertValid(execute("-t freemarker-generator/csv/html/transform.ftl src/examples/data/csv/contract.csv"));
+        assertValid(execute("-t freemarker-generator/csv/md/transform.ftl src/examples/data/csv/contract.csv"));
         assertValid(execute("-t src/examples/templates/csv/shell/curl.ftl src/examples/data/csv/user.csv"));
         assertValid(execute("-t src/examples/templates/csv/fo/transform.ftl src/examples/data/csv/locker-test-users.csv"));
         assertValid(execute("-t src/examples/templates/csv/fo/transactions.ftl src/examples/data/csv/transactions.csv"));
         assertValid(execute("-t src/examples/templates/csv/html/transactions.ftl src/examples/data/csv/transactions.csv"));
-        assertValid(execute("-t csv/csv/transform.ftl src/examples/data/csv/contract.csv"));
+        assertValid(execute("-t freemarker-generator/csv/csv/transform.ftl src/examples/data/csv/contract.csv"));
     }
 
     @Test
     public void shouldRunExcelExamples() throws IOException {
-        assertValid(execute("-t excel/html/transform.ftl src/examples/data/excel/test.xls"));
-        assertValid(execute("-t excel/html/transform.ftl src/examples/data/excel/test.xlsx"));
-        assertValid(execute("-t excel/html/transform.ftl src/examples/data/excel/test-multiple-sheets.xlsx"));
-        assertValid(execute("-t excel/md/transform.ftl src/examples/data/excel/test-multiple-sheets.xlsx"));
-        assertValid(execute("-t excel/csv/transform.ftl src/examples/data/excel/test-multiple-sheets.xlsx"));
+        assertValid(execute("-t freemarker-generator/excel/html/transform.ftl src/examples/data/excel/test.xls"));
+        assertValid(execute("-t freemarker-generator/excel/html/transform.ftl src/examples/data/excel/test.xlsx"));
+        assertValid(execute("-t freemarker-generator/excel/html/transform.ftl src/examples/data/excel/test-multiple-sheets.xlsx"));
+        assertValid(execute("-t freemarker-generator/excel/md/transform.ftl src/examples/data/excel/test-multiple-sheets.xlsx"));
+        assertValid(execute("-t freemarker-generator/excel/csv/transform.ftl src/examples/data/excel/test-multiple-sheets.xlsx"));
         assertValid(execute("-t src/examples/templates/excel/csv/custom.ftl -Pcsv.format=MYSQL src/examples/data/excel/test.xls"));
         assertValid(execute("-t src/examples/templates/excel/dataframe/transform.ftl src/examples/data/excel/test.xls"));
     }
@@ -75,7 +76,7 @@ public class ExamplesTest extends AbstractMainTest {
     public void shouldRunJsonExamples() throws IOException {
         assertValid(execute("-t src/examples/templates/json/csv/swagger-endpoints.ftl src/examples/data/json/swagger-spec.json"));
         assertValid(execute("-t src/examples/templates/json/md/github-users.ftl src/examples/data/json/github-users.json"));
-        assertValid(execute("-t json/yaml/transform.ftl src/examples/data/json/swagger-spec.json"));
+        assertValid(execute("-t freemarker-generator/json/yaml/transform.ftl src/examples/data/json/swagger-spec.json"));
     }
 
     @Test
@@ -86,7 +87,7 @@ public class ExamplesTest extends AbstractMainTest {
     @Test
     public void shouldRunYamlExamples() throws IOException {
         assertValid(execute("-t src/examples/templates/yaml/txt/transform.ftl src/examples/data/yaml/customer.yaml"));
-        assertValid(execute("-t yaml/json/transform.ftl src/examples/data/yaml/swagger-spec.yaml"));
+        assertValid(execute("-t freemarker-generator/yaml/json/transform.ftl src/examples/data/yaml/swagger-spec.yaml"));
     }
 
     @Test
@@ -135,8 +136,8 @@ public class ExamplesTest extends AbstractMainTest {
 
     @Test
     public void shouldTransformMultipleTemplates() throws IOException {
-        assertValid(execute("-t csv/md/transform.ftl -t csv/html/transform.ftl src/examples/data/csv/contract.csv"));
-        assertValid(execute("-t csv/md/transform.ftl -o target/contract.md -t csv/html/transform.ftl -o target/contract.html src/examples/data/csv/contract.csv"));
+        assertValid(execute("-t freemarker-generator/csv/md/transform.ftl -t freemarker-generator/csv/html/transform.ftl src/examples/data/csv/contract.csv"));
+        assertValid(execute("-t freemarker-generator/csv/md/transform.ftl -o target/contract.md -t freemarker-generator/csv/html/transform.ftl -o target/contract.html src/examples/data/csv/contract.csv"));
     }
 
     @Test

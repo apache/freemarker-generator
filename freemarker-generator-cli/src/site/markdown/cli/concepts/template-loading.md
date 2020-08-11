@@ -17,7 +17,7 @@ In order the render a template it needs to be loaded first - there are multiple 
 You can check the currently used template loader directories easily on the command line, e.g.
 
 ```
-freemarker-generator -t info.ftl
+freemarker-generator -t freemarker-generator/info.ftl
 
 FreeMarker Generator Template Loader Directories
 ------------------------------------------------------------------------------
@@ -29,7 +29,7 @@ FreeMarker Generator Template Loader Directories
 The main benefit of `MultiTemplateLoader` is the use of abstract template paths finding a template in the template loader directories
 
 ```
-freemarker-generator -t info.ftl
+freemarker-generator -t freemarker-generator/info.ftl
 ``` 
 
 and [Template Includes](https://freemarker.apache.org/docs/ref_directive_include.html)
