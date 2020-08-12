@@ -22,12 +22,14 @@ import java.io.Writer;
 import java.util.Arrays;
 
 /**
- * Run unit tests with local templates directory.
+ * Run unit tests with local templates directory and configuration file.
  */
 abstract class AbstractMainTest {
 
+    protected static final String TEST_TEMPLATES_DIRECTORY = "./src/templates";
+    protected static final String TEST_CONFIG_FILE = "./src/main/config/freemarker-generator.properties";
+
     private static final String SPACE = " ";
-    private static final String TEST_TEMPLATES_DIRECTORY = "./src/templates";
 
     String execute(String commandLine) throws IOException {
         try (Writer writer = new StringWriter()) {
@@ -41,6 +43,6 @@ abstract class AbstractMainTest {
     }
 
     private String buildFinalCommandLine(String commandLine) {
-        return String.format("--basedir %s %s", TEST_TEMPLATES_DIRECTORY, commandLine);
+        return String.format("--config %s --basedir %s %s", TEST_CONFIG_FILE, TEST_TEMPLATES_DIRECTORY, commandLine);
     }
 }

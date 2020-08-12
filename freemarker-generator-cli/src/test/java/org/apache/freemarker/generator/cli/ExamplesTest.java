@@ -31,6 +31,8 @@ public class ExamplesTest extends AbstractMainTest {
 
     @Test
     public void shouldRunInfo() throws IOException {
+        assertValid(execute("-t src/templates/freemarker-generator/info.ftl README.md"));
+        assertValid(execute("-t ./src/templates/freemarker-generator/info.ftl README.md"));
         assertValid(execute("-t freemarker-generator/info.ftl README.md"));
         assertValid(execute("-t /freemarker-generator/info.ftl README.md"));
     }

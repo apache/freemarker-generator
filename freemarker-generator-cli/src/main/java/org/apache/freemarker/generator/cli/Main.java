@@ -267,7 +267,7 @@ public class Main implements Callable<Integer> {
         if (properties != null) {
             return properties;
         } else {
-            throw new RuntimeException("FreeMarker Generator configuration file not found: " + fileName);
+            return new Properties();
         }
     }
 

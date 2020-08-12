@@ -26,21 +26,37 @@ import static org.junit.Assert.assertEquals;
 public class TemplateLoadingTest extends AbstractMainTest {
 
     private static final int SUCCESS = 0;
-    private static final String ANY_TEMPLATE_NAME = "./src/templates/freemarker-generator/info.ftl";
+    private static final String ANY_TEMPLATE_NAME = "freemarker-generator/cat.ftl";
+    private static final String ANY_TEMPLATE_FILE_NAME = "src/templates/" + ANY_TEMPLATE_NAME;
     private static final String CURR_DIR = System.getProperty("user.dir", ".");
 
     @Test
-    public void shouldLoadRelativeTemplate() {
-        final String[] args = new String[] { "-t", ANY_TEMPLATE_NAME };
+    public void shouldLoadTemplateFromRelativeFile() {
+        final String[] args = new String[] { "-t", ANY_TEMPLATE_FILE_NAME };
 
         assertEquals(SUCCESS, Main.execute(args, new NullWriter()));
     }
 
     @Test
-    public void shouldLoadAbsoluteTemplate() {
-        final String absoluteFileName = new File(CURR_DIR, ANY_TEMPLATE_NAME).getAbsolutePath();
+    public void shouldLoadTemplateFromAbsoluteFile() {
+        final String absoluteFileName = new File(CURR_DIR, ANY_TEMPLATE_FILE_NAME).getAbsolutePath();
         final String[] args = new String[] { "-t", absoluteFileName };
 
         assertEquals(SUCCESS, Main.execute(args, new NullWriter()));
     }
+
+    @Test
+    public void shouldLoadTemplateFromTemplateLoader() {
+        final String[] args = new String[] { "--basedir", TEST_TEMPLATES_DIRECTORY, "-t", ANY_TEMPLATE_NAME };
+
+        assertEquals(SUCCESS, Main.execute(args, new NullWriter()));
+    }
+
+    @Test
+    public void shouldLoadTemplateWithLeadingSlachFromTemplateLoader() {
+        final String[] args = new String[] { "--basedir", TEST_TEMPLATES_DIRECTORY, "-t", "/" + ANY_TEMPLATE_NAME };
+
+        assertEquals(SUCCESS, Main.execute(args, new NullWriter()));
+    }
+
 }
