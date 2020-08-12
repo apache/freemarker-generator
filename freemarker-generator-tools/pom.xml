@@ -33,7 +33,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <apache.poi.version>4.1.1</apache.poi.version>
+        <apache.poi.version>4.1.2</apache.poi.version>
     </properties>
 
     <dependencies>
@@ -103,13 +103,13 @@
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.12.1</version>
+            <version>1.13.1</version>
         </dependency>
         <!-- SnakeYamlTool -->
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.25</version>
+            <version>1.26</version>
         </dependency>
         <!-- Testing -->
         <dependency>
