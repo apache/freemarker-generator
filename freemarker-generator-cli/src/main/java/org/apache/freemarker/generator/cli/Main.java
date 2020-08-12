@@ -66,9 +66,6 @@ public class Main implements Callable<Integer> {
         public String interactiveTemplate;
     }
 
-    @Option(names = { "-b", "--basedir" }, description = "additional template base directory")
-    String baseDir;
-
     @Option(names = { "-D", "--system-property" }, description = "set system property")
     Properties systemProperties;
 
@@ -104,6 +101,9 @@ public class Main implements Callable<Integer> {
 
     @Option(names = { "--stdin" }, description = "read data source from stdin")
     boolean readFromStdin;
+
+    @Option(names = { "--template-dir" }, description = "additional template directory")
+    String templateDir;
 
     @Option(names = { "--times" }, defaultValue = "1", description = "re-run X times for profiling")
     int times;
@@ -167,7 +167,7 @@ public class Main implements Callable<Integer> {
         updateSystemProperties();
 
         final Properties configuration = loadFreeMarkerCliConfiguration(configFile);
-        final List<File> templateDirectories = getTemplateDirectories(baseDir);
+        final List<File> templateDirectories = getTemplateDirectories(templateDir);
         final Settings settings = settings(configuration, templateDirectories);
 
         try {
@@ -258,8 +258,8 @@ public class Main implements Callable<Integer> {
                 .collect(Collectors.toList());
     }
 
-    private static List<File> getTemplateDirectories(String baseDir) {
-        return templateDirectorySupplier(baseDir).get();
+    private static List<File> getTemplateDirectories(String additionalTemplateDir) {
+        return templateDirectorySupplier(additionalTemplateDir).get();
     }
 
     private static Properties loadFreeMarkerCliConfiguration(String fileName) {

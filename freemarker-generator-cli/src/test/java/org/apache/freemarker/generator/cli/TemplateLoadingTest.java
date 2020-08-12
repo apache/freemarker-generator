@@ -47,14 +47,14 @@ public class TemplateLoadingTest extends AbstractMainTest {
 
     @Test
     public void shouldLoadTemplateFromTemplateLoader() {
-        final String[] args = new String[] { "--basedir", TEST_TEMPLATES_DIRECTORY, "-t", ANY_TEMPLATE_NAME };
+        final String[] args = new String[] { "--template-dir", TEST_TEMPLATES_DIRECTORY, "-t", ANY_TEMPLATE_NAME };
 
         assertEquals(SUCCESS, Main.execute(args, new NullWriter()));
     }
 
     @Test
     public void shouldLoadTemplateWithLeadingSlachFromTemplateLoader() {
-        final String[] args = new String[] { "--basedir", TEST_TEMPLATES_DIRECTORY, "-t", "/" + ANY_TEMPLATE_NAME };
+        final String[] args = new String[] { "--template-dir", TEST_TEMPLATES_DIRECTORY, "-t", "/" + ANY_TEMPLATE_NAME };
 
         assertEquals(SUCCESS, Main.execute(args, new NullWriter()));
     }

@@ -17,6 +17,9 @@ All notable changes to this project will be documented in this file. We try to a
 * [FREEMARKER-129] Migrate `freemarker-cli` into `freemarker-generator` project (see [https://github.com/sgoeschl/freemarker-cli](https://github.com/sgoeschl/freemarker-cli))
 
 ### Changed
+* [FREEMARKER-153] Packaged templates are now prefixed with `freemarker-generator`, e.g. `freemarker-generator/info.ftl`
+* [FREEMARKER-153] Renamed `--basedir` command line option to `--template-dir`
+* [FREEMARKER-153] Renamed `freemarker-cli` to `freemarker-generator`
 * Removing `DataSources.first` and use `dataSources.get(0)` instead
 * [FREEMARKER-146] Cleanly separate example templates and data from user-supplied content
 * `DataSource` use `uri` instead of `location`

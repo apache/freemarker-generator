@@ -10,46 +10,49 @@ Now you can have a look at the command line options
 
 ```text
 freemarker-generator -h
-Usage: freemarker-generator (-t=<templates> [-t=<templates>]... |
-                      -i=<interactiveTemplate>) [-hV] [--stdin] [-b=<baseDir>]
-                      [--config=<configFile>]
-                      [--data-source-exclude=<dataSourceExcludePattern>]
-                      [--data-source-include=<dataSourceIncludePattern>]
-                      [-e=<inputEncoding>] [-l=<locale>]
-                      [--output-encoding=<outputEncoding>] [--times=<times>]
-                      [-D=<String=String>]... [-m=<dataModels>]...
-                      [-o=<outputs>]... [-P=<String=String>]...
-                      [-s=<dataSources>]... [<sources>...]
-Apache FreeMarker Generator
-      [<sources>...]        data source files and/or directories
-  -b, --basedir=<baseDir>   additional template base directory
-      --config=<configFile> FreeMarker Generator configuration file
-  -D, --system-property=<String=String>
+UUsage: freemarker-generator (-t=<templates> [-t=<templates>]... |
+                             -i=<interactiveTemplate>) [-hV] [--stdin]
+                             [--config=<configFile>]
+                             [--data-source-exclude=<dataSourceExcludePattern>]
+                             [--data-source-include=<dataSourceIncludePattern>]
+                             [-e=<inputEncoding>] [-l=<locale>]
+                             [--output-encoding=<outputEncoding>]
+                             [--template-dir=<templateDir>] [--times=<times>]
+                             [-D=<String=String>]... [-m=<dataModels>]...
+                             [-o=<outputs>]... [-P=<String=String>]...
+                             [-s=<dataSources>]... [<sources>...]
+ Apache FreeMarker Generator
+       [<sources>...]       data source files and/or directories
+       --config=<configFile>
+                            FreeMarker Generator configuration file
+   -D, --system-property=<String=String>
                             set system property
-      --data-source-exclude=<dataSourceExcludePattern>
+       --data-source-exclude=<dataSourceExcludePattern>
                             file exclude pattern for data sources
-      --data-source-include=<dataSourceIncludePattern>
+       --data-source-include=<dataSourceIncludePattern>
                             file include pattern for data sources
-  -e, --input-encoding=<inputEncoding>
+   -e, --input-encoding=<inputEncoding>
                             encoding of data source
-  -h, --help                Show this help message and exit.
-  -i, --interactive=<interactiveTemplate>
+   -h, --help               Show this help message and exit.
+   -i, --interactive=<interactiveTemplate>
                             interactive template to process
-  -l, --locale=<locale>     locale being used for the output, e.g. 'en_US'
-  -m, --data-model=<dataModels>
+   -l, --locale=<locale>    locale being used for the output, e.g. 'en_US'
+   -m, --data-model=<dataModels>
                             data model used for rendering
-  -o, --output=<outputs>    output files or directories
-      --output-encoding=<outputEncoding>
+   -o, --output=<outputs>   output files or directories
+       --output-encoding=<outputEncoding>
                             encoding of output, e.g. UTF-8
-  -P, --param=<String=String>
+   -P, --param=<String=String>
                             set parameter
-  -s, --data-source=<dataSources>
+   -s, --data-source=<dataSources>
                             data source used for rendering
-      --stdin               read data source from stdin
-  -t, --template=<templates>
+       --stdin              read data source from stdin
+   -t, --template=<templates>
                             templates to process
-      --times=<times>       re-run X times for profiling
-  -V, --version             Print version information and exit.
+       --template-dir=<templateDir>
+                            additional template directory
+       --times=<times>      re-run X times for profiling
+   -V, --version            Print version information and exit.
 ```
 
 Check the version of the `Apache FreeMarker Generator`

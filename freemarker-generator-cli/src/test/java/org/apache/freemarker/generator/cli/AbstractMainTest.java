@@ -43,6 +43,6 @@ abstract class AbstractMainTest {
     }
 
     private String buildFinalCommandLine(String commandLine) {
-        return String.format("--config %s --basedir %s %s", TEST_CONFIG_FILE, TEST_TEMPLATES_DIRECTORY, commandLine);
+        return String.format("--config %s --template-dir %s %s", TEST_CONFIG_FILE, TEST_TEMPLATES_DIRECTORY, commandLine);
     }
 }
