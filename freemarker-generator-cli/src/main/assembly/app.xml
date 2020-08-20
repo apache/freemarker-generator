@@ -28,7 +28,7 @@
         <fileSet>
             <directory>${project.basedir}/target/appassembler</directory>
             <excludes>
-              <exclude>bin/freemarker-cli</exclude>
+              <exclude>bin/freemarker-generator</exclude>
               <exclude>*.sh</exclude>
             </excludes>
             <outputDirectory>${file.separator}</outputDirectory>
@@ -37,7 +37,7 @@
         <fileSet>
             <directory>${project.basedir}/target/appassembler</directory>
             <includes>
-              <include>bin/freemarker-cli</include>
+              <include>bin/freemarker-generator</include>
               <include>*.sh</include>
             </includes>
             <outputDirectory>${file.separator}</outputDirectory>

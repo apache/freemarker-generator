@@ -6,9 +6,10 @@ jdk:
   - openjdk11
   - openjdk12
   - openjdk13
+  - openjdk14
 script:
   - mvn clean install
-  - cd ./freemarker-generator-cli
+  - cd ./freemarker-generator-cli/target/appassembler/
   - sh ./run-examples.sh
-  - cd ../freemarker-generator-maven-plugin-sample
+  - cd ../../../freemarker-generator-maven-plugin-sample
   - mvn clean package

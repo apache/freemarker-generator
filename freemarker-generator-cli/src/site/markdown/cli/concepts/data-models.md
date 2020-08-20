@@ -24,7 +24,7 @@ Expose the fields of the JSON data source in FreeMarker's model
     "year": "2020"
 }
 
-> freemarker-cli --data-model https://xkcd.com/info.0.json  -i '<a href="${img}">${title}</a>'; echo
+> freemarker-generator --data-model https://xkcd.com/info.0.json  -i '<a href="${img}">${title}</a>'; echo
 <a href="https://imgs.xkcd.com/comics/old_days_2.png">Old Days 2</a>
 ```
 
@@ -39,14 +39,14 @@ Exposed the JSON data source as variable `post` in FreeMarker's model
     "userId": 1
 }
 
-> freemarker-cli --data-model post=https://jsonplaceholder.typicode.com/posts/2 -i 'post title is: ${post.title}'; echo
+> freemarker-generator --data-model post=https://jsonplaceholder.typicode.com/posts/2 -i 'post title is: ${post.title}'; echo
 post title is: qui est esse
 ```
 
 Expose all environment variables as `env` in theFreeMarker model
  
 ```
-> freemarker-cli --data-model env=env:/// -i '<#list env as name,value>${name}=${value}${"\n"}</#list>'
+> freemarker-generator --data-model env=env:/// -i '<#list env as name,value>${name}=${value}${"\n"}</#list>'
 HOME=/Users/sgoeschl
 USER=sgoeschl
 ```
@@ -54,14 +54,14 @@ USER=sgoeschl
 Expose a single environment variable in theFreeMarker model
 
 ```
-> freemarker-cli --data-model NAME=env:///USER -i 'Hello ${NAME}'; echo
+> freemarker-generator --data-model NAME=env:///USER -i 'Hello ${NAME}'; echo
 Hello sgoeschl
 ```
 
 Alternatively use the short command line options, e.g.
 
 ```
-> freemarker-cli -m NAME=env:///USER -i 'Hello ${NAME}!'; echo
+> freemarker-generator -m NAME=env:///USER -i 'Hello ${NAME}!'; echo
 Hello sgoeschl!
 ```
 
@@ -74,7 +74,7 @@ The following snippet shows a more advanced example
 > export DB_CONFIG='{"db_default_user":"scott","db_default_password":"tiger"}'
 > echo $DB_CONFIG 
 {"db_default_user":"scott","db_default_password":"tiger"}
-> freemarker-cli -m config=env:///DB_CONFIG#mimeType=application/json  -i '<#list config as name,value>${name}=${value}${"\n"}</#list>'
+> freemarker-generator -m config=env:///DB_CONFIG#mimeType=application/json  -i '<#list config as name,value>${name}=${value}${"\n"}</#list>'
 db_default_user=scott
 db_default_password=tiger
 ```

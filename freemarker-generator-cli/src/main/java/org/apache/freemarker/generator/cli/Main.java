@@ -50,10 +50,10 @@ import static java.util.Objects.requireNonNull;
 import static org.apache.freemarker.generator.cli.config.Suppliers.propertiesSupplier;
 import static org.apache.freemarker.generator.cli.config.Suppliers.templateDirectorySupplier;
 
-@Command(description = "Apache FreeMarker CLI", name = "freemarker-cli", mixinStandardHelpOptions = true, versionProvider = GitVersionProvider.class)
+@Command(description = "Apache FreeMarker Generator", name = "freemarker-generator", mixinStandardHelpOptions = true, versionProvider = GitVersionProvider.class)
 public class Main implements Callable<Integer> {
 
-    private static final String FREEMARKER_CLI_PROPERTY_FILE = "freemarker-cli.properties";
+    private static final String FREEMARKER_GENERATOR_PROPERTY_FILE = "freemarker-generator.properties";
 
     @ArgGroup(multiplicity = "1")
     TemplateSourceOptions templateSourceOptions;
@@ -65,9 +65,6 @@ public class Main implements Callable<Integer> {
         @Option(names = { "-i", "--interactive" }, description = "interactive template to process")
         public String interactiveTemplate;
     }
-
-    @Option(names = { "-b", "--basedir" }, description = "additional template base directory")
-    String baseDir;
 
     @Option(names = { "-D", "--system-property" }, description = "set system property")
     Properties systemProperties;
@@ -90,7 +87,7 @@ public class Main implements Callable<Integer> {
     @Option(names = { "-s", "--data-source" }, description = "data source used for rendering")
     List<String> dataSources;
 
-    @Option(names = { "--config" }, defaultValue = FREEMARKER_CLI_PROPERTY_FILE, description = "FreeMarker CLI configuration file")
+    @Option(names = { "--config" }, defaultValue = FREEMARKER_GENERATOR_PROPERTY_FILE, description = "FreeMarker Generator configuration file")
     String configFile;
 
     @Option(names = { "--data-source-include" }, description = "file include pattern for data sources")
@@ -104,6 +101,9 @@ public class Main implements Callable<Integer> {
 
     @Option(names = { "--stdin" }, description = "read data source from stdin")
     boolean readFromStdin;
+
+    @Option(names = { "--template-dir" }, description = "additional template directory")
+    String templateDir;
 
     @Option(names = { "--times" }, defaultValue = "1", description = "re-run X times for profiling")
     int times;
@@ -167,7 +167,7 @@ public class Main implements Callable<Integer> {
         updateSystemProperties();
 
         final Properties configuration = loadFreeMarkerCliConfiguration(configFile);
-        final List<File> templateDirectories = getTemplateDirectories(baseDir);
+        final List<File> templateDirectories = getTemplateDirectories(templateDir);
         final Settings settings = settings(configuration, templateDirectories);
 
         try {
@@ -258,8 +258,8 @@ public class Main implements Callable<Integer> {
                 .collect(Collectors.toList());
     }
 
-    private static List<File> getTemplateDirectories(String baseDir) {
-        return templateDirectorySupplier(baseDir).get();
+    private static List<File> getTemplateDirectories(String additionalTemplateDir) {
+        return templateDirectorySupplier(additionalTemplateDir).get();
     }
 
     private static Properties loadFreeMarkerCliConfiguration(String fileName) {
@@ -267,7 +267,7 @@ public class Main implements Callable<Integer> {
         if (properties != null) {
             return properties;
         } else {
-            throw new RuntimeException("FreeMarker CLI configuration file not found: " + fileName);
+            return new Properties();
         }
     }
 

@@ -1,6 +1,6 @@
 ## Transformation
 
-The `freemarker-cli` generates text output based on processing FreeMarker templates and data 
+The `freemarker-generator` generates text output based on processing FreeMarker templates and data 
 
 * A command line invocation requires 1..n `templates` and 0..n `data sources` / `data models` 
 * A command line invocation is mapped to a series of `template transformations`
@@ -18,17 +18,17 @@ The `freemarker-cli` generates text output based on processing FreeMarker templa
 Transforming a single template to a single output file 
 
 ```
-freemarker-cli \
--t templates/csv/md/transform.ftl examples/data/csv/contract.csv \
+freemarker-generator \
+-t freemarker-generator/csv/md/transform.ftl examples/data/csv/contract.csv \
 -o target/contract.md
 ```
 
 Transforming multiple templates to multiple output files (1:1 mapping between templates and outputs)
 
 ```
-> freemarker-cli \
--t templates/csv/md/transform.ftl -o target/contract.md \
--t templates/csv/html/transform.ftl -o target/contract.html \
+> freemarker-generator \
+-t freemarker-generator/csv/md/transform.ftl -o target/contract.md \
+-t freemarker-generator/csv/html/transform.ftl -o target/contract.html \
 examples/data/csv/contract.csv
 
 > tree target 
@@ -40,7 +40,7 @@ target
 Transforming single template directory to single output directory
 
 ```
-> freemarker-cli \
+> freemarker-generator \
 -t examples/data/template -o target/template1
 
 > tree target     
@@ -56,7 +56,7 @@ target
 Transforming multiple template directories to multiple output directories
 
 ```
-freemarker-cli \
+freemarker-generator \
 -t examples/data/template -o target/template1 \
 -t examples/data/template -o target/template2 
 

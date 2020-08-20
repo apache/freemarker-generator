@@ -5,87 +5,90 @@
 * Requires JDK 1.8+ on Linux, Mac OSX and Windows
 * Download [freemarker-generator-cli-0.1.0-SNAPSHOT-app.tar.gz] or [freemarker-generator-cli-0.1.0-SNAPSHOT-app.zip]
 * Unpack the archive in a directory of your choice
-* Add the `bin/freemarker-cli` or `bin/freemarker-cli.bat` to your `PATH` variable
+* Add the `bin/freemarker-generator` or `bin/freemarker-generator.bat` to your `PATH` variable
 
 ### Verify Installation
 
 On my local box (Mac OS 10.15.5) I use the following setup
 
 ```
-export FREEMARKER_CLI_HOME=/Applications/Java/freemarker-cli-2.0.0
+export FREEMARKER_CLI_HOME=/Applications/Java/freemarker-generator-2.0.0
 export PATH=$PATH:$FREEMARKER_CLI_HOME/bin
 ```
 
-Afterwards `Apache FreeMarker CLI` can be executed from the command line
+Afterwards `Apache FreeMarker Generator` can be executed from the command line
 
 ```
-> which freemarker-cli
-/Applications/Java/freemarker-cli-2.0.0/bin/freemarker-cli
+> which freemarker-generator
+/Applications/Java/freemarker-generator-2.0.0/bin/freemarker-generator
 ```
 
-and check the version of `Apache FreeMarker CLI`
+and check the version of `Apache FreeMarker Generator`
 
 ```
-> freemarker-cli -V
+> freemarker-generator -V
 version=0.1.0-SNAPSHOT, time=2020-06-25T21:48:02+0200, commit=b320d00094be8789086ad6153d9d3fcaf4b8c75f
 ```
 
 ### Command Line Options
 
-`Apache FreeMarker CLI` provides command line help as shown below
+`Apache FreeMarker Generator` provides command line help as shown below
 
 ```
-> freemarker-cli -h
-  Usage: freemarker-cli (-t=<templates> [-t=<templates>]... |
-                        -i=<interactiveTemplate>) [-hV] [--stdin] [-b=<baseDir>]
-                        [--config=<configFile>]
-                        [--data-source-exclude=<dataSourceExcludePattern>]
-                        [--data-source-include=<dataSourceIncludePattern>]
-                        [-e=<inputEncoding>] [-l=<locale>]
-                        [--output-encoding=<outputEncoding>] [--times=<times>]
-                        [-D=<String=String>]... [-m=<dataModels>]...
-                        [-o=<outputs>]... [-P=<String=String>]...
-                        [-s=<dataSources>]... [<sources>...]
-  Apache FreeMarker CLI
-        [<sources>...]        data source files and/or directories
-    -b, --basedir=<baseDir>   additional template base directory
-        --config=<configFile> FreeMarker CLI configuration file
-    -D, --system-property=<String=String>
-                              set system property
-        --data-source-exclude=<dataSourceExcludePattern>
-                              file exclude pattern for data sources
-        --data-source-include=<dataSourceIncludePattern>
-                              file include pattern for data sources
-    -e, --input-encoding=<inputEncoding>
-                              encoding of data source
-    -h, --help                Show this help message and exit.
-    -i, --interactive=<interactiveTemplate>
-                              interactive template to process
-    -l, --locale=<locale>     locale being used for the output, e.g. 'en_US'
-    -m, --data-model=<dataModels>
-                              data model used for rendering
-    -o, --output=<outputs>    output files or directories
-        --output-encoding=<outputEncoding>
-                              encoding of output, e.g. UTF-8
-    -P, --param=<String=String>
-                              set parameter
-    -s, --data-source=<dataSources>
-                              data source used for rendering
-        --stdin               read data source from stdin
-    -t, --template=<templates>
-                              templates to process
-        --times=<times>       re-run X times for profiling
-    -V, --version             Print version information and exit.
+> freemarker-generator -h
+Usage: freemarker-generator (-t=<templates> [-t=<templates>]... |
+                            -i=<interactiveTemplate>) [-hV] [--stdin]
+                            [--config=<configFile>]
+                            [--data-source-exclude=<dataSourceExcludePattern>]
+                            [--data-source-include=<dataSourceIncludePattern>]
+                            [-e=<inputEncoding>] [-l=<locale>]
+                            [--output-encoding=<outputEncoding>]
+                            [--template-dir=<templateDir>] [--times=<times>]
+                            [-D=<String=String>]... [-m=<dataModels>]...
+                            [-o=<outputs>]... [-P=<String=String>]...
+                            [-s=<dataSources>]... [<sources>...]
+Apache FreeMarker Generator
+      [<sources>...]       data source files and/or directories
+      --config=<configFile>
+                           FreeMarker Generator configuration file
+  -D, --system-property=<String=String>
+                           set system property
+      --data-source-exclude=<dataSourceExcludePattern>
+                           file exclude pattern for data sources
+      --data-source-include=<dataSourceIncludePattern>
+                           file include pattern for data sources
+  -e, --input-encoding=<inputEncoding>
+                           encoding of data source
+  -h, --help               Show this help message and exit.
+  -i, --interactive=<interactiveTemplate>
+                           interactive template to process
+  -l, --locale=<locale>    locale being used for the output, e.g. 'en_US'
+  -m, --data-model=<dataModels>
+                           data model used for rendering
+  -o, --output=<outputs>   output files or directories
+      --output-encoding=<outputEncoding>
+                           encoding of output, e.g. UTF-8
+  -P, --param=<String=String>
+                           set parameter
+  -s, --data-source=<dataSources>
+                           data source used for rendering
+      --stdin              read data source from stdin
+  -t, --template=<templates>
+                           templates to process
+      --template-dir=<templateDir>
+                           additional template directory
+      --times=<times>      re-run X times for profiling
+  -V, --version            Print version information and exit.
 ```
 
 ### The Info Template
 
 The distribution ships with a couple of FreeMarker templates and the `templates/info.ftl` is particularly helpful 
-to better understand `Apache FreeMarker CLI`
+to better understand `Apache FreeMarker Generator`
 
 ```
-> freemarker-cli -t templates/info.ftl
-FreeMarker CLI Information
+> freemarker-generator -t freemarker-generator/info.ftl
+FreeMarker Generator Information
 ------------------------------------------------------------------------------
 FreeMarker version     : 2.3.30
 Template name          : templates/info.ftl
@@ -95,13 +98,13 @@ Timestamp              : Jun 26, 2020 10:44:15 AM
 Output encoding        : UTF-8
 Output format          : plainText
 
-FreeMarker CLI Template Loader Directories
+FreeMarker Generator Template Loader Directories
 ------------------------------------------------------------------------------
 [#1] /Users/sgoeschl/work/github/apache/freemarker-generator
-[#2] /Users/sgoeschl/.freemarker-cli
-[#3] /Applications/Java/freemarker-cli-2.0.0
+[#2] /Users/sgoeschl/.freemarker-generator
+[#3] /Applications/Java/freemarker-generator-2.0.0
 
-FreeMarker CLI Tools
+FreeMarker Generator Tools
 ------------------------------------------------------------------------------
 - CSVTool              : Process CSV files using Apache Commons CSV (see https://commons.apache.org/proper/commons-csv/)
 - DataFrameTool        : Bridge to [nRo/DataFrame](https://github.com/nRo/DataFrame)
@@ -118,7 +121,7 @@ FreeMarker CLI Tools
 - XmlTool              : Process XML files using Apache FreeMarker (see https://freemarker.apache.org/docs/xgui.html)
 - YamlTool             : Process YAML files using SnakeYAML(see https://bitbucket.org/asomov/snakeyaml/wiki/Home)
 
-FreeMarker CLI Data Model
+FreeMarker Generator Data Model
 ---------------------------------------------------------------------------
 - CSVTool
 - DataFrameTool
@@ -137,7 +140,7 @@ FreeMarker CLI Data Model
 - YamlTool
 ```
 
-* The "FreeMarker CLI Information" section provides insights into configuration and currently processed template.
-* The "FreeMarker CLI Template Loader Directories" shows the template directories being searched to resolve a template path
-* The "FreeMarker CLI Tools" section list the available tools
-* The "FreeMarker CLI Data Model" section shows all available entries in the current FreeMarker context 
+* The "FreeMarker Generator Information" section provides insights into configuration and currently processed template.
+* The "FreeMarker Generator Template Loader Directories" shows the template directories being searched to resolve a template path
+* The "FreeMarker Generator Tools" section list the available tools
+* The "FreeMarker Generator Data Model" section shows all available entries in the current FreeMarker context 

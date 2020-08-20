@@ -2,7 +2,7 @@
 
 There a many examples (see below) available you can execute - The examples were tested with JDK 1.8 on Mac OS X.
                                                              
-Run `run-examples.sh` in the `Apache Freemarker CLI` installation directory and have a look at the generated output. 
+Run `run-examples.sh` in the `Apache FreeMarker Generator` installation directory and have a look at the generated output. 
 
 ```text
 ./run-examples.sh 
@@ -82,11 +82,11 @@ A simple example with real JSON data to be transformed into Markdown
 
 You can either use the existing JSON sample
 
-> freemarker-cli -t examples/templates/json/md/github-users.ftl examples/data/json/github-users.json
+> freemarker-generator -t examples/templates/json/md/github-users.ftl examples/data/json/github-users.json
 
 or pipe a cURL response
 
-> curl -s https://api.github.com/users | freemarker-cli -t examples/templates/json/md/github-users.ftl --stdin
+> curl -s https://api.github.com/users | freemarker-generator -t examples/templates/json/md/github-users.ftl --stdin
 
 Below you see the Apache FreeMarker Template
 
@@ -121,8 +121,8 @@ creates the following output
 Sometimes you have a CSV file which needs to be translated in Markdown or HTML - there are on-line solutions available such as [CSV To Markdown Table Generator](https://donatstudios.com/CsvToMarkdownTable) but having a local solution gives you more flexibility.
 
 ```text
-> freemarker-cli -t templates/csv/md/transform.ftl examples/data/csv/contract.csv
-> freemarker-cli -t templates/csv/html/transform.ftl examples/data/csv/contract.csv
+> freemarker-generator -t freemarker-generator/csv/md/transform.ftl examples/data/csv/contract.csv
+> freemarker-generator -t freemarker-generator/csv/html/transform.ftl examples/data/csv/contract.csv
 ```
 
 The FreeMarker template is shown below
@@ -160,7 +160,7 @@ The resulting file actually looks pleasant when compared to raw CSV
 Of course you can also transform a XML document
 
 ```text
-> freemarker-cli -t examples/templates/xml/txt/recipients.ftl examples/data/xml/recipients.xml
+> freemarker-generator -t examples/templates/xml/txt/recipients.ftl examples/data/xml/recipients.xml
 ```
 
 using the following template
@@ -249,7 +249,7 @@ ${'\n'}
 
 Invoking the FTL template
 
-> freemarker-cli -t examples/templates/json/csv/swagger-endpoints.ftl examples/data/json/swagger-spec.json 
+> freemarker-generator -t examples/templates/json/csv/swagger-endpoints.ftl examples/data/json/swagger-spec.json 
 
 gives you
 
@@ -266,10 +266,10 @@ ENDPOINT;METHOD;CONSUMES;PRODUCES;SUMMARY;DESCRIPTION
 Another day my project management asked me to create a CSV configuration file based on an Excel documents - as usual manual copying was not an option due to required data cleanup and data transformation. So I thought about Apache POI which support XLS and XLSX documents - integration of Apache POI was a breeze but the resulting code was not particularly useful example. So a more generic transformation was provided to show the transformation of Excel documents ...
 
 ```text
-> freemarker-cli -t templates/excel/html/transform.ftl examples/data/excel/test.xls
-> freemarker-cli -t templates/excel/html/transform.ftl examples/data/excel/test.xlsx
-> freemarker-cli -t templates/excel/html/transform.ftl examples/data/excel/test-multiple-sheets.xlsx
-> freemarker-cli -t templates/excel/md/transform.ftl examples/data/excel/test-multiple-sheets.xlsx
+> freemarker-generator -t freemarker-generator/excel/html/transform.ftl examples/data/excel/test.xls
+> freemarker-generator -t freemarker-generator/excel/html/transform.ftl examples/data/excel/test.xlsx
+> freemarker-generator -t freemarker-generator/excel/html/transform.ftl examples/data/excel/test-multiple-sheets.xlsx
+> freemarker-generator -t freemarker-generator/excel/md/transform.ftl examples/data/excel/test-multiple-sheets.xlsx
 ```
 
 The provided FTL transforms an Excel into a HTML document supporting multiple Excel sheets
@@ -353,7 +353,7 @@ but the result looks reasonable
 In this sample we transform all property files found in a directory (recursive search using include pattern) to a CSV file
 
 ```text
-> freemarker-cli --data-source-include *.properties -t examples/templates/properties/csv/locker-test-users.ftl examples/data/properties
+> freemarker-generator --data-source-include *.properties -t examples/templates/properties/csv/locker-test-users.ftl examples/data/properties
 TENANT,SITE,USER_ID,DISPOSER_ID,PASSWORD,SMS_OTP,NAME,DESCRIPTION
 TENANT_A,fat,user_0004,user_0004,password_0004,,,
 TENANT_B,fat,user_0001,user_0001,password_0001,,,
@@ -484,7 +484,7 @@ For a POC (proof of concept) I created a sample transformation from CSV to XML-F
 In order to create the PDF you need to execute the following commands (assuming that you have Apache FOP installed)
 
 ```text
-> freemarker-cli -t examples/templates/csv/fo/transform.ftl examples/data/csv/locker-test-users.csv > sample.fo
+> freemarker-generator -t examples/templates/csv/fo/transform.ftl examples/data/csv/locker-test-users.csv > sample.fo
 > fop -fo sample.fo sample.pdf
 Dec 29, 2018 10:24:30 PM org.apache.fop.events.LoggingEventListener processEvent
 WARNING: Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
@@ -501,7 +501,7 @@ The result does not look very impressive but it is a PDF :-)
 Further along the line of the POC we converted a transaction export from CSV to PDF using Apache FOP
 
 ```text
-> freemarker-cli -t examples/templates/csv/fo/transactions.ftl examples/data/csv/transactions.csv > transactions.fo
+> freemarker-generator -t examples/templates/csv/fo/transactions.ftl examples/data/csv/transactions.csv > transactions.fo
 > fop -fo transactions.fo transactions.pdf
 Jan 16, 2019 11:15:21 PM org.apache.fop.events.LoggingEventListener processEvent
 WARNING: Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
@@ -562,7 +562,7 @@ Recently I got the rather unusual question how to determine the list of dependen
 Your dependencies as CSV can be generated as shown below
 
 ```text
-> freemarker-cli -t examples/templates/html/csv/dependencies.ftl examples/data/html/dependencies.html 
+> freemarker-generator -t examples/templates/html/csv/dependencies.ftl examples/data/html/dependencies.html 
 GroupId,ArtifactId,Version,Type,Licenses
 com.jayway.jsonpath,json-path,2.4.0,jar,The Apache Software License Version 2.0
 commons-cli,commons-cli,1.4,jar,Apache License Version 2.0
@@ -617,7 +617,7 @@ date "+%FT%H:%M:%S" | tr -d '\n'; curl --write-out ',${record.disposer},%{http_c
 Rendering the FreeMarker template 
 
 ```
-> freemarker-cli -t ./examples/templates/csv/shell/curl.ftl examples/data/csv/user.csv
+> freemarker-generator -t examples/templates/csv/shell/curl.ftl examples/data/csv/user.csv
 ```
 
 generates the following shell script
@@ -659,7 +659,7 @@ QUOTEDSTRING (?>(?<!\\)(?>"(?>\\.|[^\\"]+)+"|""|(?>'(?>\\.|[^\\']+)+')|''|(?>`(?
 
 And with `Grok` the `QUOTEDSTRING` is just a building block for an even more complex regular expression such as `COMBINEDAPACHELOG`
 
-> bin/freemarker-cli -t examples/templates/accesslog/combined-access.ftl examples/data/accesslog/combined-access.log 
+> bin/freemarker-generator -t examples/templates/accesslog/combined-access.ftl examples/data/accesslog/combined-access.log 
 
 which gives you the following output
 
@@ -765,22 +765,22 @@ h3. AWS EC2 Instance
 Sometime you need to apply a CSS, JSON or XPath query in ad ad-hoc way without installing `xmllint`, `jq` or `pup` - in this case you can pass a FreeMarker template in an interactive fashion
 
 ```text
-> bin/freemarker-cli -i 'Hello ${tools.system.envs["USER"]}'; echo
+> bin/freemarker-generator -i 'Hello ${tools.system.envs["USER"]}'; echo
 Hello sgoeschl
 
-> bin/freemarker-cli -i '${tools.jsonpath.parse(dataSources?values[0]).read("$.info.title")}' examples/data/json/swagger-spec.json; echo
+> bin/freemarker-generator -i '${tools.jsonpath.parse(dataSources?values[0]).read("$.info.title")}' examples/data/json/swagger-spec.json; echo
 Swagger Petstore
 
-> bin/freemarker-cli -i 'Post Title : ${tools.jsonpath.parse(dataSources?values[0]).read("$.title")}' https://jsonplaceholder.typicode.com/posts/2; echo
+> bin/freemarker-generator -i 'Post Title : ${tools.jsonpath.parse(dataSources?values[0]).read("$.title")}' https://jsonplaceholder.typicode.com/posts/2; echo
 Post Title : qui est esse
 
-> bin/freemarker-cli -i '${tools.xml.parse(dataSources?values[0])["recipients/person[1]/name"]}' examples/data/xml/recipients.xml; echo
+> bin/freemarker-generator -i '${tools.xml.parse(dataSources?values[0])["recipients/person[1]/name"]}' examples/data/xml/recipients.xml; echo
 John Smith
 
-> bin/freemarker-cli -i '${tools.jsoup.parse(dataSources?values[0]).select("a")[0]}' examples/data/html/dependencies.html; echo
-<a href="${project.url}" title="FreeMarker CLI">FreeMarker CLI</a>
+> bin/freemarker-generator -i '${tools.jsoup.parse(dataSources?values[0]).select("a")[0]}' examples/data/html/dependencies.html; echo
+<a href="${project.url}" title="FreeMarker Generator">FreeMarker Generator</a>
 
-> freemarker-cli -i '<#list tools.system.envs as name,value>${name} ==> ${value}${"\n"}</#list>'
+> freemarker-generator -i '<#list tools.system.envs as name,value>${name} ==> ${value}${"\n"}</#list>'
 TERM ==> xterm-256color
 LANG ==> en_US
 DISPLAY ==> :0.0
@@ -795,7 +795,7 @@ During an integration project we imported large transactions CSV files (500.000+
 So lets start the filtering & transformation using the following command line
 
 ```text
-> bin/freemarker-cli -e UTF-8 -l de_AT -Pcolumn="Order ID" \
+> bin/freemarker-generator -e UTF-8 -l de_AT -Pcolumn="Order ID" \
   -Pvalues=226939189,957081544 \
   -t examples/templates/csv/md/filter.ftl examples/data/csv/sales-records.csv
 ```
@@ -889,13 +889,13 @@ yields
 Sometimes we simply need to transform a JSON into an equivalent YAML or the other way around
 
 ```
-> freemarker-cli -t templates/yaml/json/transform.ftl examples/data/yaml/swagger-spec.yaml 
-> freemarker-cli -i '${tools.gson.toJson(tools.yaml.parse(dataSources?values[0]))}' examples/data/yaml/swagger-spec.yaml
-> freemarker-cli -i '${tools.gson.toJson(yaml)}' -m yaml=examples/data/yaml/swagger-spec.yaml
+> freemarker-generator -t freemarker-generator/yaml/json/transform.ftl examples/data/yaml/swagger-spec.yaml 
+> freemarker-generator -i '${tools.gson.toJson(tools.yaml.parse(dataSources?values[0]))}' examples/data/yaml/swagger-spec.yaml
+> freemarker-generator -i '${tools.gson.toJson(yaml)}' -m yaml=examples/data/yaml/swagger-spec.yaml
 
-> freemarker-cli -t templates/json/yaml/transform.ftl examples/data/json/swagger-spec.json
-> freemarker-cli -i '${tools.yaml.toYaml(tools.gson.parse(dataSources?values[0]))}' examples/data/json/swagger-spec.json
-> freemarker-cli -i '${tools.yaml.toYaml(json)}' -m json=examples/data/json/swagger-spec.json
+> freemarker-generator -t freemarker-generator/json/yaml/transform.ftl examples/data/json/swagger-spec.json
+> freemarker-generator -i '${tools.yaml.toYaml(tools.gson.parse(dataSources?values[0]))}' examples/data/json/swagger-spec.json
+> freemarker-generator -i '${tools.yaml.toYaml(json)}' -m json=examples/data/json/swagger-spec.json
 ```
 
 ### 15. Using Advanced FreeMarker Features
@@ -910,7 +910,7 @@ There is a `demo.ftl` which shows some advanced FreeMarker functionality
 
 Running 
 
-> freemarker-cli -t examples/templates/demo.ftl 
+> freemarker-generator -t examples/templates/demo.ftl 
 
 gives you
 
@@ -974,7 +974,7 @@ user.home    : /Users/sgoeschl
 
 9) List Environment Variables
 ---------------------------------------------------------------------------
-- PATH ==> /Users/sgoeschl/bin:/Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home/bin:/usr/local/opt/ruby/bin:HOME/.gem/ruby/2.7.0/bin:/usr/local/Cellar/git/2.19.1/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Applications/Java/apache-fop-2.3:/Applications/Java/freemarker-cli-2.0.0-BETA-2/bin:
+- PATH ==> /Users/sgoeschl/bin:/Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home/bin:/usr/local/opt/ruby/bin:HOME/.gem/ruby/2.7.0/bin:/usr/local/Cellar/git/2.19.1/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Apple/usr/bin:/Applications/Java/apache-fop-2.3:/Applications/Java/freemarker-generator-2.0.0-BETA-2/bin:
 - GIT_HOME ==> /usr/local/Cellar/git/2.19.1
 - JAVA_8_HOME ==> /Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home
 - JAVA_HOME ==> /Library/Java/JavaVirtualMachines/jdk1.8.0_192.jdk/Contents/Home
@@ -1006,7 +1006,7 @@ user.home    : /Users/sgoeschl
 - SSH_AUTH_SOCK ==> /private/tmp/com.apple.launchd.DTdlBj20Ka/Listeners
 - EDITOR ==> vi
 - XPC_FLAGS ==> 0x0
-- FREEMARKER_CLI_HOME ==> /Applications/Java/freemarker-cli-2.0.0-BETA-2
+- FREEMARKER_CLI_HOME ==> /Applications/Java/freemarker-generator-2.0.0-BETA-2
 - TERM_SESSION_ID ==> 2745D6A3-543A-4DE3-830B-945678460311
 - LC_ALL ==> en_US.utf-8
 - __CF_USER_TEXT_ENCODING ==> 0x1F5:0x0:0x0
@@ -1038,7 +1038,7 @@ Get all documents
 - dataSources
 - tools
 
-13) FreeMarker CLI Tools
+13) FreeMarker Generator Tools
 ---------------------------------------------------------------------------
 - csv                  : Process CSV files using Apache Commons CSV (see https://commons.apache.org/proper/commons-csv/)
 - dataframe            : Bridge to [nRo/DataFrame](https://github.com/nRo/DataFrame)

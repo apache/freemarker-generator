@@ -32,29 +32,26 @@ import static java.util.stream.Collectors.toList;
  * <ol>
  *    <li>User-defined template directory</li>
  *    <li>Current working directory</li>
- *    <li>~/.freemarker-cli</li>
+ *    <li>~/.freemarker-generator</li>
  *    <li>Application installation directory</li>
  * </ol>
  */
 public class TemplateDirectorySupplier implements Supplier<List<File>> {
 
-    /** Installation directory of "freemarker-cli" when invoked with shell wrapper */
+    /** Installation directory of "freemarker-generator" when invoked with shell wrapper */
     private static final String APP_HOME = "app.home";
-
-    /** Current working directory when invoked with shell wrapper */
-    private static final String USER_DIR = "user.dir";
 
     /** Home directory of the user */
     private static final String USER_HOME = "user.home";
 
-    /** The user's optional "freemarker-cli" directory */
-    private static final String USER_CONFIGURATION_DIR_NAME = ".freemarker-cli";
+    /** The user's optional "freemarker-generator" directory */
+    private static final String USER_CONFIGURATION_DIR_NAME = ".freemarker-generator";
 
-    /** User-defined template directory */
-    private final String userDefinedTemplateDir;
+    /** Additional template directory, e.g. provided as command line parameter */
+    private final String additionalTemplateDirName;
 
-    public TemplateDirectorySupplier(String userDefinedTemplateDir) {
-        this.userDefinedTemplateDir = userDefinedTemplateDir;
+    public TemplateDirectorySupplier(String additionalTemplateDirName) {
+        this.additionalTemplateDirName = additionalTemplateDirName;
     }
 
     @Override
@@ -70,28 +67,31 @@ public class TemplateDirectorySupplier implements Supplier<List<File>> {
 
     private List<String> templateLoaderDirectories() {
         return new ArrayList<>(asList(
-                userTemplateDirName(),
-                currentWorkingDirName(),
-                userConfigDirName(),
-                applicationDirName()
+                additionalTemplatesDirectory(),
+                userConfigTemplatesDirectory(),
+                applicationTemplatesDirectory()
         ));
     }
 
-    private String userTemplateDirName() {
-        return userDefinedTemplateDir != null ? new File(userDefinedTemplateDir).getAbsolutePath() : null;
+    private String additionalTemplatesDirectory() {
+        return additionalTemplateDirName != null ? new File(additionalTemplateDirName).getAbsolutePath() : null;
     }
 
-    private String userConfigDirName() {
+    private String userConfigDirectory() {
         final String userHomeDir = System.getProperty(USER_HOME);
         return new File(userHomeDir, USER_CONFIGURATION_DIR_NAME).getAbsolutePath();
     }
 
-    private static String applicationDirName() {
+    private String userConfigTemplatesDirectory() {
+        return userConfigDirectory() + "/templates";
+    }
+
+    private static String applicationDirectory() {
         return System.getProperty(APP_HOME);
     }
 
-    private static String currentWorkingDirName() {
-        return System.getProperty(USER_DIR);
+    private static String applicationTemplatesDirectory() {
+        return applicationDirectory() + "/templates";
     }
 
     private static boolean isDirectory(File directory) {

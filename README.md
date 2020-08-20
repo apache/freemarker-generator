@@ -23,7 +23,7 @@ well. It can be used to generated source code, configuration files, etc.
 
 Currently it can be invoked as a 
 
-* Command-line interface `freemarker-generator-cli`
+* Command-line interface `freemarker-generator`
 * Maven plug-in `freemarker-generator-maven-plugin`
 
 Building Apache FreeMarker Generator
