@@ -95,6 +95,10 @@ public class TemplateDirectorySupplier implements Supplier<List<File>> {
     }
 
     private static boolean isDirectory(File directory) {
-        return directory != null && directory.exists() && directory.isDirectory() && directory.canRead();
+        boolean exists = directory.exists();
+        boolean isDirectory = directory.isDirectory();
+        boolean canRead = directory.canRead();
+        boolean r = directory != null && exists && isDirectory && canRead;
+        return r;
     }
 }

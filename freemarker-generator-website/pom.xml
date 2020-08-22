@@ -35,9 +35,11 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         
         <websiteOutputDirectory>${project.build.directory}/website</websiteOutputDirectory>
-        <freemarkerGeneratorBaseDirectory>${project.basedir}/../freemarker-generator-cli</freemarkerGeneratorBaseDirectory>
+        <freemarkerGeneratorAppHome>${project.basedir}/../freemarker-generator-cli/target/appassembler</freemarkerGeneratorAppHome>
         <docgenInsertedOutputsDirectory>${project.build.directory}/docgen-insertable-outputs</docgenInsertedOutputsDirectory>
-        <docgenInsertedExamplesDirectory>${freemarkerGeneratorBaseDirectory}/examples</docgenInsertedExamplesDirectory>
+        <docgenInsertedExampleTemplatesDirectory>${freemarkerGeneratorAppHome}/examples/templates</docgenInsertedExampleTemplatesDirectory>
+        <docgenInsertedExampleOutputDirectory>${freemarkerGeneratorAppHome}/target/out</docgenInsertedExampleOutputDirectory>
+        <docgenInsertedTemplatesDirectory>${freemarkerGeneratorAppHome}/templates</docgenInsertedTemplatesDirectory>
     </properties>
 
     <dependencies>
@@ -65,6 +67,15 @@
                           <arguments>
                               <argument>-classpath</argument>
                               <classpath/>
+
+                              <!-- Setting up things without calling the launcher scripts in app/bin: -->
+                              <!-- TODO in freemarker-generator-cli: Ideally, only setting -Dapp.home should be enough. -->
+                              <argument>org.apache.freemarker.generator.cli.Main</argument>
+                              <argument>--config</argument>
+                              <argument>${freemarkerGeneratorAppHome}/config/freemarker-generator.properties</argument>
+                              <argument>--template-dir</argument>
+                              <argument>${freemarkerGeneratorAppHome}/templates</argument>
+
                               <argument>org.apache.freemarker.generator.cli.Main</argument>
                               <argument>--help</argument>
                           </arguments>
@@ -82,11 +93,17 @@
                           <arguments>
                               <argument>-classpath</argument>
                               <classpath/>
+
+                              <!-- Setting up things without calling the launcher scripts in app/bin: -->
+                              <!-- TODO in freemarker-generator-cli: Ideally, only setting -Dapp.home should be enough. -->
                               <argument>org.apache.freemarker.generator.cli.Main</argument>
-                              <argument>-b</argument>
-                              <argument>${freemarkerGeneratorBaseDirectory}</argument>
+                              <argument>--config</argument>
+                              <argument>${freemarkerGeneratorAppHome}/config/freemarker-generator.properties</argument>
+                              <argument>--template-dir</argument>
+                              <argument>${freemarkerGeneratorAppHome}/templates</argument>
+
                               <argument>-t</argument>
-                              <argument>templates/info.ftl</argument>
+                              <argument>freemarker-generator/info.ftl</argument>
                           </arguments>
                           <outputFile>${docgenInsertedOutputsDirectory}/info-template-output.txt</outputFile>
                         </configuration>
@@ -111,7 +128,9 @@
                     <outputDirectory>${websiteOutputDirectory}</outputDirectory>
                     <insertableFiles>
                         <outputs>${docgenInsertedOutputsDirectory}/**</outputs>
-                        <examples>${docgenInsertedExamplesDirectory}/**</examples>
+                        <templates>${docgenInsertedTemplatesDirectory}/**</templates>
+                        <exampleTemplates>${docgenInsertedExampleTemplatesDirectory}/**</exampleTemplates>
+                        <exampleOutputs>${docgenInsertedExampleOutputDirectory}/**</exampleOutputs>
                     </insertableFiles>
                     <customVariables>
                       <version>${project.version}</version>
