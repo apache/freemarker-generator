@@ -26,8 +26,8 @@ import java.util.Arrays;
  */
 abstract class AbstractMainTest {
 
-    protected static final String TEST_TEMPLATES_DIRECTORY = "./src/templates";
-    protected static final String TEST_CONFIG_FILE = "./src/main/config/freemarker-generator.properties";
+    protected static final String TEST_TEMPLATES_DIRECTORY = "./src/app/templates";
+    protected static final String TEST_CONFIG_FILE = "./src/app/config/freemarker-generator.properties";
 
     private static final String SPACE = " ";
 
