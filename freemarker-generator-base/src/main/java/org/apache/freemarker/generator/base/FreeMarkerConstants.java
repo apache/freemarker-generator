@@ -47,6 +47,12 @@ public class FreeMarkerConstants {
         private Configuration() {
         }
 
+        // The default config file for freemarker generator
+        public static final String CONFIG_FILE_NAME = "config/freemarker-generator.properties";
+
+        /** The user's optional ".freemarker-generator" directory in the user's home directory */
+        public static final String USER_CONFIGURATION_DIR_NAME = ".freemarker-generator";
+
         /** Prefix to extract tools from 'freemarker-generator.properties' */
         public static final String TOOLS_PREFIX = "freemarker.tools.";
 
@@ -69,7 +75,6 @@ public class FreeMarkerConstants {
         public static final String STDIN = "stdin";
         public static final String SYSTEM = "system";
         public static final String STRING = "string";
-        public static final String URL = "url";
     }
 
     public static class Model {
@@ -86,5 +91,17 @@ public class FreeMarkerConstants {
         public static final String FREEMARKER_TEMPLATE_DIRECTORIES = "freemarker.template.directories";
         public static final String FREEMARKER_USER_SYSTEM_PROPERTIES = "freemarker.user.system.properties";
         public static final String FREEMARKER_USER_PARAMETERS = "freemarker.user.parameters";
+    }
+
+    public static class SystemProperties {
+
+        private SystemProperties() {
+        }
+
+        /** Installation directory of "freemarker-generator" when invoked with shell wrapper */
+        public static final String APP_HOME = "app.home";
+
+        /** Home directory of the user */
+        public static final String USER_HOME = "user.home";
     }
 }

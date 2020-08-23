@@ -16,7 +16,6 @@
  */
 package org.apache.freemarker.generator.base.template;
 
-import org.apache.freemarker.generator.base.FreeMarkerConstants;
 import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.file.RecursiveFileSupplier;
 import org.apache.freemarker.generator.base.util.NonClosableWriterWrapper;
