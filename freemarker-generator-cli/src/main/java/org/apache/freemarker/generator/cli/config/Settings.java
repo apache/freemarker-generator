@@ -45,7 +45,7 @@ import static org.apache.freemarker.generator.base.util.StringUtils.isEmpty;
  */
 public class Settings {
 
-    /** FreeMarker CLI configuration containing tool mappings, etc. */
+    /** FreeMarker Generator configuration containing tool mappings, etc. */
     private final Properties configuration;
 
     /** Command line arguments */

@@ -21,18 +21,33 @@ import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Arrays;
 
+/**
+ * Run unit tests with local templates directory and configuration file.
+ */
 abstract class AbstractMainTest {
+
+    protected static final boolean WRITE_TO_STDOUT = false;
+    protected static final String TEST_TEMPLATES_DIRECTORY = "./src/app/templates";
+    protected static final String TEST_CONFIG_FILE = "./src/app/config/freemarker-generator.properties";
 
     private static final String SPACE = " ";
 
     String execute(String commandLine) throws IOException {
         try (Writer writer = new StringWriter()) {
-            final String[] args = commandLine.split(SPACE);
+            final String[] args = buildFinalCommandLine(commandLine).split(SPACE);
             if (Main.execute(args, writer) == 0) {
-                return writer.toString();
+                final String output = writer.toString();
+                if (WRITE_TO_STDOUT) {
+                    System.out.println(output);
+                }
+                return output;
             } else {
                 throw new RuntimeException("Executing freemarker-cli failed: " + Arrays.toString(args));
             }
         }
+    }
+
+    private String buildFinalCommandLine(String commandLine) {
+        return String.format("--config %s --template-dir %s %s", TEST_CONFIG_FILE, TEST_TEMPLATES_DIRECTORY, commandLine);
     }
 }

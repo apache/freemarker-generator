@@ -1,4 +1,5 @@
 #!/bin/sh
+
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
 # contributor license agreements.  See the NOTICE file distributed with
@@ -14,26 +15,25 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
 
 # Check that java is on the path
 
 hash java 2>/dev/null || { echo >&2 "I require JDK but it's not installed.  Aborting."; exit 1; }
-hash mvn 2>/dev/null || { echo >&2 "I require Maven but it's not installed.  Aborting."; exit 1; }
 
 # Run all the samples being documented
 
 mkdir target 2>/dev/null
 mkdir target/out 2>/dev/null
 
-FREEMARKER_CMD="target/appassembler/bin/freemarker-cli"
-# FREEMARKER_CMD="java -jar target/freemarker-cli-2.0.0-BETA-4-SNAPSHOT-jar-with-dependencies.jar"
+FREEMARKER_CMD=./bin/freemarker-generator
 
 #############################################################################
 # Info
 #############################################################################
 
-echo "templates/info.ftl"
-$FREEMARKER_CMD -t templates/info.ftl README.md > target/out/info.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+echo "templates/freemarker-generator/info.ftl"
+$FREEMARKER_CMD -t freemarker-generator/info.ftl README.md > target/out/info.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
 # Demo
@@ -57,11 +57,11 @@ $FREEMARKER_CMD -i '${tools.dataframe.print(tools.dataframe.fromMaps(tools.gson.
 # CSV
 #############################################################################
 
-echo "templates/csv/html/transform.ftl"
-$FREEMARKER_CMD -t templates/csv/html/transform.ftl examples/data/csv/contract.csv > target/out/contract.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
+echo "templates/freemarker-generator/csv/html/transform.ftl"
+$FREEMARKER_CMD -t freemarker-generator/csv/html/transform.ftl examples/data/csv/contract.csv > target/out/contract.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
-echo "templates/csv/md/transform.ftl"
-$FREEMARKER_CMD -t templates/csv/md/transform.ftl examples/data/csv/contract.csv > target/out/contract.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
+echo "templates/freemarker-generator/csv/md/transform.ftl"
+$FREEMARKER_CMD -t freemarker-generator/csv/md/transform.ftl examples/data/csv/contract.csv > target/out/contract.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 echo "examples/templates/csv/shell/curl.ftl"
 $FREEMARKER_CMD -t ./examples/templates/csv/shell/curl.ftl examples/data/csv/user.csv > target/out/curl.sh || { echo >&2 "Test failed.  Aborting."; exit 1; }
@@ -93,7 +93,7 @@ fi
 # CSV to HTML & PDF
 #############################################################################
 
-echo "templates/csv/html/transform.ftl"
+echo "examples/templates/csv/html/transform.ftl"
 $FREEMARKER_CMD -t examples/templates/csv/html/transactions.ftl examples/data/csv/transactions.csv > target/out/transactions.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 if hash wkhtmltopdf 2>/dev/null; then
@@ -122,16 +122,16 @@ $FREEMARKER_CMD -t examples/templates/accesslog/combined-access.ftl examples/dat
 echo "examples/templates/excel/dataframe/transform.ftl"
 $FREEMARKER_CMD -t examples/templates/excel/dataframe/transform.ftl examples/data/excel/test.xls > target/out/test.xls.dataframe.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
-echo "templates/excel/html/transform.ftl"
-$FREEMARKER_CMD -t templates/excel/html/transform.ftl examples/data/excel/test.xls > target/out/test.xls.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
-$FREEMARKER_CMD -t templates/excel/html/transform.ftl examples/data/excel/test.xlsx > target/out/test.xslx.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
-$FREEMARKER_CMD -t templates/excel/html/transform.ftl examples/data/excel/test-multiple-sheets.xlsx > target/out/test-multiple-sheets.xlsx.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
+echo "templates/freemarker-generator/excel/html/transform.ftl"
+$FREEMARKER_CMD -t freemarker-generator/excel/html/transform.ftl examples/data/excel/test.xls > target/out/test.xls.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -t freemarker-generator/excel/html/transform.ftl examples/data/excel/test.xlsx > target/out/test.xslx.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -t freemarker-generator/excel/html/transform.ftl examples/data/excel/test-multiple-sheets.xlsx > target/out/test-multiple-sheets.xlsx.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
-echo "templates/excel/md/transform.ftl"
-$FREEMARKER_CMD -t templates/excel/md/transform.ftl examples/data/excel/test-multiple-sheets.xlsx > target/out/test-multiple-sheets.xlsx.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
+echo "templates/freemarker-generator/excel/md/transform.ftl"
+$FREEMARKER_CMD -t freemarker-generator/excel/md/transform.ftl examples/data/excel/test-multiple-sheets.xlsx > target/out/test-multiple-sheets.xlsx.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
-echo "templates/excel/csv/transform.ftl"
-$FREEMARKER_CMD -t templates/excel/csv/transform.ftl examples/data/excel/test-multiple-sheets.xlsx > target/out/test-multiple-sheets.xlsx.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
+echo "templates/freemarker-generator/excel/csv/transform.ftl"
+$FREEMARKER_CMD -t freemarker-generator/excel/csv/transform.ftl examples/data/excel/test-multiple-sheets.xlsx > target/out/test-multiple-sheets.xlsx.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 echo "examples/templates/excel/csv/custom.ftl"
 $FREEMARKER_CMD -t examples/templates/excel/csv/custom.ftl -Pcsv.format=MYSQL examples/data/excel/test.xls > target/out/test-transform-xls.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
@@ -143,6 +143,9 @@ $FREEMARKER_CMD -t examples/templates/excel/csv/custom.ftl -Pcsv.format=MYSQL ex
 echo "examples/templates/html/csv/dependencies.ftl"
 $FREEMARKER_CMD -t examples/templates/html/csv/dependencies.ftl examples/data/html/dependencies.html > target/out/dependencies.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
+echo "examples/templates/html/txt/licence.ftl"
+$FREEMARKER_CMD -t examples/templates/html/txt/licence.ftl examples/data/html/dependencies.html > target/out/licence.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
 #############################################################################
 # JSON
 #############################################################################
@@ -150,13 +153,11 @@ $FREEMARKER_CMD -t examples/templates/html/csv/dependencies.ftl examples/data/ht
 echo "examples/templates/json/csv/swagger-endpoints.ftl"
 $FREEMARKER_CMD -t examples/templates/json/csv/swagger-endpoints.ftl examples/data/json/swagger-spec.json > target/out/swagger-spec.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
-echo "templates/json/yaml/transform.ftl"
-$FREEMARKER_CMD -t templates/json/yaml/transform.ftl examples/data/json/swagger-spec.json > target/out/swagger-spec.yaml || { echo >&2 "Test failed.  Aborting."; exit 1; }
+echo "templates/freemarker-generator/json/yaml/transform.ftl"
+$FREEMARKER_CMD -t freemarker-generator/json/yaml/transform.ftl examples/data/json/swagger-spec.json > target/out/swagger-spec.yaml || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
-if hash curl 2>/dev/null; then
 echo "examples/templates/json/md/github-users.ftl"
-$FREEMARKER_CMD -t examples/templates/json/md/github-users.ftl examples/data/json/github-users.json > target/out/github-users-curl.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
-fi
+$FREEMARKER_CMD -t examples/templates/json/md/github-users.ftl examples/data/json/github-users.json > target/out/github-users.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
 # Properties
@@ -173,21 +174,21 @@ echo "examples/data/template"
 $FREEMARKER_CMD -t examples/data/template -PNGINX_HOSTNAME=localhost -o target/out/template  || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
+# XML
+#############################################################################
+
+echo "examples/templates/xml/txt/recipients.ftl"
+$FREEMARKER_CMD -t examples/templates/xml/txt/recipients.ftl examples/data/xml/recipients.xml > target/out/recipients.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
+#############################################################################
 # YAML
 #############################################################################
 
 echo "examples/templates/yaml/txt/transform.ftl"
 $FREEMARKER_CMD -t examples/templates/yaml/txt/transform.ftl examples/data/yaml/customer.yaml > target/out/customer.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
-echo "templates/yaml/json/transform.ftl"
-$FREEMARKER_CMD -t templates/yaml/json/transform.ftl examples/data/yaml/swagger-spec.yaml > target/out/swagger-spec.json || { echo >&2 "Test failed.  Aborting."; exit 1; }
-
-#############################################################################
-# XML
-#############################################################################
-
-echo "examples/templates/xml/txt/recipients.ftl"
-$FREEMARKER_CMD -t ./examples/templates/xml/txt/recipients.ftl examples/data/xml/recipients.xml > target/out/recipients.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+echo "templates/freemarker-generator/yaml/json/transform.ftl"
+$FREEMARKER_CMD -t freemarker-generator/yaml/json/transform.ftl examples/data/yaml/swagger-spec.yaml > target/out/swagger-spec.json || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 echo "Created the following sample files in ./target/out"
 ls -l ./target/out

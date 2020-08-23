@@ -1,12 +1,12 @@
-# Apache FreeMarker CLI Tools
+# Apache FreeMarker Generator Tools
 
 ## Overview 
 
-The implementation of the `Apache FreeMarker CLI Tools` was inspired by [Apache Velocity Tools](https://velocity.apache.org/tools/devel/) - a `tool` is just a POJO (plain old Java object) that is "useful" in a template and is not meant to be rendered in the output.
+The implementation of the `Apache FreeMarker Generator Tools` was inspired by [Apache Velocity Tools](https://velocity.apache.org/tools/devel/) - a `tool` is just a POJO (plain old Java object) that is "useful" in a template and is not meant to be rendered in the output.
 
-Let's have a look at the anatomy and life-cycle of a `Apache FreeMarker CLI Tool`
+Let's have a look at the anatomy and life-cycle of a `Apache FreeMarker Generator Tool`
 
-* The meta-data, e.g. class name, is read from `freemarker-cli.properties`
+* The meta-data, e.g. class name, is read from `freemarker-generator.properties`
 * It provides a default constructor
 * Its `toString` methods prints a short description
 * It exposes public methods being used directly by the template

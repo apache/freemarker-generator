@@ -26,20 +26,13 @@ import static org.junit.Assert.assertEquals;
 
 public class TemplateDirectorySupplierTest {
 
-    // Depending on the local configuration the "~/.freemarker-cli" directory might be found.
+    // Depending on the local configuration the "~/.freemarker-generator" directory might be found.
     private final int nrOfDefaultTemplateDirectories = templateDirectories(null).size();
 
     @Test
-    public void shouldRemoveDuplicateTemplateDirectorie() throws IOException {
-        final List<File> directories = templateDirectories(".");
-
-        assertEquals(nrOfDefaultTemplateDirectories, directories.size());
-    }
-
-    @Test
     public void shouldAddTemplateDirectory() throws IOException {
-        assertEquals(nrOfDefaultTemplateDirectories + 1, templateDirectories("templates").size());
-        assertEquals(nrOfDefaultTemplateDirectories + 1, templateDirectories("./templates").size());
+        assertEquals(nrOfDefaultTemplateDirectories + 1, templateDirectories("src/app/templates").size());
+        assertEquals(nrOfDefaultTemplateDirectories + 1, templateDirectories("./src/app/templates").size());
     }
 
     @Test

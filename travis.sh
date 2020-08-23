@@ -18,8 +18,8 @@
 #
 # Simulate the Travis build locally
 mvn clean install site site:stage
-cd ./freemarker-generator-cli
+cd ./freemarker-generator-cli/target/appassembler/
 sh ./run-examples.sh
-cd ../freemarker-generator-maven-plugin-sample
+cd ../../../freemarker-generator-maven-plugin-sample
 mvn clean package
 cd ..

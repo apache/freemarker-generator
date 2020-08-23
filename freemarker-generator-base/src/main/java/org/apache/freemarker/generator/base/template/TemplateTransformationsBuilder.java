@@ -16,6 +16,7 @@
  */
 package org.apache.freemarker.generator.base.template;
 
+import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.file.RecursiveFileSupplier;
 import org.apache.freemarker.generator.base.util.NonClosableWriterWrapper;
 import org.apache.freemarker.generator.base.util.StringUtils;
@@ -217,7 +218,7 @@ public class TemplateTransformationsBuilder {
     }
 
     private List<TemplateTransformation> resolveTemplateCode(String source, File out) {
-        final TemplateSource templateSource = TemplateSource.fromCode("interactive", source);
+        final TemplateSource templateSource = TemplateSource.fromCode(Location.INTERACTIVE, source);
         final TemplateOutput templateOutput = templateOutput(out);
         return singletonList(new TemplateTransformation(templateSource, templateOutput));
     }

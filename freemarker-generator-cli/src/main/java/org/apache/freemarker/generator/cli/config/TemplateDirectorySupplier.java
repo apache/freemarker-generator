@@ -17,50 +17,40 @@
 package org.apache.freemarker.generator.cli.config;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.freemarker.generator.base.FreeMarkerConstants.Configuration;
+import org.apache.freemarker.generator.base.FreeMarkerConstants.SystemProperties;
+import org.apache.freemarker.generator.base.util.StringUtils;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
+import static org.apache.freemarker.generator.base.util.StringUtils.isNotEmpty;
 
 /**
  * Determine a list of directories to load a relative template file in the following order
  * <ol>
  *    <li>User-defined template directory</li>
- *    <li>Current working directory</li>
- *    <li>~/.freemarker-cli</li>
+ *    <li>~/.freemarker-generator</li>
  *    <li>Application installation directory</li>
  * </ol>
  */
 public class TemplateDirectorySupplier implements Supplier<List<File>> {
 
-    /** Installation directory of "freemarker-cli" when invoked with shell wrapper */
-    private static final String APP_HOME = "app.home";
+    /** Additional template directory, e.g. provided as command line parameter */
+    private final String additionalTemplateDirName;
 
-    /** Current working directory when invoked with shell wrapper */
-    private static final String USER_DIR = "user.dir";
-
-    /** Home directory of the user */
-    private static final String USER_HOME = "user.home";
-
-    /** The user's optional "freemarker-cli" directory */
-    private static final String USER_CONFIGURATION_DIR_NAME = ".freemarker-cli";
-
-    /** User-defined template directory */
-    private final String userDefinedTemplateDir;
-
-    public TemplateDirectorySupplier(String userDefinedTemplateDir) {
-        this.userDefinedTemplateDir = userDefinedTemplateDir;
+    public TemplateDirectorySupplier(String additionalTemplateDirName) {
+        this.additionalTemplateDirName = additionalTemplateDirName;
     }
 
     @Override
     public List<File> get() {
         return templateLoaderDirectories().stream()
-                .filter(Objects::nonNull)
+                .filter(StringUtils::isNotEmpty)
                 .map(FilenameUtils::normalize)
                 .map(File::new)
                 .distinct()
@@ -70,28 +60,40 @@ public class TemplateDirectorySupplier implements Supplier<List<File>> {
 
     private List<String> templateLoaderDirectories() {
         return new ArrayList<>(asList(
-                userTemplateDirName(),
-                currentWorkingDirName(),
-                userConfigDirName(),
-                applicationDirName()
+                additionalTemplatesDirectory(),
+                userConfigTemplatesDirectory(),
+                applicationTemplatesDirectory()
         ));
     }
 
-    private String userTemplateDirName() {
-        return userDefinedTemplateDir != null ? new File(userDefinedTemplateDir).getAbsolutePath() : null;
+    private String additionalTemplatesDirectory() {
+        return isNotEmpty(additionalTemplateDirName) ? new File(additionalTemplateDirName).getAbsolutePath() : null;
     }
 
-    private String userConfigDirName() {
-        final String userHomeDir = System.getProperty(USER_HOME);
-        return new File(userHomeDir, USER_CONFIGURATION_DIR_NAME).getAbsolutePath();
+    private String userConfigDirectory() {
+        final String userHomeDir = System.getProperty(SystemProperties.USER_HOME);
+        if (isNotEmpty(userHomeDir)) {
+            return new File(userHomeDir, Configuration.USER_CONFIGURATION_DIR_NAME).getAbsolutePath();
+        } else {
+            return null;
+        }
     }
 
-    private static String applicationDirName() {
-        return System.getProperty(APP_HOME);
+    private String userConfigTemplatesDirectory() {
+        return templatesDirectory(userConfigDirectory());
     }
 
-    private static String currentWorkingDirName() {
-        return System.getProperty(USER_DIR);
+    private static String applicationTemplatesDirectory() {
+        final String appHomeDir = System.getProperty(SystemProperties.APP_HOME);
+        return templatesDirectory(appHomeDir);
+    }
+
+    private static String templatesDirectory(String baseDirName) {
+        if (isNotEmpty(baseDirName)) {
+            return new File(baseDirName, "templates").getAbsolutePath();
+        } else {
+            return null;
+        }
     }
 
     private static boolean isDirectory(File directory) {

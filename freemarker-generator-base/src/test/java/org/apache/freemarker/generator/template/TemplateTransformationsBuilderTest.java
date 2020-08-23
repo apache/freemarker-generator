@@ -16,6 +16,7 @@
  */
 package org.apache.freemarker.generator.template;
 
+import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.template.TemplateOutput;
 import org.apache.freemarker.generator.base.template.TemplateSource;
 import org.apache.freemarker.generator.base.template.TemplateSource.Origin;
@@ -42,7 +43,7 @@ public class TemplateTransformationsBuilderTest {
     @Test
     public void shouldCreateFromInteractiveTemplate() {
         final TemplateTransformations transformations = builder()
-                .setTemplate("interactive", "Hello World")
+                .setTemplate(Location.INTERACTIVE, "Hello World")
                 .setStdOut()
                 .build();
 
@@ -51,7 +52,7 @@ public class TemplateTransformationsBuilderTest {
         final TemplateSource templateSource = transformations.get(0).getTemplateSource();
         final TemplateOutput templateOutput = transformations.get(0).getTemplateOutput();
 
-        assertEquals("interactive", templateSource.getName());
+        assertEquals(Location.INTERACTIVE, templateSource.getName());
         assertEquals(Origin.CODE, templateSource.getOrigin());
         assertEquals("Hello World", templateSource.getCode());
         assertNull(templateSource.getPath());
@@ -64,7 +65,7 @@ public class TemplateTransformationsBuilderTest {
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionWheMixingInteractiveTemplateWithSources() {
         builder()
-                .setTemplate("interactive", "Hello World")
+                .setTemplate(Location.INTERACTIVE, "Hello World")
                 .addSource(ANY_TEMPLATE_FILE_NAME)
                 .setStdOut()
                 .build();

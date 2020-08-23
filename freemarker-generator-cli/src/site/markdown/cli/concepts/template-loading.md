@@ -8,34 +8,34 @@ In order the render a template it needs to be loaded first - there are multiple 
 
 ### FreeMarker MultiTemplateLoader
 
-`Apache FreeMarker CLI` uses a `MultiTemplateLoader` searching for templates in the following directories
+`Apache FreeMarker Generator CLI` uses a `MultiTemplateLoader` searching for templates in the following directories
 
 * Current working directory
-* Optional `~/.freemarker-cli` directory
-* `Apache FreeMarker CLI` installation directory
+* Optional `~/.freemarker-generator` directory
+* `Apache FreeMarker Generator` installation directory
 
 You can check the currently used template loader directories easily on the command line, e.g.
 
 ```
-freemarker-cli -t templates/info.ftl
+freemarker-generator -t freemarker-generator/info.ftl
 
-FreeMarker CLI Template Loader Directories
+FreeMarker Generator Template Loader Directories
 ------------------------------------------------------------------------------
 [#1] /Users/sgoeschl/work/github/apache/freemarker-generator
-[#2] /Users/sgoeschl/.freemarker-cli
-[#3] /Applications/Java/freemarker-cli-2.0.0
+[#2] /Users/sgoeschl/.freemarker-generator
+[#3] /Applications/Java/freemarker-generator-2.0.0
 ```
 
 The main benefit of `MultiTemplateLoader` is the use of abstract template paths finding a template in the template loader directories
 
 ```
-freemarker-cli -t templates/info.ftl
+freemarker-generator -t freemarker-generator/info.ftl
 ``` 
 
 and [Template Includes](https://freemarker.apache.org/docs/ref_directive_include.html)
 
 ```
-<#import "/templates/lib/commons-csv.ftl" as csv />
+<#import "/lib/commons-csv.ftl" as csv />
 ```  
 
 ### Free-Style Template Loading
@@ -47,7 +47,7 @@ irrelevant therefore any template file outside of the template loader directorie
 This example loads the `info.ftl` directly from a GitHub URL
 
 ```
-freemarker-cli -t https://raw.githubusercontent.com/apache/freemarker-generator/master/freemarker-generator-cli/templates/info.ftl
+freemarker-generator -t https://raw.githubusercontent.com/apache/freemarker-generator/master/freemarker-generator-cli/templates/info.ftl
 ```
 
 ### Interactive Template Loading
@@ -55,6 +55,6 @@ freemarker-cli -t https://raw.githubusercontent.com/apache/freemarker-generator/
 The template can be defined directly on the command line in case of trivial transformations
 
 ```
-freemarker-cli -i '${tools.gson.toJson(yaml)}' -m yaml=examples/data/yaml/swagger-spec.yaml
+freemarker-generator -i '${tools.gson.toJson(yaml)}' -m yaml=examples/data/yaml/swagger-spec.yaml
 ```
 

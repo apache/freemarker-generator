@@ -49,7 +49,6 @@
                     <extraJvmArguments>-Xms64m -Xmx512m</extraJvmArguments>
                     <endorsedDir>endorsed</endorsedDir>
                     <useWildcardClassPath>true</useWildcardClassPath>
-                    <copyConfigurationDirectory>true</copyConfigurationDirectory>
                     <configurationDirectory>config</configurationDirectory>
                     <programs>
                         <program>
@@ -58,7 +57,7 @@
                                 <platform>unix</platform>
                             </platforms>
                             <mainClass>org.apache.freemarker.generator.cli.Main</mainClass>
-                            <id>freemarker-cli</id>
+                            <id>freemarker-generator</id>
                         </program>
                     </programs>
                 </configuration>
@@ -75,13 +74,16 @@
                                 <copy file="README.md" todir="./target/appassembler" />
                                 <copy file="LICENSE" todir="./target/appassembler" />
                                 <copy file="NOTICE" todir="./target/appassembler" />
-                                <copy file="./src/main/scripts/run-examples.bat" todir="./target/appassembler" />
-                                <copy file="./src/main/scripts/run-examples.sh" todir="./target/appassembler" />
+                                <copy file="./src/app/scripts/run-examples.bat" todir="./target/appassembler" />
+                                <copy file="./src/app/scripts/run-examples.sh" todir="./target/appassembler" />
+                                <copy todir="./target/appassembler/config">
+                                    <fileset dir="src/app/config" />
+                                </copy>
                                 <copy todir="./target/appassembler/templates">
-                                    <fileset dir="templates" />
+                                    <fileset dir="src/app/templates" />
                                 </copy>
                                 <copy todir="./target/appassembler/examples">
-                                    <fileset dir="examples" />
+                                    <fileset dir="src/app/examples" />
                                 </copy>
                                 <chmod file="./target/appassembler/run-examples.sh" perm="a+x" />
                             </target>

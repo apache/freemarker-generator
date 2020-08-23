@@ -1,6 +1,6 @@
-## FreeMarker Generator CLI
+## FreeMarker Generator
 
-`Apache FreeMarker CLI` is a command-line interface for [Apache FreeMarker](https://freemarker.apache.org/) 
+`Apache FreeMarker Generator` is a command-line interface for [Apache FreeMarker](https://freemarker.apache.org/) 
 
 * Requires JDK 1.8+ on Linux, Mac OSX and Windows
 * Use stdin, files and URLs to load data and templates 
@@ -33,4 +33,4 @@
 
 ### Advanced Topics
 
-* [FreeMarker CLI Configuration](cli/advanced/cli-configuration.html)
+* [FreeMarker Generator Configuration](cli/advanced/cli-configuration.html)

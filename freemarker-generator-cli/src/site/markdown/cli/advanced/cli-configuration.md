@@ -1,14 +1,14 @@
 ## CLI Configuration
  
-The `Apache FreeMarker CLI` configuration can be tweaked to
+The `Apache FreeMarker Generator` configuration can be tweaked to
 
 * Change the underlying `Apache FreeMarker Configuration`
 * Instantiate custom tools
 * Storing user-specific templates 
 
-### Apache FreeMarker CLI Properties File
+### Apache FreeMarker Generator Properties File
 
-`Apache FreeMarker CLI` reads the `conf/freemarker-cli.properties`
+`Apache FreeMarker Generator` reads the `conf/freemarker-generator.properties`
 
 ```
 #############################################################################
@@ -42,11 +42,11 @@ Changing this file allows to tweak the underlying `Apache FreeMarker Configurati
 
 Over the time you will accumulate more and more `Apache FreeMarker` templates - some of them are stored within a project but some of the more general might be free-floating and you don't want to store them in the installation directory.
 
-To give those free-floating templates a home `Apache FreeMarker CLI` tries to read templates from `~/freemarker-cli`, e.g.
+To give those free-floating templates a home `Apache FreeMarker Generator CLI` tries to read templates from `~/freemarker-generator`, e.g.
 
 ```
-tree ~/.freemarker-cli/
-/Users/sgoeschl/.freemarker-cli/
+tree ~/.freemarker-generator/
+/Users/sgoeschl/.freemarker-generator/
 `-- templates
     `-- json
         |-- confluence
@@ -62,16 +62,16 @@ tree ~/.freemarker-cli/
             `-- customer-user-products.ftl
 ```
 
-If a  `~/freemarker-cli` is found it will be automatically added to the `FreeMarker Template Loader` (for more information see https://freemarker.apache.org/docs/pgui_config_templateloading.html)
+If a  `~/freemarker-generator` is found it will be automatically added to the `FreeMarker Template Loader` (for more information see https://freemarker.apache.org/docs/pgui_config_templateloading.html)
 
 You can easily check this, e.g.  
 
 ```
-> freemarker-cli -t templates/info.ftl
+> freemarker-generator -t freemarker-generator/info.ftl
 
-FreeMarker CLI Template Loader Directories
+FreeMarker Generator Template Loader Directories
 ------------------------------------------------------------------------------
 [#1] /Users/sgoeschl
-[#2] /Users/sgoeschl/.freemarker-cli
-[#3] /Applications/Java/freemarker-cli-2.0.0
+[#2] /Users/sgoeschl/.freemarker-generator
+[#3] /Applications/Java/freemarker-generator-2.0.0
 ``` 
