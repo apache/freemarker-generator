@@ -17,7 +17,7 @@
 -->
 <#assign dataSource = dataSources?values[0]>
 <#assign name = dataSource.name>
-<#assign cvsFormat = tools.csv.formats["DEFAULT"].withDelimiter('\t').withHeader()>
+<#assign cvsFormat = tools.csv.formats.DEFAULT.withDelimiter('\t').withHeader()>
 <#assign csvParser = tools.csv.parse(dataSource, cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderMap()?keys>
 <#assign csvRecords = csvParser.records>

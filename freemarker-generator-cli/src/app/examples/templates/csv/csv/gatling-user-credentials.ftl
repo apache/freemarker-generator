@@ -16,7 +16,7 @@
   under the License.
 -->
 <#assign dataSource = dataSources?values[0]>
-<#assign cvsFormat = tools.csv.formats["DEFAULT"].withDelimiter(';')>
+<#assign cvsFormat = tools.csv.formats.DEFAULT.withDelimiter(';')>
 <#assign csvParser = tools.csv.parse(dataSource, cvsFormat)>
 <#assign csvRecords = csvParser.records>
 

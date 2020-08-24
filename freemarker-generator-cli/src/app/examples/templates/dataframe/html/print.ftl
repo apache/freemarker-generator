@@ -15,7 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign cvsFormat = tools.csv.formats["DEFAULT"].withHeader().withDelimiter(';')>
+<#assign cvsFormat = tools.csv.formats.DEFAULT.withHeader().withDelimiter(';')>
 <#assign csvParser = tools.csv.parse(dataSources?values[0], cvsFormat)>
 <#assign dataFrame = tools.dataframe.toDataFrame(csvParser)>
 <#--------------------------------------------------------------------------->
