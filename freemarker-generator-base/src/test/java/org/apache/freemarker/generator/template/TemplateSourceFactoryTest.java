@@ -30,7 +30,7 @@ public class TemplateSourceFactoryTest {
 
     private static final String ANY_TEMPLATE_PATH = "any/template/path.ftl";
     private static final String ANY_FILE_NAME = "pom.xml";
-    private static final String ANY_URL = "https://raw.githubusercontent.com/apache/freemarker-generator/master/freemarker-generator-cli/templates/info.ftl";
+    private static final String ANY_URL = "https://raw.githubusercontent.com/apache/freemarker-generator/master/freemarker-generator-cli/src/app/templates/freemarker-generator/info.ftl";
     private static final String ANY_ENV_VARIABLE = "JAVA_HOME";
     private static final String ANY_ENV_URI = "env:///" + ANY_ENV_VARIABLE;
 

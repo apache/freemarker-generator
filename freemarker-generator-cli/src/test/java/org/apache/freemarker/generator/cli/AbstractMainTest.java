@@ -26,8 +26,9 @@ import java.util.Arrays;
  */
 abstract class AbstractMainTest {
 
-    protected static final String TEST_TEMPLATES_DIRECTORY = "./src/templates";
-    protected static final String TEST_CONFIG_FILE = "./src/main/config/freemarker-generator.properties";
+    protected static final boolean WRITE_TO_STDOUT = false;
+    protected static final String TEST_TEMPLATES_DIRECTORY = "./src/app/templates";
+    protected static final String TEST_CONFIG_FILE = "./src/app/config/freemarker-generator.properties";
 
     private static final String SPACE = " ";
 
@@ -35,7 +36,11 @@ abstract class AbstractMainTest {
         try (Writer writer = new StringWriter()) {
             final String[] args = buildFinalCommandLine(commandLine).split(SPACE);
             if (Main.execute(args, writer) == 0) {
-                return writer.toString();
+                final String output = writer.toString();
+                if (WRITE_TO_STDOUT) {
+                    System.out.println(output);
+                }
+                return output;
             } else {
                 throw new RuntimeException("Executing freemarker-cli failed: " + Arrays.toString(args));
             }

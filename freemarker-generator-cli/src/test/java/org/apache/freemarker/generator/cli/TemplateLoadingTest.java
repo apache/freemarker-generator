@@ -27,7 +27,7 @@ public class TemplateLoadingTest extends AbstractMainTest {
 
     private static final int SUCCESS = 0;
     private static final String ANY_TEMPLATE_NAME = "freemarker-generator/cat.ftl";
-    private static final String ANY_TEMPLATE_FILE_NAME = "src/templates/" + ANY_TEMPLATE_NAME;
+    private static final String ANY_TEMPLATE_FILE_NAME = "src/app/templates/" + ANY_TEMPLATE_NAME;
     private static final String CURR_DIR = System.getProperty("user.dir", ".");
 
     @Test

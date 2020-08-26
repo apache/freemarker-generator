@@ -30,7 +30,8 @@ All notable changes to this project will be documented in this file. We try to a
 * [FREEMARKER-129] Provide a `toString()` method for all tools
 * [FREEMARKER-129] Use version "0.X.Y" to cater for API changes according to [Semantic Versioning](https://semver.org)
 
-### Fixed 
+### Fixed
+* [FREEMARKER-153] Configuration files are bootstrapped from "app.home" system property 
 * [FREEMARKER-151] Ensure that build and and examples are running on Windows
 * [FREEMARKER-147] Complete Maven site documentation
 * [FREEMARKER-127] Site build fails with missing "org/apache/maven/doxia/siterenderer/DocumentContent"

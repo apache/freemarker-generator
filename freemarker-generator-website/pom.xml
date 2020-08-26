@@ -69,12 +69,7 @@
                               <classpath/>
 
                               <!-- Setting up things without calling the launcher scripts in app/bin: -->
-                              <!-- TODO in freemarker-generator-cli: Ideally, only setting -Dapp.home should be enough. -->
-                              <argument>org.apache.freemarker.generator.cli.Main</argument>
-                              <argument>--config</argument>
-                              <argument>${freemarkerGeneratorAppHome}/config/freemarker-generator.properties</argument>
-                              <argument>--template-dir</argument>
-                              <argument>${freemarkerGeneratorAppHome}/templates</argument>
+                              <argument>-Dapp.home=${freemarkerGeneratorAppHome}</argument>
 
                               <argument>org.apache.freemarker.generator.cli.Main</argument>
                               <argument>--help</argument>
@@ -95,13 +90,9 @@
                               <classpath/>
 
                               <!-- Setting up things without calling the launcher scripts in app/bin: -->
-                              <!-- TODO in freemarker-generator-cli: Ideally, only setting -Dapp.home should be enough. -->
-                              <argument>org.apache.freemarker.generator.cli.Main</argument>
-                              <argument>--config</argument>
-                              <argument>${freemarkerGeneratorAppHome}/config/freemarker-generator.properties</argument>
-                              <argument>--template-dir</argument>
-                              <argument>${freemarkerGeneratorAppHome}/templates</argument>
+                              <argument>-Dapp.home=${freemarkerGeneratorAppHome}</argument>
 
+                              <argument>org.apache.freemarker.generator.cli.Main</argument>
                               <argument>-t</argument>
                               <argument>freemarker-generator/info.ftl</argument>
                           </arguments>
