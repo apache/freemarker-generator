@@ -284,6 +284,509 @@ version=[docgen.customVariables.version], time=2020-06-25T21:48:02+0200, commit=
 
         <programlisting role="output">[docgen.insertFile "@exampleOutputs/recipients.txt"]</programlisting>
       </section>
+
+      <section>
+        <title>Transform JSON To CSV</title>
+
+        <para>One day I was asked a to prepare a CSV files containing REST
+        endpoints described by Swagger - technically this is a JSON to CSV
+        transformation. Of course I could create that CSV manually but writing
+        a FTL template doing that was simply more fun and saves time in the
+        future.</para>
+
+        <remark>Certainly many will find the story telling tone strange.
+        Especially if we assume that others will contribute to this (who's "I"
+        then). We should just state what this is an example of, tersely. This
+        also applies to other parts.</remark>
+
+        <para><remark>Below has no example source code to include. As we don't
+        provide backward compatibility yet, we better stick to runnable
+        examples, or else they will become outdated here.</remark></para>
+
+        <programlisting>&lt;#ftl output_format="plainText" strip_text="true"&gt;
+&lt;#assign json = tools.jsonpath.parse(dataSources?values[0])&gt;
+&lt;#assign basePath = json.read("$.basePath")&gt;
+&lt;#assign paths = json.read("$.paths")&gt;
+
+&lt;#compress&gt;
+    ENDPOINT;METHOD;CONSUMES;PRODUCES;SUMMARY;DESCRIPTION
+    &lt;#list paths as endpoint,metadata&gt;
+        &lt;#assign relative_url = basePath + endpoint&gt;
+        &lt;#assign methods = metadata?keys&gt;
+        &lt;#list methods as method&gt;
+            &lt;#assign summary = sanitize(paths[endpoint][method]["summary"]!"")&gt;
+            &lt;#assign description = sanitize(paths[endpoint][method]["description"]!"")&gt;
+            &lt;#assign consumes = join(paths[endpoint][method]["consumes"]![])&gt;
+            &lt;#assign produces = join(paths[endpoint][method]["produces"]![])&gt;
+            ${relative_url};${method?upper_case};${consumes};${produces};${summary};${description}
+        &lt;/#list&gt;
+    &lt;/#list&gt;
+&lt;/#compress&gt;
+${'\n'}
+
+&lt;#function sanitize str&gt;
+    &lt;#return (((str?replace(";", ","))?replace("(\\n)+", "",'r')))?truncate(250)&gt;
+&lt;/#function&gt;
+
+&lt;#function join list&gt;
+    &lt;#if list?has_content&gt;
+        &lt;#return list?join(", ")&gt;
+    &lt;#else&gt;
+        &lt;#return ""&gt;
+    &lt;/#if&gt;
+&lt;/#function&gt;</programlisting>
+
+        <para>Invoking the FTL template</para>
+
+        <programlisting>&gt; freemarker-generator -t examples/templates/json/csv/swagger-endpoints.ftl examples/data/json/swagger-spec.json</programlisting>
+
+        <para>gives you</para>
+
+        <programlisting role="output">ENDPOINT;METHOD;CONSUMES;PRODUCES;SUMMARY;DESCRIPTION
+/api/pets;GET;;;;Returns all pets from the system that the user has access to
+/api/pets;POST;;;;Creates a new pet in the store. Duplicates are allowed
+/api/pets/{id};GET;;;;Returns a user based on a single ID, if the user does not have access to the pet
+/api/pets/{id};DELETE;;;;Deletes a single pet based on the ID supplied</programlisting>
+      </section>
+
+      <section>
+        <title>Transforming Excel Documents</title>
+
+        <para>Another day my project management asked me to create a CSV
+        configuration file based on an Excel documents - as usual manual
+        copying was not an option due to required data cleanup and data
+        transformation. So I thought about Apache POI which support XLS and
+        XLSX documents - integration of Apache POI was a breeze but the
+        resulting code was not particularly useful example. So a more generic
+        transformation was provided to show the transformation of Excel
+        documents.</para>
+
+        <programlisting>&gt; freemarker-generator -t freemarker-generator/excel/html/transform.ftl examples/data/excel/test.xls
+&gt; freemarker-generator -t freemarker-generator/excel/html/transform.ftl examples/data/excel/test.xlsx
+&gt; freemarker-generator -t freemarker-generator/excel/html/transform.ftl examples/data/excel/test-multiple-sheets.xlsx
+&gt; freemarker-generator -t freemarker-generator/excel/md/transform.ftl examples/data/excel/test-multiple-sheets.xlsx
+</programlisting>
+
+        <para>The provided FTL transforms an Excel into a HTML document
+        supporting multiple Excel sheets:</para>
+
+        <programlisting role="template">[docgen.insertFile "@templates/freemarker-generator/excel/html/transform.ftl"]</programlisting>
+
+        <para>but the result looks reasonable</para>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/examples/excel-to-html.png"
+                       width="100%"/>
+          </imageobject>
+        </mediaobject>
+      </section>
+
+      <section>
+        <title>Transform Property Files To CSV</title>
+
+        <para>In this sample we transform all property files found in a
+        directory (recursive search using include pattern) to a CSV
+        file.</para>
+
+        <programlisting>&gt; freemarker-generator --data-source-include *.properties -t examples/templates/properties/csv/locker-test-users.ftl examples/data/properties</programlisting>
+
+        <programlisting role="output">[docgen.insertFile "@exampleOutputs/locker-test-users.csv"]</programlisting>
+
+        <para>The FTL uses a couple of interesting features:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>We process a list of property files</para>
+          </listitem>
+
+          <listitem>
+            <para>The <literal>strip_text</literal> and
+            <literal>compress</literal> strips any white-spaces and
+            line-breaks from the output so we can create a proper CSV
+            file</para>
+          </listitem>
+
+          <listitem>
+            <para>We use FTL functions to extract the
+            <literal>tenant</literal> and <literal>site</literal>, e.g.
+            <literal>extractTenant</literal></para>
+          </listitem>
+
+          <listitem>
+            <para>We add a manual line break using
+            <literal>${'\n'}</literal></para>
+
+            <programlisting role="template">[docgen.insertFile "@exampleTemplates/properties/csv/locker-test-users.ftl"]</programlisting>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section>
+        <title>Transform CSV To XML-FO</title>
+
+        <para>For a POC (proof of concept) I created a sample transformation
+        from CSV to XML-FO in order to create a PDF document using <link
+        xlink:href="https://xmlgraphics.apache.org/fop">Apache FOP</link>
+        using the following template file:</para>
+
+        <programlisting role="template">[docgen.insertFile "@exampleTemplates/csv/fo/transform.ftl"]</programlisting>
+
+        <para>In order to create the PDF you need to execute the following
+        commands (assuming that you have Apache FOP installed):</para>
+
+        <programlisting>&gt; freemarker-generator -t examples/templates/csv/fo/transform.ftl examples/data/csv/locker-test-users.csv &gt; sample.fo
+&gt; fop -fo sample.fo sample.pdf
+Dec 29, 2018 10:24:30 PM org.apache.fop.events.LoggingEventListener processEvent
+WARNING: Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
+Dec 29, 2018 10:24:30 PM org.apache.fop.events.LoggingEventListener processEvent
+WARNING: Font "ZapfDingbats,normal,700" not found. Substituting with "ZapfDingbats,normal,400".
+Dec 29, 2018 10:24:30 PM org.apache.fop.events.LoggingEventListener processEvent
+INFO: Rendered page #1.</programlisting>
+
+        <para>The result does not look very impressive but it is a PDF
+        :-)</para>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/examples/locker-test-users-pdf.png"
+                       width="100%"/>
+          </imageobject>
+        </mediaobject>
+
+        <para>Further along the line of the POC we converted a transaction
+        export from CSV to PDF using Apache FOP:</para>
+
+        <programlisting role="template">[docgen.insertFile "@exampleTemplates/csv/fo/transactions.ftl"]</programlisting>
+
+        <programlisting>&gt; freemarker-generator -t examples/templates/csv/fo/transactions.ftl examples/data/csv/transactions.csv &gt; transactions.fo
+&gt; fop -fo transactions.fo transactions.pdf
+Jan 16, 2019 11:15:21 PM org.apache.fop.events.LoggingEventListener processEvent
+WARNING: Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
+Jan 16, 2019 11:15:21 PM org.apache.fop.events.LoggingEventListener processEvent
+WARNING: Font "ZapfDingbats,normal,700" not found. Substituting with "ZapfDingbats,normal,400".
+Jan 16, 2019 11:15:21 PM org.apache.fop.events.LoggingEventListener processEvent
+WARNING: The contents of fo:block line 1 exceed the available area in the inline-progression direction by 11027 millipoints. (See position 1519:51)
+Jan 16, 2019 11:15:22 PM org.apache.fop.events.LoggingEventListener processEvent
+INFO: Rendered page #1.
+Jan 16, 2019 11:15:22 PM org.apache.fop.events.LoggingEventListener processEvent
+INFO: Rendered page #2.</programlisting>
+
+        <mediaobject>
+          <imageobject>
+            <imagedata fileref="images/examples/transactions.png" width="100%"/>
+          </imageobject>
+        </mediaobject>
+      </section>
+
+      <section>
+        <title>Transforming HTML To CSV</title>
+
+        <para>Recently I got the rather unusual question how to determine the
+        list of dependencies of an application - one easy way is the Maven
+        "dependencies.html" but this is unstructured data. Having said that
+        the Jsoup library is perfectly able to parse most real-life HTML and
+        provides a DOM model.</para>
+
+        <programlisting role="template">[docgen.insertFile "@exampleTemplates/html/csv/dependencies.ftl"]</programlisting>
+
+        <para>Your dependencies as CSV can be generated as shown below:</para>
+
+        <programlisting>&gt; freemarker-generator -t examples/templates/html/csv/dependencies.ftl examples/data/html/dependencies.html</programlisting>
+
+        <programlisting role="output">[docgen.insertFile "@exampleOutputs/dependencies.csv"]</programlisting>
+      </section>
+
+      <section>
+        <title>Transform CSV To Shell Script</title>
+
+        <para>For a customer project we wanted to record REST request /
+        responses using WireMock - really quick and dirty. So we decided to
+        avoid any sophisticated test tool but generate a ready-to-use shell
+        script executing cURL commands. It turned out that handling of dollar
+        signs is a bit tricky.</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Using <literal>noparse</literal> directive to disable
+            parsing of dollar signs</para>
+          </listitem>
+
+          <listitem>
+            <para>Using <literal>${r"${MY_BASE_URL}"</literal> to generate
+            output with dollar signs</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>and the final FTL is found below:</para>
+
+        <programlisting role="template">[docgen.insertFile "@exampleTemplates/csv/shell/curl.ftl"]</programlisting>
+
+        <para>Rendering the FreeMarker template:</para>
+
+        <programlisting>&gt; freemarker-generator -t examples/templates/csv/shell/curl.ftl examples/data/csv/user.csv</programlisting>
+
+        <para>generates the following shell script:</para>
+
+        <programlisting role="output">[docgen.insertFile "@exampleOutputs/curl.sh"]</programlisting>
+
+        <para>Looks a bit complicated but lets dissect the things</para>
+
+        <itemizedlist>
+          <listitem>
+            <para><literal>date "+%FT%H:%M:%S" | tr -d '\n'</literal> creates
+            a timestamp and removes the line feed</para>
+          </listitem>
+
+          <listitem>
+            <para><literal>curl --write-out</literal> allows to print runtime
+            data (see <link
+            xlink:href="https://ec.haxx.se/usingcurl-writeout.html">https://ec.haxx.se/usingcurl-writeout.html</link>)</para>
+          </listitem>
+        </itemizedlist>
+
+        <para><remark>Shell/curl specifics are irrelevant, as far as
+        FreeMarker Generator is concerned. We should remove the above
+        explanation.</remark></para>
+
+        <para><remark>What specialty with generating shell scripts we want to
+        demonstrate in this example? Is it escaping ${...} maybe? That belongs
+        to the FreeMarke documentation. But if we still want to show that
+        here, I would recommend using the [=...] interpolation syntax when
+        generating something that already uses ${...}.</remark></para>
+
+        <para>Executing the result shell script creates the following output
+        (which is a nice CSV for further processing):</para>
+
+        <programlisting>time,user,status,duration,size
+2019-09-27T21:02:52,AAAAAAA,200,0.522473,206
+2019-09-27T21:02:53,BBBBBBB,200,0.498093,206
+2019-09-27T21:02:54,CCCCCCC,200,0.529013,206
+2019-09-27T21:02:54,DDDDDDD,200,0.528268,206</programlisting>
+
+        <remark>Can't generate the above...</remark>
+      </section>
+
+      <section>
+        <title>Unleashing The Power Of Grok</title>
+
+        <para>Think of <literal>Grok</literal> as modular regular expressions
+        with a pre-defined functionality to parse access logs or any other
+        data where you can't comprehend the regular expression any longer, one
+        very simple example is <literal>QUOTEDSTRING</literal>.</para>
+
+        <programlisting>QUOTEDSTRING (?&gt;(?&lt;!\\)(?&gt;"(?&gt;\\.|[^\\"]+)+"|""|(?&gt;'(?&gt;\\.|[^\\']+)+')|''|(?&gt;`(?&gt;\\.|[^\\`]+)+`)|``))</programlisting>
+
+        <para>And with <literal>Grok</literal> the
+        <literal>QUOTEDSTRING</literal> is just a building block for an even
+        more complex regular expression such as
+        <literal>COMBINEDAPACHELOG</literal>.</para>
+
+        <programlisting>&gt; bin/freemarker-generator -t examples/templates/accesslog/combined-access.ftl examples/data/accesslog/combined-access.log</programlisting>
+
+        <para>which gives you the following output:</para>
+
+        <programlisting role="output">[docgen.insertFile "@exampleOutputs/combined-access.log.txt"]</programlisting>
+
+        <para>using the following FreeMarker template:</para>
+
+        <programlisting>[docgen.insertFile "@exampleTemplates/accesslog/combined-access.ftl"]</programlisting>
+
+        <para>While this looks small and tidy there are some nifty
+        features:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para><literal>tools.grok.compile("%{COMBINEDAPACHELOG}")</literal>
+            builds the <literal>Grok</literal> instance to parse access logs
+            in <literal>Combined Format</literal></para>
+          </listitem>
+
+          <listitem>
+            <para>The data source is streamed line by line and not loaded into
+            memory in one piece</para>
+          </listitem>
+
+          <listitem>
+            <para>This also works for using <literal>stdin</literal> so are
+            able to parse GB of access log or other files</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section>
+        <title>Executing Arbitrary Commands</title>
+
+        <para>Using Apache Commons Exec allows to execute arbitrary commands -
+        nice but dangerous. It was recently quite useful to to invoke AWS CLI
+        to generate a Confluence page about the overall setup of our AWS
+        accounts.</para>
+
+        <para>A few snippets to illustrate the points:</para>
+
+        <programlisting role="template">&lt;#ftl output_format="plainText" strip_whitespace="true"&gt;
+&lt;#assign profile = tools.system.getProperty("profile", "default")&gt;
+&lt;#assign ec2Instances = ec2Instances()/&gt;
+
+h3. AWS EC2 Instance
+&lt;@printEc2Instances ec2Instances/&gt;
+
+&lt;#function ec2Instances&gt;
+    &lt;#local json = awsCliToJson("aws ec2 describe-instances --profile ${profile}")&gt;
+    &lt;#local instances = json.read("$.Reservations[*].Instances[*]")&gt;
+    &lt;#return instances?sort_by(['InstanceType'])&gt;
+&lt;/#function&gt;
+
+&lt;#function awsCliToJson line&gt;
+    &lt;#local output = tools.exec.execute(line)&gt;
+    &lt;#return tools.jsonpath.parse(output)&gt;
+&lt;/#function&gt;
+
+&lt;#function getAwsEc2InstanceTag tags name&gt;
+    &lt;#return tags?filter(x -&gt; x["Key"] == name)?first["Value"]!""&gt;
+&lt;/#function&gt;
+
+&lt;#macro printEc2Instances ec2Instances&gt;
+    &lt;#compress&gt;
+        || NAME || INSTANCE_TYPE || VCPUS || STATE || PRIVATE_IP_ADDRESS ||
+        &lt;#list ec2Instances as ec2Instance&gt;
+            &lt;#assign instanceType = ec2Instance["InstanceType"]&gt;
+            &lt;#assign arn = ec2Instance["IamInstanceProfile"]["Arn"]&gt;
+            &lt;#assign privateIpAddress = ec2Instance["PrivateIpAddress"]&gt;
+            &lt;#assign state = ec2Instance["State"]["Name"]&gt;
+            &lt;#assign launchTime = ec2Instance["LaunchTime"]&gt;
+
+            &lt;#assign coreCount = ec2Instance["CpuOptions"]["CoreCount"]?number&gt;
+            &lt;#assign threadsPerCore = ec2Instance["CpuOptions"]["ThreadsPerCore"]?number&gt;
+            &lt;#assign nrOfVirtualCpus = coreCount * threadsPerCore&gt;
+
+            &lt;#assign tags = ec2Instance["Tags"]/&gt;
+            &lt;#assign awsCloudFormationStackId = getAwsEc2InstanceTag(tags, "aws:cloudformation:stack-id")&gt;
+            &lt;#assign awsCloudFormationStackName = getAwsEc2InstanceTag(tags, "aws:cloudformation:stack-name")&gt;
+            &lt;#assign name = getAwsEc2InstanceTag(tags, "Name")&gt;
+            &lt;#assign country = getAwsEc2InstanceTag(tags, "Country")&gt;
+            &lt;#assign environment = getAwsEc2InstanceTag(tags, "Environment")&gt;
+
+            | ${name} | ${instanceType} | ${nrOfVirtualCpus} | ${state} | ${privateIpAddress} |
+        &lt;/#list&gt;
+    &lt;/#compress&gt;
+&lt;/#macro&gt;</programlisting>
+
+        <para><remark>Not in runnable examples (see same problem earlier, why
+        that matters). Although, it's next to impossible to make a portable
+        example of this. Question is, what do we want to demonstrate here? Lot
+        of lines to dig through for the reader, if the point is only
+        &lt;#local output = tools.exec.execute(line)&gt;.</remark></para>
+      </section>
+
+      <section>
+        <title>Interactive Templates</title>
+
+        <para>Sometime you need to apply a CSS, JSON or XPath query in an
+        ad-hoc way without installing <literal>xmllint</literal>,
+        <literal>jq</literal> or <literal>pup</literal> - in this case you can
+        pass a FreeMarker template in an interactive fashion.</para>
+
+        <programlisting>&gt; bin/freemarker-generator -i 'Hello ${tools.system.envs.USER}'; echo
+Hello sgoeschl
+
+&gt; bin/freemarker-generator -i '${tools.jsonpath.parse(dataSources?values[0]).read("$.info.title")}' examples/data/json/swagger-spec.json; echo
+Swagger Petstore
+
+&gt; bin/freemarker-generator -i 'Post Title : ${tools.jsonpath.parse(dataSources?values[0]).read("$.title")}' https://jsonplaceholder.typicode.com/posts/2; echo
+Post Title : qui est esse
+
+&gt; bin/freemarker-generator -i '${tools.xml.parse(dataSources?values[0])["recipients/person[1]/name"]}' examples/data/xml/recipients.xml; echo
+John Smith
+
+&gt; bin/freemarker-generator -i '${tools.jsoup.parse(dataSources?values[0]).select("a")[0]}' examples/data/html/dependencies.html; echo
+&lt;a href="${project.url}" title="FreeMarker Generator"&gt;FreeMarker Generator&lt;/a&gt;
+
+&gt; freemarker-generator -i '&lt;#list tools.system.envs as name,value&gt;${name} ==&gt; ${value}${"\n"}&lt;/#list&gt;'
+TERM ==&gt; xterm-256color
+LANG ==&gt; en_US
+DISPLAY ==&gt; :0.0
+SHELL ==&gt; /bin/bash
+EDITOR ==&gt; vi</programlisting>
+      </section>
+
+      <section>
+        <title>Filtering &amp; Transforming CSV</title>
+
+        <para>During an integration project we imported large transactions CSV
+        files (500.000+ records) and in case of import failures the developers
+        would be happy to get a nice outline of the transactions causing the
+        problem (the CSV records have 60+ columns) - in essence it is
+        filtering (based on some primary key) and and transforming into a
+        human-readable output format (Markdown).</para>
+
+        <para>So lets start the filtering &amp; transformation using the
+        following command line</para>
+
+        <programlisting>&gt; bin/freemarker-generator -e UTF-8 -l de_AT -Pcolumn="Order ID" \
+  -Pvalues=226939189,957081544 \
+  -t examples/templates/csv/md/filter.ftl examples/data/csv/sales-records.csv</programlisting>
+
+        <para>and Apache FreeMarker template</para>
+
+        <programlisting role="template">[docgen.insertFile "@exampleTemplates/csv/md/filter.ftl"]</programlisting>
+
+        <para>yields</para>
+
+        <programlisting>[docgen.insertFile "@exampleOutputs/sales-records.md"]</programlisting>
+      </section>
+
+      <section>
+        <title>Converting Between JSON And YAML</title>
+
+        <para>Sometimes we simply need to transform a JSON into an equivalent
+        YAML or the other way around.</para>
+
+        <programlisting>&gt; freemarker-generator -t freemarker-generator/yaml/json/transform.ftl examples/data/yaml/swagger-spec.yaml 
+&gt; freemarker-generator -i '${tools.gson.toJson(tools.yaml.parse(dataSources?values[0]))}' examples/data/yaml/swagger-spec.yaml
+&gt; freemarker-generator -i '${tools.gson.toJson(yaml)}' -m yaml=examples/data/yaml/swagger-spec.yaml
+
+&gt; freemarker-generator -t freemarker-generator/json/yaml/transform.ftl examples/data/json/swagger-spec.json
+&gt; freemarker-generator -i '${tools.yaml.toYaml(tools.gson.parse(dataSources?values[0]))}' examples/data/json/swagger-spec.json
+&gt; freemarker-generator -i '${tools.yaml.toYaml(json)}' -m json=examples/data/json/swagger-spec.json</programlisting>
+      </section>
+
+      <section>
+        <title>Using Advanced FreeMarker Features</title>
+
+        <para>There is a `demo.ftl` which shows some advanced FreeMarker
+        functionality:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Invoking a Java constructor</para>
+          </listitem>
+
+          <listitem>
+            <para>Invoke a static method of non-instantiable class</para>
+          </listitem>
+
+          <listitem>
+            <para>Work with Java enumerations</para>
+          </listitem>
+
+          <listitem>
+            <para>Access System properties</para>
+          </listitem>
+
+          <listitem>
+            <para>Access Environment variables</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Running</para>
+
+        <programlisting>freemarker-generator -t examples/templates/demo.ftl</programlisting>
+
+        <para>gives you</para>
+
+        <programlisting role="output">[docgen.insertFile "@exampleOutputs/demo.txt"]</programlisting>
+      </section>
     </section>
   </chapter>
 
