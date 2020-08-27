@@ -15,7 +15,7 @@
   under the License.
 -->
 <#assign dataSource = dataSources?values[0]>
-<#assign csvParser = tools.csv.parse(dataSource, tools.csv.formats["DATAFRAME"])>
+<#assign csvParser = tools.csv.parse(dataSource, tools.csv.formats.DATAFRAME)>
 <#assign users = tools.dataframe.fromCSVParser(csvParser)>
 
 Original Data
@@ -31,7 +31,7 @@ Select By Name & Country
 <#assign country = "Germany">
 ${tools.dataframe.print(users
 .select("(name == 'Schmitt' || name == 'Meier') && country == '${country}'")
-.sort("name", tools.dataframe.sortOrder["ASCENDING"]))}
+.sort("name", tools.dataframe.sortOrder.ASCENDING))}
 
 Head of Users
 =============================================================================
@@ -39,7 +39,7 @@ ${tools.dataframe.print(users.head(2))}
 
 Count Column Values
 =============================================================================
-${tools.dataframe.print(users.getColumn("country").transform(tools.dataframe.transformer["COUNT"]))}
+${tools.dataframe.print(users.getColumn("country").transform(tools.dataframe.transformer.COUNT))}
 
 Group By Age & Country
 =============================================================================

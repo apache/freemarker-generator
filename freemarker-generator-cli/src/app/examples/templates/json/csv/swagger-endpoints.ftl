@@ -26,11 +26,11 @@
         <#assign names = metadata?keys?sort>
         <#list names as name>
             <#assign method = paths[endpoint][name]>
-            <#assign summary = sanitize(method["summary"]!"")>
-            <#assign description = sanitize(method["description"]!"")>
-            <#assign consumes = join(method["consumes"]![])>
-            <#assign produces = join(method["produces"]![])>
-            <#assign parameters = method["parameters"]>
+            <#assign summary = sanitize(method.summary!"")>
+            <#assign description = sanitize(method.description!"")>
+            <#assign consumes = join(method.consumes![])>
+            <#assign produces = join(method.produces![])>
+            <#assign parameters = method.parameters>
             ${url};${name?upper_case};${consumes};${produces};${parameters?size};${summary};${description}
         </#list>
     </#list>

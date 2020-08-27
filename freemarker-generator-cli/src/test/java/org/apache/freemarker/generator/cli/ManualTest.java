@@ -16,28 +16,27 @@
  */
 package org.apache.freemarker.generator.cli;
 
-import java.util.Arrays;
+import java.io.IOException;
 
 /**
  * Invoke freemarker-cli and dump the output for ad-hoc manual testing.
  */
-public class ManualTest {
+public class ManualTest extends AbstractMainTest {
 
-    private static final String SPACE = " ";
     // private static final String CMD = "-V";
-    // private static final String CMD = "-PCSV_SOURCE_FORMAT=DATAFRAME -t examples/templates/dataframe/example.ftl https://raw.githubusercontent.com/nRo/DataFrame/master/src/test/resources/users.csv";
-    // private static final String CMD = "-PCSV_SOURCE_WITH_HEADER=false -PCSV_SOURCE_FORMAT=DEFAULT -PCSV_TARGET_FORMAT=EXCEL -PCSV_TARGET_WITH_HEADER=true -t templates/csv/csv/transform.ftl examples/data/csv/contract.csv";
-    // private static final String CMD = "-t examples/templates/json/dataframe/github-users.ftl examples/data/json/github-users.json";
-    // private static final String CMD = "-t templates/csv/md/transform.ftl -o target/contract.md -t templates/csv/html/transform.ftl examples/data/csv/contract.csv";
-    private static final String CMD = "-t examples/templates/demo.ftl src/test/data";
+    private static final String CMD = "-t src/app/examples/templates/demo.ftl src/test/data";
 
-
-    public static void main(String[] args) {
-        Main.execute(toArgs(CMD));
+    @Override
+    public String execute(String commandLine) throws IOException {
+        return super.execute(commandLine);
     }
 
-    private static String[] toArgs(String line) {
-        // map a "%20" to space to protect system property values containing a space
-        return Arrays.stream(line.split(SPACE)).map(s -> s.replace("%20", " ")).toArray(String[]::new);
+    public static void main(String[] args) {
+        try {
+            final String output = new ManualTest().execute(CMD);
+            System.out.println(output);
+        } catch (IOException e) {
+            throw new RuntimeException("Executing the manual test failed: " + CMD, e);
+        }
     }
 }

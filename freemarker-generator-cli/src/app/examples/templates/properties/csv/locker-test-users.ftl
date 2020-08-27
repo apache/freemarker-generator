@@ -19,15 +19,15 @@
     TENANT,SITE,USER_ID,DISPOSER_ID,PASSWORD,SMS_OTP,NAME,DESCRIPTION
     <#list dataSources?values as dataSource>
         <#assign properties = tools.properties.parse(dataSource)>
-        <#assign environments = properties["ENVIRONMENTS"]!"">
+        <#assign environments = properties.ENVIRONMENTS!"">
         <#assign tenant = extractTenant(environments)>
         <#assign site = extractSite(environments)>
-        <#assign userId = properties["USER_ID"]!"">
-        <#assign disposerId = properties["USER_ID"]!"">
-        <#assign password = properties["PASSWORD"]!"">
-        <#assign smsOtp = properties["SMS_OTP"]!"">
-        <#assign name = properties["NAME"]!"">
-        <#assign description = properties["DESCRIPTION"]!"">
+        <#assign userId = properties.USER_ID!"">
+        <#assign disposerId = properties.USER_ID!"">
+        <#assign password = properties.PASSWORD!"">
+        <#assign smsOtp = properties.SMS_OTP!"">
+        <#assign name = properties.NAME!"">
+        <#assign description = properties.DESCRIPTION!"">
         ${tenant},${site},${userId},${disposerId},${password},${smsOtp},${name},${description}
     </#list>
 </#compress>

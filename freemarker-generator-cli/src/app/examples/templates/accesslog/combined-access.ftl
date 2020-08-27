@@ -23,10 +23,10 @@
     TIMESTAMP;VERB;REQUEST;HTTPVERSION
     <#list lines as line>
         <#assign parts = grok.match(line)>
-        <#assign timestamp = parts["timestamp"]>
-        <#assign verb = parts["verb"]>
-        <#assign request = parts["request"]>
-        <#assign httpversion = parts["httpversion"]>
+        <#assign timestamp = parts.timestamp>
+        <#assign verb = parts.verb>
+        <#assign request = parts.request>
+        <#assign httpversion = parts.httpversion>
         ${timestamp};${verb};${request};${httpversion}
     </#list>
 </#compress>
