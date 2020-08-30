@@ -754,8 +754,8 @@ EDITOR ==&gt; vi</programlisting>
       <section>
         <title>Using Advanced FreeMarker Features</title>
 
-        <para>There is a `demo.ftl` which shows some advanced FreeMarker
-        functionality:</para>
+        <para>There is a <literal>demo.ftl</literal> which shows some advanced
+        FreeMarker functionality:</para>
 
         <itemizedlist>
           <listitem>
@@ -785,7 +785,7 @@ EDITOR ==&gt; vi</programlisting>
 
         <para>gives you</para>
 
-        <programlisting role="output">[docgen.insertFile "@exampleOutputs/demo.txt"]</programlisting>
+        <programlisting role="output">[docgen.insertFile "@exampleOutputs/demo.txt" charset="CP1252"]</programlisting>
       </section>
     </section>
   </chapter>
