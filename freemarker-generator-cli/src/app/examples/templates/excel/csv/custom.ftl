@@ -16,7 +16,7 @@
   under the License.
 -->
 <#assign format = CSV_TARGET_FORMAT!"DEFAULT">
-<#assign salt = tools.system.parameters["salt"]!"salt">
+<#assign salt = tools.system.parameters.salt!"salt">
 <#-- Parse the first data source & sheet of the Excel document -->
 <#assign workbook = tools.excel.parse(dataSources?values[0])>
 <#assign sheet = tools.excel.getSheets(workbook)[0]>

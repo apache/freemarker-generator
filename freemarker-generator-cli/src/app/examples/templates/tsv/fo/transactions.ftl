@@ -15,7 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign cvsFormat = tools.csv.formats["TDF"].withHeader()>
+<#assign cvsFormat = tools.csv.formats.TDF.withHeader()>
 <#assign csvParser = tools.csv.parse(dataSources?values[0], cvsFormat)>
 <#assign csvHeaders = csvParser.getHeaderMap()?keys>
 <#assign csvRecords = csvParser.records>

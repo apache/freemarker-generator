@@ -58,7 +58,7 @@ Host name       : ${tools.system.getHostName()}
 Command line    : ${tools.system.getCommandLineArgs()?join(", ")}
 System property : ${tools.system.getSystemProperty("user.name", "N.A.")}
 Timestamp       : ${tools.system.currentTimeMillis?c}
-Environment     : ${tools.system.envs["USER"]!"N.A."}
+Environment     : ${tools.system.envs.USER!"N.A."}
 
 8) Access System Properties
 ---------------------------------------------------------------------------
