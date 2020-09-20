@@ -99,6 +99,78 @@
                           <outputFile>${docgenInsertedOutputsDirectory}/info-template-output.txt</outputFile>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>named-uri-my_users-simple</id>
+                        <phase>package</phase>
+                        <goals>
+                          <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                          <executable>java</executable>
+                          <arguments>
+                              <argument>-classpath</argument>
+                              <classpath/>
+
+                              <!-- Setting up things without calling the launcher scripts in app/bin: -->
+                              <argument>-Dapp.home=${freemarkerGeneratorAppHome}</argument>
+
+                              <argument>org.apache.freemarker.generator.cli.Main</argument>
+                              <argument>-t</argument>
+                              <argument>freemarker-generator/info.ftl</argument>
+                              <argument>my_users=examples/data/csv/user.csv</argument>
+                          </arguments>
+                          <workingDirectory>${freemarkerGeneratorAppHome}</workingDirectory>
+                          <outputFile>${docgenInsertedOutputsDirectory}/named-uri-my_users-simple.txt</outputFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>named-uri-my_users-charset-fragment</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-classpath</argument>
+                                <classpath/>
+
+                                <!-- Setting up things without calling the launcher scripts in app/bin: -->
+                                <argument>-Dapp.home=${freemarkerGeneratorAppHome}</argument>
+
+                                <argument>org.apache.freemarker.generator.cli.Main</argument>
+                                <argument>-t</argument>
+                                <argument>freemarker-generator/info.ftl</argument>
+                                <argument>my_users=examples/data/csv/user.csv#charset=UTF-16</argument>
+                            </arguments>
+                            <workingDirectory>${freemarkerGeneratorAppHome}</workingDirectory>
+                            <outputFile>${docgenInsertedOutputsDirectory}/named-uri-my_users-charset-fragment.txt</outputFile>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>named-uri-example-no-name</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-classpath</argument>
+                                <classpath/>
+
+                                <!-- Setting up things without calling the launcher scripts in app/bin: -->
+                                <argument>-Dapp.home=${freemarkerGeneratorAppHome}</argument>
+
+                                <argument>org.apache.freemarker.generator.cli.Main</argument>
+                                <argument>-t</argument>
+                                <argument>freemarker-generator/info.ftl</argument>
+                                <argument>http://google.com?foo=bar</argument>
+                            </arguments>
+                            <workingDirectory>${freemarkerGeneratorAppHome}</workingDirectory>
+                            <outputFile>${docgenInsertedOutputsDirectory}/named-uri-example-no-name.txt</outputFile>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -118,7 +190,7 @@
                     <sourceDirectory>src/main/docgen</sourceDirectory>
                     <outputDirectory>${websiteOutputDirectory}</outputDirectory>
                     <insertableFiles>
-                        <outputs>${docgenInsertedOutputsDirectory}/**</outputs>
+                        <websitePomGenerated>${docgenInsertedOutputsDirectory}/**</websitePomGenerated>
                         <templates>${docgenInsertedTemplatesDirectory}/**</templates>
                         <exampleTemplates>${docgenInsertedExampleTemplatesDirectory}/**</exampleTemplates>
                         <exampleOutputs>${docgenInsertedExampleOutputDirectory}/**</exampleOutputs>

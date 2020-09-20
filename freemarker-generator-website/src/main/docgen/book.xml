@@ -160,7 +160,7 @@ version=[docgen.customVariables.version], time=2020-06-25T21:48:02+0200, commit=
         below:</para>
 
         <programlisting>&gt; freemarker-generator -h
-[docgen.insertFile "@outputs/cli-help-output.txt"]</programlisting>
+[docgen.insertFile "@websitePomGenerated/cli-help-output.txt"]</programlisting>
       </simplesect>
 
       <simplesect>
@@ -171,7 +171,7 @@ version=[docgen.customVariables.version], time=2020-06-25T21:48:02+0200, commit=
         better understand Apache FreeMarker CLI.</para>
 
         <programlisting>&gt; freemarker-generator -t freemarker-generator/info.ftl
-[docgen.insertFile "@outputs/info-template-output.txt"]</programlisting>
+[docgen.insertFile "@websitePomGenerated/info-template-output.txt"]</programlisting>
 
         <para>Above:</para>
 
@@ -796,16 +796,174 @@ EDITOR ==&gt; vi</programlisting>
     <section>
       <title>Design goals</title>
 
-      <para>TODO</para>
+      <itemizedlist>
+        <listitem>
+          <para>Create a proper command-line tool which has Unix look &amp;
+          feel</para>
+        </listitem>
+
+        <listitem>
+          <para>Handle arbitrary large input and output data</para>
+        </listitem>
+
+        <listitem>
+          <para>Support multiple source files/directories for a single
+          transformation</para>
+        </listitem>
+
+        <listitem>
+          <para>Support transformation of Java <literal>properties</literal>
+          (<literal>java.util.Properties</literal>) files<remark> Reworded
+          this a bit. Especially, to remove reference to the
+          JDK.</remark></para>
+        </listitem>
+
+        <listitem>
+          <para>Support transformation of CSV files using <link
+          xlink:href="https://commons.apache.org/proper/commons-csv/">Apache
+          Commons CSV</link></para>
+        </listitem>
+
+        <listitem>
+          <para>Support transformation of JSON using <link
+          xlink:href="https://github.com/jayway/JsonPath">Jayway's
+          JSONPath</link> and <link
+          xlink:href="https://github.com/google/gson">GSON</link></para>
+        </listitem>
+
+        <listitem>
+          <para>Support transformation of Excel using <link
+          xlink:href="https://poi.apache.org">Apache POI</link></para>
+        </listitem>
+
+        <listitem>
+          <para>Support transformation of YAML using <link
+          xlink:href="https://bitbucket.org/asomov/snakeyaml/wiki/Home">SnakeYAML</link></para>
+        </listitem>
+
+        <listitem>
+          <para>Support transformation of HTML using <link
+          xlink:href="https://jsoup.org">JSoup</link></para>
+        </listitem>
+
+        <listitem>
+          <para>Support transformation of structured log files using <link
+          xlink:href="https://github.com/thekrakken/java-grok">Grok</link></para>
+        </listitem>
+
+        <listitem>
+          <para>XML &amp; XPath is supported by FreeMarker <link
+          xlink:href="http://freemarker.org/docs/xgui.html">out-of-the-box</link></para>
+        </listitem>
+
+        <listitem>
+          <para>Support for reading a data source content from STDIN to
+          integrate with command line tools</para>
+        </listitem>
+
+        <listitem>
+          <para>Support execution of arbitrary commands using <link
+          xlink:href="https://commons.apache.org/proper/commons-exec/">Apache
+          Commons Exec</link></para>
+        </listitem>
+
+        <listitem>
+          <para>Add some commonly useful information such as Java System
+          Properties, environment variables</para>
+        </listitem>
+
+        <listitem>
+          <para>Support embedding the code in existing applications</para>
+        </listitem>
+      </itemizedlist>
     </section>
 
-    <section>
+    <section xml:id="named-uri">
       <title>Named URI-s</title>
 
-      <para>TODO</para>
+      <para>Named URIs allow to identify <literal>DataSource</literal>-s (not
+      a JDBC <literal>DataSource</literal>, <link linkend="datasources">but
+      this</link><remark> - added this, or else it can confuse Java
+      developers</remark>) and pass additional information.</para>
+
+      <para>A Named URI consists of:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>An optional name</para>
+        </listitem>
+
+        <listitem>
+          <para>An URI or simple file name</para>
+        </listitem>
+      </itemizedlist>
+
+      <para><remark>There was a figure heer from
+      https://docs.gomplate.ca/datasources/, which is nicer but I wasn't sure
+      about how that affects our LICENSE, etc. So I substituted that with this
+      paragraph. </remark>As a refresher, here's an example URL to show what
+      components an URI can have in general:
+      <literal>someScheme://user@some.domain.org:1234/foo/bar/baaz?param1=value1;param2=value2#someFragment</literal>.
+      Before the <literal>:</literal>, <literal>someScheme</literal> is called
+      the scheme, then, after the <literal>\\</literal>,
+      <literal>user@some.domain.org:1234</literal> is called the authority,
+      then comes <literal>/foo/bar/baaz</literal> with is called the path,
+      then, after the <literal>?</literal>,
+      <literal>param1=value1;param2=value2</literal> is the query, and finally
+      after the <literal>#</literal>, <literal>someFragment</literal> is
+      called the fragment.</para>
+
+      <para>For our purposes, the scheme and the path components are
+      especially important, though the other components are used by certain
+      data sources for particular purposes.</para>
+
+      <orderedlist>
+        <listitem>
+          <para>Scheme: All data sources require a scheme (except for file
+          when using relative paths)</para>
+        </listitem>
+
+        <listitem>
+          <para>Authority: Used only by remote data sources, and can be
+          omitted in some of those cases.</para>
+        </listitem>
+
+        <listitem>
+          <para>Path: Can be omitted, but usually used as the basis of the
+          locator for the datasource.</para>
+        </listitem>
+
+        <listitem>
+          <para>Query: Used mainly for HTTP and HTTPS URLs.</para>
+        </listitem>
+
+        <listitem>
+          <para>Fragment: Used rarely for providing additional attributes,
+          e.g. <literal>mimeType</literal> of <literal>charset</literal>
+          </para>
+        </listitem>
+      </orderedlist>
+
+      <para>The following Named URI loads a <literal>user.csv</literal> and
+      the data source is available as <literal>my_users</literal>:</para>
+
+      <programlisting>freemarker-generator -t freemarker-generator/info.ftl my_users=examples/data/csv/user.csv
+[docgen.insertFile "@websitePomGenerated/named-uri-my_users-simple.txt" from="FreeMarker Generator DataSources"]</programlisting>
+
+      <para>A Named URI allows to pass additional information as part of the
+      fragment, e.g. the charset of the text file:</para>
+
+      <programlisting>freemarker-generator -t freemarker-generator/info.ftl my_users=examples/data/csv/user.csv#charset=UTF-16
+[docgen.insertFile "@websitePomGenerated/named-uri-my_users-charset-fragment.txt" from="FreeMarker Generator DataSources" to="?FreeMarker Generator Parameters"]</programlisting>
+
+      <para>In addition to the simplified file syntax full URIs can be
+      used:</para>
+
+      <programlisting>freemarker-generator -t freemarker-generator/info.ftl http://google.com?foo=bar
+[docgen.insertFile "@websitePomGenerated/named-uri-example-no-name.txt" from="FreeMarker Generator DataSources" to="?FreeMarker Generator Parameters"]</programlisting>
     </section>
 
-    <section>
+    <section xml:id="datasources">
       <title>Data sources</title>
 
       <para>TODO</para>

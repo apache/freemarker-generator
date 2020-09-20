@@ -98,7 +98,7 @@ customVariables: {
 }
 
 insertableFiles: {
-  outputs: null // Must be overridden by the caller
+  websitePomGenerated: null // Must be overridden by the caller
   templates: null // Must be overridden by the caller
   exampleTemplates: null // Must be overridden by the caller
   exampleOutputs: null // Must be overridden by the caller
