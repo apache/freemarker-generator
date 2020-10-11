@@ -44,7 +44,7 @@ public class ExamplesTest extends AbstractMainTest {
 
     @Test
     public void shouldRunDemoExamples() throws IOException {
-        assertValid(execute("-t src/app/examples/templates/demo.ftl README.md"));
+        assertValid(execute("-t src/app/examples/templates/demo.ftl -PdeductSensitiveInformation=true README.md"));
     }
 
     @Test

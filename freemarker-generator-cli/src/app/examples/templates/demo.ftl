@@ -15,6 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
+<#assign deductSensitiveInformation = (tools.system.parameters.deductSensitiveInformation!'false') != 'false'>
 1) FreeMarker Special Variables
 ---------------------------------------------------------------------------
 FreeMarker version     : ${.version}
@@ -74,14 +75,31 @@ user.home    : ${tools.system.systemProperties["user.home"]!""}
 9) List Environment Variables
 ---------------------------------------------------------------------------
 <#list tools.system.envs as name,value>
+<#if !deductSensitiveInformation
+    || ['BASEDIR', 'USERNAME', 'CLASSPATH', 'TEMP', 'JAVA_HOME']?seq_contains(name?upper_case)
+>
 - ${name} ==> ${value}<#lt>
+</#if>
 </#list>
+<#if deductSensitiveInformation>
+[...]
+Some items were deducted!
+</#if>
 
 10) List System Properties
 ---------------------------------------------------------------------------
-<#list tools.system.systemProperties as name,value>
+<#list tools.system.systemProperties as name, value>
+<#if !deductSensitiveInformation
+    || ['app.dir', 'app.home', 'app.pid', 'basedir', 'java.version', 'user.home', 'user.dir', 'user.name', 'user.timezone'
+        'file.separator', 'java.class.path', 'java.home']?seq_contains(name)
+>
 - ${name} ==> ${value}<#lt>
+</#if>
 </#list>
+<#if deductSensitiveInformation>
+[...]
+Some items were deducted!
+</#if>
 
 11) Access DataSources
 ---------------------------------------------------------------------------
