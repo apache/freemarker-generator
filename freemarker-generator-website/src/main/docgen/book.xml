@@ -939,8 +939,8 @@ EDITOR ==&gt; vi</programlisting>
 
         <listitem>
           <para>Fragment: Used rarely for providing additional attributes,
-          e.g. <literal>mimeType</literal> of <literal>charset</literal>
-          </para>
+          e.g. <literal>mimeType</literal> of
+          <literal>charset</literal></para>
         </listitem>
       </orderedlist>
 
@@ -954,13 +954,13 @@ EDITOR ==&gt; vi</programlisting>
       fragment, e.g. the charset of the text file:</para>
 
       <programlisting>freemarker-generator -t freemarker-generator/info.ftl my_users=examples/data/csv/user.csv#charset=UTF-16
-[docgen.insertFile "@websitePomGenerated/named-uri-my_users-charset-fragment.txt" from="FreeMarker Generator DataSources" to="?FreeMarker Generator Parameters"]</programlisting>
+[docgen.insertFile "@websitePomGenerated/named-uri-my_users-charset-fragment.txt" from="FreeMarker Generator DataSources" toIfPresent="FreeMarker Generator Parameters"]</programlisting>
 
       <para>In addition to the simplified file syntax full URIs can be
       used:</para>
 
       <programlisting>freemarker-generator -t freemarker-generator/info.ftl http://google.com?foo=bar
-[docgen.insertFile "@websitePomGenerated/named-uri-example-no-name.txt" from="FreeMarker Generator DataSources" to="?FreeMarker Generator Parameters"]</programlisting>
+[docgen.insertFile "@websitePomGenerated/named-uri-example-no-name.txt" from="FreeMarker Generator DataSources" toIfPresent="FreeMarker Generator Parameters"]</programlisting>
     </section>
 
     <section xml:id="datasources">
