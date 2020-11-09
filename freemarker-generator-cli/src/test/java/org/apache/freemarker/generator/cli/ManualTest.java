@@ -24,7 +24,8 @@ import java.io.IOException;
 public class ManualTest extends AbstractMainTest {
 
     // private static final String CMD = "-V";
-    private static final String CMD = "-t src/app/examples/templates/demo.ftl src/test/data";
+    // private static final String CMD = "-t src/app/examples/templates/demo.ftl src/test/data";
+    private static final String CMD = "-DNR_OF_RECORDS=10 -l de -t src/app/examples/templates/javafaker/csv/testdata.ftl";
 
     @Override
     public String execute(String commandLine) throws IOException {

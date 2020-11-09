@@ -17,6 +17,7 @@
 package org.apache.freemarker.generator.tools.javafaker;
 
 import com.github.javafaker.Faker;
+import org.apache.freemarker.generator.base.util.LocaleUtils;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -25,24 +26,23 @@ import java.util.concurrent.TimeUnit;
 
 public class JavaFakerTool {
 
-    private Faker faker;
-    private Map<String, TimeUnit> timeUnitMap;
-
-    public synchronized Faker getFaker() {
-        if (faker == null) {
-            faker = new Faker(Locale.getDefault());
-            timeUnitMap = createTimeUnitMap();
-        }
-
-        return faker;
+    /**
+     * Create a Java Faker instance using the default locale.
+     */
+    public Faker getFaker() {
+        return getFaker(Locale.getDefault());
     }
 
-    public synchronized Map<String, TimeUnit> getTimeUnits() {
-        if (timeUnitMap == null) {
-            timeUnitMap = createTimeUnitMap();
-        }
+    public Faker getFaker(String localeString) {
+        return getFaker(LocaleUtils.parseLocale(localeString));
+    }
 
-        return timeUnitMap;
+    public Faker getFaker(Locale locale) {
+        return new Faker(locale);
+    }
+
+    public Map<String, TimeUnit> getTimeUnits() {
+        return createTimeUnitMap();
     }
 
     @Override
@@ -60,5 +60,4 @@ public class JavaFakerTool {
         result.put("DAYS", TimeUnit.DAYS);
         return result;
     }
-
 }

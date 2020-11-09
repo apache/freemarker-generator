@@ -114,7 +114,7 @@ public class ExamplesTest extends AbstractMainTest {
 
     @Test
     public void shouldRunJavaFakerExamples() throws IOException {
-        assertValid(execute("-PCSV_TARGET_DELIMITER=SEMICOLON -t src/app/examples/templates/javafaker/csv/testdata.ftl"));
+        assertValid(execute("-t src/app/examples/templates/javafaker/csv/testdata.ftl"));
     }
 
     @Test

@@ -19,15 +19,27 @@ package org.apache.freemarker.generator.tools.javafaker;
 import com.github.javafaker.Faker;
 import org.junit.Test;
 
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import static junit.framework.TestCase.assertTrue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 public class JavaFakerToolTest {
 
     private final Faker faker = javaFakerTool().getFaker();
+
+    @Test
+    public void shouldCreateFakerFromLocale() {
+        assertNotNull(new JavaFakerTool().getFaker(Locale.ENGLISH));
+    }
+
+    @Test
+    public void shouldCreateFakerFromLocaleString() {
+        assertNotNull(new JavaFakerTool().getFaker("de-DE"));
+    }
 
     @Test
     public void shouldCreateFakeData() {
@@ -37,7 +49,12 @@ public class JavaFakerToolTest {
         assertTrue(faker.finance().iban("AT").startsWith("AT"));
     }
 
-    private static final JavaFakerTool javaFakerTool() {
+    @Test
+    public void shouldGetTimeUnits() {
+        assertEquals(6, javaFakerTool().getTimeUnits().size());
+    }
+
+    private static JavaFakerTool javaFakerTool() {
         return new JavaFakerTool();
     }
 }

@@ -1,4 +1,3 @@
-<#ftl output_format="plainText" strip_whitespace=true>
 <#--
   Licensed to the Apache Software Foundation (ASF) under one
   or more contributor license agreements.  See the NOTICE file
@@ -15,25 +14,25 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#import "/freemarker-generator/lib/commons-csv.ftl" as CSV />
-<#assign NR_OF_RECORDS = tools.system.getString("NR_OF_RECORDS","10")>
-<#assign DAYS = tools.javafaker.timeUnits["DAYS"]>
 <#assign faker = tools.javafaker.faker>
-<#assign csvTargetFormat = CSV.targetFormat()>
+<#assign nrOfRecords = tools.system.getString("NR_OF_RECORDS","10")>
+<#assign days = tools.javafaker.timeUnits["DAYS"]>
+<#assign csvTargetFormat = tools.csv.formats["DEFAULT"].withFirstRecordAsHeader()>
 <#assign csvPrinter = tools.csv.printer(csvTargetFormat)>
 <#assign csvHeaders = ['ID','CUSTOMER_ID','FIRST_NAME','LAST_NAME','EMAIL','IBAN','CREATED_AT']>
 <#compress>
     <#if csvTargetFormat.getSkipHeaderRecord()>
         ${csvPrinter.printRecord(csvHeaders)}<#t>
     </#if>
-    <#list 1..NR_OF_RECORDS?number as i>
+    <#list 1..nrOfRecords?number as i>
         <#assign id = tools.uuid.randomUUID()>
         <#assign customerId = faker.bothify("?#######")>
         <#assign firstName = faker.name().firstName()>
         <#assign lastName = faker.name().lastName()>
         <#assign email = firstName + "." + lastName + "@gmail.com">
-        <#assign iban = faker.finance().iban("AT")>
-        <#assign createAt = faker.date().past(3650, DAYS)>
+        <#assign iban = faker.finance().iban("DE")>
+
+        <#assign createAt = faker.date().past(3650, days)>
         ${csvPrinter.printRecord(
             id,
             customerId,
