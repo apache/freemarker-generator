@@ -113,6 +113,11 @@ public class ExamplesTest extends AbstractMainTest {
     }
 
     @Test
+    public void shouldRunJavaFakerExamples() throws IOException {
+        assertValid(execute("-PCSV_TARGET_DELIMITER=SEMICOLON -t src/app/examples/templates/javafaker/csv/testdata.ftl"));
+    }
+
+    @Test
     public void shouldRunInteractiveTemplateExamples() throws IOException {
         assertValid(execute("-i ${tools.jsonpath.parse(dataSources?values[0]).read(\"$.info.title\")} src/app/examples/data/json/swagger-spec.json"));
         assertValid(execute("-i ${tools.xml.parse(dataSources?values[0])[\"recipients/person[1]/name\"]} src/app/examples/data/xml/recipients.xml"));

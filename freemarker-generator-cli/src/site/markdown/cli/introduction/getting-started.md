@@ -91,53 +91,40 @@ to better understand `Apache FreeMarker Generator`
 FreeMarker Generator Information
 ------------------------------------------------------------------------------
 FreeMarker version     : 2.3.30
-Template name          : templates/info.ftl
+Template name          : info.ftl
 Language               : en
 Locale                 : en_US
-Timestamp              : Jun 26, 2020 10:44:15 AM
+Timestamp              : Nov 9, 2020 1:13:21 PM
 Output encoding        : UTF-8
 Output format          : plainText
 
 FreeMarker Generator Template Loader Directories
 ------------------------------------------------------------------------------
-[#1] /Users/sgoeschl/work/github/apache/freemarker-generator
-[#2] /Users/sgoeschl/.freemarker-generator
-[#3] /Applications/Java/freemarker-generator-2.0.0
-
-FreeMarker Generator Tools
-------------------------------------------------------------------------------
-- CSVTool              : Process CSV files using Apache Commons CSV (see https://commons.apache.org/proper/commons-csv/)
-- DataFrameTool        : Bridge to [nRo/DataFrame](https://github.com/nRo/DataFrame)
-- ExcelTool            : Process Excels files (XLS, XLSX) using Apache POI (see https://poi.apache.org)
-- ExecTool             : Execute command line tools using Apache Commons Exec (see https://commons.apache.org/proper/commons-exec/)
-- FreeMarkerTool       : Expose advanced Apache FreeMarker classes
-- GrokTool             : Process text files using Grok expressions (see https://github.com/thekrakken/java-grok)
-- GsonTool             : Process JSON files using GSON (see https://github.com/google/gson)
-- JsonPathTool         : Process JSON files using Java JSON Path (see https://github.com/json-path/JsonPath)
-- JsoupTool            : Process  HTML files using Jsoup (see https://jsoup.org)
-- PropertiesTool       : Process JDK properties files
-- SystemTool           : Expose System-related utility methods
-- UUIDTool             : Create UUIDs
-- XmlTool              : Process XML files using Apache FreeMarker (see https://freemarker.apache.org/docs/xgui.html)
-- YamlTool             : Process YAML files using SnakeYAML(see https://bitbucket.org/asomov/snakeyaml/wiki/Home)
+[#1] /Users/sgoeschl/.freemarker-generator/templates
+[#2] /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/templates
 
 FreeMarker Generator Data Model
 ---------------------------------------------------------------------------
-- CSVTool
-- DataFrameTool
-- DataSources
-- ExcelTool
-- ExecTool
-- FreeMarkerTool
-- GrokTool
-- GsonTool
-- JsonPathTool
-- JsoupTool
-- PropertiesTool
-- SystemTool
-- UUIDTool
-- XmlTool
-- YamlTool
+- dataSources
+- tools
+
+FreeMarker Generator Tools
+------------------------------------------------------------------------------
+- csv                  : Process CSV files using Apache Commons CSV (see https://commons.apache.org/proper/commons-csv/)
+- dataframe            : Bridge to [nRo/DataFrame](https://github.com/nRo/DataFrame)
+- excel                : Process Excels files (XLS, XLSX) using Apache POI (see https://poi.apache.org)
+- exec                 : Execute command line tools using Apache Commons Exec (see https://commons.apache.org/proper/commons-exec/)
+- freemarker           : Expose advanced Apache FreeMarker classes
+- grok                 : Process text files using Grok expressions (see https://github.com/thekrakken/java-grok)
+- gson                 : Process JSON files using GSON (see https://github.com/google/gson)
+- javafaker            : Generate test data using Java Faker (see https://github.com/DiUS/java-faker)
+- jsonpath             : Process JSON files using Java JSON Path (see https://github.com/json-path/JsonPath)
+- jsoup                : Process  HTML files using Jsoup (see https://jsoup.org)
+- properties           : Process JDK properties files
+- system               : Expose System-related utility methods
+- uuid                 : Create UUIDs
+- xml                  : Process XML files using Apache FreeMarker (see https://freemarker.apache.org/docs/xgui.html)
+- yaml                 : Process YAML files using SnakeYAML(see https://bitbucket.org/asomov/snakeyaml/wiki/Home)
 ```
 
 * The "FreeMarker Generator Information" section provides insights into configuration and currently processed template.
