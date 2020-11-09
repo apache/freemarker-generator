@@ -15,33 +15,32 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#import "/freemarker-generator/lib/commons-csv.ftl" as csv />
-<#assign timeUnits = tools.javafaker.timeUnits>
+<#import "/freemarker-generator/lib/commons-csv.ftl" as CSV />
+<#assign NR_OF_RECORDS = tools.system.getString("NR_OF_RECORDS","10")>
+<#assign DAYS = tools.javafaker.timeUnits["DAYS"]>
 <#assign faker = tools.javafaker.faker>
-<#assign csvTargetFormat = csv.targetFormat()>
+<#assign csvTargetFormat = CSV.targetFormat()>
 <#assign csvPrinter = tools.csv.printer(csvTargetFormat)>
 <#assign csvHeaders = ['ID','CUSTOMER_ID','FIRST_NAME','LAST_NAME','EMAIL','IBAN','CREATED_AT']>
 <#compress>
     <#if csvTargetFormat.getSkipHeaderRecord()>
         ${csvPrinter.printRecord(csvHeaders)}<#t>
     </#if>
-    <#list 1..10 as i>
+    <#list 1..NR_OF_RECORDS?number as i>
         <#assign id = tools.uuid.randomUUID()>
         <#assign customerId = faker.bothify("?#######")>
         <#assign firstName = faker.name().firstName()>
         <#assign lastName = faker.name().lastName()>
         <#assign email = firstName + "." + lastName + "@gmail.com">
         <#assign iban = faker.finance().iban("AT")>
-        <#assign createAt = faker.date().past(3650, timeUnits["DAYS"])>
-
+        <#assign createAt = faker.date().past(3650, DAYS)>
         ${csvPrinter.printRecord(
-        id,
-        customerId,
-        firstName,
-        lastName,
-        email?lower_case
-        iban,
-        createAt?datetime?iso_local
-        )}<#t>
+            id,
+            customerId,
+            firstName,
+            lastName,
+            email?lower_case
+            iban,
+            createAt?datetime?iso_local)}
     </#list>
 </#compress>
