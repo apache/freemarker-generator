@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 public class JavaFakerTool {
 
     /**
-     * Create a Java Faker instance using the default locale.
+     * @return Java Faker instance with default locale
      */
     public Faker getFaker() {
         return getFaker(Locale.getDefault());
