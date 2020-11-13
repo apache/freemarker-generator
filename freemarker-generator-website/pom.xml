@@ -171,6 +171,30 @@
                             <outputFile>${docgenInsertedOutputsDirectory}/named-uri-example-no-name.txt</outputFile>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>named-uri-example-with-name</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>java</executable>
+                            <arguments>
+                                <argument>-classpath</argument>
+                                <classpath/>
+
+                                <!-- Setting up things without calling the launcher scripts in app/bin: -->
+                                <argument>-Dapp.home=${freemarkerGeneratorAppHome}</argument>
+
+                                <argument>org.apache.freemarker.generator.cli.Main</argument>
+                                <argument>-t</argument>
+                                <argument>freemarker-generator/info.ftl</argument>
+                                <argument>page=http://google.com?foo=bar</argument>
+                            </arguments>
+                            <workingDirectory>${freemarkerGeneratorAppHome}</workingDirectory>
+                            <outputFile>${docgenInsertedOutputsDirectory}/named-uri-example-with-name.txt</outputFile>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>

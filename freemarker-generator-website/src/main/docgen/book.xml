@@ -947,26 +947,66 @@ EDITOR ==&gt; vi</programlisting>
       <para>The following Named URI loads a <literal>user.csv</literal> and
       the data source is available as <literal>my_users</literal>:</para>
 
-      <programlisting>freemarker-generator -t freemarker-generator/info.ftl my_users=examples/data/csv/user.csv
-[docgen.insertFile "@websitePomGenerated/named-uri-my_users-simple.txt" from="FreeMarker Generator DataSources"]</programlisting>
+      <programlisting>&gt; freemarker-generator -t freemarker-generator/info.ftl my_users=examples/data/csv/user.csv
+[docgen.insertFile "@websitePomGenerated/named-uri-my_users-simple.txt" from="FreeMarker Generator DataSources" toIfPresent=r"^\s*$"]</programlisting>
 
       <para>A Named URI allows to pass additional information as part of the
       fragment, e.g. the charset of the text file:</para>
 
-      <programlisting>freemarker-generator -t freemarker-generator/info.ftl my_users=examples/data/csv/user.csv#charset=UTF-16
-[docgen.insertFile "@websitePomGenerated/named-uri-my_users-charset-fragment.txt" from="FreeMarker Generator DataSources" toIfPresent="FreeMarker Generator Parameters"]</programlisting>
+      <programlisting>&gt; freemarker-generator -t freemarker-generator/info.ftl my_users=examples/data/csv/user.csv#charset=UTF-16
+[docgen.insertFile "@websitePomGenerated/named-uri-my_users-charset-fragment.txt" from="FreeMarker Generator DataSources" toIfPresent=r"^\s*$"]</programlisting>
 
       <para>In addition to the simplified file syntax full URIs can be
       used:</para>
 
-      <programlisting>freemarker-generator -t freemarker-generator/info.ftl http://google.com?foo=bar
-[docgen.insertFile "@websitePomGenerated/named-uri-example-no-name.txt" from="FreeMarker Generator DataSources" toIfPresent="FreeMarker Generator Parameters"]</programlisting>
+      <programlisting>&gt; freemarker-generator -t freemarker-generator/info.ftl http://google.com?foo=bar
+[docgen.insertFile "@websitePomGenerated/named-uri-example-no-name.txt" from="FreeMarker Generator DataSources" toIfPresent=r"^\s*$"]</programlisting>
+
+      <para>and also combined with a name:</para>
+
+      <programlisting>&gt; freemarker-generator -t freemarker-generator/info.ftl page=http://google.com?foo=bar
+[docgen.insertFile "@websitePomGenerated/named-uri-example-with-name.txt" from="FreeMarker Generator DataSources" toIfPresent=r"^\s*$"]</programlisting>
     </section>
 
     <section xml:id="datasources">
       <title>Data sources</title>
 
-      <para>TODO</para>
+      <para>A <literal>DataSource</literal> consists of lazy-loaded data
+      available in Apache FreeMarker's model (context) - it provides:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>a <literal>charset</literal> for reading textual
+          content</para>
+        </listitem>
+
+        <listitem>
+          <para>a <literal>content type</literal></para>
+        </listitem>
+
+        <listitem>
+          <para>a <literal>name</literal> and a
+          <literal>group</literal></para>
+        </listitem>
+
+        <listitem>
+          <para>access to textual content directly or using a line
+          iterator</para>
+        </listitem>
+
+        <listitem>
+          <para>access to the data input stream</para>
+        </listitem>
+      </itemizedlist>
+
+      <simplesect>
+        <title>Loading a <literal>DataSource</literal></title>
+
+        <para>A <literal>DataSource</literal> can be loaded from the file
+        system, for example with a positional command line argument:</para>
+
+        <programlisting/>
+      </simplesect>
     </section>
 
     <section>
