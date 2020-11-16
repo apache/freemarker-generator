@@ -39,6 +39,7 @@ All notable changes to this project will be documented in this file. We try to a
 * [FREEMARKER-127] Site build fails with missing "org/apache/maven/doxia/siterenderer/DocumentContent"
 
 ### Internal
+* [FREEMARKER-164] Use default unsafe FreeMarker configuration
 * [FREEMARKER-153] FreeMarker Generator release preparations
 
 [FREEMARKER-127]: https://issues.apache.org/jira/browse/FREEMARKER-127
@@ -59,3 +60,4 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-153]: https://issues.apache.org/jira/browse/FREEMARKER-153
 [FREEMARKER-155]: https://issues.apache.org/jira/browse/FREEMARKER-155
 [FREEMARKER-163]: https://issues.apache.org/jira/browse/FREEMARKER-163
+[FREEMARKER-164]: https://issues.apache.org/jira/browse/FREEMARKER-164
