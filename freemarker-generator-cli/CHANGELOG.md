@@ -41,6 +41,7 @@ All notable changes to this project will be documented in this file. We try to a
 ### Internal
 * [FREEMARKER-164] Use default unsafe FreeMarker configuration
 * [FREEMARKER-153] FreeMarker Generator release preparations
+* [FREEMARKER-168] Upgrade dependencies of freemarker-generator
 
 [FREEMARKER-127]: https://issues.apache.org/jira/browse/FREEMARKER-127
 [FREEMARKER-128]: https://issues.apache.org/jira/browse/FREEMARKER-128
@@ -61,3 +62,4 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-155]: https://issues.apache.org/jira/browse/FREEMARKER-155
 [FREEMARKER-163]: https://issues.apache.org/jira/browse/FREEMARKER-163
 [FREEMARKER-164]: https://issues.apache.org/jira/browse/FREEMARKER-164
+[FREEMARKER-168]: https://issues.apache.org/jira/browse/FREEMARKER-168
