@@ -32,9 +32,11 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.apache.poi.ss.usermodel.Row.MissingCellPolicy.CREATE_NULL_AS_BLANK;
 
@@ -55,6 +57,12 @@ public class ExcelTool {
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse Excel data source: " + dataSource, e);
         }
+    }
+
+    public List<Workbook> parse(Collection<DataSource> dataSources) {
+        return dataSources.stream()
+                .map(this::parse)
+                .collect(Collectors.toList());
     }
 
     /**

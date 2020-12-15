@@ -54,6 +54,4 @@ public class JsoupToolTest {
     private JsoupTool jsoupTool() {
         return new JsoupTool();
     }
-
-
 }

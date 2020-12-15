@@ -16,10 +16,14 @@
  */
 package org.apache.freemarker.generator.tools.gson;
 
+import org.apache.freemarker.generator.base.datasource.DataSource;
+import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
+import org.apache.freemarker.generator.base.mime.Mimetypes;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -104,7 +108,7 @@ public class GsonToolTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void shouldParseJsonWithComemnts() {
+    public void shouldParseJsonWithComments() {
         final Map<String, Object> map = (Map) gsonTool.parse(JSON_WITH_COMMENTS);
 
         assertEquals("Apple", map.get("fruit"));
@@ -123,6 +127,25 @@ public class GsonToolTest {
 
     @Test
     @SuppressWarnings("unchecked")
+    public void shouldParseDataSource() {
+        final DataSource dataSource = dataSource();
+        final Map<String, Object> map = (Map) gsonTool.parse(dataSource);
+
+        assertEquals(3, map.size());
+        assertEquals("110.0", map.get("id").toString());
+        assertEquals("Python", map.get("language"));
+        assertEquals("1900.0", map.get("price").toString());
+    }
+
+    @Test
+    public void shouldParseDataSources() {
+        final List<DataSource> dataSources = Arrays.asList(dataSource(), dataSource());
+        final List<Object> jsonList = gsonTool.parse(dataSources);
+
+        assertEquals(2, jsonList.size());
+    }
+
+    @Test
     public void shouldConvertToJson() {
         assertEquals(JSON_OBJECT, gsonTool.toJson(gsonTool.parse(JSON_OBJECT)));
         assertEquals(JSON_OBJECT_WITH_ARRAY, gsonTool.toJson(gsonTool.parse(JSON_OBJECT_WITH_ARRAY)));
@@ -139,5 +162,9 @@ public class GsonToolTest {
 
     private GsonTool gsonTool() {
         return new GsonTool();
+    }
+
+    private DataSource dataSource() {
+        return DataSourceFactory.fromString("name", "group", JSON_OBJECT, Mimetypes.MIME_APPLICATION_JSON);
     }
 }

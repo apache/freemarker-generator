@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. We try to a
 ## 0.1.0-SNAPSHOT
 
 ### Added
+* Parse list of `DataSources` for the various tools
 * [FREEMARKER-163] Integrate Java Faker library for test data generation
 * [FREEMARKER-148] Make usage of "DataSources" more "Freemarker" like
 * [FREEMARKER-149] Support multiple template transformations on the command line

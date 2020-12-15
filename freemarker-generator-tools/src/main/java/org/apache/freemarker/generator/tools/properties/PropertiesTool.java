@@ -21,7 +21,10 @@ import org.apache.freemarker.generator.base.util.PropertiesFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
+import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 public class PropertiesTool {
 
@@ -31,6 +34,12 @@ public class PropertiesTool {
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse properties: " + dataSource, e);
         }
+    }
+
+    public List<Properties> parse(Collection<DataSource> dataSources) {
+        return dataSources.stream()
+                .map(this::parse)
+                .collect(Collectors.toList());
     }
 
     public Properties parse(String value) {
