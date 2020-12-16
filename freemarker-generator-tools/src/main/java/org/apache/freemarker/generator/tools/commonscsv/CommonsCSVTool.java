@@ -47,6 +47,12 @@ public class CommonsCSVTool {
         return parse(dataSource, defaultCSVInputFormat());
     }
 
+    public List<CSVParser> parse(Collection<DataSource> dataSources) {
+        return dataSources.stream()
+                .map(this::parse)
+                .collect(Collectors.toList());
+    }
+
     public CSVParser parse(DataSource dataSource, CSVFormat format) {
         if (dataSource == null) {
             throw new IllegalArgumentException("No data source was provided");

@@ -127,6 +127,12 @@ echo "examples\templates\html\txt\licence.ftl"
 %FREEMARKER_CMD% -t examples\templates\html\txt\licence.ftl examples\data\html\dependencies.html > target\out\licence.txt
 
 REM =========================================================================
+REM Java Faker
+REM =========================================================================
+echo "examples/templates/javafaker/csv/testdata.ftl"
+%FREEMARKER_CMD% -t examples/templates/javafaker/csv/testdata.ftl > target/out/testdata.csv
+
+REM =========================================================================
 REM JSON
 REM =========================================================================
 

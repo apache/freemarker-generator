@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file. We try to a
 ## 0.1.0-SNAPSHOT
 
 ### Added
+* Parse list of `DataSources` for the various tools
+* [FREEMARKER-163] Integrate Java Faker library for test data generation
 * [FREEMARKER-148] Make usage of "DataSources" more "Freemarker" like
 * [FREEMARKER-149] Support multiple template transformations on the command line
 * [FREEMARKER-144] Proof Of Concept for providing DataFrames
@@ -38,7 +40,9 @@ All notable changes to this project will be documented in this file. We try to a
 * [FREEMARKER-127] Site build fails with missing "org/apache/maven/doxia/siterenderer/DocumentContent"
 
 ### Internal
+* [FREEMARKER-164] Use default unsafe FreeMarker configuration
 * [FREEMARKER-153] FreeMarker Generator release preparations
+* [FREEMARKER-168] Upgrade dependencies of freemarker-generator
 
 [FREEMARKER-127]: https://issues.apache.org/jira/browse/FREEMARKER-127
 [FREEMARKER-128]: https://issues.apache.org/jira/browse/FREEMARKER-128
@@ -57,3 +61,6 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-151]: https://issues.apache.org/jira/browse/FREEMARKER-151
 [FREEMARKER-153]: https://issues.apache.org/jira/browse/FREEMARKER-153
 [FREEMARKER-155]: https://issues.apache.org/jira/browse/FREEMARKER-155
+[FREEMARKER-163]: https://issues.apache.org/jira/browse/FREEMARKER-163
+[FREEMARKER-164]: https://issues.apache.org/jira/browse/FREEMARKER-164
+[FREEMARKER-168]: https://issues.apache.org/jira/browse/FREEMARKER-168

@@ -22,6 +22,9 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.yaml.snakeyaml.DumperOptions.FlowStyle.BLOCK;
 
@@ -35,6 +38,12 @@ public class SnakeYamlTool {
         } catch (IOException e) {
             throw new RuntimeException("Failed to load YAML data source: " + dataSource, e);
         }
+    }
+
+    public List<Object> parse(Collection<DataSource> dataSources) {
+        return dataSources.stream()
+                .map(this::parse)
+                .collect(Collectors.toList());
     }
 
     public Object parse(String yaml) {
