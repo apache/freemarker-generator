@@ -24,7 +24,6 @@ import org.apache.freemarker.generator.cli.model.GeneratorObjectWrapper;
 import java.util.Properties;
 import java.util.function.Supplier;
 
-import static freemarker.core.TemplateClassResolver.ALLOWS_NOTHING_RESOLVER;
 import static freemarker.template.Configuration.VERSION_2_3_29;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Stream.of;
@@ -51,10 +50,6 @@ public class ConfigurationSupplier implements Supplier<Configuration> {
     public Configuration get() {
         try {
             final Configuration configuration = new Configuration(FREEMARKER_VERSION);
-
-            // apply safe default configuration
-            configuration.setAPIBuiltinEnabled(false);
-            configuration.setNewBuiltinClassResolver(ALLOWS_NOTHING_RESOLVER);
 
             // apply all "freemarker.configuration.setting" values
             configuration.setSettings(freeMarkerConfigurationSettings());

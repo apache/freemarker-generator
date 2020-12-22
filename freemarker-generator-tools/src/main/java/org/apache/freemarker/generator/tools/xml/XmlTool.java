@@ -22,6 +22,9 @@ import org.xml.sax.InputSource;
 
 import java.io.InputStream;
 import java.io.StringReader;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class XmlTool {
 
@@ -31,6 +34,12 @@ public class XmlTool {
         } catch (Exception e) {
             throw new RuntimeException("Failed to parse XML data source: " + dataSource, e);
         }
+    }
+
+    public List<NodeModel> parse(Collection<DataSource> dataSources) {
+        return dataSources.stream()
+                .map(this::parse)
+                .collect(Collectors.toList());
     }
 
     public NodeModel parse(String value) {

@@ -23,6 +23,9 @@ import org.apache.freemarker.generator.base.datasource.DataSource;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * JSON processing using <a href="https://github.com/google/gson">Google GSON</a>
@@ -43,6 +46,18 @@ public class GsonTool {
         } catch (IOException e) {
             throw new RuntimeException("Failed to parse data source:" + dataSource, e);
         }
+    }
+
+    /**
+     * Parse a list of data sources.
+     *
+     * @param dataSources list of data sources
+     * @return list of parsed JSON (either as a map or list)
+     */
+    public List<Object> parse(Collection<DataSource> dataSources) {
+        return dataSources.stream()
+                .map(this::parse)
+                .collect(Collectors.toList());
     }
 
     /**
