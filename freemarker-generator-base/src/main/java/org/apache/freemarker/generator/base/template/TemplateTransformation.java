@@ -16,8 +16,6 @@
  */
 package org.apache.freemarker.generator.base.template;
 
-import org.apache.freemarker.generator.base.datasource.DataSources;
-
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -28,21 +26,11 @@ public class TemplateTransformation {
     /** Source of template */
     private final TemplateSource templateSource;
 
-    /** Data sources being transformed */
-    private final DataSources dataSources;
-
     /** Output of template */
     private final TemplateOutput templateOutput;
 
     public TemplateTransformation(TemplateSource templateSource, TemplateOutput templateOutput) {
         this.templateSource = requireNonNull(templateSource);
-        this.dataSources = null;
-        this.templateOutput = requireNonNull(templateOutput);
-    }
-
-    public TemplateTransformation(TemplateSource templateSource, DataSources dataSources, TemplateOutput templateOutput) {
-        this.templateSource = requireNonNull(templateSource);
-        this.dataSources = requireNonNull(dataSources);
         this.templateOutput = requireNonNull(templateOutput);
     }
 
@@ -54,15 +42,10 @@ public class TemplateTransformation {
         return templateOutput;
     }
 
-    public DataSources getDataSources() {
-        return dataSources;
-    }
-
     @Override
     public String toString() {
-        return "TemplateTransformation{" +
+        return "OutputGenerator{" +
                 "templateSource=" + templateSource +
-                "dataSources=" + dataSources +
                 ", templateOutput=" + templateOutput +
                 '}';
     }
