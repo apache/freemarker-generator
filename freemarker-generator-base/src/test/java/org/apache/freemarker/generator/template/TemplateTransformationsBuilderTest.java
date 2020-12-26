@@ -34,8 +34,10 @@ import java.util.List;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class TemplateTransformationsBuilderTest {
 
@@ -43,6 +45,8 @@ public class TemplateTransformationsBuilderTest {
     private static final String OTHER_TEMPLATE_FILE_NAME = "src/test/template/nginx/nginx.conf.ftl";
     private static final String ANY_TEMPLATE_PATH = "template/info.ftl";
     private static final String ANY_TEMPLATE_DIRECTORY_NAME = "src/test/template";
+    private static final String ANY_TEMPLATE_URL = "https://raw.githubusercontent.com/apache/freemarker-generator/master/freemarker-generator-cli/src/app/templates/freemarker-generator/info.ftl";
+    private static final String ANY_ENV_URI = "env:///JAVA_HOME";
 
     // === Interactive Template =============================================
 
@@ -93,7 +97,7 @@ public class TemplateTransformationsBuilderTest {
 
         assertNotNull(templateSource.getName());
         assertEquals(Origin.TEMPLATE_CODE, templateSource.getOrigin());
-        assertNotNull(templateSource.getCode());
+        assertTrue(templateSource.getCode().contains("Licensed to the Apache Software Foundation"));
         assertNull(templateSource.getPath());
         assertEquals(StandardCharsets.UTF_8, templateSource.getEncoding());
 
@@ -129,10 +133,10 @@ public class TemplateTransformationsBuilderTest {
         final TemplateSource templateSource = transformations.get(0).getTemplateSource();
         final TemplateOutput templateOutput = transformations.get(0).getTemplateOutput();
 
-        assertNotNull(templateSource.getName());
+        assertEquals(ANY_TEMPLATE_PATH, templateSource.getName());
         assertEquals(Origin.TEMPLATE_LOADER, templateSource.getOrigin());
         assertNull(templateSource.getCode());
-        assertNotNull(templateSource.getPath());
+        assertEquals(ANY_TEMPLATE_PATH, templateSource.getPath());
         assertEquals(StandardCharsets.UTF_8, templateSource.getEncoding());
 
         assertNotNull(templateOutput.getWriter());
@@ -187,6 +191,44 @@ public class TemplateTransformationsBuilderTest {
 
         assertEquals(1, transformations.size());
         assertEquals("application.properties", transformations.get(0).getTemplateSource().getName());
+    }
+
+    // === Template URL ===============================================
+
+    @Test
+    public void shouldCreateFromTemplateUrl() {
+        final List<TemplateTransformation> transformations = builder()
+                .addTemplateSource(ANY_TEMPLATE_URL)
+                .setWriter(stdoutWriter())
+                .build();
+
+        final TemplateSource templateSource = transformations.get(0).getTemplateSource();
+
+        assertEquals(1, transformations.size());
+        assertEquals(ANY_TEMPLATE_URL, templateSource.getName());
+        assertEquals(Origin.TEMPLATE_CODE, templateSource.getOrigin());
+        assertNull(templateSource.getPath());
+        assertEquals(StandardCharsets.UTF_8, templateSource.getEncoding());
+        assertTrue(templateSource.getCode().contains("<#ftl"));
+    }
+
+    // === Template ENV Variable =============================================
+
+    @Test
+    public void shouldCreateFromTemplateEnvironmentVariable() {
+        final List<TemplateTransformation> transformations = builder()
+                .addTemplateSource(ANY_ENV_URI)
+                .setWriter(stdoutWriter())
+                .build();
+
+        final TemplateSource templateSource = transformations.get(0).getTemplateSource();
+
+        assertEquals(1, transformations.size());
+        assertEquals("JAVA_HOME", templateSource.getName());
+        assertEquals(Origin.TEMPLATE_CODE, templateSource.getOrigin());
+        assertNull(templateSource.getPath());
+        assertEquals(StandardCharsets.UTF_8, templateSource.getEncoding());
+        assertFalse(templateSource.getCode().isEmpty());
     }
 
     private TemplateTransformationsBuilder builder() {

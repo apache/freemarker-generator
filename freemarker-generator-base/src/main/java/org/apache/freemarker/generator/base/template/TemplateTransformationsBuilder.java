@@ -17,6 +17,8 @@
 package org.apache.freemarker.generator.base.template;
 
 import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
+import org.apache.freemarker.generator.base.datasource.DataSource;
+import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.freemarker.generator.base.file.RecursiveFileSupplier;
 import org.apache.freemarker.generator.base.util.StringUtils;
 import org.apache.freemarker.generator.base.util.Validate;
@@ -154,10 +156,12 @@ public class TemplateTransformationsBuilder {
             return resolveTemplateFile(source, output);
         } else if (isTemplateDirectoryFound(source)) {
             return resolveTemplateDirectory(source, output);
-        } else if (isTemplatePath(source)) {
-            return resolveTemplatePath(source, output);
+        } else if (isTemplateHttpUrl(source)) {
+            return resolveTemplateHttpUrl(source, output);
+        } else if (isTemplateUri(source)) {
+            return resolveTemplateUri(source, output);
         } else {
-            return resolveTemplateCode(source, output);
+            return resolveTemplatePath(source, output);
         }
     }
 
@@ -184,8 +188,20 @@ public class TemplateTransformationsBuilder {
         return templateTransformations;
     }
 
-    private List<TemplateTransformation> resolveTemplatePath(String source, File out) {
+    private List<TemplateTransformation> resolveTemplateHttpUrl(String source, File out) {
         final TemplateSource templateSource = templateSource(source);
+        final TemplateOutput templateOutput = templateOutput(out);
+        return singletonList(new TemplateTransformation(templateSource, templateOutput));
+    }
+
+    private List<TemplateTransformation> resolveTemplateUri(String source, File out) {
+        final TemplateSource templateSource = templateSource(source);
+        final TemplateOutput templateOutput = templateOutput(out);
+        return singletonList(new TemplateTransformation(templateSource, templateOutput));
+    }
+
+    private List<TemplateTransformation> resolveTemplatePath(String source, File out) {
+        final TemplateSource templateSource = TemplateSource.fromPath(source);
         final TemplateOutput templateOutput = templateOutput(out);
         return singletonList(new TemplateTransformation(templateSource, templateOutput));
     }
@@ -193,12 +209,6 @@ public class TemplateTransformationsBuilder {
     private TemplateTransformation resolveInteractiveTemplate(File out) {
         final TemplateOutput templateOutput = templateOutput(out);
         return new TemplateTransformation(interactiveTemplate, templateOutput);
-    }
-
-    private List<TemplateTransformation> resolveTemplateCode(String source, File out) {
-        final TemplateSource templateSource = TemplateSource.fromCode(Location.INTERACTIVE, source);
-        final TemplateOutput templateOutput = templateOutput(out);
-        return singletonList(new TemplateTransformation(templateSource, templateOutput));
     }
 
     private TemplateOutput templateOutput(File templateOutputFile) {
@@ -210,7 +220,9 @@ public class TemplateTransformationsBuilder {
     }
 
     private TemplateSource templateSource(String source) {
-        return TemplateSourceFactory.create(source);
+        try (DataSource dataSource = DataSourceFactory.create(source)) {
+            return TemplateSource.fromCode(dataSource.getName(), dataSource.getText());
+        }
     }
 
     private String getInclude() {
@@ -251,8 +263,12 @@ public class TemplateTransformationsBuilder {
         return file.exists() && file.isDirectory();
     }
 
-    private static boolean isTemplatePath(String source) {
-        return !isTemplateFileFound(source) && !isTemplateDirectoryFound(source);
+    private static boolean isTemplateHttpUrl(String source) {
+        return source.contains("http://") || source.contains("https://");
+    }
+
+    private static boolean isTemplateUri(String source) {
+        return source.contains("://");
     }
 
     private static RecursiveFileSupplier templateFilesSupplier(String source, String include, String exclude) {
