@@ -17,14 +17,14 @@
 package org.apache.freemarker.generator.cli.config;
 
 import freemarker.cache.TemplateLoader;
-import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.datasource.DataSourcesSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesClassPathSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesFileSystemSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesSupplier;
+import org.apache.freemarker.generator.base.template.TemplateTransformation;
 import org.apache.freemarker.generator.base.template.TemplateTransformationsBuilder;
-import org.apache.freemarker.generator.base.template.TemplateTransformationsSupplier;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -68,10 +68,10 @@ public class Suppliers {
         return settings::getUserParameters;
     }
 
-    public static TemplateTransformationsSupplier templateTransformationsSupplier(Settings settings) {
+    public static Supplier<List<TemplateTransformation>> templateTransformationsSupplier(Settings settings) {
         return () -> TemplateTransformationsBuilder.builder()
-                .setTemplate(Location.INTERACTIVE, settings.getInteractiveTemplate())
-                .addSources(settings.getTemplates())
+                .setInteractiveTemplate(settings.getInteractiveTemplate())
+                .addTemplateSources(settings.getTemplates())
                 .addInclude(settings.getTemplateFileIncludePattern())
                 .addExclude(settings.getTemplateFileExcludePattern())
                 .addOutputs(settings.getOutputs())

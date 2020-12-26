@@ -29,8 +29,8 @@ import java.nio.charset.StandardCharsets;
 public class TemplateSource {
 
     public enum Origin {
-        PATH,
-        CODE
+        TEMPLATE_LOADER,
+        TEMPLATE_CODE
     }
 
     /** Name of template for diagnostics */
@@ -50,7 +50,7 @@ public class TemplateSource {
 
     private TemplateSource(String name, String code) {
         this.name = name;
-        this.origin = Origin.CODE;
+        this.origin = Origin.TEMPLATE_CODE;
         this.code = code;
         this.path = null;
         this.encoding = StandardCharsets.UTF_8;
@@ -58,7 +58,7 @@ public class TemplateSource {
 
     private TemplateSource(String name, String path, Charset encoding) {
         this.name = name;
-        this.origin = Origin.PATH;
+        this.origin = Origin.TEMPLATE_LOADER;
         this.code = null;
         this.path = path;
         this.encoding = encoding;

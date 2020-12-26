@@ -18,32 +18,29 @@ package org.apache.freemarker.generator.base.template;
 
 import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.file.RecursiveFileSupplier;
-import org.apache.freemarker.generator.base.util.NonClosableWriterWrapper;
 import org.apache.freemarker.generator.base.util.StringUtils;
 import org.apache.freemarker.generator.base.util.Validate;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.singletonList;
 
 /**
- * Provide the logic to define multiple transformations from the user input.
+ * Maps user-supplied templates (interactive, files, directories, paths) to a
+ * list of TemplateTransformation.
  */
 public class TemplateTransformationsBuilder {
 
     /** Interactive template */
-    private TemplateSource template;
+    private TemplateSource interactiveTemplate;
 
     /** List of templates and/or template directories to be rendered */
-    private final List<String> sources;
+    private final List<String> templateSources;
 
     /** Optional include patterns for resolving source templates or template directories */
     private final List<String> includes;
@@ -51,14 +48,14 @@ public class TemplateTransformationsBuilder {
     /** Optional exclude patterns for resolving source templates or template directories */
     private final List<String> excludes;
 
-    /** Optional output file or directory */
+    /** Optional output file(s) or directory - if none is defined everything is written to a user-supplied writer */
     private final List<String> outputs;
 
     /** Optional user-supplied writer */
     private Writer writer;
 
     private TemplateTransformationsBuilder() {
-        this.sources = new ArrayList<>();
+        this.templateSources = new ArrayList<>();
         this.includes = new ArrayList<>();
         this.excludes = new ArrayList<>();
         this.outputs = new ArrayList<>();
@@ -69,7 +66,7 @@ public class TemplateTransformationsBuilder {
         return new TemplateTransformationsBuilder();
     }
 
-    public TemplateTransformations build() {
+    public List<TemplateTransformation> build() {
         validate();
 
         final List<TemplateTransformation> result = new ArrayList<>();
@@ -78,32 +75,32 @@ public class TemplateTransformationsBuilder {
             final File outputFile = getOutputFile(0).orElse(null);
             result.add(resolveInteractiveTemplate(outputFile));
         } else {
-            for (int i = 0; i < sources.size(); i++) {
-                final String source = sources.get(i);
+            for (int i = 0; i < templateSources.size(); i++) {
+                final String source = templateSources.get(i);
                 final File output = getOutputFile(i).orElse(null);
                 result.addAll(resolve(source, output));
             }
         }
 
-        return new TemplateTransformations(result);
+        return result;
     }
 
-    public TemplateTransformationsBuilder setTemplate(String name, String code) {
+    public TemplateTransformationsBuilder setInteractiveTemplate(String code) {
         if (StringUtils.isNotEmpty(code)) {
-            this.template = TemplateSource.fromCode(name, code);
+            this.interactiveTemplate = TemplateSource.fromCode(Location.INTERACTIVE, code);
         }
         return this;
     }
 
-    public TemplateTransformationsBuilder addSource(String source) {
+    public TemplateTransformationsBuilder addTemplateSource(String source) {
         if (StringUtils.isNotEmpty(source)) {
-            this.sources.add(source);
+            this.templateSources.add(source);
         }
         return this;
     }
 
-    public TemplateTransformationsBuilder addSources(Collection<String> sources) {
-        sources.forEach(this::addSource);
+    public TemplateTransformationsBuilder addTemplateSources(Collection<String> sources) {
+        sources.forEach(this::addTemplateSource);
         return this;
     }
 
@@ -114,23 +111,9 @@ public class TemplateTransformationsBuilder {
         return this;
     }
 
-    public TemplateTransformationsBuilder addIncludes(Collection<String> includes) {
-        if (includes != null) {
-            this.includes.addAll(includes);
-        }
-        return this;
-    }
-
     public TemplateTransformationsBuilder addExclude(String exclude) {
         if (StringUtils.isNotEmpty(exclude)) {
             this.excludes.add(exclude);
-        }
-        return this;
-    }
-
-    public TemplateTransformationsBuilder addExcludes(Collection<String> excludes) {
-        if (excludes != null) {
-            this.excludes.addAll(excludes);
         }
         return this;
     }
@@ -154,14 +137,9 @@ public class TemplateTransformationsBuilder {
         return this;
     }
 
-    public TemplateTransformationsBuilder setStdOut() {
-        this.writer = new NonClosableWriterWrapper(new BufferedWriter(new OutputStreamWriter(System.out, UTF_8)));
-        return this;
-    }
-
     private void validate() {
-        Validate.isTrue(template != null || !sources.isEmpty(), "No template was provided");
-        Validate.isTrue(template == null || sources.isEmpty(), "Interactive template does not support multiple sources");
+        Validate.isTrue(interactiveTemplate != null || !templateSources.isEmpty(), "Interactive template does not support multiple sources");
+        Validate.isTrue(interactiveTemplate == null || templateSources.isEmpty(), "No template was provided");
     }
 
     /**
@@ -172,9 +150,9 @@ public class TemplateTransformationsBuilder {
      * @return list of <code>TemplateTransformation</code>
      */
     private List<TemplateTransformation> resolve(String source, File output) {
-        if (isTemplateFile(source)) {
+        if (isTemplateFileFound(source)) {
             return resolveTemplateFile(source, output);
-        } else if (isTemplateDirectory(source)) {
+        } else if (isTemplateDirectoryFound(source)) {
             return resolveTemplateDirectory(source, output);
         } else if (isTemplatePath(source)) {
             return resolveTemplatePath(source, output);
@@ -214,7 +192,7 @@ public class TemplateTransformationsBuilder {
 
     private TemplateTransformation resolveInteractiveTemplate(File out) {
         final TemplateOutput templateOutput = templateOutput(out);
-        return new TemplateTransformation(template, templateOutput);
+        return new TemplateTransformation(interactiveTemplate, templateOutput);
     }
 
     private List<TemplateTransformation> resolveTemplateCode(String source, File out) {
@@ -244,7 +222,7 @@ public class TemplateTransformationsBuilder {
     }
 
     private boolean hasInteractiveTemplate() {
-        return template != null;
+        return interactiveTemplate != null;
     }
 
     private Optional<File> getOutputFile(int i) {
@@ -263,18 +241,18 @@ public class TemplateTransformationsBuilder {
         return new File(outputDirectory, relativeOutputFileName);
     }
 
-    private static boolean isTemplateFile(String source) {
+    private static boolean isTemplateFileFound(String source) {
         final File file = new File(source);
         return file.exists() && file.isFile();
     }
 
-    private static boolean isTemplateDirectory(String source) {
+    private static boolean isTemplateDirectoryFound(String source) {
         final File file = new File(source);
         return file.exists() && file.isDirectory();
     }
 
     private static boolean isTemplatePath(String source) {
-        return !isTemplateFile(source) && !isTemplateDirectory(source);
+        return !isTemplateFileFound(source) && !isTemplateDirectoryFound(source);
     }
 
     private static RecursiveFileSupplier templateFilesSupplier(String source, String include, String exclude) {

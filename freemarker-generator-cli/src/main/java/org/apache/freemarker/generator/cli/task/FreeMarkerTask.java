@@ -27,7 +27,6 @@ import org.apache.freemarker.generator.base.datasource.DataSources;
 import org.apache.freemarker.generator.base.template.TemplateOutput;
 import org.apache.freemarker.generator.base.template.TemplateSource;
 import org.apache.freemarker.generator.base.template.TemplateTransformation;
-import org.apache.freemarker.generator.base.template.TemplateTransformations;
 import org.apache.freemarker.generator.base.util.UriUtils;
 import org.apache.freemarker.generator.cli.config.Settings;
 
@@ -70,7 +69,7 @@ public class FreeMarkerTask implements Callable<Integer> {
     private final Supplier<Map<String, Object>> dataModelsSupplier;
     private final Supplier<Map<String, Object>> parameterModelSupplier;
     private final Supplier<Configuration> configurationSupplier;
-    private final Supplier<TemplateTransformations> templateTransformationsSupplier;
+    private final Supplier<List<TemplateTransformation>> templateTransformationsSupplier;
 
 
     public FreeMarkerTask(Settings settings) {
@@ -86,7 +85,7 @@ public class FreeMarkerTask implements Callable<Integer> {
 
     public FreeMarkerTask(Settings settings,
                           Supplier<Configuration> configurationSupplier,
-                          Supplier<TemplateTransformations> templateTransformationsSupplier,
+                          Supplier<List<TemplateTransformation>> templateTransformationsSupplier,
                           Supplier<List<DataSource>> dataSourcesSupplier,
                           Supplier<Map<String, Object>> dataModelsSupplier,
                           Supplier<Map<String, Object>> parameterModelSupplier,
@@ -104,10 +103,10 @@ public class FreeMarkerTask implements Callable<Integer> {
     public Integer call() {
         try {
             final Configuration configuration = configurationSupplier.get();
-            final TemplateTransformations templateTransformations = templateTransformationsSupplier.get();
+            final List<TemplateTransformation> templateTransformations = templateTransformationsSupplier.get();
             final DataSources dataSources = dataSources(settings, dataSourcesSupplier);
             final Map<String, Object> dataModel = dataModel(dataSources, parameterModelSupplier, dataModelsSupplier, toolsSupplier);
-            templateTransformations.getList().forEach(t -> process(configuration, t, dataModel));
+            templateTransformations.forEach(t -> process(configuration, t, dataModel));
             return SUCCESS;
         } catch (RuntimeException e) {
             throw new RuntimeException("Failed to process templates", e);
@@ -177,16 +176,16 @@ public class FreeMarkerTask implements Callable<Integer> {
      */
     private static Template template(Configuration configuration, TemplateSource templateSource) {
         switch (templateSource.getOrigin()) {
-            case PATH:
-                return fromTemplatePath(configuration, templateSource);
-            case CODE:
+            case TEMPLATE_LOADER:
+                return fromTemplateLoader(configuration, templateSource);
+            case TEMPLATE_CODE:
                 return fromTemplateCode(configuration, templateSource);
             default:
                 throw new IllegalArgumentException("Don't know how to handle: " + templateSource.getOrigin());
         }
     }
 
-    private static Template fromTemplatePath(Configuration configuration, TemplateSource templateSource) {
+    private static Template fromTemplateLoader(Configuration configuration, TemplateSource templateSource) {
         final String path = templateSource.getPath();
         try {
             return configuration.getTemplate(path);

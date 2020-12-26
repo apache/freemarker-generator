@@ -20,13 +20,19 @@ import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.template.TemplateOutput;
 import org.apache.freemarker.generator.base.template.TemplateSource;
 import org.apache.freemarker.generator.base.template.TemplateSource.Origin;
-import org.apache.freemarker.generator.base.template.TemplateTransformations;
+import org.apache.freemarker.generator.base.template.TemplateTransformation;
 import org.apache.freemarker.generator.base.template.TemplateTransformationsBuilder;
+import org.apache.freemarker.generator.base.util.NonClosableWriterWrapper;
 import org.junit.Test;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -42,9 +48,9 @@ public class TemplateTransformationsBuilderTest {
 
     @Test
     public void shouldCreateFromInteractiveTemplate() {
-        final TemplateTransformations transformations = builder()
-                .setTemplate(Location.INTERACTIVE, "Hello World")
-                .setStdOut()
+        final List<TemplateTransformation> transformations = builder()
+                .setInteractiveTemplate("Hello World")
+                .setWriter(stdoutWriter())
                 .build();
 
         assertEquals(1, transformations.size());
@@ -53,7 +59,7 @@ public class TemplateTransformationsBuilderTest {
         final TemplateOutput templateOutput = transformations.get(0).getTemplateOutput();
 
         assertEquals(Location.INTERACTIVE, templateSource.getName());
-        assertEquals(Origin.CODE, templateSource.getOrigin());
+        assertEquals(Origin.TEMPLATE_CODE, templateSource.getOrigin());
         assertEquals("Hello World", templateSource.getCode());
         assertNull(templateSource.getPath());
         assertEquals(StandardCharsets.UTF_8, templateSource.getEncoding());
@@ -65,20 +71,19 @@ public class TemplateTransformationsBuilderTest {
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowIllegalArgumentExceptionWheMixingInteractiveTemplateWithSources() {
         builder()
-                .setTemplate(Location.INTERACTIVE, "Hello World")
-                .addSource(ANY_TEMPLATE_FILE_NAME)
-                .setStdOut()
+                .setInteractiveTemplate("Hello World")
+                .addTemplateSource(ANY_TEMPLATE_FILE_NAME)
+                .setWriter(stdoutWriter())
                 .build();
     }
-
 
     // === Template File ====================================================
 
     @Test
     public void shouldCreateFromTemplateFile() {
-        final TemplateTransformations transformations = builder()
-                .addSource(ANY_TEMPLATE_FILE_NAME)
-                .setStdOut()
+        final List<TemplateTransformation> transformations = builder()
+                .addTemplateSource(ANY_TEMPLATE_FILE_NAME)
+                .setWriter(stdoutWriter())
                 .build();
 
         assertEquals(1, transformations.size());
@@ -87,7 +92,7 @@ public class TemplateTransformationsBuilderTest {
         final TemplateOutput templateOutput = transformations.get(0).getTemplateOutput();
 
         assertNotNull(templateSource.getName());
-        assertEquals(Origin.CODE, templateSource.getOrigin());
+        assertEquals(Origin.TEMPLATE_CODE, templateSource.getOrigin());
         assertNotNull(templateSource.getCode());
         assertNull(templateSource.getPath());
         assertEquals(StandardCharsets.UTF_8, templateSource.getEncoding());
@@ -98,10 +103,10 @@ public class TemplateTransformationsBuilderTest {
 
     @Test
     public void shouldCreateFromMultipleTemplateFiles() {
-        final TemplateTransformations transformations = builder()
-                .addSource(ANY_TEMPLATE_FILE_NAME)
+        final List<TemplateTransformation> transformations = builder()
+                .addTemplateSource(ANY_TEMPLATE_FILE_NAME)
                 .addOutput("foo/first.out")
-                .addSource(OTHER_TEMPLATE_FILE_NAME)
+                .addTemplateSource(OTHER_TEMPLATE_FILE_NAME)
                 .addOutput("foo/second.out")
                 .build();
 
@@ -114,9 +119,9 @@ public class TemplateTransformationsBuilderTest {
 
     @Test
     public void shouldCreateFromTemplatePath() {
-        final TemplateTransformations transformations = builder()
-                .addSource(ANY_TEMPLATE_PATH)
-                .setStdOut()
+        final List<TemplateTransformation> transformations = builder()
+                .addTemplateSource(ANY_TEMPLATE_PATH)
+                .setWriter(stdoutWriter())
                 .build();
 
         assertEquals(1, transformations.size());
@@ -125,7 +130,7 @@ public class TemplateTransformationsBuilderTest {
         final TemplateOutput templateOutput = transformations.get(0).getTemplateOutput();
 
         assertNotNull(templateSource.getName());
-        assertEquals(Origin.PATH, templateSource.getOrigin());
+        assertEquals(Origin.TEMPLATE_LOADER, templateSource.getOrigin());
         assertNull(templateSource.getCode());
         assertNotNull(templateSource.getPath());
         assertEquals(StandardCharsets.UTF_8, templateSource.getEncoding());
@@ -138,9 +143,9 @@ public class TemplateTransformationsBuilderTest {
 
     @Test
     public void shouldCreateFromTemplateDirectory() {
-        final TemplateTransformations transformations = builder()
-                .addSource(ANY_TEMPLATE_DIRECTORY_NAME)
-                .setStdOut()
+        final List<TemplateTransformation> transformations = builder()
+                .addTemplateSource(ANY_TEMPLATE_DIRECTORY_NAME)
+                .setWriter(stdoutWriter())
                 .build();
 
         assertEquals(2, transformations.size());
@@ -150,8 +155,8 @@ public class TemplateTransformationsBuilderTest {
 
     @Test
     public void shouldCreateFromTemplateDirectoryWithOutputDirectory() {
-        final TemplateTransformations transformations = builder()
-                .addSource(ANY_TEMPLATE_DIRECTORY_NAME)
+        final List<TemplateTransformation> transformations = builder()
+                .addTemplateSource(ANY_TEMPLATE_DIRECTORY_NAME)
                 .addOutput("/foo")
                 .build();
 
@@ -162,10 +167,10 @@ public class TemplateTransformationsBuilderTest {
 
     @Test
     public void shouldCreateFromTemplateDirectoryWithInclude() {
-        final TemplateTransformations transformations = builder()
-                .addSource(ANY_TEMPLATE_DIRECTORY_NAME)
+        final List<TemplateTransformation> transformations = builder()
+                .addTemplateSource(ANY_TEMPLATE_DIRECTORY_NAME)
                 .addInclude("*.properties")
-                .setStdOut()
+                .setWriter(stdoutWriter())
                 .build();
 
         assertEquals(1, transformations.size());
@@ -174,10 +179,10 @@ public class TemplateTransformationsBuilderTest {
 
     @Test
     public void shouldCreateFromTemplateDirectoryWithExclude() {
-        final TemplateTransformations transformations = builder()
-                .addSource(ANY_TEMPLATE_DIRECTORY_NAME)
+        final List<TemplateTransformation> transformations = builder()
+                .addTemplateSource(ANY_TEMPLATE_DIRECTORY_NAME)
                 .addExclude("*.ftl")
-                .setStdOut()
+                .setWriter(stdoutWriter())
                 .build();
 
         assertEquals(1, transformations.size());
@@ -187,5 +192,9 @@ public class TemplateTransformationsBuilderTest {
     private TemplateTransformationsBuilder builder() {
         return TemplateTransformationsBuilder
                 .builder();
+    }
+
+    private Writer stdoutWriter() {
+        return new NonClosableWriterWrapper(new BufferedWriter(new OutputStreamWriter(System.out, UTF_8)));
     }
 }

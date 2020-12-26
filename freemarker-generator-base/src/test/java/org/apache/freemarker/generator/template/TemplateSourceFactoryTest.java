@@ -39,7 +39,7 @@ public class TemplateSourceFactoryTest {
         final TemplateSource templateSource = TemplateSourceFactory.create(ANY_TEMPLATE_PATH);
 
         assertEquals(ANY_TEMPLATE_PATH, templateSource.getName());
-        assertEquals(Origin.PATH, templateSource.getOrigin());
+        assertEquals(Origin.TEMPLATE_LOADER, templateSource.getOrigin());
         assertEquals(ANY_TEMPLATE_PATH, templateSource.getPath());
         assertNull(templateSource.getCode());
     }
@@ -49,7 +49,7 @@ public class TemplateSourceFactoryTest {
         final TemplateSource templateSource = TemplateSourceFactory.create(ANY_FILE_NAME);
 
         assertEquals(ANY_FILE_NAME, templateSource.getName());
-        assertEquals(Origin.CODE, templateSource.getOrigin());
+        assertEquals(Origin.TEMPLATE_CODE, templateSource.getOrigin());
         assertNull(templateSource.getPath());
         assertFalse(templateSource.getCode().isEmpty());
     }
@@ -59,7 +59,7 @@ public class TemplateSourceFactoryTest {
         final TemplateSource templateSource = TemplateSourceFactory.create(ANY_ENV_URI);
 
         assertEquals(ANY_ENV_VARIABLE, templateSource.getName());
-        assertEquals(Origin.CODE, templateSource.getOrigin());
+        assertEquals(Origin.TEMPLATE_CODE, templateSource.getOrigin());
         assertNull(templateSource.getPath());
         assertFalse(templateSource.getCode().isEmpty());
     }
@@ -70,7 +70,7 @@ public class TemplateSourceFactoryTest {
         final TemplateSource templateSource = TemplateSourceFactory.create(ANY_URL);
 
         assertNotNull(templateSource.getName());
-        assertEquals(Origin.CODE, templateSource.getOrigin());
+        assertEquals(Origin.TEMPLATE_CODE, templateSource.getOrigin());
         assertNull(templateSource.getPath());
         assertFalse(templateSource.getCode().isEmpty());
     }
@@ -81,7 +81,7 @@ public class TemplateSourceFactoryTest {
         final TemplateSource templateSource = TemplateSourceFactory.create("info=" + ANY_URL);
 
         assertEquals("info", templateSource.getName());
-        assertEquals(Origin.CODE, templateSource.getOrigin());
+        assertEquals(Origin.TEMPLATE_CODE, templateSource.getOrigin());
         assertNull(templateSource.getPath());
         assertFalse(templateSource.getCode().isEmpty());
     }
