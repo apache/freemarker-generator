@@ -60,7 +60,6 @@ public class ConfigurationSupplierTest {
 
     private SettingsBuilder settingsBuilder() {
         return Settings.builder()
-                .setTemplateNames(singletonList(ANY_TEMPLATE_NAME))
-                .setWriter(new StringWriter());
+                .setCallerSuppliedWriter(new StringWriter());
     }
 }

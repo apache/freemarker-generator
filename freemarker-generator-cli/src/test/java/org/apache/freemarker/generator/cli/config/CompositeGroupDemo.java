@@ -14,7 +14,7 @@ public class CompositeGroupDemo {
     @ArgGroup(exclusive = false, multiplicity = "1..*")
     List<OutputGenerator> outputGenerators;
 
-    static class OutputDefinition {
+    static class TemplateOutputDefinition {
         @Option(names = { "-o", "--output" }, description = "output files or directories") List<String> outputs;
     }
 
@@ -22,20 +22,20 @@ public class CompositeGroupDemo {
         @Option(names = { "-s", "--data-source" }, description = "data source used for rendering") List<String> dataSources;
     }
 
-    static class TemplateDefinition {
+    static class TemplateSourceDefinition {
         @Option(names = { "-t", "--template" }, description = "templates to process") String template;
         @Option(names = { "-i", "--interactive" }, description = "interactive template to process") public String interactiveTemplate;
     }
 
     static class OutputGenerator {
         @ArgGroup(multiplicity = "1")
-        TemplateDefinition templateDefinition;
+        TemplateSourceDefinition templateSourceDefinition;
 
         @ArgGroup(exclusive = false)
         DataSourceDefinition dataSourceDefinition;
 
         @ArgGroup(exclusive = false)
-        OutputDefinition outputDefinition;
+        TemplateOutputDefinition templateOutputDefinition;
     }
 
     public static void main(String[] args) {
@@ -54,23 +54,23 @@ public class CompositeGroupDemo {
         Validate.notNull(outputGenerators);
         Validate.isTrue(outputGenerators.size() == 4);
 
-        Validate.isTrue(outputGenerators.get(0).templateDefinition.template.equals("template01.ftl"));
+        Validate.isTrue(outputGenerators.get(0).templateSourceDefinition.template.equals("template01.ftl"));
         Validate.isTrue(outputGenerators.get(0).dataSourceDefinition.dataSources.size() == 1);
         Validate.isTrue(outputGenerators.get(0).dataSourceDefinition.dataSources.get(0).equals("datasource10.csv"));
-        Validate.isTrue(outputGenerators.get(0).outputDefinition == null);
+        Validate.isTrue(outputGenerators.get(0).templateOutputDefinition == null);
 
-        Validate.isTrue(outputGenerators.get(1).templateDefinition.template.equals("template02.ftl"));
+        Validate.isTrue(outputGenerators.get(1).templateSourceDefinition.template.equals("template02.ftl"));
         Validate.isTrue(outputGenerators.get(1).dataSourceDefinition.dataSources.size() == 2);
         Validate.isTrue(outputGenerators.get(1).dataSourceDefinition.dataSources.get(0).equals("datasource20.csv"));
         Validate.isTrue(outputGenerators.get(1).dataSourceDefinition.dataSources.get(1).equals("datasource21.csv"));
-        Validate.isTrue(outputGenerators.get(0).outputDefinition == null);
+        Validate.isTrue(outputGenerators.get(0).templateOutputDefinition == null);
 
-        Validate.isTrue(outputGenerators.get(2).templateDefinition.interactiveTemplate.equals("some-interactive-template01"));
+        Validate.isTrue(outputGenerators.get(2).templateSourceDefinition.interactiveTemplate.equals("some-interactive-template01"));
         Validate.isTrue(outputGenerators.get(2).dataSourceDefinition.dataSources.size() == 1);
         Validate.isTrue(outputGenerators.get(2).dataSourceDefinition.dataSources.get(0).equals("datasource30.csv"));
-        Validate.isTrue(outputGenerators.get(2).outputDefinition.outputs.get(0).equals("out.txt"));
+        Validate.isTrue(outputGenerators.get(2).templateOutputDefinition.outputs.get(0).equals("out.txt"));
 
-        Validate.isTrue(outputGenerators.get(3).templateDefinition.interactiveTemplate.equals("some-interactive-template02"));
+        Validate.isTrue(outputGenerators.get(3).templateSourceDefinition.interactiveTemplate.equals("some-interactive-template02"));
 
         return;
     }

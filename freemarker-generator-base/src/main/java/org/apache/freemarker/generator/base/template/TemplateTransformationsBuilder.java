@@ -23,13 +23,16 @@ import org.apache.freemarker.generator.base.file.RecursiveFileSupplier;
 import org.apache.freemarker.generator.base.util.StringUtils;
 import org.apache.freemarker.generator.base.util.Validate;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.singletonList;
 
 /**
@@ -54,14 +57,14 @@ public class TemplateTransformationsBuilder {
     private final List<String> outputs;
 
     /** Optional user-supplied writer */
-    private Writer writer;
+    private Writer userSuppliedWriter;
 
     private TemplateTransformationsBuilder() {
         this.templateSources = new ArrayList<>();
         this.includes = new ArrayList<>();
         this.excludes = new ArrayList<>();
         this.outputs = new ArrayList<>();
-        this.writer = null;
+        this.userSuppliedWriter = null;
     }
 
     public static TemplateTransformationsBuilder builder() {
@@ -134,13 +137,13 @@ public class TemplateTransformationsBuilder {
         return this;
     }
 
-    public TemplateTransformationsBuilder setWriter(Writer writer) {
-        this.writer = writer;
+    public TemplateTransformationsBuilder setUserSuppliedWriter(Writer userSuppliedWriter) {
+        this.userSuppliedWriter = userSuppliedWriter;
         return this;
     }
 
     private void validate() {
-        Validate.isTrue(interactiveTemplate != null || !templateSources.isEmpty(), "Interactive template does not support multiple sources");
+        // Validate.isTrue(interactiveTemplate != null || !templateSources.isEmpty(), "Interactive template does not support multiple sources");
         Validate.isTrue(interactiveTemplate == null || templateSources.isEmpty(), "No template was provided");
     }
 
@@ -212,10 +215,13 @@ public class TemplateTransformationsBuilder {
     }
 
     private TemplateOutput templateOutput(File templateOutputFile) {
-        if (writer == null && templateOutputFile != null) {
+        if (userSuppliedWriter != null) {
+            return TemplateOutput.fromWriter(userSuppliedWriter);
+        } else if (templateOutputFile != null) {
             return TemplateOutput.fromFile(templateOutputFile);
         } else {
-            return TemplateOutput.fromWriter(writer);
+            // @TODO FREEMARKER-161 sgoeschl Shall we close the writer or use "userSuppliedWriter"?
+            return TemplateOutput.fromWriter(new BufferedWriter(new OutputStreamWriter(System.out, UTF_8)));
         }
     }
 

@@ -18,6 +18,7 @@ package org.apache.freemarker.generator.base.util;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MapBuilder {
@@ -50,4 +51,11 @@ public class MapBuilder {
 
         return map;
     }
+
+    public static Map<String, Object> merge(List<Map<String, Object>> maps) {
+        final Map<String, Object> result = new HashMap<>();
+        maps.forEach(result::putAll);
+        return result;
+    }
+
 }

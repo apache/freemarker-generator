@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file. We try to a
 * [FREEMARKER-129] Migrate `freemarker-cli` into `freemarker-generator` project (see [https://github.com/sgoeschl/freemarker-cli](https://github.com/sgoeschl/freemarker-cli))
 
 ### Changed
+* [FREEMARKER-161] Allow multiple transformations on the CLI
 * [FREEMARKER-155] Migrate the FTL code to terser dotter form 
 * [FREEMARKER-153] Packaged templates are now prefixed with `freemarker-generator`, e.g. `freemarker-generator/info.ftl`
 * [FREEMARKER-153] Renamed `--basedir` command line option to `--template-dir`
@@ -61,6 +62,7 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-151]: https://issues.apache.org/jira/browse/FREEMARKER-151
 [FREEMARKER-153]: https://issues.apache.org/jira/browse/FREEMARKER-153
 [FREEMARKER-155]: https://issues.apache.org/jira/browse/FREEMARKER-155
+[FREEMARKER-161]: https://issues.apache.org/jira/browse/FREEMARKER-161
 [FREEMARKER-163]: https://issues.apache.org/jira/browse/FREEMARKER-163
 [FREEMARKER-164]: https://issues.apache.org/jira/browse/FREEMARKER-164
 [FREEMARKER-168]: https://issues.apache.org/jira/browse/FREEMARKER-168

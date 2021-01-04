@@ -17,15 +17,10 @@
 package org.apache.freemarker.generator.cli.config;
 
 import freemarker.cache.TemplateLoader;
-import org.apache.freemarker.generator.base.datasource.DataSourcesSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesClassPathSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesFileSystemSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesSupplier;
-import org.apache.freemarker.generator.base.template.TemplateTransformation;
-import org.apache.freemarker.generator.base.template.TemplateTransformationsBuilder;
 
-import java.util.List;
-import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -53,30 +48,8 @@ public class Suppliers {
         return new ToolsSupplier(settings.getConfiguration(), settings.toMap());
     }
 
-    public static DataSourcesSupplier dataSourcesSupplier(Settings settings) {
-        return new DataSourcesSupplier(settings.getDataSources(),
-                settings.getDataSourceIncludePattern(),
-                settings.getDataSourceExcludePattern(),
-                settings.getInputEncoding());
-    }
-
-    public static DataModelSupplier dataModelSupplier(Settings settings) {
-        return new DataModelSupplier(settings.getDataModels());
-    }
-
-    public static Supplier<Map<String, Object>> parameterSupplier(Settings settings) {
-        return settings::getUserParameters;
-    }
-
-    public static Supplier<List<TemplateTransformation>> templateTransformationsSupplier(Settings settings) {
-        return () -> TemplateTransformationsBuilder.builder()
-                .setInteractiveTemplate(settings.getInteractiveTemplate())
-                .addTemplateSources(settings.getTemplates())
-                .addInclude(settings.getTemplateFileIncludePattern())
-                .addExclude(settings.getTemplateFileExcludePattern())
-                .addOutputs(settings.getOutputs())
-                .setWriter(settings.getWriter())
-                .build();
+    public static OutputGeneratorsSupplier outputGeneratorsSupplier(Settings settings) {
+        return new OutputGeneratorsSupplier(settings);
     }
 
     public static PropertiesSupplier propertiesSupplier(String fileName) {
