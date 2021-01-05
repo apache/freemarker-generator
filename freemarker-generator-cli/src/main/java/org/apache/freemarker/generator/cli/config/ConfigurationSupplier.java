@@ -40,10 +40,12 @@ public class ConfigurationSupplier implements Supplier<Configuration> {
 
     private final Settings settings;
     private final Supplier<TemplateLoader> templateLoader;
+    private final ToolsSupplier toolsSupplier;
 
-    public ConfigurationSupplier(Settings settings, Supplier<TemplateLoader> templateLoader) {
+    public ConfigurationSupplier(Settings settings, Supplier<TemplateLoader> templateLoader, ToolsSupplier toolsSupplier) {
         this.settings = requireNonNull(settings);
         this.templateLoader = requireNonNull(templateLoader);
+        this.toolsSupplier = requireNonNull(toolsSupplier);
     }
 
     @Override
@@ -62,6 +64,9 @@ public class ConfigurationSupplier implements Supplier<Configuration> {
             configuration.setLocale(settings.getLocale());
             configuration.setOutputEncoding(settings.getOutputEncoding().name());
             configuration.setTemplateLoader(templateLoader.get());
+
+            // instantiate the tools as shared FreeMarker variables
+            configuration.setSharedVariables(toolsSupplier.get());
 
             return configuration;
         } catch (Exception e) {

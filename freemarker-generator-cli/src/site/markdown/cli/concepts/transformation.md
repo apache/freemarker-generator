@@ -72,3 +72,15 @@ target
         `-- nginx.conf
 
 ```
+
+Transforming multiple templates and data sources to multiple output files
+
+```
+freemarker-generator \
+-t freemarker-generator/yaml/json/transform.ftl -s examples/data/yaml/customer.yaml -o customer.json \
+-t freemarker-generator/yaml/json/transform.ftl -s examples/data/yaml/swagger-spec.yaml -o swagger-spec.json
+
+> ls -l *.json
+-rw-r--r--  1 sgoeschl  staff   332B Jan  5 21:30 customer.json
+-rw-r--r--  1 sgoeschl  staff    25K Jan  5 21:30 swagger-spec.json
+```  

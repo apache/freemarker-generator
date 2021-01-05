@@ -16,11 +16,7 @@
  */
 package org.apache.freemarker.generator.base.template;
 
-import org.apache.freemarker.generator.base.util.Validate;
-
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.Writer;
 
 import static java.util.Objects.requireNonNull;
@@ -59,20 +55,12 @@ public class TemplateOutput {
         return writer;
     }
 
-    public File getFile() {
-        return file;
-    }
-
-    public boolean isWrittenToFile() {
-        return file != null;
-    }
-
-    public boolean isWrittenToSuppliedWriter() {
+    public boolean hasWriter() {
         return writer != null;
     }
 
-    public Writer writer() {
-        return writer != null ? writer : fileWriter();
+    public File getFile() {
+        return file;
     }
 
     @Override
@@ -81,15 +69,5 @@ public class TemplateOutput {
                 "writer=" + writer +
                 ", file=" + file +
                 '}';
-    }
-
-    private FileWriter fileWriter() {
-        Validate.notNull(file, "Output file is null");
-
-        try {
-            return new FileWriter(file);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to create FileWriter: " + file.getAbsolutePath(), e);
-        }
     }
 }

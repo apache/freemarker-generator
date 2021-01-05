@@ -147,6 +147,17 @@ public class ExamplesTest extends AbstractMainTest {
         assertValid(execute("-t freemarker-generator/csv/md/transform.ftl -o target/contract.md -t freemarker-generator/csv/html/transform.ftl -o target/contract.html src/app/examples/data/csv/contract.csv"));
     }
 
+
+    @Test
+    public void shouldTransformMultipleTemplatesAndDataSources() throws IOException {
+        final String output = execute(
+                "-t freemarker-generator/yaml/json/transform.ftl -s src/app/examples/data/yaml/swagger-spec.yaml -o swagger-spec.json " +
+                        "-t freemarker-generator/yaml/json/transform.ftl -s src/app/examples/data/yaml/customer.yaml -o customer.json");
+
+        assertTrue("Swagger file content is missing", output.contains("This is a sample server Petstore server"));
+        assertTrue("Customer data is missing", output.contains("Xyz, DEF Street"));
+    }
+
     @Test
     public void shouldSupportDataSourcesAccessInFTL() throws IOException {
         final String args = "users=src/app/examples/data/json/github-users.json contract=src/app/examples/data/csv/contract.csv";

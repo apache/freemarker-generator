@@ -51,7 +51,7 @@ public class ConfigurationSupplierTest {
     }
 
     private ConfigurationSupplier configurationSupplier(Settings settings) {
-        return new ConfigurationSupplier(settings, templateLoaderSupplier());
+        return new ConfigurationSupplier(settings, templateLoaderSupplier(), Suppliers.toolsSupplier(settings));
     }
 
     private TemplateLoaderSupplier templateLoaderSupplier() {

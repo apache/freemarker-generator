@@ -27,6 +27,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -56,15 +57,19 @@ public class TemplateTransformationsBuilder {
     /** Optional output file(s) or directory - if none is defined everything is written to a user-supplied writer */
     private final List<String> outputs;
 
-    /** Optional user-supplied writer */
-    private Writer userSuppliedWriter;
+    /** Optional output encoding */
+    private Charset outputEncoding;
+
+    /** Optional caller-supplied writer used for testing */
+    private Writer callerSuppliedWriter;
 
     private TemplateTransformationsBuilder() {
         this.templateSources = new ArrayList<>();
         this.includes = new ArrayList<>();
         this.excludes = new ArrayList<>();
         this.outputs = new ArrayList<>();
-        this.userSuppliedWriter = null;
+        this.callerSuppliedWriter = null;
+        this.outputEncoding = UTF_8;
     }
 
     public static TemplateTransformationsBuilder builder() {
@@ -137,8 +142,16 @@ public class TemplateTransformationsBuilder {
         return this;
     }
 
-    public TemplateTransformationsBuilder setUserSuppliedWriter(Writer userSuppliedWriter) {
-        this.userSuppliedWriter = userSuppliedWriter;
+    public TemplateTransformationsBuilder setOutputEncoding(Charset outputEncoding) {
+        if (outputEncoding != null) {
+            this.outputEncoding = outputEncoding;
+        }
+
+        return this;
+    }
+
+    public TemplateTransformationsBuilder setCallerSuppliedWriter(Writer callerSuppliedWriter) {
+        this.callerSuppliedWriter = callerSuppliedWriter;
         return this;
     }
 
@@ -215,13 +228,12 @@ public class TemplateTransformationsBuilder {
     }
 
     private TemplateOutput templateOutput(File templateOutputFile) {
-        if (userSuppliedWriter != null) {
-            return TemplateOutput.fromWriter(userSuppliedWriter);
+        if (callerSuppliedWriter != null) {
+            return TemplateOutput.fromWriter(callerSuppliedWriter);
         } else if (templateOutputFile != null) {
             return TemplateOutput.fromFile(templateOutputFile);
         } else {
-            // @TODO FREEMARKER-161 sgoeschl Shall we close the writer or use "userSuppliedWriter"?
-            return TemplateOutput.fromWriter(new BufferedWriter(new OutputStreamWriter(System.out, UTF_8)));
+            return TemplateOutput.fromWriter(new BufferedWriter(new OutputStreamWriter(System.out, outputEncoding)));
         }
     }
 

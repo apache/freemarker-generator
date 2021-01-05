@@ -20,6 +20,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.commons.io.FileUtils;
+import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSources;
 import org.apache.freemarker.generator.base.output.OutputGenerator;
 import org.apache.freemarker.generator.base.template.TemplateOutput;
@@ -31,11 +32,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model.DATASOURCES;
@@ -56,13 +60,16 @@ public class FreeMarkerTask implements Callable<Integer> {
     private final Supplier<Configuration> configurationSupplier;
     private final Supplier<List<OutputGenerator>> outputGeneratorsSupplier;
     private final Supplier<Map<String, Object>> sharedDataModelSupplier;
+    private final Supplier<List<DataSource>> sharedDataSourcesSupplier;
 
     public FreeMarkerTask(Supplier<Configuration> configurationSupplier,
                           Supplier<List<OutputGenerator>> outputGeneratorsSupplier,
-                          Supplier<Map<String, Object>> sharedDataModelSupplier) {
+                          Supplier<Map<String, Object>> sharedDataModelSupplier,
+                          Supplier<List<DataSource>> sharedDataSourcesSupplier) {
         this.configurationSupplier = requireNonNull(configurationSupplier, "configurationSupplier");
         this.outputGeneratorsSupplier = requireNonNull(outputGeneratorsSupplier, "outputGeneratorsSupplier");
         this.sharedDataModelSupplier = requireNonNull(sharedDataModelSupplier, "sharedDataModelSupplier");
+        this.sharedDataSourcesSupplier = requireNonNull(sharedDataSourcesSupplier, "sharedDataSourcesSupplier");
     }
 
     @Override
@@ -70,19 +77,26 @@ public class FreeMarkerTask implements Callable<Integer> {
         final Configuration configuration = configurationSupplier.get();
         final List<OutputGenerator> outputGenerators = outputGeneratorsSupplier.get();
         final Map<String, Object> sharedDataModel = sharedDataModelSupplier.get();
-        outputGenerators.forEach(outputGenerator -> process(configuration, outputGenerator, sharedDataModel));
+        final List<DataSource> sharedDataSources = sharedDataSourcesSupplier.get();
+
+        outputGenerators.forEach(outputGenerator -> process(
+                configuration,
+                outputGenerator,
+                sharedDataModel,
+                sharedDataSources));
+
         return SUCCESS;
     }
 
     private void process(Configuration configuration,
                          OutputGenerator outputGenerator,
-                         Map<String, Object> sharedDataModelMap) {
-
+                         Map<String, Object> sharedDataModelMap,
+                         List<DataSource> sharedDataSources) {
         final TemplateSource templateSource = outputGenerator.getTemplateSource();
         final TemplateOutput templateOutput = outputGenerator.getTemplateOutput();
-        final DataSources dataSources = new DataSources(outputGenerator.getDataSources());
-        final Map<String, Object> dataModelMap = outputGenerator.getVariables();
-        final Map<String, Object> dataModel = toDataModel(dataSources, dataModelMap, sharedDataModelMap);
+        final DataSources dataSources = toDataSources(outputGenerator, sharedDataSources);
+        final Map<String, Object> variables = outputGenerator.getVariables();
+        final Map<String, Object> dataModel = toDataModel(dataSources, variables, sharedDataModelMap);
 
         try (Writer writer = writer(templateOutput)) {
             final Template template = template(configuration, templateSource);
@@ -90,6 +104,11 @@ public class FreeMarkerTask implements Callable<Integer> {
         } catch (TemplateException | IOException e) {
             throw new RuntimeException("Failed to process template: " + templateSource.getName(), e);
         }
+    }
+
+    private static DataSources toDataSources(OutputGenerator outputGenerator, List<DataSource> sharedDataSources) {
+        return new DataSources(Stream.of(outputGenerator.getDataSources(), sharedDataSources)
+                .flatMap(Collection::stream).collect(Collectors.toList()));
     }
 
     @SafeVarargs
@@ -101,13 +120,13 @@ public class FreeMarkerTask implements Callable<Integer> {
     }
 
     private static Writer writer(TemplateOutput templateOutput) throws IOException {
-        if (templateOutput.getWriter() != null) {
+        if (templateOutput.hasWriter()) {
             return templateOutput.getWriter();
+        } else {
+            final File file = templateOutput.getFile();
+            FileUtils.forceMkdirParent(file);
+            return new BufferedWriter(new FileWriter(file));
         }
-
-        final File file = templateOutput.getFile();
-        FileUtils.forceMkdirParent(file);
-        return new BufferedWriter(new FileWriter(file));
     }
 
     /**
@@ -127,7 +146,7 @@ public class FreeMarkerTask implements Callable<Integer> {
             case TEMPLATE_CODE:
                 return fromTemplateCode(configuration, templateSource);
             default:
-                throw new IllegalArgumentException("Don't know how to handle: " + templateSource.getOrigin());
+                throw new IllegalArgumentException("Don't know how to create a template: " + templateSource.getOrigin());
         }
     }
 
@@ -142,7 +161,6 @@ public class FreeMarkerTask implements Callable<Integer> {
 
     private static Template fromTemplateCode(Configuration configuration, TemplateSource templateSource) {
         final String name = templateSource.getName();
-
         try {
             return new Template(name, templateSource.getCode(), configuration);
         } catch (IOException e) {

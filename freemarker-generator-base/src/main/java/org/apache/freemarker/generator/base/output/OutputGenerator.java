@@ -39,7 +39,7 @@ public class OutputGenerator {
     /** Data sources used for the transformation */
     private final List<DataSource> dataSources;
 
-    /** Data sources used for the transformation */
+    /** Variables (as a map) used for the transformation */
     private final Map<String, Object> variables;
 
     public OutputGenerator(
@@ -74,6 +74,8 @@ public class OutputGenerator {
         return "OutputGenerator{" +
                 "templateSource=" + templateSource +
                 ", templateOutput=" + templateOutput +
+                ", dataSources=" + dataSources +
+                ", variables=" + variables +
                 '}';
     }
 }

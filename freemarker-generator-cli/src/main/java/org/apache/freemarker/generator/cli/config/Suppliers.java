@@ -29,11 +29,7 @@ import java.util.function.Supplier;
 public class Suppliers {
 
     public static ConfigurationSupplier configurationSupplier(Settings settings) {
-        return new ConfigurationSupplier(settings, templateLoaderSupplier(settings));
-    }
-
-    public static ConfigurationSupplier configurationSupplier(Settings settings, Supplier<TemplateLoader> templateLoader) {
-        return new ConfigurationSupplier(settings, templateLoader);
+        return new ConfigurationSupplier(settings, templateLoaderSupplier(settings), toolsSupplier(settings));
     }
 
     public static TemplateDirectorySupplier templateDirectorySupplier(String additionalTemplateDirName) {

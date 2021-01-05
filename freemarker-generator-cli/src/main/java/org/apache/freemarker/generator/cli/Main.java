@@ -20,7 +20,6 @@ import org.apache.freemarker.generator.base.FreeMarkerConstants.Configuration;
 import org.apache.freemarker.generator.base.FreeMarkerConstants.SystemProperties;
 import org.apache.freemarker.generator.base.parameter.ParameterModelSupplier;
 import org.apache.freemarker.generator.base.util.ClosableUtils;
-import org.apache.freemarker.generator.base.util.MapBuilder;
 import org.apache.freemarker.generator.cli.config.Settings;
 import org.apache.freemarker.generator.cli.picocli.GitVersionProvider;
 import org.apache.freemarker.generator.cli.picocli.OutputGeneratorDefinition;
@@ -33,10 +32,7 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,7 +42,6 @@ import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.stream.IntStream;
 
-import static java.util.Arrays.asList;
 import static java.util.Objects.requireNonNull;
 import static org.apache.freemarker.generator.base.util.StringUtils.isEmpty;
 import static org.apache.freemarker.generator.base.util.StringUtils.isNotEmpty;
@@ -54,7 +49,6 @@ import static org.apache.freemarker.generator.cli.config.Suppliers.configuration
 import static org.apache.freemarker.generator.cli.config.Suppliers.outputGeneratorsSupplier;
 import static org.apache.freemarker.generator.cli.config.Suppliers.propertiesSupplier;
 import static org.apache.freemarker.generator.cli.config.Suppliers.templateDirectorySupplier;
-import static org.apache.freemarker.generator.cli.config.Suppliers.toolsSupplier;
 
 @Command(description = "Apache FreeMarker Generator", name = "freemarker-generator", mixinStandardHelpOptions = true, versionProvider = GitVersionProvider.class)
 public class Main implements Callable<Integer> {
@@ -162,7 +156,8 @@ public class Main implements Callable<Integer> {
             final FreeMarkerTask freeMarkerTask = new FreeMarkerTask(
                     configurationSupplier(settings),
                     outputGeneratorsSupplier(settings),
-                    () -> MapBuilder.merge(asList(toolsSupplier(settings).get(), settings.getUserParameters()))
+                    settings::getUserParameters,
+                    Collections::emptyList
             );
             return freeMarkerTask.call();
         } finally {

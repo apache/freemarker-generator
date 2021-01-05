@@ -46,12 +46,15 @@ public class OutputGeneratorsSupplier implements Supplier<List<OutputGenerator>>
         }
 
         // set the writer
-        builder.setUserSuppliedWriter(settings.getCallerSuppliedWriter());
+        builder.setCallerSuppliedWriter(settings.getCallerSuppliedWriter());
 
         // set template output
         if (templateOutputDefinition != null) {
             builder.addOutputs(templateOutputDefinition.outputs);
         }
+
+        // set the output encoding
+        builder.setOutputEncoding(settings.getOutputEncoding());
 
         // set template filter
         if (definition.hasTemplateSourceIncludes()) {
