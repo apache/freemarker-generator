@@ -5,7 +5,7 @@ The generation of test data is supported by [Java Faker](https://github.com/DiUS
 Let's assume that you need to populate a user table based on a CSV file with random data
 
 ```
-freemarker-generator -DNR_OF_RECORDS=10 -t src/app/examples/templates/javafaker/csv/testdata.ftl
+freemarker-generator -DNR_OF_RECORDS=10 -t examples/templates/javafaker/csv/testdata.ftl
 ```  
 
 will generate
