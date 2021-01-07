@@ -1,3 +1,5 @@
+UTF-8 encoding
+=============================================================================
 première is first
 première is slightly different
 Кириллица is Cyrillic

@@ -231,7 +231,7 @@ public class TemplateTransformationsBuilder {
         if (callerSuppliedWriter != null) {
             return TemplateOutput.fromWriter(callerSuppliedWriter);
         } else if (templateOutputFile != null) {
-            return TemplateOutput.fromFile(templateOutputFile);
+            return TemplateOutput.fromFile(templateOutputFile, outputEncoding);
         } else {
             return TemplateOutput.fromWriter(new BufferedWriter(new OutputStreamWriter(System.out, outputEncoding)));
         }

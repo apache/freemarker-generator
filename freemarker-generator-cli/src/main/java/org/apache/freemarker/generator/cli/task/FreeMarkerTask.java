@@ -28,8 +28,9 @@ import org.apache.freemarker.generator.base.template.TemplateSource;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Arrays;
 import java.util.Collection;
@@ -125,7 +126,8 @@ public class FreeMarkerTask implements Callable<Integer> {
         } else {
             final File file = templateOutput.getFile();
             FileUtils.forceMkdirParent(file);
-            return new BufferedWriter(new FileWriter(file));
+            // We need to explicitly set our output encoding here - see https://freemarker.apache.org/docs/pgui_misc_charset.html
+            return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), templateOutput.getCharset()));
         }
     }
 
