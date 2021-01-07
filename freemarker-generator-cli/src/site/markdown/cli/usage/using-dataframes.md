@@ -38,13 +38,19 @@ and create a `DateFrame` using the following code snippet
 The example can be executed by running
 
 ```
-bin/freemarker-generator -PCSV_SOURCE_FORMAT=DATAFRAME -t examples/templates/dataframe/example.ftl examples/data/csv/dataframe.csv
+freemarker-generator \
+-PCSV_SOURCE_FORMAT=DATAFRAME \
+-t examples/templates/dataframe/example.ftl \
+examples/data/csv/dataframe.csv
 ```
 
 or
 
 ```
-bin/freemarker-generator -PCSV_SOURCE_FORMAT=DATAFRAME -t examples/templates/dataframe/example.ftl https://raw.githubusercontent.com/nRo/DataFrame/master/src/test/resources/users.csv
+freemarker-generator \
+-PCSV_SOURCE_FORMAT=DATAFRAME \
+-t examples/templates/dataframe/example.ftl \
+https://raw.githubusercontent.com/nRo/DataFrame/master/src/test/resources/users.csv
 ```
 
 #### Select By Age
@@ -156,8 +162,8 @@ it is a list of maps hence we invoke `tools.dataframe.fromMaps()
 
 ```
 freemarker-generator \
-  -i '${tools.dataframe.print(tools.dataframe.fromMaps(tools.gson.parse(dataSources?values[0])))}' \
-  examples/data/json/github-users.json
+-i '${tools.dataframe.print(tools.dataframe.fromMaps(tools.gson.parse(dataSources?values[0])))}' \
+examples/data/json/github-users.json
 
 ┌────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┐
 │#login      │#id         │#avatar_ur  │#gravatar_  │#url        │#html_url   │#followers  │#following  │#gists_url  │#starred_u  │#subscript  │#organizat  │#repos_url  │#events_ur  │#received_  │#type       │#site_admi  │
