@@ -29,31 +29,43 @@ For our purposes, the scheme and the path components are especially important, t
 The following Named URI loads a "user.csv" and the data source is available as `my_users` 
 
 ```
-freemarker-cli -t freemarker-generator/info.ftl my_users=examples/data/csv/user.csv
-[#1], name=my_users, group=default, contentType=text/csv, charset=UTF-8, length=376 Bytes
-URI : file:examples/data/csv/user.csv
+freemarker-generator -t freemarker-generator/info.ftl my_users=examples/data/csv/user.csv
+
+FreeMarker Generator DataSources
+------------------------------------------------------------------------------
+[#1]: name=my_users, group=default, fileName=my_users mimeType=text/csv, charset=UTF-8, length=376 Bytes
+URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/csv/user.csv
 ```
 
 A Named URI allows to pass additional information as part of the fragment, e.g. the charset of the text file 
 
 ```
-freemarker-cli -t freemarker-generator/info.ftl my_users=examples/data/csv/user.csv#charset=UTF-16
-[#1], name=my_users, group=default, contentType=text/csv, charset=UTF-16, length=376 Bytes
-URI : file:examples/data/csv/user.csv
+freemarker-generator -t freemarker-generator/info.ftl my_users=examples/data/csv/user.csv#charset=UTF-16
+
+FreeMarker Generator DataSources
+------------------------------------------------------------------------------
+[#1]: name=my_users, group=default, fileName=my_users mimeType=text/csv, charset=UTF-16, length=376 Bytes
+URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/csv/user.csv
 ```
 
 In addition to the simplified file syntax full URIs can be used
 
 ```
-freemarker-cli -t freemarker-generator/info.ftl http://google.com?foo=bar
-[#1], name=google.com, group=default, contentType=text/html, charset=ISO-8859-1, length=-1 Bytes
+freemarker-generator -t freemarker-generator/info.ftl http://google.com?foo=bar
+
+FreeMarker Generator DataSources
+------------------------------------------------------------------------------
+[#1]: name=http://google.com?foo=bar, group=default, fileName=google.com?foo=bar mimeType=text/html, charset=ISO-8859-1, length=-1 Bytes
 URI : http://google.com?foo=bar
 ```
 
 and also combined with a name
 
 ```
-freemarker-cli -t freemarker-generator/info.ftl page=http://google.com?foo=bar
-[#1], name=page, group=default, contentType=text/html, charset=ISO-8859-1, length=-1 Bytes
+freemarker-generator -t freemarker-generator/info.ftl page=http://google.com\?foo\=bar
+
+FreeMarker Generator DataSources
+------------------------------------------------------------------------------
+[#1]: name=page, group=default, fileName=page mimeType=text/html, charset=ISO-8859-1, length=-1 Bytes
 URI : http://google.com?foo=bar
 ```

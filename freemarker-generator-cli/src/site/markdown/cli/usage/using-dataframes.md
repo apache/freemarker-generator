@@ -38,13 +38,13 @@ and create a `DateFrame` using the following code snippet
 The example can be executed by running
 
 ```
-bin/freemarker-cli -PCSV_SOURCE_FORMAT=DATAFRAME -t examples/templates/dataframe/example.ftl examples/data/csv/dataframe.csv
+bin/freemarker-generator -PCSV_SOURCE_FORMAT=DATAFRAME -t examples/templates/dataframe/example.ftl examples/data/csv/dataframe.csv
 ```
 
 or
 
 ```
-bin/freemarker-cli -PCSV_SOURCE_FORMAT=DATAFRAME -t examples/templates/dataframe/example.ftl https://raw.githubusercontent.com/nRo/DataFrame/master/src/test/resources/users.csv
+bin/freemarker-generator -PCSV_SOURCE_FORMAT=DATAFRAME -t examples/templates/dataframe/example.ftl https://raw.githubusercontent.com/nRo/DataFrame/master/src/test/resources/users.csv
 ```
 
 #### Select By Age
@@ -155,7 +155,7 @@ data being parsed as a list of maps and print the JSON as dataframe. Technically
 it is a list of maps hence we invoke `tools.dataframe.fromMaps()
 
 ```
-freemarker-cli \
+freemarker-generator \
   -i '${tools.dataframe.print(tools.dataframe.fromMaps(tools.gson.parse(dataSources?values[0])))}' \
   examples/data/json/github-users.json
 
@@ -195,7 +195,7 @@ Let's transform an Excel Sheet to a `DataFrame` being printed using the followin
 which is rendered by the following command line invocation
 
 ```
-freemarker-cli -t examples/templates/excel/dataframe/transform.ftl examples/data/excel/test.xls
+freemarker-generator -t examples/templates/excel/dataframe/transform.ftl examples/data/excel/test.xls
 
 ┌────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┐
 │#Text       │#Date       │#Number     │#Currency   │#Time       │#Percentag  │#Forumula   │
