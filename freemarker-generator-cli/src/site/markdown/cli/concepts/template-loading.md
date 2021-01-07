@@ -47,7 +47,7 @@ irrelevant therefore any template file outside of the template loader directorie
 This example loads the `info.ftl` directly from a GitHub URL
 
 ```
-freemarker-generator -t https://raw.githubusercontent.com/apache/freemarker-generator/master/freemarker-generator-cli/templates/info.ftl
+freemarker-generator -t https://raw.githubusercontent.com/apache/freemarker-generator/master/freemarker-generator-cli/src/app/templates/freemarker-generator/info.ftl
 ```
 
 ### Interactive Template Loading

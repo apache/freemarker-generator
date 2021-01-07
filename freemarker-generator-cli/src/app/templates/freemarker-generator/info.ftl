@@ -47,7 +47,7 @@ FreeMarker Generator Tools
 FreeMarker Generator DataSources
 ------------------------------------------------------------------------------
 <#list dataSources?values as ds>
-[#${ds?counter}]: name=${ds.name}, group=${ds.group}, fileName=${ds.fileName} mimeType=${ds.mimeType}, charset=${ds.charset}, length=${ds.length} Bytes
+[#${ds?counter}]: name=${ds.name}, group=${ds.group}, fileName=${ds.fileName}, mimeType=${ds.mimeType}, charset=${ds.charset}, length=${ds.length} Bytes
 URI : ${ds.uri}
 </#list>
 </#if>

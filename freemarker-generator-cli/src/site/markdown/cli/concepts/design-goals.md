@@ -13,5 +13,6 @@
 * XML & XPath is supported by FreeMarker [out-of-the-box](http://freemarker.org/docs/xgui.html)
 * Support for reading a data source content from STDIN to integrate with command line tools
 * Support execution of arbitrary commands using [Apache Commons Exec](https://commons.apache.org/proper/commons-exec/)
+* Support creation of test data using [JavaFaker](https://github.com/DiUS/java-faker/)
 * Add some commonly useful information such as `System Properties`, `Enviroment Variables`
 * Support embedding the code in existing applications

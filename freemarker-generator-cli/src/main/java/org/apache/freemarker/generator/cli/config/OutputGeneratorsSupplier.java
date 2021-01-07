@@ -1,20 +1,29 @@
 package org.apache.freemarker.generator.cli.config;
 
+import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.datasource.DataSource;
+import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.freemarker.generator.base.datasource.DataSourcesSupplier;
 import org.apache.freemarker.generator.base.output.OutputGenerator;
 import org.apache.freemarker.generator.base.template.TemplateTransformation;
 import org.apache.freemarker.generator.base.template.TemplateTransformationsBuilder;
+import org.apache.freemarker.generator.base.util.UriUtils;
 import org.apache.freemarker.generator.cli.picocli.OutputGeneratorDefinition;
 import org.apache.freemarker.generator.cli.picocli.TemplateOutputDefinition;
 import org.apache.freemarker.generator.cli.picocli.TemplateSourceDefinition;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
+import static org.apache.freemarker.generator.base.FreeMarkerConstants.Location.STDIN;
+import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_TEXT_PLAIN;
 
 public class OutputGeneratorsSupplier implements Supplier<List<OutputGenerator>> {
 
@@ -71,7 +80,7 @@ public class OutputGeneratorsSupplier implements Supplier<List<OutputGenerator>>
             final OutputGenerator outputGenerator = new OutputGenerator(
                     templateTransformation.getTemplateSource(),
                     templateTransformation.getTemplateOutput(),
-                    dataSources(definition),
+                    dataSources(settings, definition),
                     dataModels(definition)
             );
             result.add(outputGenerator);
@@ -80,8 +89,14 @@ public class OutputGeneratorsSupplier implements Supplier<List<OutputGenerator>>
         return result;
     }
 
-    private List<DataSource> dataSources(OutputGeneratorDefinition outputGeneratorDefinition) {
+    private List<DataSource> dataSources(Settings settings, OutputGeneratorDefinition outputGeneratorDefinition) {
         final ArrayList<DataSource> result = new ArrayList<>();
+
+        // Add optional data source from STDIN at the start of the list since
+        // this allows easy sequence slicing in FreeMarker.
+        if (settings.isReadFromStdin()) {
+            result.add(0, stdinDataSource());
+        }
 
         final DataSourcesSupplier sharedDataSourcesSupplier = new DataSourcesSupplier(
                 settings.getSources(),
@@ -106,5 +121,10 @@ public class OutputGeneratorsSupplier implements Supplier<List<OutputGenerator>>
 
     private Map<String, Object> dataModels(OutputGeneratorDefinition outputGeneratorDefinition) {
         return new DataModelSupplier(outputGeneratorDefinition.getDataModels()).get();
+    }
+
+    private static DataSource stdinDataSource() {
+        final URI uri = UriUtils.toUri(Location.SYSTEM, STDIN);
+        return DataSourceFactory.fromInputStream(STDIN, DEFAULT_GROUP, uri, System.in, MIME_TEXT_PLAIN, UTF_8);
     }
 }

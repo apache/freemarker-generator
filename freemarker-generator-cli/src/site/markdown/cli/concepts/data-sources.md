@@ -83,6 +83,17 @@ URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-ge
 URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/json/swagger-spec.json```
 ```
 
+Access to `stdin` is implemented as `DataSource` - please not that `stdin` is read lazy to cater for arbitrary large input data
+
+```
+cat examples/data/csv/contract.csv | bin/freemarker-generator -t freemarker-generator/info.ftl --stdin
+
+FreeMarker Generator DataSources
+------------------------------------------------------------------------------
+[#1]: name=stdin, group=default, fileName=stdin mimeType=text/plain, charset=UTF-8, length=-1 Bytes
+URI : system:///stdin
+```
+
 ### Selecting A DataSource
 
 After loading one or more `DataSource` they are accessible as `dataSource` map in the FreeMarker model
