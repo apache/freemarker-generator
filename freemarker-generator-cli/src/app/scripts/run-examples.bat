@@ -130,7 +130,7 @@ REM =========================================================================
 REM Java Faker
 REM =========================================================================
 echo "examples/templates/javafaker/csv/testdata.ftl"
-%FREEMARKER_CMD% -t examples/templates/javafaker/csv/testdata.ftl > target/out/testdata.csv
+%FREEMARKER_CMD% -DNR_OF_RECORDS=10 -t examples/templates/javafaker/csv/testdata.ftl > target/out/testdata.csv
 
 REM =========================================================================
 REM JSON

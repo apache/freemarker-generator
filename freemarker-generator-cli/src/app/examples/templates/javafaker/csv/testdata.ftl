@@ -14,8 +14,9 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign faker = tools.javafaker.faker>
-<#assign nrOfRecords = tools.system.getString("NR_OF_RECORDS","10")>
+<#-- Get a localized JavaFaker instance -->
+<#assign faker = tools.javafaker.getFaker("de_DE")>
+<#assign nrOfRecords = tools.system.getString("NR_OF_RECORDS","100")>
 <#assign days = tools.javafaker.timeUnits["DAYS"]>
 <#assign csvTargetFormat = tools.csv.formats["DEFAULT"].withFirstRecordAsHeader()>
 <#assign csvPrinter = tools.csv.printer(csvTargetFormat)>
@@ -24,15 +25,18 @@
     <#if csvTargetFormat.getSkipHeaderRecord()>
         ${csvPrinter.printRecord(csvHeaders)}<#t>
     </#if>
-    <#list 1..nrOfRecords?number as i>
-        <#assign id = tools.uuid.randomUUID()>
+    <#list 0..nrOfRecords?number as i>
+        <#-- Generate a reproducable id to allow re-importing of test data -->
+        <#assign id = tools.uuid.namedUUID("trxid-" + i?string)>
         <#assign customerId = faker.bothify("?#######")>
         <#assign firstName = faker.name().firstName()>
         <#assign lastName = faker.name().lastName()>
-        <#assign email = firstName + "." + lastName + "@gmail.com">
+        <#assign email = firstName + "." + lastName + "@server.invalid">
+        <#-- JavaFakers IBAN generation is really slow -->
         <#assign iban = faker.finance().iban("DE")>
-
+        <#-- Distribute the creation date up to 10 years in the past -->
         <#assign createAt = faker.date().past(3650, days)>
+        <#-- Use a CSV Printer to properly escape the output -->
         ${csvPrinter.printRecord(
             id,
             customerId,

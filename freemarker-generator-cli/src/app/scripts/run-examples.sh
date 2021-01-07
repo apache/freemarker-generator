@@ -151,7 +151,7 @@ $FREEMARKER_CMD -t examples/templates/html/txt/licence.ftl examples/data/html/de
 #############################################################################
 
 echo "examples/templates/javafaker/csv/testdata.ftl"
-$FREEMARKER_CMD -t examples/templates/javafaker/csv/testdata.ftl > target/out/testdata.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -DNR_OF_RECORDS=10 -t examples/templates/javafaker/csv/testdata.ftl > target/out/testdata.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
 # JSON
