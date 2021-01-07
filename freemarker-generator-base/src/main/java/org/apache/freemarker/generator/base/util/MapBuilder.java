@@ -51,11 +51,4 @@ public class MapBuilder {
 
         return map;
     }
-
-    public static Map<String, Object> merge(List<Map<String, Object>> maps) {
-        final Map<String, Object> result = new HashMap<>();
-        maps.forEach(result::putAll);
-        return result;
-    }
-
 }
