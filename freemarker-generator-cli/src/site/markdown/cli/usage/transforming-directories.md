@@ -41,7 +41,7 @@ If no output directory is provided all output is written to `stdout`
 ```
 freemarker-generator -t examples/data/template/
 # == application.properties ==================================================
-server.name=localhost
+server.name=127.0.0.1
 server.logs=/var/log/nginx
 # == nginx-conf ==============================================================
 server {
