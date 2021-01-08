@@ -55,7 +55,7 @@ public class TemplateTransformationsBuilder {
     /** Optional exclude patterns for resolving source templates or template directories */
     private final List<String> excludes;
 
-    /** Optional output file(s) or directory - if none is defined everything is written to a user-supplied writer */
+    /** Optional output file(s) or directory - if none is defined everything is written to STDOUT */
     private final List<String> outputs;
 
     /** Optional output encoding */
@@ -157,6 +157,7 @@ public class TemplateTransformationsBuilder {
     }
 
     private void validate() {
+        // TODO FREEMARKER-161 08.01.2021 sgoeschl refactor code
         // Validate.isTrue(interactiveTemplate != null || !templateSources.isEmpty(), "Interactive template does not support multiple sources");
         Validate.isTrue(interactiveTemplate == null || templateSources.isEmpty(), "No template was provided");
     }

@@ -29,7 +29,6 @@ import static org.junit.Assert.assertTrue;
 public class PicocliTest {
 
     private static final String ANY_TEMPLATE = "any.ftl";
-    private static final String OTHER_TEMPLATE = "other.ftl";
     private static final String INTERACTIVE_TEMPLATE = "interactive-template";
     private static final String ANY_FILE = "users.csv";
     private static final String OTHER_FILE = "transctions.csv";
@@ -154,24 +153,23 @@ public class PicocliTest {
         final List<OutputGeneratorDefinition> defs = main.outputGeneratorDefinitions;
         assertEquals(4, defs.size());
 
-        assertTrue(defs.get(0).templateSourceDefinition.template.equals("template01.ftl"));
-        assertTrue(defs.get(0).dataSourceDefinition.dataSources.size() == 1);
-        assertTrue(defs.get(0).dataSourceDefinition.dataSources.get(0).equals("datasource10.csv"));
-        assertTrue(defs.get(0).templateOutputDefinition == null);
+        assertEquals("template01.ftl", defs.get(0).templateSourceDefinition.template);
+        assertEquals(1, defs.get(0).dataSourceDefinition.dataSources.size());
+        assertEquals("datasource10.csv", defs.get(0).dataSourceDefinition.dataSources.get(0));
+        assertNull(defs.get(0).templateOutputDefinition);
 
-        assertTrue(defs.get(1).templateSourceDefinition.template.equals("template02.ftl"));
-        assertTrue(defs.get(1).dataSourceDefinition.dataSources.size() == 2);
-        assertTrue(defs.get(1).dataSourceDefinition.dataSources.get(0).equals("datasource20.csv"));
-        assertTrue(defs.get(1).dataSourceDefinition.dataSources.get(1).equals("datasource21.csv"));
-        assertTrue(defs.get(0).templateOutputDefinition == null);
+        assertEquals("template02.ftl", defs.get(1).templateSourceDefinition.template);
+        assertEquals(2, defs.get(1).dataSourceDefinition.dataSources.size());
+        assertEquals("datasource20.csv", defs.get(1).dataSourceDefinition.dataSources.get(0));
+        assertEquals("datasource21.csv", defs.get(1).dataSourceDefinition.dataSources.get(1));
+        assertNull(defs.get(0).templateOutputDefinition);
 
-        assertTrue(defs.get(2).templateSourceDefinition.interactiveTemplate.equals("some-interactive-template01"));
-        assertTrue(defs.get(2).dataSourceDefinition.dataSources.size() == 1);
-        assertTrue(defs.get(2).dataSourceDefinition.dataSources.get(0).equals("datasource30.csv"));
-        assertTrue(defs.get(2).templateOutputDefinition.outputs.get(0).equals("out.txt"));
+        assertEquals("some-interactive-template01", defs.get(2).templateSourceDefinition.interactiveTemplate);
+        assertEquals(1, defs.get(2).dataSourceDefinition.dataSources.size());
+        assertEquals("datasource30.csv", defs.get(2).dataSourceDefinition.dataSources.get(0));
+        assertEquals("out.txt", defs.get(2).templateOutputDefinition.outputs.get(0));
 
-        assertTrue(defs.get(3).templateSourceDefinition.interactiveTemplate.equals("some-interactive-template02"));
-
+        assertEquals("some-interactive-template02", defs.get(3).templateSourceDefinition.interactiveTemplate);
     }
 
     private static Main parse(String... args) {

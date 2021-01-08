@@ -42,6 +42,10 @@ public class OutputGeneratorDefinition {
     public DataModelDefinition dataModelDefinition;
 
     public void validate(CommandLine commandLine) {
+        if (templateSourceDefinition == null) {
+            throw new ParameterException(commandLine, "No template defined to be rendered");
+        }
+
         if (templateOutputDefinition != null && templateOutputDefinition.outputs.size() > 1) {
             throw new ParameterException(commandLine, "More than one output defined for a template");
         }
@@ -52,7 +56,6 @@ public class OutputGeneratorDefinition {
                     throw new ParameterException(commandLine, "No wildcards supported for data source: " + source);
                 }
             }
-
         }
     }
 

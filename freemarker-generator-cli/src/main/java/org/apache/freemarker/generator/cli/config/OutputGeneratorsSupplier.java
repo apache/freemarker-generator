@@ -21,6 +21,7 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Objects.requireNonNull;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.Location.STDIN;
 import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_TEXT_PLAIN;
@@ -43,7 +44,7 @@ public class OutputGeneratorsSupplier implements Supplier<List<OutputGenerator>>
 
     private List<OutputGenerator> outputGenerator(OutputGeneratorDefinition definition) {
         final List<OutputGenerator> result = new ArrayList<>();
-        final TemplateSourceDefinition templateSourceDefinition = definition.getTemplateSourceDefinition();
+        final TemplateSourceDefinition templateSourceDefinition = requireNonNull(definition.getTemplateSourceDefinition());
         final TemplateOutputDefinition templateOutputDefinition = definition.getTemplateOutputDefinition();
         final TemplateTransformationsBuilder builder = TemplateTransformationsBuilder.builder();
 
