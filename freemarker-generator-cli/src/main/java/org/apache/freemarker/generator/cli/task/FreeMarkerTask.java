@@ -47,12 +47,6 @@ import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model.DAT
 
 /**
  * Renders a FreeMarker template.
- * <p>
- * Implementation notes
- * <ul>
- *     <li>configurationSupplier provides the tools</li>
- *     <li>outputGeneratorsSupplier handles STDIN already</li>
- * </ul>
  */
 public class FreeMarkerTask implements Callable<Integer> {
 

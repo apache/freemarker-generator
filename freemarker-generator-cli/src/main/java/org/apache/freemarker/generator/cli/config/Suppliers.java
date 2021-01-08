@@ -16,12 +16,9 @@
  */
 package org.apache.freemarker.generator.cli.config;
 
-import freemarker.cache.TemplateLoader;
 import org.apache.freemarker.generator.base.file.PropertiesClassPathSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesFileSystemSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesSupplier;
-
-import java.util.function.Supplier;
 
 /**
  * Convenience methods to create suppliers.

@@ -87,26 +87,25 @@ The distribution ships with a couple of FreeMarker templates and the `templates/
 to better understand `Apache FreeMarker Generator`
 
 ```
-> freemarker-generator -t freemarker-generator/info.ftl
+> freemarker-generator -t freemarker-generator/info.ftl 
 FreeMarker Generator Information
 ------------------------------------------------------------------------------
 FreeMarker version     : 2.3.30
-Template name          : info.ftl
+Template name          : freemarker-generator/info.ftl
 Language               : en
 Locale                 : en_US
-Timestamp              : Nov 9, 2020 1:13:21 PM
+Timestamp              : Jan 7, 2021 11:36:26 PM
 Output encoding        : UTF-8
 Output format          : plainText
 
 FreeMarker Generator Template Loader Directories
 ------------------------------------------------------------------------------
 [#1] /Users/sgoeschl/.freemarker-generator/templates
-[#2] /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/templates
+[#2] /Applications/Java/freemarker-generator/templates
 
 FreeMarker Generator Data Model
 ---------------------------------------------------------------------------
 - dataSources
-- tools
 
 FreeMarker Generator Tools
 ------------------------------------------------------------------------------

@@ -20,6 +20,7 @@ import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.freemarker.generator.base.file.RecursiveFileSupplier;
+import org.apache.freemarker.generator.base.util.NonClosableWriterWrapper;
 import org.apache.freemarker.generator.base.util.StringUtils;
 import org.apache.freemarker.generator.base.util.Validate;
 
@@ -233,7 +234,7 @@ public class TemplateTransformationsBuilder {
         } else if (templateOutputFile != null) {
             return TemplateOutput.fromFile(templateOutputFile, outputEncoding);
         } else {
-            return TemplateOutput.fromWriter(new BufferedWriter(new OutputStreamWriter(System.out, outputEncoding)));
+            return TemplateOutput.fromWriter(stdoutWriter(outputEncoding));
         }
     }
 
@@ -266,6 +267,11 @@ public class TemplateTransformationsBuilder {
     }
 
     private static File getTemplateOutputFile(File templateDirectory, File templateFile, File outputDirectory) {
+        if (outputDirectory == null) {
+            // missing output directory uses STDOUT
+            return null;
+        }
+
         final String relativePath = relativePath(templateDirectory, templateFile);
         final String relativeOutputFileName = mapExtension(relativePath);
         return new File(outputDirectory, relativeOutputFileName);
@@ -305,5 +311,10 @@ public class TemplateTransformationsBuilder {
         } else {
             return fileName;
         }
+    }
+
+    private Writer stdoutWriter(Charset outputEncoding) {
+        // avoid closing System.out after rendering the template
+        return new BufferedWriter(new NonClosableWriterWrapper(new OutputStreamWriter(System.out, outputEncoding)));
     }
 }

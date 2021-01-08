@@ -43,8 +43,8 @@ public class OutputGeneratorsSupplier implements Supplier<List<OutputGenerator>>
 
     private List<OutputGenerator> outputGenerator(OutputGeneratorDefinition definition) {
         final List<OutputGenerator> result = new ArrayList<>();
-        final TemplateSourceDefinition templateSourceDefinition = definition.templateSourceDefinition;
-        final TemplateOutputDefinition templateOutputDefinition = definition.templateOutputDefinition;
+        final TemplateSourceDefinition templateSourceDefinition = definition.getTemplateSourceDefinition();
+        final TemplateOutputDefinition templateOutputDefinition = definition.getTemplateOutputDefinition();
         final TemplateTransformationsBuilder builder = TemplateTransformationsBuilder.builder();
 
         // set the template
