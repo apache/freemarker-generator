@@ -20,7 +20,9 @@ import picocli.CommandLine.Option;
 
 import java.util.List;
 
-/** User-supplied list of data sources or directories */
+/**
+ * User-supplied list of data sources or directories
+ */
 public class DataSourceDefinition {
 
     @Option(names = { "-s", "--data-source" }, description = "data source used for rendering")
