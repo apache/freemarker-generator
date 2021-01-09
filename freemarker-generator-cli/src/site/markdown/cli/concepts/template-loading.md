@@ -10,7 +10,6 @@ In order the render a template it needs to be loaded first - there are multiple 
 
 `Apache FreeMarker Generator CLI` uses a `MultiTemplateLoader` searching for templates in the following directories
 
-* Current working directory
 * Optional `~/.freemarker-generator` directory
 * `Apache FreeMarker Generator` installation directory
 
@@ -21,9 +20,8 @@ freemarker-generator -t freemarker-generator/info.ftl
 
 FreeMarker Generator Template Loader Directories
 ------------------------------------------------------------------------------
-[#1] /Users/sgoeschl/work/github/apache/freemarker-generator
-[#2] /Users/sgoeschl/.freemarker-generator
-[#3] /Applications/Java/freemarker-generator-2.0.0
+[#1] /Users/sgoeschl/.freemarker-generator/templates
+[#2] /Applications/Java/freemarker-generator/templates
 ```
 
 The main benefit of `MultiTemplateLoader` is the use of abstract template paths finding a template in the template loader directories
@@ -38,9 +36,21 @@ and [Template Includes](https://freemarker.apache.org/docs/ref_directive_include
 <#import "/lib/commons-csv.ftl" as csv />
 ```  
 
+You can add a template directory, e.g. the current working directory
+
+```
+freemarker-generator -t freemarker-generator/info.ftl --template-dir=./
+
+FreeMarker Generator Template Loader Directories
+------------------------------------------------------------------------------
+[#1] /Users/sgoeschl
+[#2] /Users/sgoeschl/.freemarker-generator/templates
+[#3] /Applications/Java/freemarker-generator/templates
+```
+
 ### Free-Style Template Loading
 
-The previously described `Template Loaders` do not support absolute template files or arbitrary URLS - this behaviour 
+The previously described `Template Loaders` do not support absolute template files or arbitrary URLs - this behaviour 
 stems from security aspects when running `Apache FreeMarker` on the server side. For a command-line tool this is mostly
 irrelevant therefore any template file outside of the template loader directories can be loaded 
 

@@ -9,9 +9,9 @@
 * Transform a directory with a single command-line invocation
 * Made for the heavy lifting of data by using lazy-loading and streaming 
 
-### Getting Started
+### First Seps
 
-* [Installation](cli/introduction/getting-started.html)
+* [Getting Started](cli/introduction/getting-started.html)
 * [Running Examples](cli/usage/running-examples.html)
 
 ### Concepts

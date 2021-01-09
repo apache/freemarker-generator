@@ -12,7 +12,7 @@
 On my local box (Mac OS 10.15.5) I use the following setup
 
 ```
-export FREEMARKER_CLI_HOME=/Applications/Java/freemarker-generator-2.0.0
+export FREEMARKER_CLI_HOME=/Applications/Java/freemarker-generator
 export PATH=$PATH:$FREEMARKER_CLI_HOME/bin
 ```
 
@@ -20,14 +20,14 @@ Afterwards `Apache FreeMarker Generator` can be executed from the command line
 
 ```
 > which freemarker-generator
-/Applications/Java/freemarker-generator-2.0.0/bin/freemarker-generator
+/Applications/Java/freemarker-generator/bin/freemarker-generator
 ```
 
 and check the version of `Apache FreeMarker Generator`
 
 ```
 > freemarker-generator -V
-version=0.1.0-SNAPSHOT, time=2020-06-25T21:48:02+0200, commit=b320d00094be8789086ad6153d9d3fcaf4b8c75f
+version=0.1.0-SNAPSHOT, time=2021-01-09T10:41:01+0100, commit=d308ede197f1c2972e3b328b9a37fa233cae101a
 ```
 
 ### Command Line Options
@@ -36,17 +36,22 @@ version=0.1.0-SNAPSHOT, time=2020-06-25T21:48:02+0200, commit=b320d00094be878908
 
 ```
 > freemarker-generator -h
-Usage: freemarker-generator (-t=<templates> [-t=<templates>]... |
-                            -i=<interactiveTemplate>) [-hV] [--stdin]
-                            [--config=<configFile>]
+Usage: freemarker-generator ((-t=<template> | -i=<interactiveTemplate>)
+                            [[--template-include=<templateIncludePatterns>]
+                            [--template-include=<templateIncludePatterns>]...
+                            [--template-exclude=<templateExcludePatterns>]
+                            [--template-exclude=<templateExcludePatterns>]...]
+                            [[-o=<outputs>] [-o=<outputs>]...]
+                            [[-s=<dataSources>] [-s=<dataSources>]...]
+                            [[-m=<dataModels>] [-m=<dataModels>]...])... [-hV]
+                            [--stdin] [--config=<configFile>]
                             [--data-source-exclude=<dataSourceExcludePattern>]
                             [--data-source-include=<dataSourceIncludePattern>]
                             [-e=<inputEncoding>] [-l=<locale>]
                             [--output-encoding=<outputEncoding>]
                             [--template-dir=<templateDir>] [--times=<times>]
-                            [-D=<String=String>]... [-m=<dataModels>]...
-                            [-o=<outputs>]... [-P=<String=String>]...
-                            [-s=<dataSources>]... [<sources>...]
+                            [-D=<String=String>]... [-P=<String=String>]...
+                            [<sources>...]
 Apache FreeMarker Generator
       [<sources>...]       data source files and/or directories
       --config=<configFile>
@@ -54,9 +59,9 @@ Apache FreeMarker Generator
   -D, --system-property=<String=String>
                            set system property
       --data-source-exclude=<dataSourceExcludePattern>
-                           file exclude pattern for data sources
+                           data source exclude pattern
       --data-source-include=<dataSourceIncludePattern>
-                           file include pattern for data sources
+                           data source include pattern
   -e, --input-encoding=<inputEncoding>
                            encoding of data source
   -h, --help               Show this help message and exit.
@@ -73,10 +78,14 @@ Apache FreeMarker Generator
   -s, --data-source=<dataSources>
                            data source used for rendering
       --stdin              read data source from stdin
-  -t, --template=<templates>
+  -t, --template=<template>
                            templates to process
       --template-dir=<templateDir>
                            additional template directory
+      --template-exclude=<templateExcludePatterns>
+                           template exclude pattern
+      --template-include=<templateIncludePatterns>
+                           template include pattern
       --times=<times>      re-run X times for profiling
   -V, --version            Print version information and exit.
 ```

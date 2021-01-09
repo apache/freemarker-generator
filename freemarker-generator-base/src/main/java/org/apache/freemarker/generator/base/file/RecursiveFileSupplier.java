@@ -85,7 +85,7 @@ public class RecursiveFileSupplier implements Supplier<List<File>> {
         } else if (file.isDirectory()) {
             return resolveDirectory(file);
         } else {
-            throw new IllegalArgumentException("Unable to find source: " + source);
+            throw new IllegalArgumentException("Unable to find file: " + source);
         }
     }
 
