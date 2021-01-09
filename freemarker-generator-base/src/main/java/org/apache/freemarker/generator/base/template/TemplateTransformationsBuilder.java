@@ -30,9 +30,7 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.singletonList;
@@ -46,8 +44,8 @@ public class TemplateTransformationsBuilder {
     /** Interactive template */
     private TemplateSource interactiveTemplate;
 
-    /** List of templates and/or template directories to be rendered */
-    private final List<String> templateSources;
+    /** Template source - either a single template or a directory */
+    private String templateSource;
 
     /** Optional include patterns for resolving source templates or template directories */
     private final List<String> includes;
@@ -55,8 +53,8 @@ public class TemplateTransformationsBuilder {
     /** Optional exclude patterns for resolving source templates or template directories */
     private final List<String> excludes;
 
-    /** Optional output file(s) or directory - if none is defined everything is written to STDOUT */
-    private final List<String> outputs;
+    /** Optional output file or directory - if none is defined everything is written to STDOUT */
+    private String output;
 
     /** Optional output encoding */
     private Charset outputEncoding;
@@ -65,10 +63,10 @@ public class TemplateTransformationsBuilder {
     private Writer callerSuppliedWriter;
 
     private TemplateTransformationsBuilder() {
-        this.templateSources = new ArrayList<>();
+        this.templateSource = null;
         this.includes = new ArrayList<>();
         this.excludes = new ArrayList<>();
-        this.outputs = new ArrayList<>();
+        this.output = null;
         this.callerSuppliedWriter = null;
         this.outputEncoding = UTF_8;
     }
@@ -81,16 +79,12 @@ public class TemplateTransformationsBuilder {
         validate();
 
         final List<TemplateTransformation> result = new ArrayList<>();
+        final File outputFile = getOutputFile();
 
         if (hasInteractiveTemplate()) {
-            final File outputFile = getOutputFile(0).orElse(null);
             result.add(resolveInteractiveTemplate(outputFile));
         } else {
-            for (int i = 0; i < templateSources.size(); i++) {
-                final String source = templateSources.get(i);
-                final File output = getOutputFile(i).orElse(null);
-                result.addAll(resolve(source, output));
-            }
+            result.addAll(resolve(templateSource, outputFile));
         }
 
         return result;
@@ -103,15 +97,8 @@ public class TemplateTransformationsBuilder {
         return this;
     }
 
-    public TemplateTransformationsBuilder addTemplateSource(String source) {
-        if (StringUtils.isNotEmpty(source)) {
-            this.templateSources.add(source);
-        }
-        return this;
-    }
-
-    public TemplateTransformationsBuilder addTemplateSources(Collection<String> sources) {
-        sources.forEach(this::addTemplateSource);
+    public TemplateTransformationsBuilder setTemplateSource(String source) {
+        this.templateSource = source;
         return this;
     }
 
@@ -129,22 +116,14 @@ public class TemplateTransformationsBuilder {
         return this;
     }
 
-    public TemplateTransformationsBuilder addOutputs(Collection<String> outputs) {
-        if (outputs != null) {
-            this.outputs.addAll(outputs);
-        }
-        return this;
-    }
-
-    public TemplateTransformationsBuilder addOutput(String output) {
-        if (StringUtils.isNotEmpty(output)) {
-            this.outputs.add(output);
-        }
+    public TemplateTransformationsBuilder setOutput(String output) {
+        this.output = output;
         return this;
     }
 
     public TemplateTransformationsBuilder setOutputEncoding(Charset outputEncoding) {
         if (outputEncoding != null) {
+            // keep UTF-8 here
             this.outputEncoding = outputEncoding;
         }
 
@@ -157,9 +136,7 @@ public class TemplateTransformationsBuilder {
     }
 
     private void validate() {
-        // TODO FREEMARKER-161 08.01.2021 sgoeschl refactor code
-        // Validate.isTrue(interactiveTemplate != null || !templateSources.isEmpty(), "Interactive template does not support multiple sources");
-        Validate.isTrue(interactiveTemplate == null || templateSources.isEmpty(), "No template was provided");
+        Validate.isTrue(interactiveTemplate == null || templateSource == null, "No template was provided");
     }
 
     /**
@@ -257,14 +234,8 @@ public class TemplateTransformationsBuilder {
         return interactiveTemplate != null;
     }
 
-    private Optional<File> getOutputFile(int i) {
-        if (outputs.isEmpty()) {
-            return Optional.empty();
-        } else if (i < outputs.size()) {
-            return Optional.of(new File(outputs.get(i)));
-        } else {
-            return Optional.of(new File(outputs.get(0)));
-        }
+    private File getOutputFile() {
+        return output == null ? null : new File(output);
     }
 
     private static File getTemplateOutputFile(File templateDirectory, File templateFile, File outputDirectory) {

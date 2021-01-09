@@ -26,7 +26,6 @@ import org.apache.freemarker.generator.base.util.NonClosableWriterWrapper;
 import org.junit.Test;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.nio.charset.StandardCharsets;
@@ -76,7 +75,7 @@ public class TemplateTransformationsBuilderTest {
     public void shouldThrowIllegalArgumentExceptionWheMixingInteractiveTemplateWithSources() {
         builder()
                 .setInteractiveTemplate("Hello World")
-                .addTemplateSource(ANY_TEMPLATE_FILE_NAME)
+                .setTemplateSource(ANY_TEMPLATE_FILE_NAME)
                 .setCallerSuppliedWriter(stdoutWriter())
                 .build();
     }
@@ -86,7 +85,7 @@ public class TemplateTransformationsBuilderTest {
     @Test
     public void shouldCreateFromTemplateFile() {
         final List<TemplateTransformation> transformations = builder()
-                .addTemplateSource(ANY_TEMPLATE_FILE_NAME)
+                .setTemplateSource(ANY_TEMPLATE_FILE_NAME)
                 .setCallerSuppliedWriter(stdoutWriter())
                 .build();
 
@@ -105,26 +104,12 @@ public class TemplateTransformationsBuilderTest {
         assertNull(templateOutput.getFile());
     }
 
-    @Test
-    public void shouldCreateFromMultipleTemplateFiles() {
-        final List<TemplateTransformation> transformations = builder()
-                .addTemplateSource(ANY_TEMPLATE_FILE_NAME)
-                .addOutput("foo/first.out")
-                .addTemplateSource(OTHER_TEMPLATE_FILE_NAME)
-                .addOutput("foo/second.out")
-                .build();
-
-        assertEquals(2, transformations.size());
-        assertEquals(new File("foo/first.out"), transformations.get(0).getTemplateOutput().getFile());
-        assertEquals(new File("foo/second.out"), transformations.get(1).getTemplateOutput().getFile());
-    }
-
     // === Template Path ====================================================
 
     @Test
     public void shouldCreateFromTemplatePath() {
         final List<TemplateTransformation> transformations = builder()
-                .addTemplateSource(ANY_TEMPLATE_PATH)
+                .setTemplateSource(ANY_TEMPLATE_PATH)
                 .setCallerSuppliedWriter(stdoutWriter())
                 .build();
 
@@ -148,7 +133,7 @@ public class TemplateTransformationsBuilderTest {
     @Test
     public void shouldCreateFromTemplateDirectory() {
         final List<TemplateTransformation> transformations = builder()
-                .addTemplateSource(ANY_TEMPLATE_DIRECTORY_NAME)
+                .setTemplateSource(ANY_TEMPLATE_DIRECTORY_NAME)
                 .setCallerSuppliedWriter(stdoutWriter())
                 .build();
 
@@ -160,8 +145,8 @@ public class TemplateTransformationsBuilderTest {
     @Test
     public void shouldCreateFromTemplateDirectoryWithOutputDirectory() {
         final List<TemplateTransformation> transformations = builder()
-                .addTemplateSource(ANY_TEMPLATE_DIRECTORY_NAME)
-                .addOutput("/foo")
+                .setTemplateSource(ANY_TEMPLATE_DIRECTORY_NAME)
+                .setOutput("/foo")
                 .build();
 
         assertEquals(2, transformations.size());
@@ -172,7 +157,7 @@ public class TemplateTransformationsBuilderTest {
     @Test
     public void shouldCreateFromTemplateDirectoryWithInclude() {
         final List<TemplateTransformation> transformations = builder()
-                .addTemplateSource(ANY_TEMPLATE_DIRECTORY_NAME)
+                .setTemplateSource(ANY_TEMPLATE_DIRECTORY_NAME)
                 .addInclude("*.properties")
                 .setCallerSuppliedWriter(stdoutWriter())
                 .build();
@@ -184,7 +169,7 @@ public class TemplateTransformationsBuilderTest {
     @Test
     public void shouldCreateFromTemplateDirectoryWithExclude() {
         final List<TemplateTransformation> transformations = builder()
-                .addTemplateSource(ANY_TEMPLATE_DIRECTORY_NAME)
+                .setTemplateSource(ANY_TEMPLATE_DIRECTORY_NAME)
                 .addExclude("*.ftl")
                 .setCallerSuppliedWriter(stdoutWriter())
                 .build();
@@ -198,7 +183,7 @@ public class TemplateTransformationsBuilderTest {
     @Test
     public void shouldCreateFromTemplateUrl() {
         final List<TemplateTransformation> transformations = builder()
-                .addTemplateSource(ANY_TEMPLATE_URL)
+                .setTemplateSource(ANY_TEMPLATE_URL)
                 .setCallerSuppliedWriter(stdoutWriter())
                 .build();
 
@@ -217,7 +202,7 @@ public class TemplateTransformationsBuilderTest {
     @Test
     public void shouldCreateFromTemplateEnvironmentVariable() {
         final List<TemplateTransformation> transformations = builder()
-                .addTemplateSource(ANY_ENV_URI)
+                .setTemplateSource(ANY_ENV_URI)
                 .setCallerSuppliedWriter(stdoutWriter())
                 .build();
 

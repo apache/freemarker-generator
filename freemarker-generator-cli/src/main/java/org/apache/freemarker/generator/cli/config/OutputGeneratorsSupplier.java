@@ -68,15 +68,15 @@ public class OutputGeneratorsSupplier implements Supplier<List<OutputGenerator>>
         if (templateSourceDefinition.isInteractiveTemplate()) {
             builder.setInteractiveTemplate(templateSourceDefinition.interactiveTemplate);
         } else {
-            builder.addTemplateSource(templateSourceDefinition.template);
+            builder.setTemplateSource(templateSourceDefinition.template);
         }
 
         // set the writer
         builder.setCallerSuppliedWriter(settings.getCallerSuppliedWriter());
 
         // set template output
-        if (templateOutputDefinition != null) {
-            builder.addOutputs(templateOutputDefinition.outputs);
+        if (templateOutputDefinition != null && templateOutputDefinition.hasOutput()) {
+            builder.setOutput(templateOutputDefinition.outputs.get(0));
         }
 
         // set the output encoding

@@ -88,14 +88,6 @@ public class OutputGeneratorDefinition {
         return templateOutputDefinition;
     }
 
-    public DataSourceDefinition getDataSourceDefinition() {
-        return dataSourceDefinition;
-    }
-
-    public DataModelDefinition getDataModelDefinition() {
-        return dataModelDefinition;
-    }
-
     public boolean hasTemplateSourceIncludes() {
         return getTemplateSourceFilterDefinition() != null &&
                 getTemplateSourceFilterDefinition().templateIncludePatterns != null &&
