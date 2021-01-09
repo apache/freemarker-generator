@@ -161,10 +161,12 @@
                 <configuration>
                     <excludes>
                         <exclude>README.md</exclude>
-                        <exclude>src/site/markdown/**/*.md</exclude>
+                        <exclude>CHANGELOG.md</exclude>
                         <exclude>.travis.yml</exclude>
+                        <exclude>src/app/examples/data/*/**</exclude>
+                        <exclude>src/app/scripts/run-examples.bat</exclude>
                         <exclude>src/main/resources/patterns/*</exclude>
-                        <exclude>examples/data/*/**</exclude>
+                        <exclude>src/site/markdown/**/*.md</exclude>
                         <exclude>src/test/data/encoding/utf8.txt</exclude>
                         <exclude>src/test/data/json/*/**</exclude>
                         <exclude>src/test/data/yaml/environments.yaml</exclude>

@@ -19,17 +19,16 @@ package org.apache.freemarker.generator.cli.config;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Version;
+import org.apache.freemarker.generator.base.util.PropertiesTransformer;
 import org.apache.freemarker.generator.cli.model.GeneratorObjectWrapper;
 
 import java.util.Properties;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import static freemarker.template.Configuration.VERSION_2_3_29;
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Stream.of;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.Configuration.SETTING_PREFIX;
-import static org.apache.freemarker.generator.base.util.PropertiesTransformer.filterKeyPrefix;
-import static org.apache.freemarker.generator.base.util.PropertiesTransformer.removeKeyPrefix;
 
 /**
  * Supply a FreeMarker configuration.
@@ -81,9 +80,9 @@ public class ConfigurationSupplier implements Supplier<Configuration> {
      * @return FreeMarker configuration settings
      */
     private Properties freeMarkerConfigurationSettings() {
-        return of(settings.getConfiguration())
-                .map(p -> filterKeyPrefix(p, SETTING_PREFIX))
-                .map(p -> removeKeyPrefix(p, SETTING_PREFIX))
+        return Stream.of(settings.getConfiguration())
+                .map(p -> PropertiesTransformer.filterKeyPrefix(p, SETTING_PREFIX))
+                .map(p -> PropertiesTransformer.removeKeyPrefix(p, SETTING_PREFIX))
                 .findFirst().get();
     }
 }
