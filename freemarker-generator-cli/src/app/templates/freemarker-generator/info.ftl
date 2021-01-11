@@ -51,19 +51,19 @@ FreeMarker Generator DataSources
 FreeMarker Generator Parameters
 ------------------------------------------------------------------------------
 <#if tools.system.parameters?has_content>
-    <#list tools.system.parameters as key,value>
-        <#if value?is_hash>
-            - ${key} ==> { <#list value as name,value>${name}=${value} </#list>}
-        <#else>
-            - ${key} ==> ${value}
-        </#if>
-    </#list>
+<#list tools.system.parameters as key,value>
+<#if value?is_hash>
+- ${key} ==> { <#list value as name,value>${name}=${value} </#list>}
 <#else>
-    No parameters found ...
+- ${key} ==> ${value}
+</#if>
+</#list>
+<#else>
+No parameters found ...
 </#if>
 
 FreeMarker Generator Tools
 ------------------------------------------------------------------------------
 <#list tools?keys?sort as name>
-    - ${name?right_pad(20)} : ${tools[name]}
+- ${name?right_pad(20)} : ${tools[name]}
 </#list>
