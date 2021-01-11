@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
-import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model.DATASOURCES;
+import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model;
 
 /**
  * Renders a FreeMarker template.
@@ -116,7 +116,7 @@ public class FreeMarkerTask implements Callable<Integer> {
     private static Map<String, Object> toTemplateDataModel(DataSources dataSources, Map<String, Object>... maps) {
         final Map<String, Object> result = new HashMap<>();
         Arrays.stream(maps).forEach(result::putAll);
-        result.put(DATASOURCES, dataSources);
+        result.put(Model.DATASOURCES, dataSources);
         return result;
     }
 
