@@ -42,12 +42,13 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings("unchecked")
-public class SupplierTest {
+public class SuppliersTest {
 
+    private static final String ANY_DATA_MODEL_NAME = "src/test/data/properties/test.properties";
+    private static final String ANY_DATA_SOURCE_NAME = "src/test/data/properties/test.properties";
     private static final String ANY_INTERACTIVE_TEMPLATE = "Hello World";
-    private static final String ANY_DATAMODEL_NAME = "src/app/examples/data/ftl/nginx/nginx.env";
-    private static final String ANY_DATASOURCE_NAME = "pom.xml";
-    private static final String ANY_TEMPLATE_DIRECTORY_NAME = "src/app/templates";
+    private static final String ANY_TEMPLATE_DIRECTORY_NAME = "src/test/templates";
+    private static final String ANY_TEMPLATE_NAME = "echo.ftl";
     private static final List<File> ANY_TEMPLATE_DIRECTORIES = singletonList(new File(ANY_TEMPLATE_DIRECTORY_NAME));
 
     @Test
@@ -79,7 +80,7 @@ public class SupplierTest {
 
         final TemplateLoader templateLoader = templateLoaderSupplier.get();
 
-        assertNotNull(templateLoader.findTemplateSource("freemarker-generator/info.ftl"));
+        assertNotNull(templateLoader.findTemplateSource(ANY_TEMPLATE_NAME));
     }
 
     @Test
@@ -96,23 +97,23 @@ public class SupplierTest {
 
     @Test
     public void shouldCreateSharedDataSources() {
-        final Settings settings = Settings.builder().setSharedDataSources(singletonList(ANY_DATASOURCE_NAME)).build();
+        final Settings settings = Settings.builder().setSharedDataSources(singletonList(ANY_DATA_SOURCE_NAME)).build();
         final DataSourcesSupplier dataSourcesSupplier = Suppliers.sharedDataSourcesSupplier(settings);
 
         final List<DataSource> dataSourceList = dataSourcesSupplier.get();
 
         assertEquals(1, dataSourceList.size());
-        assertTrue(dataSourceList.get(0).getName().endsWith(ANY_DATASOURCE_NAME));
+        assertTrue(dataSourceList.get(0).getName().endsWith(ANY_DATA_SOURCE_NAME));
     }
 
     @Test
     public void shouldCreateSharedDataModel() {
-        final Settings settings = Settings.builder().setSharedDataModels(singletonList(ANY_DATAMODEL_NAME)).build();
+        final Settings settings = Settings.builder().setSharedDataModels(singletonList(ANY_DATA_MODEL_NAME)).build();
         final DataModelSupplier sharedDataModelSupplier = Suppliers.sharedDataModelSupplier(settings);
 
         final Map<String, Object> map = sharedDataModelSupplier.get();
 
-        assertEquals(3, map.size());
+        assertEquals(2, map.size());
     }
 
     @Test
@@ -121,9 +122,9 @@ public class SupplierTest {
         def.templateSourceDefinition = new TemplateSourceDefinition();
         def.templateSourceDefinition.interactiveTemplate = ANY_INTERACTIVE_TEMPLATE;
         def.dataModelDefinition = new DataModelDefinition();
-        def.dataModelDefinition.dataModels = singletonList(ANY_DATAMODEL_NAME);
+        def.dataModelDefinition.dataModels = singletonList(ANY_DATA_MODEL_NAME);
         def.dataSourceDefinition = new DataSourceDefinition();
-        def.dataSourceDefinition.dataSources = singletonList(ANY_DATASOURCE_NAME);
+        def.dataSourceDefinition.dataSources = singletonList(ANY_DATA_SOURCE_NAME);
         final Settings settings = Settings.builder().setOutputGeneratorDefinitions(singletonList(def)).build();
         final OutputGeneratorsSupplier outputGeneratorsSupplier = Suppliers.outputGeneratorsSupplier(settings);
 
@@ -133,9 +134,8 @@ public class SupplierTest {
         assertEquals(1, outputGenerators.size());
         assertEquals(Origin.TEMPLATE_CODE, outputGenerator.getTemplateSource().getOrigin());
         assertEquals(1, outputGenerator.getDataSources().size());
-        assertEquals(ANY_DATASOURCE_NAME, outputGenerator.getDataSources().get(0).getFileName());
-        assertEquals(3, outputGenerator.getVariables().size());
-        assertEquals("localhost", outputGenerator.getVariables().get("NGINX_HOSTNAME"));
+        assertEquals(2, outputGenerator.getVariables().size());
+        assertEquals("foo", outputGenerator.getVariables().get("FOO"));
         assertNotNull(outputGenerator.getTemplateOutput().getWriter());
         assertNull(outputGenerator.getTemplateOutput().getFile());
     }
