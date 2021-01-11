@@ -16,6 +16,7 @@
  */
 package org.apache.freemarker.generator.cli.config;
 
+import org.apache.freemarker.generator.base.datasource.DataSourcesSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesClassPathSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesFileSystemSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesSupplier;
@@ -43,6 +44,17 @@ public class Suppliers {
 
     public static OutputGeneratorsSupplier outputGeneratorsSupplier(Settings settings) {
         return new OutputGeneratorsSupplier(settings);
+    }
+
+    public static DataSourcesSupplier sharedDataSourcesSupplier(Settings settings) {
+        return new DataSourcesSupplier(settings.getSharedDataSources(),
+                settings.getSourceIncludePattern(),
+                settings.getSourceExcludePattern(),
+                settings.getInputEncoding());
+    }
+
+    public static DataModelSupplier sharedDataModelSupplier(Settings settings) {
+        return new DataModelSupplier(settings.getSharedDataModels());
     }
 
     public static PropertiesSupplier propertiesSupplier(String fileName) {

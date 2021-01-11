@@ -21,6 +21,7 @@ import org.apache.freemarker.generator.base.FreeMarkerConstants.SystemProperties
 import org.apache.freemarker.generator.base.parameter.ParameterModelSupplier;
 import org.apache.freemarker.generator.base.util.ClosableUtils;
 import org.apache.freemarker.generator.cli.config.Settings;
+import org.apache.freemarker.generator.cli.config.Suppliers;
 import org.apache.freemarker.generator.cli.picocli.GitVersionProvider;
 import org.apache.freemarker.generator.cli.picocli.OutputGeneratorDefinition;
 import org.apache.freemarker.generator.cli.task.FreeMarkerTask;
@@ -35,20 +36,16 @@ import picocli.CommandLine.Spec;
 import java.io.File;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.stream.IntStream;
 
+import static java.util.Collections.emptyList;
 import static java.util.Objects.requireNonNull;
 import static org.apache.freemarker.generator.base.util.StringUtils.isEmpty;
 import static org.apache.freemarker.generator.base.util.StringUtils.isNotEmpty;
-import static org.apache.freemarker.generator.cli.config.Suppliers.configurationSupplier;
-import static org.apache.freemarker.generator.cli.config.Suppliers.outputGeneratorsSupplier;
-import static org.apache.freemarker.generator.cli.config.Suppliers.propertiesSupplier;
-import static org.apache.freemarker.generator.cli.config.Suppliers.templateDirectorySupplier;
 
 @Command(description = "Apache FreeMarker Generator", name = "freemarker-generator", mixinStandardHelpOptions = true, versionProvider = GitVersionProvider.class)
 public class Main implements Callable<Integer> {
@@ -61,6 +58,9 @@ public class Main implements Callable<Integer> {
 
     @Option(names = { "--data-source-exclude" }, description = "data source exclude pattern")
     public String dataSourceExcludePattern;
+
+    @Option(names = { "--shared-data-model" }, description = "shared data models used for rendering")
+    public List<String> sharedDataModels;
 
     @Option(names = { "-D", "--system-property" }, description = "set system property")
     Properties systemProperties;
@@ -89,24 +89,21 @@ public class Main implements Callable<Integer> {
     @Option(names = { "--times" }, defaultValue = "1", description = "re-run X times for profiling")
     int times;
 
-    @Parameters(description = "data source files and/or directories")
-    List<String> sources;
+    @Parameters(description = "shared data source files and/or directories")
+    List<String> sharedDataSources;
 
     /** User-supplied command line parameters */
     final String[] args;
 
     /** User-supplied writer (used mainly for unit testing) */
-    Writer callerSuppliedWriter;
+    final Writer callerSuppliedWriter;
 
     /** Injected by Picocli */
     @Spec private CommandSpec spec;
 
-    Main() {
-        this.args = new String[0];
-    }
-
     Main(String[] args) {
         this.args = requireNonNull(args);
+        this.callerSuppliedWriter = null;
     }
 
     private Main(String[] args, Writer callerSuppliedWriter) {
@@ -154,10 +151,11 @@ public class Main implements Callable<Integer> {
 
         try {
             final FreeMarkerTask freeMarkerTask = new FreeMarkerTask(
-                    configurationSupplier(settings),
-                    outputGeneratorsSupplier(settings),
-                    settings::getUserParameters,
-                    Collections::emptyList
+                    Suppliers.configurationSupplier(settings),
+                    Suppliers.outputGeneratorsSupplier(settings),
+                    Suppliers.sharedDataModelSupplier(settings),
+                    Suppliers.sharedDataSourcesSupplier(settings),
+                    settings::getUserParameters
             );
             return freeMarkerTask.call();
         } finally {
@@ -178,7 +176,8 @@ public class Main implements Callable<Integer> {
                 .setConfiguration(configuration)
                 .setTemplateDirectories(templateDirectories)
                 .setOutputGeneratorDefinitions(outputGeneratorDefinitions)
-                .setSources(getDataSources())
+                .setSharedDataSources(getSharedDataSources())
+                .setSharedDataModels(sharedDataModels)
                 .setSourceIncludePattern(dataSourceIncludePattern)
                 .setSourceExcludePattern(dataSourceExcludePattern)
                 .setInputEncoding(inputEncoding)
@@ -203,16 +202,12 @@ public class Main implements Callable<Integer> {
      *
      * @return List of data sources
      */
-    private List<String> getDataSources() {
-        if (sources != null) {
-            return new ArrayList<>(sources);
-        } else {
-            return Collections.emptyList();
-        }
+    private List<String> getSharedDataSources() {
+        return sharedDataSources != null ? new ArrayList<>(sharedDataSources) : emptyList();
     }
 
     private static List<File> getTemplateDirectories(String additionalTemplateDir) {
-        return templateDirectorySupplier(additionalTemplateDir).get();
+        return Suppliers.templateDirectorySupplier(additionalTemplateDir).get();
     }
 
     /**
@@ -231,7 +226,7 @@ public class Main implements Callable<Integer> {
             return new Properties();
         }
 
-        final Properties properties = propertiesSupplier(fileName).get();
+        final Properties properties = Suppliers.propertiesSupplier(fileName).get();
         if (properties != null) {
             return properties;
         } else {

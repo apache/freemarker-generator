@@ -56,15 +56,18 @@ public class FreeMarkerTask implements Callable<Integer> {
     private final Supplier<List<OutputGenerator>> outputGeneratorsSupplier;
     private final Supplier<Map<String, Object>> sharedDataModelSupplier;
     private final Supplier<List<DataSource>> sharedDataSourcesSupplier;
+    private final Supplier<Map<String, Object>> sharedParametersSupplier;
 
     public FreeMarkerTask(Supplier<Configuration> configurationSupplier,
                           Supplier<List<OutputGenerator>> outputGeneratorsSupplier,
                           Supplier<Map<String, Object>> sharedDataModelSupplier,
-                          Supplier<List<DataSource>> sharedDataSourcesSupplier) {
+                          Supplier<List<DataSource>> sharedDataSourcesSupplier,
+                          Supplier<Map<String, Object>> sharedParametersSupplier) {
         this.configurationSupplier = requireNonNull(configurationSupplier, "configurationSupplier");
         this.outputGeneratorsSupplier = requireNonNull(outputGeneratorsSupplier, "outputGeneratorsSupplier");
         this.sharedDataModelSupplier = requireNonNull(sharedDataModelSupplier, "sharedDataModelSupplier");
         this.sharedDataSourcesSupplier = requireNonNull(sharedDataSourcesSupplier, "sharedDataSourcesSupplier");
+        this.sharedParametersSupplier = requireNonNull(sharedParametersSupplier, "parametersSupplier");
     }
 
     @Override
@@ -73,12 +76,14 @@ public class FreeMarkerTask implements Callable<Integer> {
         final List<OutputGenerator> outputGenerators = outputGeneratorsSupplier.get();
         final Map<String, Object> sharedDataModel = sharedDataModelSupplier.get();
         final List<DataSource> sharedDataSources = sharedDataSourcesSupplier.get();
+        final Map<String, Object> sharedParameters = sharedParametersSupplier.get();
 
         outputGenerators.forEach(outputGenerator -> process(
                 configuration,
                 outputGenerator,
                 sharedDataModel,
-                sharedDataSources));
+                sharedDataSources,
+                sharedParameters));
 
         return SUCCESS;
     }
@@ -86,16 +91,17 @@ public class FreeMarkerTask implements Callable<Integer> {
     private void process(Configuration configuration,
                          OutputGenerator outputGenerator,
                          Map<String, Object> sharedDataModelMap,
-                         List<DataSource> sharedDataSources) {
+                         List<DataSource> sharedDataSources,
+                         Map<String, Object> sharedParameters) {
         final TemplateSource templateSource = outputGenerator.getTemplateSource();
         final TemplateOutput templateOutput = outputGenerator.getTemplateOutput();
         final DataSources dataSources = toDataSources(outputGenerator, sharedDataSources);
         final Map<String, Object> variables = outputGenerator.getVariables();
-        final Map<String, Object> dataModel = toDataModel(dataSources, variables, sharedDataModelMap);
+        final Map<String, Object> templateDataModel = toTemplateDataModel(dataSources, variables, sharedDataModelMap, sharedParameters);
 
         try (Writer writer = writer(templateOutput)) {
             final Template template = template(configuration, templateSource);
-            template.process(dataModel, writer);
+            template.process(templateDataModel, writer);
         } catch (TemplateException | IOException e) {
             throw new RuntimeException("Failed to process template: " + templateSource.getName(), e);
         }
@@ -107,7 +113,7 @@ public class FreeMarkerTask implements Callable<Integer> {
     }
 
     @SafeVarargs
-    private static Map<String, Object> toDataModel(DataSources dataSources, Map<String, Object>... maps) {
+    private static Map<String, Object> toTemplateDataModel(DataSources dataSources, Map<String, Object>... maps) {
         final Map<String, Object> result = new HashMap<>();
         Arrays.stream(maps).forEach(result::putAll);
         result.put(DATASOURCES, dataSources);

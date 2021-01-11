@@ -115,15 +115,6 @@ public class OutputGeneratorsSupplier implements Supplier<List<OutputGenerator>>
             result.add(0, stdinDataSource());
         }
 
-        final DataSourcesSupplier sharedDataSourcesSupplier = new DataSourcesSupplier(
-                settings.getSources(),
-                settings.getSourceIncludePattern(),
-                settings.getSourceExcludePattern(),
-                settings.getInputEncoding()
-        );
-
-        result.addAll(sharedDataSourcesSupplier.get());
-
         final DataSourcesSupplier outputGeneratorDataSourcesSupplier = new DataSourcesSupplier(
                 outputGeneratorDefinition.getDataSources(),
                 settings.getSourceIncludePattern(),

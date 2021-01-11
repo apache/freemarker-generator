@@ -40,19 +40,19 @@ public class PicocliTest {
         final Main main = parse("-t", ANY_TEMPLATE, ANY_FILE_URI);
 
         assertEquals(1, main.outputGeneratorDefinitions.size());
-        assertEquals(ANY_FILE_URI, main.sources.get(0));
+        assertEquals(ANY_FILE_URI, main.sharedDataSources.get(0));
     }
 
     @Test
     public void shouldParseMultiplePositionalParameter() {
-        assertEquals(ANY_FILE, parse("-t", ANY_TEMPLATE, ANY_FILE, OTHER_FILE).sources.get(0));
-        assertEquals(OTHER_FILE, parse("-t", ANY_TEMPLATE, ANY_FILE, OTHER_FILE).sources.get(1));
+        assertEquals(ANY_FILE, parse("-t", ANY_TEMPLATE, ANY_FILE, OTHER_FILE).sharedDataSources.get(0));
+        assertEquals(OTHER_FILE, parse("-t", ANY_TEMPLATE, ANY_FILE, OTHER_FILE).sharedDataSources.get(1));
 
-        assertEquals(ANY_FILE, parse("-t", ANY_TEMPLATE, ANY_FILE, OTHER_FILE_URI).sources.get(0));
-        assertEquals(OTHER_FILE_URI, parse("-t", ANY_TEMPLATE, ANY_FILE, OTHER_FILE_URI).sources.get(1));
+        assertEquals(ANY_FILE, parse("-t", ANY_TEMPLATE, ANY_FILE, OTHER_FILE_URI).sharedDataSources.get(0));
+        assertEquals(OTHER_FILE_URI, parse("-t", ANY_TEMPLATE, ANY_FILE, OTHER_FILE_URI).sharedDataSources.get(1));
 
-        assertEquals(ANY_FILE_URI, parse("-t", ANY_TEMPLATE, ANY_FILE_URI, OTHER_FILE_URI).sources.get(0));
-        assertEquals(OTHER_FILE_URI, parse("-t", ANY_TEMPLATE, ANY_FILE_URI, OTHER_FILE_URI).sources.get(1));
+        assertEquals(ANY_FILE_URI, parse("-t", ANY_TEMPLATE, ANY_FILE_URI, OTHER_FILE_URI).sharedDataSources.get(0));
+        assertEquals(OTHER_FILE_URI, parse("-t", ANY_TEMPLATE, ANY_FILE_URI, OTHER_FILE_URI).sharedDataSources.get(1));
     }
 
     @Test
@@ -74,7 +74,7 @@ public class PicocliTest {
 
         assertEquals(ANY_FILE, main.outputGeneratorDefinitions.get(0).getDataSources().get(0));
         assertEquals(OTHER_FILE_URI, main.outputGeneratorDefinitions.get(0).getDataSources().get(1));
-        assertNull(main.sources);
+        assertNull(main.sharedDataSources);
     }
 
     @Test
@@ -94,7 +94,7 @@ public class PicocliTest {
 
         assertEquals(ANY_FILE, outputGeneratorDefinition.getDataModels().get(0));
         assertEquals(OTHER_FILE_URI, outputGeneratorDefinition.getDataModels().get(1));
-        assertNull(main.sources);
+        assertNull(main.sharedDataSources);
     }
 
     @Test

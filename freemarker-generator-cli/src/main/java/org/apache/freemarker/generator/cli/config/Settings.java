@@ -56,8 +56,11 @@ public class Settings {
     /** User-provided output generators (transformations) */
     private final List<OutputGeneratorDefinition> outputGeneratorDefinitions;
 
-    /** List of additional sources provided by positional parameters */
-    private final List<String> sources;
+    /** List of additional shared data sources provided by positional parameters */
+    private final List<String> sharedDataSources;
+
+    /** List of additional shared data models */
+    private final List<String> sharedDataModels;
 
     /** Include pattern for sources */
     private final String sourceIncludePattern;
@@ -94,7 +97,8 @@ public class Settings {
             List<String> commandLineArgs,
             List<File> templateDirectories,
             List<OutputGeneratorDefinition> outputGeneratorDefinitions,
-            List<String> sources,
+            List<String> sharedDataSources,
+            List<String> sharedDataModels,
             String sourceIncludePattern,
             String sourceExcludePattern,
             Charset inputEncoding,
@@ -109,7 +113,8 @@ public class Settings {
         this.commandLineArgs = requireNonNull(commandLineArgs);
         this.templateDirectories = requireNonNull(templateDirectories);
         this.outputGeneratorDefinitions = requireNonNull(outputGeneratorDefinitions);
-        this.sources = requireNonNull(sources);
+        this.sharedDataSources = requireNonNull(sharedDataSources);
+        this.sharedDataModels = requireNonNull(sharedDataModels);
         this.sourceIncludePattern = sourceIncludePattern;
         this.sourceExcludePattern = sourceExcludePattern;
         this.inputEncoding = inputEncoding;
@@ -143,8 +148,12 @@ public class Settings {
         return outputGeneratorDefinitions;
     }
 
-    public List<String> getSources() {
-        return sources;
+    public List<String> getSharedDataSources() {
+        return sharedDataSources;
+    }
+
+    public List<String> getSharedDataModels() {
+        return sharedDataModels;
     }
 
     public String getSourceIncludePattern() {
@@ -215,6 +224,10 @@ public class Settings {
                 ", commandLineArgs=" + commandLineArgs +
                 ", templateDirectories=" + templateDirectories +
                 ", outputGeneratorDefinitions=" + outputGeneratorDefinitions +
+                ", sharedDataSources=" + sharedDataSources +
+                ", sharedDataModels=" + sharedDataModels +
+                ", sourceIncludePattern='" + sourceIncludePattern + '\'' +
+                ", sourceExcludePattern='" + sourceExcludePattern + '\'' +
                 ", inputEncoding=" + inputEncoding +
                 ", outputEncoding=" + outputEncoding +
                 ", verbose=" + verbose +
@@ -222,10 +235,9 @@ public class Settings {
                 ", isReadFromStdin=" + isReadFromStdin +
                 ", userParameters=" + userParameters +
                 ", userSystemProperties=" + userSystemProperties +
-                ", writer=" + callerSuppliedWriter +
+                ", callerSuppliedWriter=" + callerSuppliedWriter +
                 ", templateEncoding=" + getTemplateEncoding() +
                 ", readFromStdin=" + isReadFromStdin() +
-                ", toMap=" + toMap() +
                 '}';
     }
 
@@ -233,7 +245,8 @@ public class Settings {
         private List<String> commandLineArgs;
         private List<File> templateDirectories;
         private List<OutputGeneratorDefinition> outputGeneratorDefinitions;
-        private List<String> sources;
+        private List<String> sharedDataSources;
+        private List<String> sharedDataModels;
         private String sourceIncludePattern;
         private String sourceExcludePattern;
         private String inputEncoding;
@@ -250,7 +263,8 @@ public class Settings {
             this.commandLineArgs = emptyList();
             this.templateDirectories = emptyList();
             this.outputGeneratorDefinitions = emptyList();
-            this.sources = emptyList();
+            this.sharedDataSources = emptyList();
+            this.sharedDataModels = emptyList();
             this.sourceIncludePattern = null;
             this.sourceExcludePattern = null;
             this.configuration = new Properties();
@@ -261,28 +275,28 @@ public class Settings {
             this.setOutputEncoding(DEFAULT_CHARSET.name());
         }
 
-        public SettingsBuilder setCommandLineArgs(String[] commandLineArgs) {
-            if (commandLineArgs == null) {
-                this.commandLineArgs = emptyList();
-            } else {
-                this.commandLineArgs = Arrays.asList(commandLineArgs);
-            }
-
+        public SettingsBuilder setCommandLineArgs(String[] args) {
+            this.commandLineArgs = args != null ? Arrays.asList(args) : emptyList();
             return this;
         }
 
         public SettingsBuilder setTemplateDirectories(List<File> list) {
-            this.templateDirectories = list;
+            this.templateDirectories = list != null ? new ArrayList<>(list) : emptyList();
             return this;
         }
 
         public SettingsBuilder setOutputGeneratorDefinitions(List<OutputGeneratorDefinition> outputGeneratorDefinitions) {
-            this.outputGeneratorDefinitions = new ArrayList<>(outputGeneratorDefinitions);
+            this.outputGeneratorDefinitions = outputGeneratorDefinitions != null ? new ArrayList<>(outputGeneratorDefinitions) : emptyList();
             return this;
         }
 
-        public SettingsBuilder setSources(List<String> sources) {
-            this.sources = new ArrayList<>(sources);
+        public SettingsBuilder setSharedDataSources(List<String> sharedDataSources) {
+            this.sharedDataSources = sharedDataSources != null ? new ArrayList<>(sharedDataSources) : emptyList();
+            return this;
+        }
+
+        public SettingsBuilder setSharedDataModels(List<String> sharedDataModels) {
+            this.sharedDataModels = sharedDataModels != null ? new ArrayList<>(sharedDataModels) : emptyList();
             return this;
         }
 
@@ -361,7 +375,8 @@ public class Settings {
                     commandLineArgs,
                     templateDirectories,
                     outputGeneratorDefinitions,
-                    sources,
+                    sharedDataSources,
+                    sharedDataModels,
                     sourceIncludePattern,
                     sourceExcludePattern,
                     inputEncoding,
