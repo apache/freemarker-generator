@@ -82,7 +82,7 @@ public class TemplateSource {
      * @param encoding character encoding og template
      * @return file-based template source
      */
-
+    // @TODO FREEMARKER-161 sgoeschl 2021-01-11 Load templates with proper encoding
     public static TemplateSource fromPath(String path, Charset encoding) {
         Validate.notEmpty(path, "Template path is empty");
         Validate.notNull(encoding, "Template encoding is null");

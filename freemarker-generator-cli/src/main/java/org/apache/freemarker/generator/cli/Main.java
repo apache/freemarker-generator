@@ -187,6 +187,7 @@ public class Main implements Callable<Integer> {
                 .setSystemProperties(systemProperties != null ? systemProperties : new Properties())
                 .setTemplateDirectories(templateDirectories)
                 .setCallerSuppliedWriter(callerSuppliedWriter)
+                .setVerbose(false)
                 .build();
     }
 
