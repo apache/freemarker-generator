@@ -36,24 +36,24 @@ version=0.1.0-SNAPSHOT, time=2021-01-09T10:41:01+0100, commit=d308ede197f1c2972e
 
 ```
 > freemarker-generator -h
-Usage: freemarker-generator ((-t=<template> | -i=<interactiveTemplate>)
-                            [[--template-include=<templateIncludePatterns>]
-                            [--template-include=<templateIncludePatterns>]...
-                            [--template-exclude=<templateExcludePatterns>]
-                            [--template-exclude=<templateExcludePatterns>]...]
-                            [[-o=<outputs>] [-o=<outputs>]...]
-                            [[-s=<dataSources>] [-s=<dataSources>]...]
-                            [[-m=<dataModels>] [-m=<dataModels>]...])... [-hV]
-                            [--stdin] [--config=<configFile>]
+Usage: freemarker-generator [-hV] [--stdin] [--config=<configFile>]
                             [--data-source-exclude=<dataSourceExcludePattern>]
                             [--data-source-include=<dataSourceIncludePattern>]
                             [-e=<inputEncoding>] [-l=<locale>]
                             [--output-encoding=<outputEncoding>]
-                            [--template-dir=<templateDir>] [--times=<times>]
-                            [-D=<String=String>]... [-P=<String=String>]...
-                            [<sources>...]
+                            [--template-dir=<templateDir>]
+                            [--template-encoding=<templateEncoding>]
+                            [--times=<times>] [-D=<String=String>]...
+                            [-P=<String=String>]...
+                            [--shared-data-model=<sharedDataModels>]...
+                            ((-t=<template> | -i=<interactiveTemplate>)
+                            [[--template-include=<templateIncludePatterns>]...
+                            [--template-exclude=<templateExcludePatterns>]...]
+                            [[-o=<outputs>]...] [[-s=<dataSources>]...]
+                            [[-m=<dataModels>]...])... [<sharedDataSources>...]
 Apache FreeMarker Generator
-      [<sources>...]       data source files and/or directories
+      [<sharedDataSources>...]
+                           shared data source files and/or directories
       --config=<configFile>
                            FreeMarker Generator configuration file
   -D, --system-property=<String=String>
@@ -77,11 +77,15 @@ Apache FreeMarker Generator
                            set parameter
   -s, --data-source=<dataSources>
                            data source used for rendering
+      --shared-data-model=<sharedDataModels>
+                           shared data models used for rendering
       --stdin              read data source from stdin
   -t, --template=<template>
                            templates to process
       --template-dir=<templateDir>
                            additional template directory
+      --template-encoding=<templateEncoding>
+                           template encoding
       --template-exclude=<templateExcludePatterns>
                            template exclude pattern
       --template-include=<templateIncludePatterns>
