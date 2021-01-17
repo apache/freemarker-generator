@@ -53,6 +53,9 @@ public class TemplateTransformationsBuilder {
     /** Optional exclude patterns for resolving source templates or template directories */
     private final List<String> excludes;
 
+    /** Encoding used to load templates */
+    private Charset templateEncoding;
+
     /** Optional output file or directory - if none is defined everything is written to STDOUT */
     private String output;
 
@@ -66,6 +69,7 @@ public class TemplateTransformationsBuilder {
         this.templateSource = null;
         this.includes = new ArrayList<>();
         this.excludes = new ArrayList<>();
+        this.templateEncoding = UTF_8;
         this.output = null;
         this.callerSuppliedWriter = null;
         this.outputEncoding = UTF_8;
@@ -112,6 +116,13 @@ public class TemplateTransformationsBuilder {
     public TemplateTransformationsBuilder addExclude(String exclude) {
         if (StringUtils.isNotEmpty(exclude)) {
             this.excludes.add(exclude);
+        }
+        return this;
+    }
+
+    public TemplateTransformationsBuilder setTemplateEncoding(Charset charset) {
+        if (charset != null) {
+            this.templateEncoding = charset;
         }
         return this;
     }
@@ -196,7 +207,7 @@ public class TemplateTransformationsBuilder {
     }
 
     private List<TemplateTransformation> resolveTemplatePath(String source, File out) {
-        final TemplateSource templateSource = TemplateSource.fromPath(source);
+        final TemplateSource templateSource = TemplateSource.fromPath(source, templateEncoding);
         final TemplateOutput templateOutput = templateOutput(out);
         return singletonList(new TemplateTransformation(templateSource, templateOutput));
     }
@@ -218,7 +229,7 @@ public class TemplateTransformationsBuilder {
 
     private TemplateSource templateSource(String source) {
         try (DataSource dataSource = DataSourceFactory.create(source)) {
-            return TemplateSource.fromCode(dataSource.getName(), dataSource.getText());
+            return TemplateSource.fromCode(dataSource.getName(), dataSource.getText(templateEncoding.name()));
         }
     }
 

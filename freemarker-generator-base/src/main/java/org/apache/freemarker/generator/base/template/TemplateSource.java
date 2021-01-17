@@ -67,22 +67,10 @@ public class TemplateSource {
     /**
      * Template will be loaded from path using a file-base template loader.
      *
-     * @param path template path
-     * @return file-based template source
-     */
-    public static TemplateSource fromPath(String path) {
-        Validate.notEmpty(path, "Template path is empty");
-        return new TemplateSource(path, path, StandardCharsets.UTF_8);
-    }
-
-    /**
-     * Template will be loaded from path using a file-base template loader.
-     *
      * @param path     template path
      * @param encoding character encoding og template
      * @return file-based template source
      */
-    // @TODO FREEMARKER-161 sgoeschl 2021-01-11 Load templates with proper encoding
     public static TemplateSource fromPath(String path, Charset encoding) {
         Validate.notEmpty(path, "Template path is empty");
         Validate.notNull(encoding, "Template encoding is null");

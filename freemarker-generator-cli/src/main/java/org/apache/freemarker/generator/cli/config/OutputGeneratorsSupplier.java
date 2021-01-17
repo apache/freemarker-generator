@@ -71,6 +71,9 @@ public class OutputGeneratorsSupplier implements Supplier<List<OutputGenerator>>
             builder.setTemplateSource(templateSourceDefinition.template);
         }
 
+        // set encoding of loaded templates
+        builder.setTemplateEncoding(settings.getTemplateEncoding());
+
         // set the writer
         builder.setCallerSuppliedWriter(settings.getCallerSuppliedWriter());
 

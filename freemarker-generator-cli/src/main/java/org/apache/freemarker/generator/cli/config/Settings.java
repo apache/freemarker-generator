@@ -53,6 +53,9 @@ public class Settings {
     /** List of FreeMarker template directories to be passed to FreeMarker <code>TemplateLoader</code> */
     private final List<File> templateDirectories;
 
+    /** Encoding to load templates */
+    private final Charset templateEncoding;
+
     /** User-provided output generators (transformations) */
     private final List<OutputGeneratorDefinition> outputGeneratorDefinitions;
 
@@ -96,6 +99,7 @@ public class Settings {
             Properties configuration,
             List<String> commandLineArgs,
             List<File> templateDirectories,
+            Charset templateEncoding,
             List<OutputGeneratorDefinition> outputGeneratorDefinitions,
             List<String> sharedDataSources,
             List<String> sharedDataModels,
@@ -112,6 +116,7 @@ public class Settings {
 
         this.commandLineArgs = requireNonNull(commandLineArgs);
         this.templateDirectories = requireNonNull(templateDirectories);
+        this.templateEncoding = requireNonNull(templateEncoding);
         this.outputGeneratorDefinitions = requireNonNull(outputGeneratorDefinitions);
         this.sharedDataSources = requireNonNull(sharedDataSources);
         this.sharedDataModels = requireNonNull(sharedDataModels);
@@ -173,7 +178,7 @@ public class Settings {
     }
 
     public Charset getTemplateEncoding() {
-        return UTF_8;
+        return templateEncoding;
     }
 
     public boolean isVerbose() {
@@ -236,7 +241,7 @@ public class Settings {
                 ", userParameters=" + userParameters +
                 ", userSystemProperties=" + userSystemProperties +
                 ", callerSuppliedWriter=" + callerSuppliedWriter +
-                ", templateEncoding=" + getTemplateEncoding() +
+                ", templateEncoding=" + templateEncoding +
                 ", readFromStdin=" + isReadFromStdin() +
                 '}';
     }
@@ -244,6 +249,7 @@ public class Settings {
     public static class SettingsBuilder {
         private List<String> commandLineArgs;
         private List<File> templateDirectories;
+        private String templateEncoding;
         private List<OutputGeneratorDefinition> outputGeneratorDefinitions;
         private List<String> sharedDataSources;
         private List<String> sharedDataModels;
@@ -262,6 +268,7 @@ public class Settings {
         private SettingsBuilder() {
             this.commandLineArgs = emptyList();
             this.templateDirectories = emptyList();
+            this.templateEncoding = UTF_8.name();
             this.outputGeneratorDefinitions = emptyList();
             this.sharedDataSources = emptyList();
             this.sharedDataModels = emptyList();
@@ -282,6 +289,13 @@ public class Settings {
 
         public SettingsBuilder setTemplateDirectories(List<File> list) {
             this.templateDirectories = list != null ? new ArrayList<>(list) : emptyList();
+            return this;
+        }
+
+        public SettingsBuilder setTemplateEncoding(String templateEncoding) {
+            if (templateEncoding != null) {
+                this.templateEncoding = templateEncoding;
+            }
             return this;
         }
 
@@ -366,21 +380,20 @@ public class Settings {
         }
 
         public Settings build() {
-            final Charset inputEncoding = Charset.forName(this.inputEncoding);
-            final Charset outputEncoding = Charset.forName(this.outputEncoding);
             final String currLocale = locale != null ? locale : getDefaultLocale();
 
             return new Settings(
                     configuration,
                     commandLineArgs,
                     templateDirectories,
+                    Charset.forName(this.templateEncoding),
                     outputGeneratorDefinitions,
                     sharedDataSources,
                     sharedDataModels,
                     sourceIncludePattern,
                     sourceExcludePattern,
-                    inputEncoding,
-                    outputEncoding,
+                    Charset.forName(this.inputEncoding),
+                    Charset.forName(this.outputEncoding),
                     verbose,
                     LocaleUtils.parseLocale(currLocale),
                     isReadFromStdin,

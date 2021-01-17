@@ -86,6 +86,9 @@ public class Main implements Callable<Integer> {
     @Option(names = { "--template-dir" }, description = "additional template directory")
     String templateDir;
 
+    @Option(names = { "--template-encoding" }, description = "template encoding", defaultValue = "UTF-8")
+    String templateEncoding;
+
     @Option(names = { "--times" }, defaultValue = "1", description = "re-run X times for profiling")
     int times;
 
@@ -175,6 +178,7 @@ public class Main implements Callable<Integer> {
                 .setCommandLineArgs(args)
                 .setConfiguration(configuration)
                 .setTemplateDirectories(templateDirectories)
+                .setTemplateEncoding(templateEncoding)
                 .setOutputGeneratorDefinitions(outputGeneratorDefinitions)
                 .setSharedDataSources(getSharedDataSources())
                 .setSharedDataModels(sharedDataModels)
