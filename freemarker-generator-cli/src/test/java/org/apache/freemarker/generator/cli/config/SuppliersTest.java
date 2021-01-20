@@ -18,11 +18,13 @@ package org.apache.freemarker.generator.cli.config;
 
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.freemarker.generator.base.FreeMarkerConstants.Model;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourcesSupplier;
 import org.apache.freemarker.generator.base.output.OutputGenerator;
 import org.apache.freemarker.generator.base.template.TemplateSource.Origin;
+import org.apache.freemarker.generator.base.util.OperatingSystem;
 import org.apache.freemarker.generator.cli.picocli.DataModelDefinition;
 import org.apache.freemarker.generator.cli.picocli.DataSourceDefinition;
 import org.apache.freemarker.generator.cli.picocli.OutputGeneratorDefinition;
@@ -57,7 +59,7 @@ public class SuppliersTest {
 
         final List<File> files = templateDirectorySupplier.get();
 
-        assertTrue(files.get(0).getAbsolutePath().endsWith(ANY_TEMPLATE_DIRECTORY_NAME));
+        assertTrue(files.get(0).getAbsolutePath().endsWith(fixSeparators(ANY_TEMPLATE_DIRECTORY_NAME)));
     }
 
     @Test
@@ -139,4 +141,12 @@ public class SuppliersTest {
         assertNotNull(outputGenerator.getTemplateOutput().getWriter());
         assertNull(outputGenerator.getTemplateOutput().getFile());
     }
+    private static String fixSeparators(String str) {
+        if (OperatingSystem.isWindows()) {
+            return FilenameUtils.separatorsToWindows(str);
+        } else {
+            return str;
+        }
+    }
+
 }
