@@ -127,7 +127,10 @@ UUIDTool Named UUID   : ${tools.uuid.namedUUID("value and salt")}
 
 15) Printing Special Characters
 ---------------------------------------------------------------------------
+Windows 1252 Characters: €¥§ÆÇæ®
 German Special Characters: äöüßÄÖÜ
+Cyrillic Characters: Кириллица
+Chinese Characters: 你好吗
 
 16) Locale-specific output
 ---------------------------------------------------------------------------

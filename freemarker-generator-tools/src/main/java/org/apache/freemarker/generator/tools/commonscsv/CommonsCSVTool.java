@@ -50,7 +50,7 @@ public class CommonsCSVTool {
     public List<CSVParser> parse(Collection<DataSource> dataSources) {
         return dataSources.stream()
                 .map(this::parse)
-                .collect(Collectors.toList());
+                .collect(toList());
     }
 
     public CSVParser parse(DataSource dataSource, CSVFormat format) {

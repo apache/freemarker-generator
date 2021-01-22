@@ -16,17 +16,10 @@
  */
 package org.apache.freemarker.generator.cli.config;
 
-import freemarker.cache.TemplateLoader;
-import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.datasource.DataSourcesSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesClassPathSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesFileSystemSupplier;
 import org.apache.freemarker.generator.base.file.PropertiesSupplier;
-import org.apache.freemarker.generator.base.template.TemplateTransformationsBuilder;
-import org.apache.freemarker.generator.base.template.TemplateTransformationsSupplier;
-
-import java.util.Map;
-import java.util.function.Supplier;
 
 /**
  * Convenience methods to create suppliers.
@@ -34,11 +27,7 @@ import java.util.function.Supplier;
 public class Suppliers {
 
     public static ConfigurationSupplier configurationSupplier(Settings settings) {
-        return new ConfigurationSupplier(settings, templateLoaderSupplier(settings));
-    }
-
-    public static ConfigurationSupplier configurationSupplier(Settings settings, Supplier<TemplateLoader> templateLoader) {
-        return new ConfigurationSupplier(settings, templateLoader);
+        return new ConfigurationSupplier(settings, templateLoaderSupplier(settings), toolsSupplier(settings));
     }
 
     public static TemplateDirectorySupplier templateDirectorySupplier(String additionalTemplateDirName) {
@@ -53,30 +42,19 @@ public class Suppliers {
         return new ToolsSupplier(settings.getConfiguration(), settings.toMap());
     }
 
-    public static DataSourcesSupplier dataSourcesSupplier(Settings settings) {
-        return new DataSourcesSupplier(settings.getDataSources(),
-                settings.getDataSourceIncludePattern(),
-                settings.getDataSourceExcludePattern(),
+    public static OutputGeneratorsSupplier outputGeneratorsSupplier(Settings settings) {
+        return new OutputGeneratorsSupplier(settings);
+    }
+
+    public static DataSourcesSupplier sharedDataSourcesSupplier(Settings settings) {
+        return new DataSourcesSupplier(settings.getSharedDataSources(),
+                settings.getSourceIncludePattern(),
+                settings.getSourceExcludePattern(),
                 settings.getInputEncoding());
     }
 
-    public static DataModelSupplier dataModelSupplier(Settings settings) {
-        return new DataModelSupplier(settings.getDataModels());
-    }
-
-    public static Supplier<Map<String, Object>> parameterSupplier(Settings settings) {
-        return settings::getUserParameters;
-    }
-
-    public static TemplateTransformationsSupplier templateTransformationsSupplier(Settings settings) {
-        return () -> TemplateTransformationsBuilder.builder()
-                .setTemplate(Location.INTERACTIVE, settings.getInteractiveTemplate())
-                .addSources(settings.getTemplates())
-                .addInclude(settings.getTemplateFileIncludePattern())
-                .addExclude(settings.getTemplateFileExcludePattern())
-                .addOutputs(settings.getOutputs())
-                .setWriter(settings.getWriter())
-                .build();
+    public static DataModelSupplier sharedDataModelSupplier(Settings settings) {
+        return new DataModelSupplier(settings.getSharedDataModels());
     }
 
     public static PropertiesSupplier propertiesSupplier(String fileName) {

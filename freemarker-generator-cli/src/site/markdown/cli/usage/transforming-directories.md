@@ -34,12 +34,20 @@ server {
   index index.htm;
 ```
 
-### Transform Template Directory To STDOUT
+### Transform Template Directory To Output Directory
 
-If no output directory is provided all output is written to `stdout`
+The transformed templates are written to an `out` directory
+
+* `nginx.conf.ftl` was changed to `nginx.conf" during the transformation
 
 ```
-freemarker-generator -t examples/data/template/
+freemarker-generator -t examples/data/template/ -o out; tree out; cat out/application.properties out/nginx/nginx.conf
+out
+|-- application.properties
+`-- nginx
+    `-- nginx.conf
+
+1 directory, 2 files    
 # == application.properties ==================================================
 server.name=127.0.0.1
 server.logs=/var/log/nginx
@@ -53,35 +61,21 @@ server {
 }
 ```
 
-### Transform Template Directory To Output Directory
-
-The transformed templates are written to an `out` directory
-
-* `nginx.conf.ftl` was changed to `nginx.conf" during the transformation
-
-```
-freemarker-generator -t examples/data/template/ -o out; tree out
-out
-|-- application.properties
-`-- nginx
-    `-- nginx.conf
-
-1 directory, 2 files
-```
-
 ### Use Command Line Parameters
 
 A user-supplied parameter `NGINX_HOSTNAME` is used to render the templates
 
 ```
-freemarker-generator -t examples/data/template/ -P NGINX_HOSTNAME=localhost
+freemarker-generator -t examples/data/template/ -P NGINX_HOSTNAME=some.host.invalid -o out; \
+cat out/application.properties out/nginx/nginx.conf
+
 # == application.properties ==================================================
-server.name=localhost
+server.name=some.host.invalid
 server.logs=/var/log/nginx
 # == nginx-conf ==============================================================
 server {
   listen 80;
-  server_name localhost;
+  server_name some.host.invalid;
 
   root /usr/share/nginx/www;
   index index.htm;
@@ -136,15 +130,15 @@ server {
 Another option is passing the information as JSON file
 
 ```
-echo '{"NGINX_PORT":"8443","NGINX_HOSTNAME":"localhost"}' > nginx.json
+echo '{"NGINX_PORT":"8443","NGINX_HOSTNAME":"some.host.invalid"}' > nginx.json
 freemarker-generator -t examples/data/template/ -m nginx.json 
 # == application.properties ==================================================
-server.name=localhost
+server.name=some.host.invalid
 server.logs=/var/log/nginx
 # == nginx-conf ==============================================================
 server {
   listen 8443;
-  server_name localhost;
+  server_name some.host.invalid;
 
   root /usr/share/nginx/www;
   index index.htm;
@@ -156,7 +150,7 @@ server {
 Yet another option is using a YAML file
 
 ```
-echo -e "- NGINX_PORT": "\"8443\"\n- NGINX_HOSTNAME": "localhost" > nginx.yaml
+echo -e "- NGINX_PORT": "\"8443\"\n- NGINX_HOSTNAME": "some.host.invalid" > nginx.yaml
 freemarker-generator -t examples/data/template/ -m nginx.yaml 
 # == application.properties ==================================================
 server.name=localhost
@@ -179,15 +173,15 @@ In the cloud it is common to pass JSON configuration as environment variable
 * `#mimeType=application/json` defines that JSON content is parsed
 
 ```
-export NGINX_CONF='{"NGINX_PORT":"8443","NGINX_HOSTNAME":"localhost"}'
+export NGINX_CONF='{"NGINX_PORT":"8443","NGINX_HOSTNAME":"some.host.invalid"}'
 freemarker-generator -t examples/data/template/ -m env:///NGINX_CONF#mimeType=application/json
 # == application.properties ==================================================
-server.name=localhost
+server.name=some.host.invalid
 server.logs=/var/log/nginx
 # == nginx-conf ==============================================================
 server {
   listen 8443;
-  server_name localhost;
+  server_name some.host.invalid;
 
   root /usr/share/nginx/www;
   index index.htm;
@@ -199,7 +193,7 @@ server {
 For testing purpose it is useful to override certain settings
 
 ```
-export NGINX_CONF='{"NGINX_PORT":"8443","NGINX_HOSTNAME":"localhost"}'
+export NGINX_CONF='{"NGINX_PORT":"8443","NGINX_HOSTNAME":"some.host.invalid"}'
 freemarker-generator -t examples/data/template/ -PNGINX_HOSTNAME=www.mydomain.com -m env:///NGINX_CONF#mimeType=application/json
 # == application.properties ==================================================
 server.name=www.mydomain.com

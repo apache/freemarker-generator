@@ -148,6 +148,16 @@ public class ExamplesTest extends AbstractMainTest {
     }
 
     @Test
+    public void shouldTransformMultipleTemplatesAndDataSources() throws IOException {
+        final String output = execute(
+                "-t freemarker-generator/yaml/json/transform.ftl -s src/app/examples/data/yaml/swagger-spec.yaml -o swagger-spec.json " +
+                        "-t freemarker-generator/yaml/json/transform.ftl -s src/app/examples/data/yaml/customer.yaml -o customer.json");
+
+        assertTrue("Swagger file content is missing", output.contains("This is a sample server Petstore server"));
+        assertTrue("Customer data is missing", output.contains("Xyz, DEF Street"));
+    }
+
+    @Test
     public void shouldSupportDataSourcesAccessInFTL() throws IOException {
         final String args = "users=src/app/examples/data/json/github-users.json contract=src/app/examples/data/csv/contract.csv";
 
@@ -160,22 +170,6 @@ public class ExamplesTest extends AbstractMainTest {
         assertEquals("users", execute(args + " -i ${dataSources[\"users\"].name}"));
         assertEquals("application/json", execute(args + " -i ${dataSources[\"users\"].mimeType}"));
     }
-
-    /**
-     * @Test public void shouldNotShadowDataSourcesInFTL() throws IOException {
-     * final String args = "empty=examples/data/json/github-users.json";
-     * <p>
-     * // check shadowing of "isEmpty"
-     * assertEquals("false", execute("empty=examples/data/json/github-users.json -i ${dataSources.empty?c}"));
-     * // DataSources#isEmpty shadows the data source "empty"
-     * // assertEquals("false", execute("empty=examples/data/json/github-users.json -i ${DataSources[\"empty\"]}"));
-     * assertEquals("empty", execute("empty=examples/data/json/github-users.json -i ${dataSources.get(\"empty\").name}"));
-     * <p>
-     * // check shadowing of "find"
-     * // assertEquals("find", execute("find=examples/data/json/github-users.json -i ${dataSources.find.name}"));
-     * // assertEquals("find", execute("find=examples/data/json/github-users.json -i ${DataSources[\"find\"].name}"));
-     * }
-     */
 
     @Test
     @Ignore("Manual test to check memory consumption and resource handling")

@@ -16,12 +16,9 @@
  */
 package org.apache.freemarker.generator.base.template;
 
-import org.apache.freemarker.generator.base.util.Validate;
-
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.io.Writer;
+import java.nio.charset.Charset;
 
 import static java.util.Objects.requireNonNull;
 
@@ -36,43 +33,42 @@ public class TemplateOutput {
 
     private final Writer writer;
     private final File file;
+    private final Charset charset;
 
-    private TemplateOutput(File file) {
+    private TemplateOutput(File file, final Charset charset) {
         this.writer = null;
         this.file = requireNonNull(file);
+        this.charset = requireNonNull(charset);
     }
 
     private TemplateOutput(Writer writer) {
         this.writer = requireNonNull(writer);
         this.file = null;
+        this.charset = null;
     }
 
     public static TemplateOutput fromWriter(Writer writer) {
         return new TemplateOutput(writer);
     }
 
-    public static TemplateOutput fromFile(File file) {
-        return new TemplateOutput(file);
+    public static TemplateOutput fromFile(File file, final Charset charset) {
+        return new TemplateOutput(file, charset);
     }
 
     public Writer getWriter() {
         return writer;
     }
 
+    public boolean hasWriter() {
+        return writer != null;
+    }
+
     public File getFile() {
         return file;
     }
 
-    public boolean isWrittenToFile() {
-        return file != null;
-    }
-
-    public boolean isWrittenToSuppliedWriter() {
-        return writer != null;
-    }
-
-    public Writer writer() {
-        return writer != null ? writer : fileWriter();
+    public Charset getCharset() {
+        return charset;
     }
 
     @Override
@@ -80,16 +76,7 @@ public class TemplateOutput {
         return "TemplateOutput{" +
                 "writer=" + writer +
                 ", file=" + file +
+                ", charset=" + charset +
                 '}';
-    }
-
-    private FileWriter fileWriter() {
-        Validate.notNull(file, "Output file is null");
-
-        try {
-            return new FileWriter(file);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to create FileWriter: " + file.getAbsolutePath(), e);
-        }
     }
 }

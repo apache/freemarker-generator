@@ -20,53 +20,47 @@ import org.apache.freemarker.generator.base.FreeMarkerConstants.Configuration;
 import org.apache.freemarker.generator.base.FreeMarkerConstants.SystemProperties;
 import org.apache.freemarker.generator.base.parameter.ParameterModelSupplier;
 import org.apache.freemarker.generator.base.util.ClosableUtils;
-import org.apache.freemarker.generator.base.util.ListUtils;
 import org.apache.freemarker.generator.cli.config.Settings;
+import org.apache.freemarker.generator.cli.config.Suppliers;
 import org.apache.freemarker.generator.cli.picocli.GitVersionProvider;
+import org.apache.freemarker.generator.cli.picocli.OutputGeneratorDefinition;
 import org.apache.freemarker.generator.cli.task.FreeMarkerTask;
 import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Model.CommandSpec;
 import picocli.CommandLine.Option;
-import picocli.CommandLine.ParameterException;
 import picocli.CommandLine.Parameters;
 import picocli.CommandLine.Spec;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.Callable;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
+import static java.util.Collections.emptyList;
 import static java.util.Objects.requireNonNull;
 import static org.apache.freemarker.generator.base.util.StringUtils.isEmpty;
 import static org.apache.freemarker.generator.base.util.StringUtils.isNotEmpty;
-import static org.apache.freemarker.generator.cli.config.Suppliers.propertiesSupplier;
-import static org.apache.freemarker.generator.cli.config.Suppliers.templateDirectorySupplier;
 
 @Command(description = "Apache FreeMarker Generator", name = "freemarker-generator", mixinStandardHelpOptions = true, versionProvider = GitVersionProvider.class)
 public class Main implements Callable<Integer> {
 
-    @ArgGroup(multiplicity = "1")
-    TemplateSourceOptions templateSourceOptions;
+    @ArgGroup(exclusive = false, multiplicity = "1..*")
+    List<OutputGeneratorDefinition> outputGeneratorDefinitions;
 
-    public static final class TemplateSourceOptions {
-        @Option(names = { "-t", "--template" }, description = "templates to process")
-        public List<String> templates;
+    @Option(names = { "--data-source-include" }, description = "data source include pattern")
+    public String dataSourceIncludePattern;
 
-        @Option(names = { "-i", "--interactive" }, description = "interactive template to process")
-        public String interactiveTemplate;
-    }
+    @Option(names = { "--data-source-exclude" }, description = "data source exclude pattern")
+    public String dataSourceExcludePattern;
+
+    @Option(names = { "--shared-data-model" }, description = "shared data models used for rendering")
+    public List<String> sharedDataModels;
 
     @Option(names = { "-D", "--system-property" }, description = "set system property")
     Properties systemProperties;
@@ -77,26 +71,11 @@ public class Main implements Callable<Integer> {
     @Option(names = { "-l", "--locale" }, description = "locale being used for the output, e.g. 'en_US'")
     String locale;
 
-    @Option(names = { "-m", "--data-model" }, description = "data model used for rendering")
-    List<String> dataModels;
-
-    @Option(names = { "-o", "--output" }, description = "output files or directories")
-    List<String> outputs;
-
     @Option(names = { "-P", "--param" }, description = "set parameter")
     Map<String, String> parameters;
 
-    @Option(names = { "-s", "--data-source" }, description = "data source used for rendering")
-    List<String> dataSources;
-
     @Option(names = { "--config" }, description = "FreeMarker Generator configuration file")
     String configFile;
-
-    @Option(names = { "--data-source-include" }, description = "file include pattern for data sources")
-    String dataSourceIncludePattern;
-
-    @Option(names = { "--data-source-exclude" }, description = "file exclude pattern for data sources")
-    String dataSourceExcludePattern;
 
     @Option(names = { "--output-encoding" }, description = "encoding of output, e.g. UTF-8", defaultValue = "UTF-8")
     String outputEncoding;
@@ -107,32 +86,32 @@ public class Main implements Callable<Integer> {
     @Option(names = { "--template-dir" }, description = "additional template directory")
     String templateDir;
 
+    @Option(names = { "--template-encoding" }, description = "template encoding", defaultValue = "UTF-8")
+    String templateEncoding;
+
     @Option(names = { "--times" }, defaultValue = "1", description = "re-run X times for profiling")
     int times;
 
-    @Parameters(description = "data source files and/or directories")
-    List<String> sources;
+    @Parameters(description = "shared data source files and/or directories")
+    List<String> sharedDataSources;
 
     /** User-supplied command line parameters */
     final String[] args;
 
     /** User-supplied writer (used mainly for unit testing) */
-    Writer userSuppliedWriter;
+    final Writer callerSuppliedWriter;
 
     /** Injected by Picocli */
     @Spec private CommandSpec spec;
 
-    Main() {
-        this.args = new String[0];
+    Main(String[] args) {
+        this.args = requireNonNull(args);
+        this.callerSuppliedWriter = null;
     }
 
-    private Main(String[] args) {
+    private Main(String[] args, Writer callerSuppliedWriter) {
         this.args = requireNonNull(args);
-    }
-
-    private Main(String[] args, Writer userSuppliedWriter) {
-        this.args = requireNonNull(args);
-        this.userSuppliedWriter = requireNonNull(userSuppliedWriter);
+        this.callerSuppliedWriter = requireNonNull(callerSuppliedWriter);
     }
 
     public static void main(String[] args) {
@@ -171,75 +150,49 @@ public class Main implements Callable<Integer> {
         final String currentConfigFile = isNotEmpty(configFile) ? configFile : getDefaultConfigFileName();
         final Properties configuration = loadFreeMarkerCliConfiguration(currentConfigFile);
         final List<File> templateDirectories = getTemplateDirectories(templateDir);
-        final Settings settings = settings(configuration, templateDirectories);
+        final Settings settings = settings(configuration, templateDirectories, outputGeneratorDefinitions);
 
         try {
-            final FreeMarkerTask freeMarkerTask = new FreeMarkerTask(settings);
+            final FreeMarkerTask freeMarkerTask = new FreeMarkerTask(
+                    Suppliers.configurationSupplier(settings),
+                    Suppliers.outputGeneratorsSupplier(settings),
+                    Suppliers.sharedDataModelSupplier(settings),
+                    Suppliers.sharedDataSourcesSupplier(settings),
+                    settings::getUserParameters
+            );
             return freeMarkerTask.call();
         } finally {
-            if (settings.hasOutputs()) {
-                ClosableUtils.closeQuietly(settings.getWriter());
-            }
+            ClosableUtils.closeQuietly(settings.getCallerSuppliedWriter());
         }
     }
 
     void validate() {
-        // "-d" or "--data-source" parameter shall not contain wildcard characters
-        if (dataSources != null) {
-            for (String source : dataSources) {
-                if (isFileSource(source) && (source.contains("*") || source.contains("?"))) {
-                    throw new ParameterException(spec.commandLine(), "No wildcards supported for data source: " + source);
-                }
-            }
-        }
-
-        // does the templates match the expected outputs?!
-        // -) no output means it goes to stdout
-        // -) for each template there should be an output
-        final List<String> templates = templateSourceOptions.templates;
-        if (templates != null && templates.size() > 1) {
-            if (outputs != null && outputs.size() != templates.size()) {
-                throw new ParameterException(spec.commandLine(), "Template output does not match specified templates");
-            }
-        }
+        outputGeneratorDefinitions.forEach(t -> t.validate(spec.commandLine()));
     }
 
-    private Settings settings(Properties configuration, List<File> templateDirectories) {
+    private Settings settings(Properties configuration, List<File> templateDirectories, List<OutputGeneratorDefinition> outputGeneratorDefinitions) {
         final ParameterModelSupplier parameterModelSupplier = new ParameterModelSupplier(parameters);
 
         return Settings.builder()
                 .isReadFromStdin(readFromStdin)
-                .setArgs(args)
+                .setCommandLineArgs(args)
                 .setConfiguration(configuration)
-                .setDataModels(dataModels)
-                .setDataSources(getCombinedDataSources())
-                .setDataSourceIncludePattern(dataSourceIncludePattern)
-                .setDataSourceExcludePattern(dataSourceExcludePattern)
+                .setTemplateDirectories(templateDirectories)
+                .setTemplateEncoding(templateEncoding)
+                .setOutputGeneratorDefinitions(outputGeneratorDefinitions)
+                .setSharedDataSources(getSharedDataSources())
+                .setSharedDataModels(sharedDataModels)
+                .setSourceIncludePattern(dataSourceIncludePattern)
+                .setSourceExcludePattern(dataSourceExcludePattern)
                 .setInputEncoding(inputEncoding)
-                .setInteractiveTemplate(templateSourceOptions.interactiveTemplate)
                 .setLocale(locale)
                 .setOutputEncoding(outputEncoding)
-                .setOutputs(outputs)
                 .setParameters(parameterModelSupplier.get())
                 .setSystemProperties(systemProperties != null ? systemProperties : new Properties())
                 .setTemplateDirectories(templateDirectories)
-                .setTemplateNames(templateSourceOptions.templates)
-                .setWriter(writer(outputs, outputEncoding))
+                .setCallerSuppliedWriter(callerSuppliedWriter)
+                .setVerbose(false)
                 .build();
-    }
-
-    private Writer writer(List<String> outputFiles, String outputEncoding) {
-        try {
-            if (userSuppliedWriter != null) {
-                return userSuppliedWriter;
-            } else if (ListUtils.isNullOrEmpty(outputFiles)) {
-                return new BufferedWriter(new OutputStreamWriter(System.out, outputEncoding));
-            } else {
-                return null;
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Unable to create writer", e);
-        }
     }
 
     private void updateSystemProperties() {
@@ -254,15 +207,12 @@ public class Main implements Callable<Integer> {
      *
      * @return List of data sources
      */
-    private List<String> getCombinedDataSources() {
-        return Stream.of(dataSources, sources)
-                .filter(Objects::nonNull)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
+    private List<String> getSharedDataSources() {
+        return sharedDataSources != null ? new ArrayList<>(sharedDataSources) : emptyList();
     }
 
     private static List<File> getTemplateDirectories(String additionalTemplateDir) {
-        return templateDirectorySupplier(additionalTemplateDir).get();
+        return Suppliers.templateDirectorySupplier(additionalTemplateDir).get();
     }
 
     /**
@@ -281,21 +231,11 @@ public class Main implements Callable<Integer> {
             return new Properties();
         }
 
-        final Properties properties = propertiesSupplier(fileName).get();
+        final Properties properties = Suppliers.propertiesSupplier(fileName).get();
         if (properties != null) {
             return properties;
         } else {
             return new Properties();
-        }
-    }
-
-    private static boolean isFileSource(String source) {
-        if (source.contains("file://")) {
-            return true;
-        } else if (source.contains("://")) {
-            return false;
-        } else {
-            return true;
         }
     }
 }

@@ -50,7 +50,7 @@ public class UriUtils {
     public static String toStringWithoutFragment(URI uri) {
         final String str = uri.toString();
         final int index = str.indexOf('#');
-        return (index > 0) ? str.substring(0, index) : str;
+        return index > 0 ? str.substring(0, index) : str;
     }
 
     public static boolean isUri(String str) {

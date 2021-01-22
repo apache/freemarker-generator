@@ -14,27 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.maven;
+package org.apache.freemarker.generator.cli.picocli;
 
-import java.util.Locale;
+import picocli.CommandLine.Option;
 
-/**
- * Helper class to detect the operting system (mostly Windows).
- *
- * TODO should be moved to "freemarker-generator-base"
- */
-public class OperatingSystem {
-    private static final String OS = System.getProperty("os.name", "unknown").toLowerCase(Locale.ROOT);
+public class TemplateSourceDefinition {
 
-    public static boolean isWindows() {
-        return OS.contains("win");
-    }
+    @Option(names = { "-t", "--template" }, description = "templates to process")
+    public String template;
 
-    public static boolean isMac() {
-        return OS.contains("mac");
-    }
+    @Option(names = { "-i", "--interactive" }, description = "interactive template to process")
+    public String interactiveTemplate;
 
-    public static boolean isUnix() {
-        return OS.contains("nux");
+    public boolean isInteractiveTemplate() {
+        return interactiveTemplate != null && !interactiveTemplate.isEmpty();
     }
 }

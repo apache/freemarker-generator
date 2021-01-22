@@ -37,24 +37,20 @@ FreeMarker Generator Data Model
 - ${key}<#lt>
 </#list>
 
-FreeMarker Generator Tools
-------------------------------------------------------------------------------
-<#list tools?keys?sort as name>
-- ${name?right_pad(20)} : ${tools[name]}
-</#list>
-
-<#if dataSources?has_content>
 FreeMarker Generator DataSources
 ------------------------------------------------------------------------------
+<#if dataSources?has_content>
 <#list dataSources?values as ds>
-[#${ds?counter}]: name=${ds.name}, group=${ds.group}, fileName=${ds.fileName} mimeType=${ds.mimeType}, charset=${ds.charset}, length=${ds.length} Bytes
+[#${ds?counter}]: name=${ds.name}, group=${ds.group}, fileName=${ds.fileName}, mimeType=${ds.mimeType}, charset=${ds.charset}, length=${ds.length} Bytes
 URI : ${ds.uri}
 </#list>
+<#else>
+No data sources found ...
 </#if>
 
-<#if tools.system.parameters?has_content>
 FreeMarker Generator Parameters
 ------------------------------------------------------------------------------
+<#if tools.system.parameters?has_content>
 <#list tools.system.parameters as key,value>
 <#if value?is_hash>
 - ${key} ==> { <#list value as name,value>${name}=${value} </#list>}
@@ -62,4 +58,12 @@ FreeMarker Generator Parameters
 - ${key} ==> ${value}
 </#if>
 </#list>
+<#else>
+No parameters found ...
 </#if>
+
+FreeMarker Generator Tools
+------------------------------------------------------------------------------
+<#list tools?keys?sort as name>
+- ${name?right_pad(20)} : ${tools[name]}
+</#list>

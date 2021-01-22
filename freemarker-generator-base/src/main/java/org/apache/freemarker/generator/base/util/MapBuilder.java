@@ -22,18 +22,18 @@ import java.util.Map;
 
 public class MapBuilder {
 
-    public static Map<String, Object> toLinkedMap(Object... data) {
+    public static Map<String, Object> toLinkedMap(Object... nameValuePairs) {
 
         final HashMap<String, Object> map = new LinkedHashMap<>();
 
-        if (data.length % 2 != 0) {
+        if (nameValuePairs.length % 2 != 0) {
             throw new IllegalArgumentException("Odd number of arguments");
         }
 
         String currKey = null;
         int step = -1;
 
-        for (Object value : data) {
+        for (Object value : nameValuePairs) {
             step++;
             switch (step % 2) {
                 case 0:

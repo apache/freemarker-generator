@@ -14,27 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.maven;
+package org.apache.freemarker.generator.cli.picocli;
 
-import java.util.Locale;
+import picocli.CommandLine.Option;
+
+import java.util.List;
 
 /**
- * Helper class to detect the operting system (mostly Windows).
- *
- * TODO should be moved to "freemarker-generator-base"
+ * User-supplied list of data sources or directories
  */
-public class OperatingSystem {
-    private static final String OS = System.getProperty("os.name", "unknown").toLowerCase(Locale.ROOT);
+public class DataSourceDefinition {
 
-    public static boolean isWindows() {
-        return OS.contains("win");
-    }
-
-    public static boolean isMac() {
-        return OS.contains("mac");
-    }
-
-    public static boolean isUnix() {
-        return OS.contains("nux");
-    }
+    @Option(names = { "-s", "--data-source" }, description = "data source used for rendering")
+    public List<String> dataSources;
 }

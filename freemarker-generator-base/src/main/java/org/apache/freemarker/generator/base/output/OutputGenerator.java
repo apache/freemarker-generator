@@ -14,14 +14,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.base.template;
+package org.apache.freemarker.generator.base.output;
+
+import org.apache.freemarker.generator.base.datasource.DataSource;
+import org.apache.freemarker.generator.base.template.TemplateOutput;
+import org.apache.freemarker.generator.base.template.TemplateSource;
+
+import java.util.List;
+import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
 /**
  * Information about loading templates and writing their output.
  */
-public class TemplateTransformation {
+public class OutputGenerator {
 
     /** Source of template */
     private final TemplateSource templateSource;
@@ -29,9 +36,21 @@ public class TemplateTransformation {
     /** Output of template */
     private final TemplateOutput templateOutput;
 
-    public TemplateTransformation(TemplateSource templateSource, TemplateOutput templateOutput) {
+    /** Data sources used for the transformation */
+    private final List<DataSource> dataSources;
+
+    /** Variables (as a map) used for the transformation */
+    private final Map<String, Object> variables;
+
+    public OutputGenerator(
+            TemplateSource templateSource,
+            TemplateOutput templateOutput,
+            List<DataSource> dataSources,
+            Map<String, Object> variables) {
         this.templateSource = requireNonNull(templateSource);
         this.templateOutput = requireNonNull(templateOutput);
+        this.dataSources = requireNonNull(dataSources);
+        this.variables = requireNonNull(variables);
     }
 
     public TemplateSource getTemplateSource() {
@@ -42,11 +61,21 @@ public class TemplateTransformation {
         return templateOutput;
     }
 
+    public List<DataSource> getDataSources() {
+        return dataSources;
+    }
+
+    public Map<String, Object> getVariables() {
+        return variables;
+    }
+
     @Override
     public String toString() {
         return "OutputGenerator{" +
                 "templateSource=" + templateSource +
                 ", templateOutput=" + templateOutput +
+                ", dataSources=" + dataSources +
+                ", variables=" + variables +
                 '}';
     }
 }
