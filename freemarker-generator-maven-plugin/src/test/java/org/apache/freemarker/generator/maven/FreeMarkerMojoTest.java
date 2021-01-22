@@ -27,6 +27,7 @@ import mockit.Expectations;
 import mockit.Mocked;
 import mockit.Verifications;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.freemarker.generator.base.util.OperatingSystem;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -50,7 +51,7 @@ import static org.assertj.core.api.Assertions.*;
 public class FreeMarkerMojoTest extends Assert {
 
     private static final File TEST_OUTPUT_DIR = new File("target/test-output/freemarker-mojo");
-    private static final String FREEMARKER_VERSION = "2.3.29";
+    private static final String FREEMARKER_VERSION = "2.3.30";
 
     @BeforeClass
     public static void beforeClass() throws IOException {
@@ -80,17 +81,17 @@ public class FreeMarkerMojoTest extends Assert {
             result = project;
         }};
 
-        FreeMarkerMojo mojo = new FreeMarkerMojo();
+        final FreeMarkerMojo mojo = new FreeMarkerMojo();
 
         // Validate freeMarkerVersion is required.
-        assertThatExceptionOfType(MojoExecutionException.class).isThrownBy(() -> {
-            mojo.execute();
-        }).withMessage("freeMarkerVersion is required");
+        assertThatExceptionOfType(MojoExecutionException.class)
+                .isThrownBy(mojo::execute)
+                .withMessage("freeMarkerVersion is required");
 
         Deencapsulation.setField(mojo, "freeMarkerVersion", "");
-        assertThatExceptionOfType(MojoExecutionException.class).isThrownBy(() -> {
-            mojo.execute();
-        }).withMessage("freeMarkerVersion is required");
+        assertThatExceptionOfType(MojoExecutionException.class)
+                .isThrownBy(mojo::execute)
+                .withMessage("freeMarkerVersion is required");
 
         final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "executeTest");
         Deencapsulation.setField(mojo, "freeMarkerVersion", FREEMARKER_VERSION);
@@ -102,15 +103,13 @@ public class FreeMarkerMojoTest extends Assert {
         Deencapsulation.setField(mojo, "session", session);
 
         // Validate source directory.
-        assertThatExceptionOfType(MojoExecutionException.class).isThrownBy(() -> {
-            mojo.execute();
-        })
+        assertThatExceptionOfType(MojoExecutionException.class)
+                .isThrownBy(mojo::execute)
                 .withMessageStartingWith("Required directory does not exist");
 
         new File(testCaseOutputDir, "data").mkdirs();
-        assertThatExceptionOfType(MojoExecutionException.class).isThrownBy(() -> {
-            mojo.execute();
-        })
+        assertThatExceptionOfType(MojoExecutionException.class)
+                .isThrownBy(mojo::execute)
                 .withMessageStartingWith("Required directory does not exist");
         new File(testCaseOutputDir, "template").mkdirs();
 
@@ -121,9 +120,9 @@ public class FreeMarkerMojoTest extends Assert {
             project.addCompileSourceRoot(fixSeparators("target/test-output/freemarker-mojo/executeTest/generated-files"));
             times = 1;
 
-            Configuration config;
-            MavenSession capturedSession;
-            Map<String, OutputGeneratorPropertiesProvider> builders;
+            final Configuration config;
+            final MavenSession capturedSession;
+            final Map<String, OutputGeneratorPropertiesProvider> builders;
 
             GeneratingFileVisitor.create(
                     config = withCapture(),
@@ -133,11 +132,11 @@ public class FreeMarkerMojoTest extends Assert {
 
             assertEquals("UTF-8", config.getDefaultEncoding());
             assertEquals(session, capturedSession);
-            TemplateLoader loader = config.getTemplateLoader();
+            final TemplateLoader loader = config.getTemplateLoader();
             assertTrue(loader instanceof FileTemplateLoader);
 
-            Path path;
-            FileVisitor<Path> fileVisitor;
+            final Path path;
+            final FileVisitor<Path> fileVisitor;
 
             Files.walkFileTree(path = withCapture(), fileVisitor = withCapture());
             times = 1;
@@ -154,7 +153,7 @@ public class FreeMarkerMojoTest extends Assert {
             @Mocked MojoExecution mojoExecution,
             @Mocked GeneratingFileVisitor generatingFileVisitor,
             @Mocked Files files
-    ) throws MojoExecutionException, MojoFailureException, IOException {
+    ) throws MojoExecutionException, MojoFailureException {
 
         new Expectations(mojoExecution, generatingFileVisitor) {{
             mojoExecution.getLifecyclePhase();
@@ -163,9 +162,9 @@ public class FreeMarkerMojoTest extends Assert {
             result = project;
         }};
 
-        FreeMarkerMojo mojo = new FreeMarkerMojo();
+        final FreeMarkerMojo mojo = new FreeMarkerMojo();
 
-        File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "generateTestSourceTest");
+        final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "generateTestSourceTest");
         Deencapsulation.setField(mojo, "freeMarkerVersion", FREEMARKER_VERSION);
         Deencapsulation.setField(mojo, "sourceDirectory", testCaseOutputDir);
         Deencapsulation.setField(mojo, "templateDirectory", new File(testCaseOutputDir, "template"));
@@ -193,7 +192,7 @@ public class FreeMarkerMojoTest extends Assert {
             @Mocked MojoExecution mojoExecution,
             @Mocked GeneratingFileVisitor generatingFileVisitor,
             @Mocked Files files
-    ) throws MojoExecutionException, MojoFailureException, IOException {
+    ) throws IOException {
 
         new Expectations(mojoExecution, generatingFileVisitor) {{
             mojoExecution.getLifecyclePhase();
@@ -204,9 +203,9 @@ public class FreeMarkerMojoTest extends Assert {
             result = new RuntimeException("test exception");
         }};
 
-        FreeMarkerMojo mojo = new FreeMarkerMojo();
+        final FreeMarkerMojo mojo = new FreeMarkerMojo();
 
-        File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "generateTestSourceTest");
+        final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "generateTestSourceTest");
         Deencapsulation.setField(mojo, "freeMarkerVersion", FREEMARKER_VERSION);
         Deencapsulation.setField(mojo, "sourceDirectory", testCaseOutputDir);
         Deencapsulation.setField(mojo, "templateDirectory", new File(testCaseOutputDir, "template"));
@@ -218,9 +217,8 @@ public class FreeMarkerMojoTest extends Assert {
         new File(testCaseOutputDir, "data").mkdirs();
         new File(testCaseOutputDir, "template").mkdirs();
 
-        assertThatExceptionOfType(MojoExecutionException.class).isThrownBy(() -> {
-            mojo.execute();
-        })
+        assertThatExceptionOfType(MojoExecutionException.class)
+                .isThrownBy(mojo::execute)
                 .withMessageStartingWith("Failed to process files in generator dir");
     }
 
@@ -239,9 +237,9 @@ public class FreeMarkerMojoTest extends Assert {
             result = new RuntimeException("test exception");
         }};
 
-        FreeMarkerMojo mojo = new FreeMarkerMojo();
+        final FreeMarkerMojo mojo = new FreeMarkerMojo();
 
-        File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "setTemplateLoaderException");
+        final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "setTemplateLoaderException");
 
         Deencapsulation.setField(mojo, "freeMarkerVersion", FREEMARKER_VERSION);
         Deencapsulation.setField(mojo, "sourceDirectory", testCaseOutputDir);
@@ -254,9 +252,8 @@ public class FreeMarkerMojoTest extends Assert {
         new File(testCaseOutputDir, "data").mkdirs();
         new File(testCaseOutputDir, "template").mkdirs();
 
-        assertThatExceptionOfType(MojoExecutionException.class).isThrownBy(() -> {
-            mojo.execute();
-        })
+        assertThatExceptionOfType(MojoExecutionException.class)
+                .isThrownBy(mojo::execute)
                 .withMessageStartingWith("Could not establish file template loader for directory");
     }
 
@@ -267,10 +264,9 @@ public class FreeMarkerMojoTest extends Assert {
             @Mocked MojoExecution mojoExecution,
             @Mocked Configuration config) throws Exception {
 
-        FreeMarkerMojo mojo = new FreeMarkerMojo();
-
-        File sourceDirectory = new File("src/test/data/freemarker-mojo");
-        File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "loadFreemarkerProperties");
+        final FreeMarkerMojo mojo = new FreeMarkerMojo();
+        final File sourceDirectory = new File("src/test/data/freemarker-mojo");
+        final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "loadFreemarkerProperties");
 
         Deencapsulation.setField(mojo, "freeMarkerVersion", FREEMARKER_VERSION);
         Deencapsulation.setField(mojo, "sourceDirectory", sourceDirectory);
@@ -283,7 +279,7 @@ public class FreeMarkerMojoTest extends Assert {
         mojo.execute();
 
         new Verifications() {{
-            Properties properties;
+            final Properties properties;
 
             config.setSettings(properties = withCapture());
             times = 1;
@@ -305,10 +301,10 @@ public class FreeMarkerMojoTest extends Assert {
             result = new RuntimeException("test exception");
         }};
 
-        FreeMarkerMojo mojo = new FreeMarkerMojo();
+        final FreeMarkerMojo mojo = new FreeMarkerMojo();
 
-        File sourceDirectory = new File("src/test/data/freemarker-mojo");
-        File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "loadFreemarkerPropertiesExceptionTest");
+        final File sourceDirectory = new File("src/test/data/freemarker-mojo");
+        final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "loadFreemarkerPropertiesExceptionTest");
 
         Deencapsulation.setField(mojo, "freeMarkerVersion", FREEMARKER_VERSION);
         Deencapsulation.setField(mojo, "sourceDirectory", sourceDirectory);
@@ -320,9 +316,9 @@ public class FreeMarkerMojoTest extends Assert {
 
         System.out.println("==== before mojo execute");
         try {
-            assertThatExceptionOfType(MojoExecutionException.class).isThrownBy(() -> {
-                mojo.execute();
-            }).withMessage(fixSeparators("Failed to load src/test/data/freemarker-mojo/freemarker.properties"));
+            assertThatExceptionOfType(MojoExecutionException.class)
+                    .isThrownBy(mojo::execute)
+                    .withMessage(fixSeparators("Failed to load src/test/data/freemarker-mojo/freemarker.properties"));
         } catch (Throwable t) {
             t.printStackTrace();
         }
@@ -340,10 +336,10 @@ public class FreeMarkerMojoTest extends Assert {
             result = new RuntimeException("test exception");
         }};
 
-        FreeMarkerMojo mojo = new FreeMarkerMojo();
+        final FreeMarkerMojo mojo = new FreeMarkerMojo();
 
-        File sourceDirectory = new File("src/test/data/freemarker-mojo");
-        File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "loadFreemarkerProperties");
+        final File sourceDirectory = new File("src/test/data/freemarker-mojo");
+        final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "loadFreemarkerProperties");
 
         Deencapsulation.setField(mojo, "freeMarkerVersion", FREEMARKER_VERSION);
         Deencapsulation.setField(mojo, "sourceDirectory", sourceDirectory);
@@ -353,9 +349,9 @@ public class FreeMarkerMojoTest extends Assert {
         Deencapsulation.setField(mojo, "mojo", mojoExecution);
         Deencapsulation.setField(mojo, "session", session);
 
-        assertThatExceptionOfType(MojoExecutionException.class).isThrownBy(() -> {
-            mojo.execute();
-        }).withMessage(fixSeparators("Invalid setting(s) in src/test/data/freemarker-mojo/freemarker.properties"));
+        assertThatExceptionOfType(MojoExecutionException.class)
+                .isThrownBy(mojo::execute)
+                .withMessage(fixSeparators("Invalid setting(s) in src/test/data/freemarker-mojo/freemarker.properties"));
     }
 
     private static String fixSeparators(String str) {

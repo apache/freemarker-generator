@@ -48,19 +48,19 @@ import static org.assertj.core.api.Assertions.*;
 
 public class GeneratingFileVisitorTest extends Assert {
 
-    private static File testDir = new File("src/test/data/generating-file-visitor");
-    private static File dataDir = new File(testDir, "data");
-    private static File templateDir = new File(testDir, "template");
-    private static File outputDir = new File("target/test-output/generating-file-visitor");
-    private static Map<String, OutputGeneratorPropertiesProvider> builders = new HashMap<>();
+    private static final File TEST_DIR = new File("src/test/data/generating-file-visitor");
+    private static final File DATA_DIR = new File(TEST_DIR, "data");
+    private static final File TEMPLATE_DIR = new File(TEST_DIR, "template");
+    private static final File OUTPUT_DIR = new File("target/test-output/generating-file-visitor");
+    private static final Map<String, OutputGeneratorPropertiesProvider> BUILDERS = new HashMap<>();
     private Configuration config;
-    private Properties pomProperties = new Properties();
+    private final Properties pomProperties = new Properties();
 
     @BeforeClass
     public static void beforeClass() throws IOException {
-        builders.put(".json", JsonPropertiesProvider.create(dataDir, templateDir, outputDir));
+        BUILDERS.put(".json", JsonPropertiesProvider.create(DATA_DIR, TEMPLATE_DIR, OUTPUT_DIR));
         // Clean output dir before each run.
-        File outputDir = new File("target/test-output/generating-file-visitor");
+        final File outputDir = new File("target/test-output/generating-file-visitor");
         if (outputDir.exists()) {
             // Recursively delete output from previous run.
             Files.walk(outputDir.toPath())
@@ -72,15 +72,15 @@ public class GeneratingFileVisitorTest extends Assert {
 
     @BeforeMethod
     public void before() throws IOException {
-        if (!testDir.isDirectory()) {
+        if (!TEST_DIR.isDirectory()) {
             throw new RuntimeException("Can't find required test data directory. "
                     + "If running test outside of maven, make sure working directory is the project directory. "
-                    + "Looking for: " + testDir);
+                    + "Looking for: " + TEST_DIR);
         }
 
         config = new Configuration(Configuration.VERSION_2_3_23);
         config.setDefaultEncoding("UTF-8");
-        config.setTemplateLoader(new FileTemplateLoader(templateDir));
+        config.setTemplateLoader(new FileTemplateLoader(TEMPLATE_DIR));
         pomProperties.put("pomVar", "pom value");
     }
 
@@ -90,7 +90,7 @@ public class GeneratingFileVisitorTest extends Assert {
             @Mocked MavenProject project,
             @Mocked File mockFile,
             @Mocked BasicFileAttributes attrs) throws IOException {
-        List<MavenProject> projects = new ArrayList<>();
+        final List<MavenProject> projects = new ArrayList<>();
         projects.add(project);
         new Expectations(session, project, mockFile) {{
             session.getCurrentProject();
@@ -107,13 +107,13 @@ public class GeneratingFileVisitorTest extends Assert {
             result = 10;
         }};
 
-        File file = new File(dataDir, "mydir/success-test-2.txt.json");
-        GeneratingFileVisitor gfv = GeneratingFileVisitor.create(config, session, builders);
+        final File file = new File(DATA_DIR, "mydir/success-test-2.txt.json");
+        final GeneratingFileVisitor gfv = GeneratingFileVisitor.create(config, session, BUILDERS);
         assertEquals(FileVisitResult.CONTINUE, gfv.visitFile(file.toPath(), attrs));
 
-        File outputFile = new File(outputDir, "mydir/success-test-2.txt");
+        final File outputFile = new File(OUTPUT_DIR, "mydir/success-test-2.txt");
         assertTrue(outputFile.isFile());
-        List<String> lines = Files.readAllLines(outputFile.toPath(), StandardCharsets.UTF_8);
+        final List<String> lines = Files.readAllLines(outputFile.toPath(), StandardCharsets.UTF_8);
         assertEquals(17, lines.size());
         assertEquals("This is a test freemarker template. Test pom data: 'pom value'.", lines.get(16));
     }
@@ -124,7 +124,7 @@ public class GeneratingFileVisitorTest extends Assert {
             @Mocked MavenProject project,
             @Mocked File mockFile,
             @Mocked BasicFileAttributes attrs) throws IOException {
-        List<MavenProject> projects = new ArrayList<>();
+        final List<MavenProject> projects = new ArrayList<>();
         projects.add(project);
         new Expectations(session, project, mockFile) {{
             session.getCurrentProject();
@@ -141,13 +141,13 @@ public class GeneratingFileVisitorTest extends Assert {
             result = 10;
         }};
 
-        File file = new File(dataDir, "mydir/success-test.txt.json");
-        GeneratingFileVisitor gfv = GeneratingFileVisitor.create(config, session, builders);
+        final File file = new File(DATA_DIR, "mydir/success-test.txt.json");
+        final GeneratingFileVisitor gfv = GeneratingFileVisitor.create(config, session, BUILDERS);
         assertEquals(FileVisitResult.CONTINUE, gfv.visitFile(file.toPath(), attrs));
 
-        File outputFile = new File(outputDir, "mydir/success-test.txt");
+        final File outputFile = new File(OUTPUT_DIR, "mydir/success-test.txt");
         assertTrue(outputFile.isFile());
-        List<String> lines = Files.readAllLines(outputFile.toPath(), StandardCharsets.UTF_8);
+        final List<String> lines = Files.readAllLines(outputFile.toPath(), StandardCharsets.UTF_8);
         assertEquals(17, lines.size());
         assertEquals("This is a test freemarker template. Test json data: 'test value'. Test pom data: 'pom value'.", lines
                 .get(16));
@@ -158,8 +158,8 @@ public class GeneratingFileVisitorTest extends Assert {
             @Mocked MavenSession session,
             @Mocked MavenProject project,
             @Mocked File mockFile,
-            @Mocked BasicFileAttributes attrs) throws IOException {
-        List<MavenProject> projects = new ArrayList<>();
+            @Mocked BasicFileAttributes attrs) {
+        final List<MavenProject> projects = new ArrayList<>();
         projects.add(project);
         new Expectations(session, project, mockFile) {{
             attrs.isRegularFile();
@@ -172,11 +172,11 @@ public class GeneratingFileVisitorTest extends Assert {
             result = 10;
         }};
         // Test file without .json suffix.
-        File file = new File(dataDir, "mydir/bad-extension-test.txt");
-        GeneratingFileVisitor gfv = GeneratingFileVisitor.create(config, session, builders);
-        assertThatExceptionOfType(RuntimeException.class).isThrownBy(() -> {
-            gfv.visitFile(file.toPath(), attrs);
-        }).withMessage("Unknown file extension: " + file.toPath());
+        final File file = new File(DATA_DIR, "mydir/bad-extension-test.txt");
+        final GeneratingFileVisitor gfv = GeneratingFileVisitor.create(config, session, BUILDERS);
+        assertThatExceptionOfType(RuntimeException.class)
+                .isThrownBy(() -> gfv.visitFile(file.toPath(), attrs))
+                .withMessage("Unknown file extension: " + file.toPath());
     }
 
     @Test
@@ -185,7 +185,7 @@ public class GeneratingFileVisitorTest extends Assert {
                                              @Mocked BasicFileAttributes attrs,
                                              @Mocked File mockFile
     ) {
-        List<MavenProject> projects = new ArrayList<>();
+        final List<MavenProject> projects = new ArrayList<>();
         projects.add(project);
         new Expectations(session, project, mockFile) {{
             attrs.isRegularFile();
@@ -199,8 +199,8 @@ public class GeneratingFileVisitorTest extends Assert {
         }};
         // FYI: if you change above result to true, test will fail trying to read the 'mydir' directory
         // as a json file.
-        File dir = new File(dataDir, "mydir");
-        GeneratingFileVisitor gfv = GeneratingFileVisitor.create(config, session, builders);
+        final File dir = new File(DATA_DIR, "mydir");
+        final GeneratingFileVisitor gfv = GeneratingFileVisitor.create(config, session, BUILDERS);
         assertEquals(FileVisitResult.CONTINUE, gfv.visitFile(dir.toPath(), attrs));
     }
 }

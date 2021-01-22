@@ -23,7 +23,6 @@ import freemarker.cache.FileTemplateLoader;
 import freemarker.template.Configuration;
 import mockit.Expectations;
 import mockit.Mocked;
-import org.apache.commons.io.FilenameUtils;
 import org.assertj.core.api.*;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -39,20 +38,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static junit.framework.Assert.assertEquals;
 import static org.assertj.core.api.AssertionsForClassTypes.*;
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class OutputGeneratorTest {
 
-    private File testDir = new File("src/test/data/generating-file-visitor");
-    private File dataDir = new File(testDir, "data");
-    private File templateDir = new File(testDir, "template");
-    private File outputDir = new File("target/test-output/generating-file-visitor");
-    private Configuration config;
-    private Map<String, Object> dataModel = new HashMap<String, Object>();
+    private final File testDir = new File("src/test/data/generating-file-visitor");
+    private final File dataDir = new File(testDir, "data");
+    private final File templateDir = new File(testDir, "template");
+    private final File outputDir = new File("target/test-output/generating-file-visitor");
+    private final Map<String, Object> dataModel = new HashMap<>();
 
+    private Configuration config;
+
+    @SuppressWarnings("unchecked")
     @BeforeMethod
     public void setupDataModel() {
         dataModel.clear();
@@ -64,7 +65,7 @@ public class OutputGeneratorTest {
     @BeforeClass
     public static void cleanFields() throws IOException {
         // Clean output dir before each run.
-        File outputDir = new File("target/test-output/generating-file-visitor");
+        final File outputDir = new File("target/test-output/generating-file-visitor");
         if (outputDir.exists()) {
             // Recursively delete output from previous run.
             Files.walk(outputDir.toPath())
@@ -89,37 +90,37 @@ public class OutputGeneratorTest {
 
     @Test
     public void createTest() {
-        OutputGenerator.OutputGeneratorBuilder builder = OutputGenerator.builder();
-        assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> {
-            builder.create();
-        }).withMessage("Must set the pomModifiedTimestamp");
+        final OutputGenerator.OutputGeneratorBuilder builder = OutputGenerator.builder();
+        assertThatExceptionOfType(IllegalStateException.class)
+                .isThrownBy(builder::create)
+                .withMessage("Must set the pomModifiedTimestamp");
 
         builder.addPomLastModifiedTimestamp(0);
-        assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> {
-            builder.create();
-        }).withMessage("Must set a non-null generatorLocation");
+        assertThatExceptionOfType(IllegalStateException.class)
+                .isThrownBy(builder::create)
+                .withMessage("Must set a non-null generatorLocation");
 
-        File file = new File(dataDir, "mydir/success-test.txt.json");
-        builder.addGeneratorLocation(file.toPath());
-        assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> {
-            builder.create();
-        }).withMessage("Must set a non-null templateLocation");
+        final File file = new File(dataDir, "mydir/success-test.txt.json");
+        builder.addGeneratorLocation(new File(dataDir, "mydir/success-test.txt.json").toPath());
+        assertThatExceptionOfType(IllegalStateException.class)
+                .isThrownBy(builder::create)
+                .withMessage("Must set a non-null templateLocation");
 
-        File templateFile = new File(templateDir, "test.ftl");
+        final File templateFile = new File(templateDir, "test.ftl");
         builder.addTemplateLocation(templateFile.toPath());
-        assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> {
-            builder.create();
-        }).withMessage("Must set a non-null outputLocation");
+        assertThatExceptionOfType(IllegalStateException.class)
+                .isThrownBy(builder::create)
+                .withMessage("Must set a non-null outputLocation");
 
-        File outputFile = new File(outputDir, "mydir/success-test.txt");
+        final File outputFile = new File(outputDir, "mydir/success-test.txt");
         builder.addOutputLocation(outputFile.toPath());
 
-        assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> {
-            builder.create();
-        }).withMessage("Must set a non-null dataModel");
+        assertThatExceptionOfType(IllegalStateException.class)
+                .isThrownBy(builder::create)
+                .withMessage("Must set a non-null dataModel");
 
         builder.addDataModel(dataModel);
-        OutputGenerator generator = builder.create();
+        final OutputGenerator generator = builder.create();
 
         assertEquals(0, generator.pomModifiedTimestamp);
         assertEquals(file.toPath(), generator.generatorLocation);
@@ -131,34 +132,34 @@ public class OutputGeneratorTest {
 
     @Test
     public void addToDataModelTest() {
-        OutputGenerator.OutputGeneratorBuilder builder = OutputGenerator.builder();
-        assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> {
-            builder.create();
-        }).withMessage("Must set the pomModifiedTimestamp");
+        final OutputGenerator.OutputGeneratorBuilder builder = OutputGenerator.builder();
+        assertThatExceptionOfType(IllegalStateException.class)
+                .isThrownBy(builder::create)
+                .withMessage("Must set the pomModifiedTimestamp");
 
         builder.addPomLastModifiedTimestamp(0);
-        assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> {
-            builder.create();
-        }).withMessage("Must set a non-null generatorLocation");
+        assertThatExceptionOfType(IllegalStateException.class)
+                .isThrownBy(builder::create)
+                .withMessage("Must set a non-null generatorLocation");
 
-        File file = new File(dataDir, "mydir/success-test.txt.json");
+        final File file = new File(dataDir, "mydir/success-test.txt.json");
         builder.addGeneratorLocation(file.toPath());
-        assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> {
-            builder.create();
-        }).withMessage("Must set a non-null templateLocation");
+        assertThatExceptionOfType(IllegalStateException.class)
+                .isThrownBy(builder::create)
+                .withMessage("Must set a non-null templateLocation");
 
-        File templateFile = new File(templateDir, "test.ftl");
+        final File templateFile = new File(templateDir, "test.ftl");
         builder.addTemplateLocation(templateFile.toPath());
-        assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> {
-            builder.create();
-        }).withMessage("Must set a non-null outputLocation");
+        assertThatExceptionOfType(IllegalStateException.class)
+                .isThrownBy(builder::create)
+                .withMessage("Must set a non-null outputLocation");
 
-        File outputFile = new File(outputDir, "mydir/success-test.txt");
+        final File outputFile = new File(outputDir, "mydir/success-test.txt");
         builder.addOutputLocation(outputFile.toPath());
 
-        assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> {
-            builder.create();
-        }).withMessage("Must set a non-null dataModel");
+        assertThatExceptionOfType(IllegalStateException.class)
+                .isThrownBy(builder::create)
+                .withMessage("Must set a non-null dataModel");
 
         builder.addToDataModel("testVar", "testVal");
         OutputGenerator generator = builder.create();
@@ -179,20 +180,20 @@ public class OutputGeneratorTest {
     @Test
     public void generate_SuccessTest()
             throws IOException {
-        OutputGenerator.OutputGeneratorBuilder builder = OutputGenerator.builder();
+        final OutputGenerator.OutputGeneratorBuilder builder = OutputGenerator.builder();
         builder.addPomLastModifiedTimestamp(0);
-        File file = new File(dataDir, "mydir/success-test.txt.json");
+        final File file = new File(dataDir, "mydir/success-test.txt.json");
         builder.addGeneratorLocation(file.toPath());
-        File outputFile = new File(outputDir, "mydir/success-test.txt");
+        final File outputFile = new File(outputDir, "mydir/success-test.txt");
         builder.addOutputLocation(outputFile.toPath());
-        File templateFile = new File(templateDir, "test.ftl");
+        final File templateFile = new File(templateDir, "test.ftl");
         builder.addTemplateLocation(templateFile.toPath());
         builder.addDataModel(dataModel);
-        OutputGenerator generator = builder.create();
+        final OutputGenerator generator = builder.create();
         generator.generate(config);
 
         assertTrue(outputFile.isFile());
-        List<String> lines = Files.readAllLines(outputFile.toPath(), StandardCharsets.UTF_8);
+        final List<String> lines = Files.readAllLines(outputFile.toPath(), StandardCharsets.UTF_8);
         assertEquals(17, lines.size());
         assertEquals("This is a test freemarker template. Test json data: 'test value'. Test pom data: 'pom value'.", lines
                 .get(16));
@@ -217,67 +218,66 @@ public class OutputGeneratorTest {
 
     @Test
     public void generate_badTemplateNameTest() {
-        OutputGenerator.OutputGeneratorBuilder builder = OutputGenerator.builder();
+        final OutputGenerator.OutputGeneratorBuilder builder = OutputGenerator.builder();
         builder.addPomLastModifiedTimestamp(0);
-        File file = new File(dataDir, "mydir/bad-template-name.txt.json");
+        final File file = new File(dataDir, "mydir/bad-template-name.txt.json");
         builder.addGeneratorLocation(file.toPath());
-        File outputFile = new File(outputDir, "mydir/bad-template-name.txt");
+        final File outputFile = new File(outputDir, "mydir/bad-template-name.txt");
         builder.addOutputLocation(outputFile.toPath());
-        File templateFile = new File(templateDir, "missing.ftl"); //this doesn't exist
+        final File templateFile = new File(templateDir, "missing.ftl"); //this doesn't exist
         builder.addTemplateLocation(templateFile.toPath());
         builder.addDataModel(dataModel);
-        OutputGenerator generator = builder.create();
-        Assertions.assertThatExceptionOfType(RuntimeException.class).isThrownBy(() -> {
-            generator.generate(config);
-        }).withMessage("Could not read template: missing.ftl");
+        final OutputGenerator generator = builder.create();
+        Assertions.assertThatExceptionOfType(RuntimeException.class)
+                .isThrownBy(() -> generator.generate(config))
+                .withMessage("Could not read template: missing.ftl");
     }
 
     @Test
     public void generate_missingVarTest() {
-        OutputGenerator.OutputGeneratorBuilder builder = OutputGenerator.builder();
+        final OutputGenerator.OutputGeneratorBuilder builder = OutputGenerator.builder();
         builder.addPomLastModifiedTimestamp(0);
-        File file = new File(dataDir, "mydir/missing-var-test.txt.json");
+        final File file = new File(dataDir, "mydir/missing-var-test.txt.json");
         builder.addGeneratorLocation(file.toPath());
-        File outputFile = new File(outputDir, "mydir/missing-var-test.txt");
+        final File outputFile = new File(outputDir, "mydir/missing-var-test.txt");
         builder.addOutputLocation(outputFile.toPath());
-        File templateFile = new File(templateDir, "test.ftl"); //this is missing a
+        final File templateFile = new File(templateDir, "test.ftl"); //this is missing a
         builder.addTemplateLocation(templateFile.toPath());
         dataModel.remove("testVar");
         builder.addDataModel(dataModel);
-        OutputGenerator generator = builder.create();
+        final OutputGenerator generator = builder.create();
         Assertions.assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> {
-                    generator.generate(config);
-                })
+                .isThrownBy(() -> generator.generate(config))
                 .withMessageStartingWith("Could not process template associated with data file");
     }
 
     @Test
     public void generate_badParentTest() throws IOException {
-        OutputGenerator.OutputGeneratorBuilder builder = OutputGenerator.builder();
+        final OutputGenerator.OutputGeneratorBuilder builder = OutputGenerator.builder();
         builder.addPomLastModifiedTimestamp(0);
-        File file = new File(dataDir, "badParent/bad-parent-test.txt.json");
+        final File file = new File(dataDir, "badParent/bad-parent-test.txt.json");
         builder.addGeneratorLocation(file.toPath());
-        File outputFile = new File(outputDir, "badParent/bad-parent-test.txt");
+        final File outputFile = new File(outputDir, "badParent/bad-parent-test.txt");
         builder.addOutputLocation(outputFile.toPath());
-        File templateFile = new File(templateDir, "test.ftl"); //this is missing a
+        final File templateFile = new File(templateDir, "test.ftl"); //this is missing a
         builder.addTemplateLocation(templateFile.toPath());
         builder.addDataModel(dataModel);
-        OutputGenerator generator = builder.create();
+        final OutputGenerator generator = builder.create();
         outputDir.mkdirs();
         outputFile.getParentFile().createNewFile();
 
-        Assertions.assertThatExceptionOfType(RuntimeException.class).isThrownBy(() -> {
-            generator.generate(config);
-        }).withMessage("Parent directory of output file is a file: " + outputFile.getParentFile().getAbsolutePath());
+        Assertions.assertThatExceptionOfType(RuntimeException.class)
+                .isThrownBy(() -> generator.generate(config))
+                .withMessage("Parent directory of output file is a file: " + outputFile.getParentFile()
+                        .getAbsolutePath());
     }
 
     @Test
     public void generate_cantCreateOutputFileParentDirTest(
             @Mocked FactoryUtil factoryUtil,
-            @Mocked File mockOutputFile) throws IOException {
+            @Mocked File mockOutputFile) {
 
-        File parentDir = new File("target/test-output/generating-file-visitor/mydir");
+        final File parentDir = new File("target/test-output/generating-file-visitor/mydir");
         new Expectations(mockOutputFile, parentDir) {{
             FactoryUtil.createFile(anyString);
             result = mockOutputFile;
@@ -289,18 +289,18 @@ public class OutputGeneratorTest {
             result = false;
         }};
 
-        OutputGenerator.OutputGeneratorBuilder builder = OutputGenerator.builder();
+        final OutputGenerator.OutputGeneratorBuilder builder = OutputGenerator.builder();
         builder.addPomLastModifiedTimestamp(0);
-        File file = new File(dataDir, "mydir/missing-var-test.txt.json");
+        final File file = new File(dataDir, "mydir/missing-var-test.txt.json");
         builder.addGeneratorLocation(file.toPath());
-        File outputFile = new File(outputDir, "mydir/missing-var-test.txt");
+        final File outputFile = new File(outputDir, "mydir/missing-var-test.txt");
         builder.addOutputLocation(outputFile.toPath());
-        File templateFile = new File(templateDir, "test.ftl"); //this is missing a
+        final File templateFile = new File(templateDir, "test.ftl"); //this is missing a
         builder.addTemplateLocation(templateFile.toPath());
         builder.addDataModel(dataModel);
-        OutputGenerator generator = builder.create();
-        Assertions.assertThatExceptionOfType(RuntimeException.class).isThrownBy(() -> {
-            generator.generate(config);
-        }).withMessage("Could not create directory: " + parentDir.getAbsoluteFile().toString());
+        final OutputGenerator generator = builder.create();
+        Assertions.assertThatExceptionOfType(RuntimeException.class)
+                .isThrownBy(() -> generator.generate(config))
+                .withMessage("Could not create directory: " + parentDir.getAbsoluteFile().toString());
     }
 }

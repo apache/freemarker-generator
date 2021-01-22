@@ -37,19 +37,19 @@ import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.internal.junit.ArrayAsserts.assertArrayEquals;
 
 public class JsonPropertiesProviderTest {
-    private File testDir = new File("src/test/data/generating-file-visitor");
-    private File dataDir = new File(testDir, "data");
-    private File templateDir = new File(testDir, "template");
-    private File outputDir = new File("target/test-output/generating-file-visitor");
+    private final File testDir = new File("src/test/data/generating-file-visitor");
+    private final File dataDir = new File(testDir, "data");
+    private final File templateDir = new File(testDir, "template");
+    private final File outputDir = new File("target/test-output/generating-file-visitor");
 
     @Test
     public void testSuccess(@Mocked OutputGenerator.OutputGeneratorBuilder builder) {
-        Path path = dataDir.toPath().resolve("mydir/success-test.txt.json");
-        Path expectedTemplateLocation = templateDir.toPath().resolve("test.ftl");
-        Path expectedOutputLocation = outputDir.toPath().resolve("mydir/success-test.txt");
-        Map<String, Object> expectedMap = new HashMap<>(4);
+        final Path path = dataDir.toPath().resolve("mydir/success-test.txt.json");
+        final Path expectedTemplateLocation = templateDir.toPath().resolve("test.ftl");
+        final Path expectedOutputLocation = outputDir.toPath().resolve("mydir/success-test.txt");
+        final Map<String, Object> expectedMap = new HashMap<>(4);
         expectedMap.put("testVar", "test value");
-        JsonPropertiesProvider toTest = JsonPropertiesProvider.create(dataDir, templateDir, outputDir);
+        final JsonPropertiesProvider toTest = JsonPropertiesProvider.create(dataDir, templateDir, outputDir);
         toTest.providePropertiesFromFile(path, builder);
         new Verifications() {{
             Path templateLocation;
@@ -67,11 +67,11 @@ public class JsonPropertiesProviderTest {
 
     @Test
     public void testSuccessNoDataModel(@Mocked OutputGenerator.OutputGeneratorBuilder builder) {
-        Path path = dataDir.toPath().resolve("mydir/success-test-2.txt.json");
-        Path expectedTemplateLocation = templateDir.toPath().resolve("test-pom-only.ftl");
-        Path expectedOutputLocation = outputDir.toPath().resolve("mydir/success-test-2.txt");
-        Map<String, Object> expectedMap = new HashMap<>(4);
-        JsonPropertiesProvider toTest = JsonPropertiesProvider.create(dataDir, templateDir, outputDir);
+        final Path path = dataDir.toPath().resolve("mydir/success-test-2.txt.json");
+        final Path expectedTemplateLocation = templateDir.toPath().resolve("test-pom-only.ftl");
+        final Path expectedOutputLocation = outputDir.toPath().resolve("mydir/success-test-2.txt");
+        final Map<String, Object> expectedMap = new HashMap<>(4);
+        final JsonPropertiesProvider toTest = JsonPropertiesProvider.create(dataDir, templateDir, outputDir);
         toTest.providePropertiesFromFile(path, builder);
         new Verifications() {{
             Path templateLocation;
@@ -89,36 +89,34 @@ public class JsonPropertiesProviderTest {
 
     @Test
     public void testParsingException(@Mocked OutputGenerator.OutputGeneratorBuilder builder, @Mocked Gson gson) {
-        Path path = dataDir.toPath().resolve("mydir/success-test.txt.json");
+        final Path path = dataDir.toPath().resolve("mydir/success-test.txt.json");
         new Expectations() {{
             gson.fromJson((JsonReader) any, (Type) any);
             result = new RuntimeException("test exception");
         }};
-        JsonPropertiesProvider toTest = JsonPropertiesProvider.create(dataDir, templateDir, outputDir);
+        final JsonPropertiesProvider toTest = JsonPropertiesProvider.create(dataDir, templateDir, outputDir);
 
-        assertThatExceptionOfType(RuntimeException.class).isThrownBy(() -> {
-            toTest.providePropertiesFromFile(path, builder);
-        })
+        assertThatExceptionOfType(RuntimeException.class)
+                .isThrownBy(() -> toTest.providePropertiesFromFile(path, builder))
                 .withMessageStartingWith("Could not parse json data file");
     }
 
     @Test
     public void testMissingTemplateName(@Mocked OutputGenerator.OutputGeneratorBuilder builder) {
-        Path path = dataDir.toPath().resolve("mydir/missing-template-name.txt.json");
-        JsonPropertiesProvider toTest = JsonPropertiesProvider.create(dataDir, templateDir, outputDir);
+        final Path path = dataDir.toPath().resolve("mydir/missing-template-name.txt.json");
+        final JsonPropertiesProvider toTest = JsonPropertiesProvider.create(dataDir, templateDir, outputDir);
 
-        assertThatExceptionOfType(RuntimeException.class).isThrownBy(() -> {
-            toTest.providePropertiesFromFile(path, builder);
-        }).withMessage("Require json data property not found: templateName");
+        assertThatExceptionOfType(RuntimeException.class)
+                .isThrownBy(() -> toTest.providePropertiesFromFile(path, builder))
+                .withMessage("Require json data property not found: templateName");
     }
 
     @Test
     public void testBadPath(@Mocked OutputGenerator.OutputGeneratorBuilder builder) {
-        Path path = testDir.toPath().resolve("badPath/success-test.txt.json");
-        JsonPropertiesProvider toTest = JsonPropertiesProvider.create(dataDir, templateDir, outputDir);
-        assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> {
-            toTest.providePropertiesFromFile(path, builder);
-        })
+        final Path path = testDir.toPath().resolve("badPath/success-test.txt.json");
+        final JsonPropertiesProvider toTest = JsonPropertiesProvider.create(dataDir, templateDir, outputDir);
+        assertThatExceptionOfType(IllegalStateException.class)
+                .isThrownBy(() -> toTest.providePropertiesFromFile(path, builder))
                 .withMessageStartingWith("visitFile() given file not in sourceDirectory");
     }
 }

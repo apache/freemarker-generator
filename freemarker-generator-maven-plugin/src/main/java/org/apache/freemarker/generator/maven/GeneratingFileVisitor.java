@@ -30,7 +30,7 @@ import java.util.Map;
 
 /**
  * FileVisitor designed to process json data files. The json file parsed into
- * a map and given to FreeMarker to
+ * a map and given to FreeMarker to.
  */
 public class GeneratingFileVisitor extends SimpleFileVisitor<Path> {
 
@@ -68,8 +68,8 @@ public class GeneratingFileVisitor extends SimpleFileVisitor<Path> {
                     .addGeneratorLocation(path)
                     .addPomLastModifiedTimestamp(pomLastModifiedTimestamp);
             final String fileName = path.getFileName().toString();
-            final String extenstion = fileName.substring(fileName.lastIndexOf('.'));
-            final OutputGeneratorPropertiesProvider pathProcessor = extensionToBuilder.get(extenstion);
+            final String extension = fileName.substring(fileName.lastIndexOf('.'));
+            final OutputGeneratorPropertiesProvider pathProcessor = extensionToBuilder.get(extension);
             if (pathProcessor == null) {
                 throw new RuntimeException("Unknown file extension: " + path);
             }
