@@ -31,7 +31,6 @@ import org.apache.freemarker.generator.base.util.OperatingSystem;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.junit.Assert;
 import org.testng.annotations.BeforeClass;
@@ -72,7 +71,7 @@ public class FreeMarkerMojoTest extends Assert {
             @Mocked MojoExecution mojoExecution,
             @Mocked GeneratingFileVisitor generatingFileVisitor,
             @Mocked Files files
-    ) throws MojoExecutionException, MojoFailureException, IOException {
+    ) throws MojoExecutionException, IOException {
 
         new Expectations(mojoExecution, generatingFileVisitor) {{
             mojoExecution.getLifecyclePhase();
@@ -153,7 +152,7 @@ public class FreeMarkerMojoTest extends Assert {
             @Mocked MojoExecution mojoExecution,
             @Mocked GeneratingFileVisitor generatingFileVisitor,
             @Mocked Files files
-    ) throws MojoExecutionException, MojoFailureException {
+    ) throws MojoExecutionException {
 
         new Expectations(mojoExecution, generatingFileVisitor) {{
             mojoExecution.getLifecyclePhase();
