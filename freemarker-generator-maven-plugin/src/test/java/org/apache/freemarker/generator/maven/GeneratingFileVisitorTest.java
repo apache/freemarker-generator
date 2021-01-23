@@ -78,9 +78,7 @@ public class GeneratingFileVisitorTest extends Assert {
                     + "Looking for: " + TEST_DIR);
         }
 
-        config = new Configuration(Configuration.VERSION_2_3_23);
-        config.setDefaultEncoding("UTF-8");
-        config.setTemplateLoader(new FileTemplateLoader(TEMPLATE_DIR));
+        config = configuration();
         pomProperties.put("pomVar", "pom value");
     }
 
@@ -183,8 +181,7 @@ public class GeneratingFileVisitorTest extends Assert {
     public void visitFile_notRegularFileTest(@Mocked MavenSession session,
                                              @Mocked MavenProject project,
                                              @Mocked BasicFileAttributes attrs,
-                                             @Mocked File mockFile
-    ) {
+                                             @Mocked File mockFile) {
         final List<MavenProject> projects = new ArrayList<>();
         projects.add(project);
         new Expectations(session, project, mockFile) {{
@@ -202,5 +199,16 @@ public class GeneratingFileVisitorTest extends Assert {
         final File dir = new File(DATA_DIR, "mydir");
         final GeneratingFileVisitor gfv = GeneratingFileVisitor.create(config, session, BUILDERS);
         assertEquals(FileVisitResult.CONTINUE, gfv.visitFile(dir.toPath(), attrs));
+    }
+
+    private static Configuration configuration() {
+        try {
+            final Configuration configuration = new Configuration(Configuration.VERSION_2_3_23);
+            configuration.setDefaultEncoding("UTF-8");
+            configuration.setTemplateLoader(new FileTemplateLoader(TEMPLATE_DIR));
+            return configuration;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create Freemarker configuration", e);
+        }
     }
 }
