@@ -22,11 +22,12 @@ package org.apache.freemarker.generator.maven;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
-import mockit.Deencapsulation;
+import freemarker.template.TemplateException;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.Verifications;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.freemarker.generator.base.util.OperatingSystem;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecution;
@@ -71,7 +72,7 @@ public class FreeMarkerMojoTest extends Assert {
             @Mocked MojoExecution mojoExecution,
             @Mocked GeneratingFileVisitor generatingFileVisitor,
             @Mocked Files files
-    ) throws MojoExecutionException, IOException {
+    ) throws MojoExecutionException, IOException, IllegalAccessException {
 
         new Expectations(mojoExecution, generatingFileVisitor) {{
             mojoExecution.getLifecyclePhase();
@@ -87,19 +88,19 @@ public class FreeMarkerMojoTest extends Assert {
                 .isThrownBy(mojo::execute)
                 .withMessage("freeMarkerVersion is required");
 
-        Deencapsulation.setField(mojo, "freeMarkerVersion", "");
+        FieldUtils.writeField(mojo, "freeMarkerVersion", "", true);
         assertThatExceptionOfType(MojoExecutionException.class)
                 .isThrownBy(mojo::execute)
                 .withMessage("freeMarkerVersion is required");
 
         final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "executeTest");
-        Deencapsulation.setField(mojo, "freeMarkerVersion", FREEMARKER_VERSION);
-        Deencapsulation.setField(mojo, "sourceDirectory", testCaseOutputDir);
-        Deencapsulation.setField(mojo, "templateDirectory", new File(testCaseOutputDir, "template"));
-        Deencapsulation.setField(mojo, "generatorDirectory", new File(testCaseOutputDir, "data"));
-        Deencapsulation.setField(mojo, "outputDirectory", new File(testCaseOutputDir, "generated-files"));
-        Deencapsulation.setField(mojo, "mojo", mojoExecution);
-        Deencapsulation.setField(mojo, "session", session);
+        FieldUtils.writeField(mojo, "freeMarkerVersion", FREEMARKER_VERSION, true);
+        FieldUtils.writeField(mojo, "sourceDirectory", testCaseOutputDir, true);
+        FieldUtils.writeField(mojo, "templateDirectory", new File(testCaseOutputDir, "template"), true);
+        FieldUtils.writeField(mojo, "generatorDirectory", new File(testCaseOutputDir, "data"), true);
+        FieldUtils.writeField(mojo, "outputDirectory", new File(testCaseOutputDir, "generated-files"), true);
+        FieldUtils.writeField(mojo, "mojo", mojoExecution, true);
+        FieldUtils.writeField(mojo, "session", session, true);
 
         // Validate source directory.
         assertThatExceptionOfType(MojoExecutionException.class)
@@ -152,7 +153,7 @@ public class FreeMarkerMojoTest extends Assert {
             @Mocked MojoExecution mojoExecution,
             @Mocked GeneratingFileVisitor generatingFileVisitor,
             @Mocked Files files
-    ) throws MojoExecutionException {
+    ) throws MojoExecutionException, IllegalAccessException {
 
         new Expectations(mojoExecution, generatingFileVisitor) {{
             mojoExecution.getLifecyclePhase();
@@ -164,13 +165,13 @@ public class FreeMarkerMojoTest extends Assert {
         final FreeMarkerMojo mojo = new FreeMarkerMojo();
 
         final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "generateTestSourceTest");
-        Deencapsulation.setField(mojo, "freeMarkerVersion", FREEMARKER_VERSION);
-        Deencapsulation.setField(mojo, "sourceDirectory", testCaseOutputDir);
-        Deencapsulation.setField(mojo, "templateDirectory", new File(testCaseOutputDir, "template"));
-        Deencapsulation.setField(mojo, "generatorDirectory", new File(testCaseOutputDir, "data"));
-        Deencapsulation.setField(mojo, "outputDirectory", new File(testCaseOutputDir, "generated-files"));
-        Deencapsulation.setField(mojo, "mojo", mojoExecution);
-        Deencapsulation.setField(mojo, "session", session);
+        FieldUtils.writeField(mojo, "freeMarkerVersion", FREEMARKER_VERSION, true);
+        FieldUtils.writeField(mojo, "sourceDirectory", testCaseOutputDir, true);
+        FieldUtils.writeField(mojo, "templateDirectory", new File(testCaseOutputDir, "template"), true);
+        FieldUtils.writeField(mojo, "generatorDirectory", new File(testCaseOutputDir, "data"), true);
+        FieldUtils.writeField(mojo, "outputDirectory", new File(testCaseOutputDir, "generated-files"), true);
+        FieldUtils.writeField(mojo, "mojo", mojoExecution, true);
+        FieldUtils.writeField(mojo, "session", session, true);
 
         new File(testCaseOutputDir, "data").mkdirs();
         new File(testCaseOutputDir, "template").mkdirs();
@@ -191,7 +192,7 @@ public class FreeMarkerMojoTest extends Assert {
             @Mocked MojoExecution mojoExecution,
             @Mocked GeneratingFileVisitor generatingFileVisitor,
             @Mocked Files files
-    ) throws IOException {
+    ) throws IOException, IllegalAccessException {
 
         new Expectations(mojoExecution, generatingFileVisitor) {{
             mojoExecution.getLifecyclePhase();
@@ -205,13 +206,13 @@ public class FreeMarkerMojoTest extends Assert {
         final FreeMarkerMojo mojo = new FreeMarkerMojo();
 
         final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "generateTestSourceTest");
-        Deencapsulation.setField(mojo, "freeMarkerVersion", FREEMARKER_VERSION);
-        Deencapsulation.setField(mojo, "sourceDirectory", testCaseOutputDir);
-        Deencapsulation.setField(mojo, "templateDirectory", new File(testCaseOutputDir, "template"));
-        Deencapsulation.setField(mojo, "generatorDirectory", new File(testCaseOutputDir, "data"));
-        Deencapsulation.setField(mojo, "outputDirectory", new File(testCaseOutputDir, "generated-files"));
-        Deencapsulation.setField(mojo, "mojo", mojoExecution);
-        Deencapsulation.setField(mojo, "session", session);
+        FieldUtils.writeField(mojo, "freeMarkerVersion", FREEMARKER_VERSION, true);
+        FieldUtils.writeField(mojo, "sourceDirectory", testCaseOutputDir, true);
+        FieldUtils.writeField(mojo, "templateDirectory", new File(testCaseOutputDir, "template"), true);
+        FieldUtils.writeField(mojo, "generatorDirectory", new File(testCaseOutputDir, "data"), true);
+        FieldUtils.writeField(mojo, "outputDirectory", new File(testCaseOutputDir, "generated-files"), true);
+        FieldUtils.writeField(mojo, "mojo", mojoExecution, true);
+        FieldUtils.writeField(mojo, "session", session, true);
 
         new File(testCaseOutputDir, "data").mkdirs();
         new File(testCaseOutputDir, "template").mkdirs();
@@ -227,7 +228,7 @@ public class FreeMarkerMojoTest extends Assert {
             @Mocked MavenProject project,
             @Mocked MojoExecution mojoExecution,
             @Mocked FactoryUtil factoryUtil,
-            @Mocked Configuration config) {
+            @Mocked Configuration config) throws IllegalAccessException {
 
         new Expectations(config, FactoryUtil.class) {{
             FactoryUtil.createConfiguration(FREEMARKER_VERSION);
@@ -240,13 +241,13 @@ public class FreeMarkerMojoTest extends Assert {
 
         final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "setTemplateLoaderException");
 
-        Deencapsulation.setField(mojo, "freeMarkerVersion", FREEMARKER_VERSION);
-        Deencapsulation.setField(mojo, "sourceDirectory", testCaseOutputDir);
-        Deencapsulation.setField(mojo, "templateDirectory", new File(testCaseOutputDir, "template"));
-        Deencapsulation.setField(mojo, "generatorDirectory", new File(testCaseOutputDir, "data"));
-        Deencapsulation.setField(mojo, "outputDirectory", new File(testCaseOutputDir, "generated-files"));
-        Deencapsulation.setField(mojo, "mojo", mojoExecution);
-        Deencapsulation.setField(mojo, "session", session);
+        FieldUtils.writeField(mojo, "freeMarkerVersion", FREEMARKER_VERSION, true);
+        FieldUtils.writeField(mojo, "sourceDirectory", testCaseOutputDir, true);
+        FieldUtils.writeField(mojo, "templateDirectory", new File(testCaseOutputDir, "template"), true);
+        FieldUtils.writeField(mojo, "generatorDirectory", new File(testCaseOutputDir, "data"), true);
+        FieldUtils.writeField(mojo, "outputDirectory", new File(testCaseOutputDir, "generated-files"), true);
+        FieldUtils.writeField(mojo, "mojo", mojoExecution, true);
+        FieldUtils.writeField(mojo, "session", session, true);
 
         new File(testCaseOutputDir, "data").mkdirs();
         new File(testCaseOutputDir, "template").mkdirs();
@@ -261,19 +262,19 @@ public class FreeMarkerMojoTest extends Assert {
             @Mocked MavenSession session,
             @Mocked MavenProject project,
             @Mocked MojoExecution mojoExecution,
-            @Mocked Configuration config) throws Exception {
+            @Mocked Configuration config) throws MojoExecutionException, TemplateException, IllegalAccessException {
 
         final FreeMarkerMojo mojo = new FreeMarkerMojo();
         final File sourceDirectory = new File("src/test/data/freemarker-mojo");
         final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "loadFreemarkerProperties");
 
-        Deencapsulation.setField(mojo, "freeMarkerVersion", FREEMARKER_VERSION);
-        Deencapsulation.setField(mojo, "sourceDirectory", sourceDirectory);
-        Deencapsulation.setField(mojo, "templateDirectory", new File(sourceDirectory, "template"));
-        Deencapsulation.setField(mojo, "generatorDirectory", new File(sourceDirectory, "data"));
-        Deencapsulation.setField(mojo, "outputDirectory", new File(testCaseOutputDir, "generated-files"));
-        Deencapsulation.setField(mojo, "mojo", mojoExecution);
-        Deencapsulation.setField(mojo, "session", session);
+        FieldUtils.writeField(mojo, "freeMarkerVersion", FREEMARKER_VERSION, true);
+        FieldUtils.writeField(mojo, "sourceDirectory", sourceDirectory, true);
+        FieldUtils.writeField(mojo, "templateDirectory", new File(sourceDirectory, "template"), true);
+        FieldUtils.writeField(mojo, "generatorDirectory", new File(sourceDirectory, "data"), true);
+        FieldUtils.writeField(mojo, "outputDirectory", new File(testCaseOutputDir, "generated-files"), true);
+        FieldUtils.writeField(mojo, "mojo", mojoExecution, true);
+        FieldUtils.writeField(mojo, "session", session, true);
 
         mojo.execute();
 
@@ -293,7 +294,7 @@ public class FreeMarkerMojoTest extends Assert {
             @Mocked MavenProject project,
             @Mocked MojoExecution mojoExecution,
             @Mocked FactoryUtil factoryUtil,
-            @Mocked Configuration config) throws Exception {
+            @Mocked Configuration config) throws IOException, IllegalAccessException {
 
         new Expectations(FactoryUtil.class) {{
             FactoryUtil.createFileInputStream((File) any);
@@ -305,15 +306,14 @@ public class FreeMarkerMojoTest extends Assert {
         final File sourceDirectory = new File("src/test/data/freemarker-mojo");
         final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "loadFreemarkerPropertiesExceptionTest");
 
-        Deencapsulation.setField(mojo, "freeMarkerVersion", FREEMARKER_VERSION);
-        Deencapsulation.setField(mojo, "sourceDirectory", sourceDirectory);
-        Deencapsulation.setField(mojo, "templateDirectory", new File(sourceDirectory, "template"));
-        Deencapsulation.setField(mojo, "generatorDirectory", new File(sourceDirectory, "data"));
-        Deencapsulation.setField(mojo, "outputDirectory", new File(testCaseOutputDir, "generated-files"));
-        Deencapsulation.setField(mojo, "mojo", mojoExecution);
-        Deencapsulation.setField(mojo, "session", session);
+        FieldUtils.writeField(mojo, "freeMarkerVersion", FREEMARKER_VERSION, true);
+        FieldUtils.writeField(mojo, "sourceDirectory", sourceDirectory, true);
+        FieldUtils.writeField(mojo, "templateDirectory", new File(sourceDirectory, "template"), true);
+        FieldUtils.writeField(mojo, "generatorDirectory", new File(sourceDirectory, "data"), true);
+        FieldUtils.writeField(mojo, "outputDirectory", new File(testCaseOutputDir, "generated-files"), true);
+        FieldUtils.writeField(mojo, "mojo", mojoExecution, true);
+        FieldUtils.writeField(mojo, "session", session, true);
 
-        System.out.println("==== before mojo execute");
         try {
             assertThatExceptionOfType(MojoExecutionException.class)
                     .isThrownBy(mojo::execute)
@@ -328,7 +328,7 @@ public class FreeMarkerMojoTest extends Assert {
             @Mocked MavenSession session,
             @Mocked MavenProject project,
             @Mocked MojoExecution mojoExecution,
-            @Mocked Configuration config) throws Exception {
+            @Mocked Configuration config) throws TemplateException, IllegalAccessException {
 
         new Expectations() {{
             config.setSettings((Properties) any);
@@ -340,13 +340,13 @@ public class FreeMarkerMojoTest extends Assert {
         final File sourceDirectory = new File("src/test/data/freemarker-mojo");
         final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "loadFreemarkerProperties");
 
-        Deencapsulation.setField(mojo, "freeMarkerVersion", FREEMARKER_VERSION);
-        Deencapsulation.setField(mojo, "sourceDirectory", sourceDirectory);
-        Deencapsulation.setField(mojo, "templateDirectory", new File(sourceDirectory, "template"));
-        Deencapsulation.setField(mojo, "generatorDirectory", new File(sourceDirectory, "data"));
-        Deencapsulation.setField(mojo, "outputDirectory", new File(testCaseOutputDir, "generated-files"));
-        Deencapsulation.setField(mojo, "mojo", mojoExecution);
-        Deencapsulation.setField(mojo, "session", session);
+        FieldUtils.writeField(mojo, "freeMarkerVersion", FREEMARKER_VERSION, true);
+        FieldUtils.writeField(mojo, "sourceDirectory", sourceDirectory, true);
+        FieldUtils.writeField(mojo, "templateDirectory", new File(sourceDirectory, "template"), true);
+        FieldUtils.writeField(mojo, "generatorDirectory", new File(sourceDirectory, "data"), true);
+        FieldUtils.writeField(mojo, "outputDirectory", new File(testCaseOutputDir, "generated-files"), true);
+        FieldUtils.writeField(mojo, "mojo", mojoExecution, true);
+        FieldUtils.writeField(mojo, "session", session, true);
 
         assertThatExceptionOfType(MojoExecutionException.class)
                 .isThrownBy(mojo::execute)
