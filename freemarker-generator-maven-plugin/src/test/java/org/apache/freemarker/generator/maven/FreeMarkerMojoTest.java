@@ -47,6 +47,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class FreeMarkerMojoTest extends Assert {
 
@@ -76,16 +77,7 @@ public class FreeMarkerMojoTest extends Assert {
 
         final FreeMarkerMojo mojo = new FreeMarkerMojo();
 
-        // Validate freeMarkerVersion is required.
-        assertThatExceptionOfType(MojoExecutionException.class)
-                .isThrownBy(mojo::execute)
-                .withMessage("freeMarkerVersion is required");
-
         FieldUtils.writeField(mojo, "freeMarkerVersion", "", true);
-        assertThatExceptionOfType(MojoExecutionException.class)
-                .isThrownBy(mojo::execute)
-                .withMessage("freeMarkerVersion is required");
-
         final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "executeTest");
         FieldUtils.writeField(mojo, "freeMarkerVersion", FREEMARKER_VERSION, true);
         FieldUtils.writeField(mojo, "sourceDirectory", testCaseOutputDir, true);
@@ -95,17 +87,7 @@ public class FreeMarkerMojoTest extends Assert {
         FieldUtils.writeField(mojo, "mojo", mojoExecution, true);
         FieldUtils.writeField(mojo, "session", session, true);
 
-        // Validate source directory.
-        assertThatExceptionOfType(MojoExecutionException.class)
-                .isThrownBy(mojo::execute)
-                .withMessageStartingWith("Required directory does not exist");
-
         FileUtils.forceMkdir(new File(testCaseOutputDir, "data"));
-        assertThatExceptionOfType(MojoExecutionException.class)
-                .isThrownBy(mojo::execute)
-                .withMessageStartingWith("Required directory does not exist");
-
-
         FileUtils.forceMkdir(new File(testCaseOutputDir, "template"));
 
         // Validate minimum configuration.
@@ -348,6 +330,55 @@ public class FreeMarkerMojoTest extends Assert {
         assertThatExceptionOfType(MojoExecutionException.class)
                 .isThrownBy(mojo::execute)
                 .withMessage(fixSeparators("Invalid setting(s) in src/test/data/freemarker-mojo/freemarker.properties"));
+    }
+
+    @Test
+    public void execute_checkPluginParametersTest()
+            throws MojoExecutionException, IOException, IllegalAccessException {
+
+        UnitTestHelper.deleteTestOutputDir(TEST_OUTPUT_DIR);
+
+        final MavenSession session = mock(MavenSession.class);
+        final MojoExecution mojoExecution = mock(MojoExecution.class);
+        final FreeMarkerMojo mojo = new FreeMarkerMojo();
+
+        // Validate freeMarkerVersion is required.
+
+        FieldUtils.writeField(mojo, "freeMarkerVersion", null, true);
+        assertThatExceptionOfType(MojoExecutionException.class)
+                .isThrownBy(mojo::execute)
+                .withMessage("freeMarkerVersion is required");
+
+        FieldUtils.writeField(mojo, "freeMarkerVersion", "", true);
+        assertThatExceptionOfType(MojoExecutionException.class)
+                .isThrownBy(mojo::execute)
+                .withMessage("freeMarkerVersion is required");
+
+        final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "executeTest");
+        FieldUtils.writeField(mojo, "freeMarkerVersion", FREEMARKER_VERSION, true);
+        FieldUtils.writeField(mojo, "sourceDirectory", testCaseOutputDir, true);
+        FieldUtils.writeField(mojo, "templateDirectory", new File(testCaseOutputDir, "template"), true);
+        FieldUtils.writeField(mojo, "generatorDirectory", new File(testCaseOutputDir, "data"), true);
+        FieldUtils.writeField(mojo, "outputDirectory", new File(testCaseOutputDir, "generated-files"), true);
+        FieldUtils.writeField(mojo, "mojo", mojoExecution, true);
+        FieldUtils.writeField(mojo, "session", session, true);
+
+        // Validate source directory.
+
+        assertThatExceptionOfType(MojoExecutionException.class)
+                .isThrownBy(mojo::execute)
+                .withMessageStartingWith("Required directory does not exist");
+
+        FileUtils.forceMkdir(new File(testCaseOutputDir, "data"));
+        assertThatExceptionOfType(MojoExecutionException.class)
+                .isThrownBy(mojo::execute)
+                .withMessageStartingWith("Required directory does not exist");
+
+        FileUtils.forceMkdir(new File(testCaseOutputDir, "template"));
+
+        // Validate minimum configuration.
+
+        mojo.execute();
     }
 
     private static String fixSeparators(String str) {
