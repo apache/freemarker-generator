@@ -43,7 +43,6 @@ import java.io.IOException;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Comparator;
 import java.util.Map;
 import java.util.Properties;
 
@@ -262,6 +261,7 @@ public class FreeMarkerMojoTest extends Assert {
             @Mocked Configuration config) throws MojoExecutionException, TemplateException, IllegalAccessException {
 
         final FreeMarkerMojo mojo = new FreeMarkerMojo();
+
         final File sourceDirectory = new File("src/test/data/freemarker-mojo");
         final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "loadFreemarkerProperties");
 
