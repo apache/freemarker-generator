@@ -72,36 +72,11 @@ public class FreeMarkerMojo extends AbstractMojo {
             throw new MojoExecutionException("Required directory does not exist: " + generatorDirectory);
         }
 
-        final Configuration config = FactoryUtil.createConfiguration(freeMarkerVersion);
-
-        config.setDefaultEncoding("UTF-8");
-
         if (!templateDirectory.isDirectory()) {
             throw new MojoExecutionException("Required directory does not exist: " + templateDirectory);
         }
-        try {
-            config.setTemplateLoader(new FileTemplateLoader(templateDirectory));
-        } catch (Throwable t) {
-            getLog().error("Could not establish file template loader for directory: " + templateDirectory, t);
-            throw new MojoExecutionException("Could not establish file template loader for directory: " + templateDirectory);
-        }
 
-        final File freeMarkerProps = FactoryUtil.createFile(sourceDirectory, "freemarker.properties");
-        if (freeMarkerProps.isFile()) {
-            final Properties configProperties = new Properties();
-            try (InputStream is = FactoryUtil.createFileInputStream(freeMarkerProps)) {
-                configProperties.load(is);
-            } catch (Throwable t) {
-                getLog().error("Failed to load " + freeMarkerProps, t);
-                throw new MojoExecutionException("Failed to load " + freeMarkerProps);
-            }
-            try {
-                config.setSettings(configProperties);
-            } catch (Throwable t) {
-                getLog().error("Invalid setting(s) in " + freeMarkerProps, t);
-                throw new MojoExecutionException("Invalid setting(s) in " + freeMarkerProps);
-            }
-        }
+        final Configuration config = freeMarkerConfiguration();
 
         if ("generate-sources".equals(mojo.getLifecyclePhase())) {
             session.getCurrentProject().addCompileSourceRoot(outputDirectory.toString());
@@ -119,5 +94,36 @@ public class FreeMarkerMojo extends AbstractMojo {
             getLog().error("Failed to process files in generator dir: " + generatorDirectory, t);
             throw new MojoExecutionException("Failed to process files in generator dir: " + generatorDirectory);
         }
+    }
+
+    private Configuration freeMarkerConfiguration() throws MojoExecutionException{
+        final Configuration configuration = FactoryUtil.createConfiguration(freeMarkerVersion);
+        configuration.setDefaultEncoding("UTF-8");
+
+        try {
+            configuration.setTemplateLoader(new FileTemplateLoader(templateDirectory));
+        } catch (Throwable t) {
+            getLog().error("Could not establish file template loader for directory: " + templateDirectory, t);
+            throw new MojoExecutionException("Could not establish file template loader for directory: " + templateDirectory);
+        }
+
+        final File freeMarkerProps = FactoryUtil.createFile(sourceDirectory, "freemarker.properties");
+        if (freeMarkerProps.isFile()) {
+            final Properties configProperties = new Properties();
+            try (InputStream is = FactoryUtil.createFileInputStream(freeMarkerProps)) {
+                configProperties.load(is);
+            } catch (Throwable t) {
+                getLog().error("Failed to load " + freeMarkerProps, t);
+                throw new MojoExecutionException("Failed to load " + freeMarkerProps);
+            }
+            try {
+                configuration.setSettings(configProperties);
+            } catch (Throwable t) {
+                getLog().error("Invalid setting(s) in " + freeMarkerProps, t);
+                throw new MojoExecutionException("Invalid setting(s) in " + freeMarkerProps);
+            }
+        }
+
+        return configuration;
     }
 }

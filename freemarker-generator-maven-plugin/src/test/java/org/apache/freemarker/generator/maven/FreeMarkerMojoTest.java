@@ -19,13 +19,6 @@
 
 package org.apache.freemarker.generator.maven;
 
-import freemarker.cache.FileTemplateLoader;
-import freemarker.cache.TemplateLoader;
-import freemarker.template.Configuration;
-import freemarker.template.TemplateException;
-import mockit.Expectations;
-import mockit.Mocked;
-import mockit.Verifications;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -35,15 +28,13 @@ import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.junit.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileVisitor;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.*;
@@ -60,27 +51,30 @@ public class FreeMarkerMojoTest extends Assert {
     }
 
     @Test
-    public void executeTest(
-            @Mocked MavenSession session,
-            @Mocked MavenProject project,
-            @Mocked MojoExecution mojoExecution,
-            @Mocked GeneratingFileVisitor generatingFileVisitor,
-            @Mocked Files files
-    ) throws MojoExecutionException, IOException, IllegalAccessException {
+    public void execute_generateSourceTest() throws MojoExecutionException, IOException, IllegalAccessException {
 
-        new Expectations(mojoExecution, generatingFileVisitor) {{
-            mojoExecution.getLifecyclePhase();
-            result = "generate-sources";
-            session.getCurrentProject();
-            result = project;
-        }};
+        final File mockFile = mock(File.class);
+        final MavenSession session = mock(MavenSession.class);
+        final MavenProject project = mock(MavenProject.class);
+        final MojoExecution mojoExecution = mock(MojoExecution.class);
+
+        final List<MavenProject> projects = new ArrayList<>();
+        projects.add(project);
+
+        when(session.getAllProjects()).thenReturn(projects);
+        when(session.getCurrentProject()).thenReturn(project);
+        when(session.getCurrentProject().getProperties()).thenReturn(new Properties());
+        when(project.getFile()).thenReturn(mockFile);
+        when(mockFile.lastModified()).thenReturn(10L);
+        when(mojoExecution.getLifecyclePhase()).thenReturn("generate-sources");
 
         final FreeMarkerMojo mojo = new FreeMarkerMojo();
+        final File sourceDirectory = new File("src/test/data/freemarker-mojo");
+        final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "executeTest");
 
         FieldUtils.writeField(mojo, "freeMarkerVersion", "", true);
-        final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "executeTest");
         FieldUtils.writeField(mojo, "freeMarkerVersion", FREEMARKER_VERSION, true);
-        FieldUtils.writeField(mojo, "sourceDirectory", testCaseOutputDir, true);
+        FieldUtils.writeField(mojo, "sourceDirectory", sourceDirectory, true);
         FieldUtils.writeField(mojo, "templateDirectory", new File(testCaseOutputDir, "template"), true);
         FieldUtils.writeField(mojo, "generatorDirectory", new File(testCaseOutputDir, "data"), true);
         FieldUtils.writeField(mojo, "outputDirectory", new File(testCaseOutputDir, "generated-files"), true);
@@ -90,60 +84,37 @@ public class FreeMarkerMojoTest extends Assert {
         FileUtils.forceMkdir(new File(testCaseOutputDir, "data"));
         FileUtils.forceMkdir(new File(testCaseOutputDir, "template"));
 
-        // Validate minimum configuration.
         mojo.execute();
 
-        new Verifications() {{
-            project.addCompileSourceRoot(fixSeparators("target/test-output/freemarker-mojo/executeTest/generated-files"));
-            times = 1;
-
-            final Configuration config;
-            final MavenSession capturedSession;
-            final Map<String, OutputGeneratorPropertiesProvider> builders;
-
-            GeneratingFileVisitor.create(
-                    config = withCapture(),
-                    capturedSession = withCapture(),
-                    builders = withCapture());
-            times = 1;
-
-            assertEquals("UTF-8", config.getDefaultEncoding());
-            assertEquals(session, capturedSession);
-            final TemplateLoader loader = config.getTemplateLoader();
-            assertTrue(loader instanceof FileTemplateLoader);
-
-            final Path path;
-            final FileVisitor<Path> fileVisitor;
-
-            Files.walkFileTree(path = withCapture(), fileVisitor = withCapture());
-            times = 1;
-
-            assertEquals(new File(testCaseOutputDir, "data").toPath(), path);
-            assertTrue(fileVisitor instanceof GeneratingFileVisitor);
-        }};
+        verify(project).addCompileSourceRoot(fixSeparators("target/test-output/freemarker-mojo/executeTest/generated-files"));
+        verify(project, times(0)).addTestCompileSourceRoot(anyString());
     }
 
     @Test
-    public void execute_generateTestSourceTest(
-            @Mocked MavenSession session,
-            @Mocked MavenProject project,
-            @Mocked MojoExecution mojoExecution,
-            @Mocked GeneratingFileVisitor generatingFileVisitor,
-            @Mocked Files files
-    ) throws MojoExecutionException, IOException, IllegalAccessException {
+    public void execute_generateTestSourceTest() throws MojoExecutionException, IOException, IllegalAccessException {
 
-        new Expectations(mojoExecution, generatingFileVisitor) {{
-            mojoExecution.getLifecyclePhase();
-            result = "generate-test-sources";
-            session.getCurrentProject();
-            result = project;
-        }};
+        final File mockFile = mock(File.class);
+        final MavenSession session = mock(MavenSession.class);
+        final MavenProject project = mock(MavenProject.class);
+        final MojoExecution mojoExecution = mock(MojoExecution.class);
+
+        final List<MavenProject> projects = new ArrayList<>();
+        projects.add(project);
+
+        when(session.getAllProjects()).thenReturn(projects);
+        when(session.getCurrentProject()).thenReturn(project);
+        when(session.getCurrentProject().getProperties()).thenReturn(new Properties());
+        when(project.getFile()).thenReturn(mockFile);
+        when(mockFile.lastModified()).thenReturn(10L);
+        when(mojoExecution.getLifecyclePhase()).thenReturn("generate-test-sources");
 
         final FreeMarkerMojo mojo = new FreeMarkerMojo();
-
+        final File sourceDirectory = new File("src/test/data/freemarker-mojo");
         final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "generateTestSourceTest");
+
+        FieldUtils.writeField(mojo, "freeMarkerVersion", "", true);
         FieldUtils.writeField(mojo, "freeMarkerVersion", FREEMARKER_VERSION, true);
-        FieldUtils.writeField(mojo, "sourceDirectory", testCaseOutputDir, true);
+        FieldUtils.writeField(mojo, "sourceDirectory", sourceDirectory, true);
         FieldUtils.writeField(mojo, "templateDirectory", new File(testCaseOutputDir, "template"), true);
         FieldUtils.writeField(mojo, "generatorDirectory", new File(testCaseOutputDir, "data"), true);
         FieldUtils.writeField(mojo, "outputDirectory", new File(testCaseOutputDir, "generated-files"), true);
@@ -155,181 +126,8 @@ public class FreeMarkerMojoTest extends Assert {
 
         mojo.execute();
 
-        new Verifications() {{
-            project.addTestCompileSourceRoot(fixSeparators("target/test-output/freemarker-mojo/generateTestSourceTest/generated-files"));
-            times = 1;
-        }};
-    }
-
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    @Test
-    public void execute_walkFileTreeExceptionTest(
-            @Mocked MavenSession session,
-            @Mocked MavenProject project,
-            @Mocked MojoExecution mojoExecution,
-            @Mocked GeneratingFileVisitor generatingFileVisitor,
-            @Mocked Files files
-    ) throws IOException, IllegalAccessException {
-
-        new Expectations(mojoExecution, generatingFileVisitor) {{
-            mojoExecution.getLifecyclePhase();
-            result = "generate-test-sources";
-            session.getCurrentProject();
-            result = project;
-            Files.walkFileTree((Path) any, (FileVisitor) any);
-            result = new RuntimeException("test exception");
-        }};
-
-        final FreeMarkerMojo mojo = new FreeMarkerMojo();
-
-        final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "generateTestSourceTest");
-        FieldUtils.writeField(mojo, "freeMarkerVersion", FREEMARKER_VERSION, true);
-        FieldUtils.writeField(mojo, "sourceDirectory", testCaseOutputDir, true);
-        FieldUtils.writeField(mojo, "templateDirectory", new File(testCaseOutputDir, "template"), true);
-        FieldUtils.writeField(mojo, "generatorDirectory", new File(testCaseOutputDir, "data"), true);
-        FieldUtils.writeField(mojo, "outputDirectory", new File(testCaseOutputDir, "generated-files"), true);
-        FieldUtils.writeField(mojo, "mojo", mojoExecution, true);
-        FieldUtils.writeField(mojo, "session", session, true);
-
-        FileUtils.forceMkdir(new File(testCaseOutputDir, "data"));
-        FileUtils.forceMkdir(new File(testCaseOutputDir, "template"));
-
-        assertThatExceptionOfType(MojoExecutionException.class)
-                .isThrownBy(mojo::execute)
-                .withMessageStartingWith("Failed to process files in generator dir");
-    }
-
-    @Test
-    public void execute_setTemplateLoaderExceptionTest(
-            @Mocked MavenSession session,
-            @Mocked MavenProject project,
-            @Mocked MojoExecution mojoExecution,
-            @Mocked FactoryUtil factoryUtil,
-            @Mocked Configuration config) throws IOException, IllegalAccessException {
-
-        new Expectations(config, FactoryUtil.class) {{
-            FactoryUtil.createConfiguration(FREEMARKER_VERSION);
-            result = config;
-            config.setTemplateLoader((TemplateLoader) any);
-            result = new RuntimeException("test exception");
-        }};
-
-        final FreeMarkerMojo mojo = new FreeMarkerMojo();
-
-        final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "setTemplateLoaderException");
-
-        FieldUtils.writeField(mojo, "freeMarkerVersion", FREEMARKER_VERSION, true);
-        FieldUtils.writeField(mojo, "sourceDirectory", testCaseOutputDir, true);
-        FieldUtils.writeField(mojo, "templateDirectory", new File(testCaseOutputDir, "template"), true);
-        FieldUtils.writeField(mojo, "generatorDirectory", new File(testCaseOutputDir, "data"), true);
-        FieldUtils.writeField(mojo, "outputDirectory", new File(testCaseOutputDir, "generated-files"), true);
-        FieldUtils.writeField(mojo, "mojo", mojoExecution, true);
-        FieldUtils.writeField(mojo, "session", session, true);
-
-
-        FileUtils.forceMkdir(new File(testCaseOutputDir, "data"));
-        FileUtils.forceMkdir(new File(testCaseOutputDir, "template"));
-
-        assertThatExceptionOfType(MojoExecutionException.class)
-                .isThrownBy(mojo::execute)
-                .withMessageStartingWith("Could not establish file template loader for directory");
-    }
-
-    @Test
-    public void execute_loadFreemarkerPropertiesTest(
-            @Mocked MavenSession session,
-            @Mocked MavenProject project,
-            @Mocked MojoExecution mojoExecution,
-            @Mocked Configuration config) throws MojoExecutionException, TemplateException, IllegalAccessException {
-
-        final FreeMarkerMojo mojo = new FreeMarkerMojo();
-
-        final File sourceDirectory = new File("src/test/data/freemarker-mojo");
-        final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "loadFreemarkerProperties");
-
-        FieldUtils.writeField(mojo, "freeMarkerVersion", FREEMARKER_VERSION, true);
-        FieldUtils.writeField(mojo, "sourceDirectory", sourceDirectory, true);
-        FieldUtils.writeField(mojo, "templateDirectory", new File(sourceDirectory, "template"), true);
-        FieldUtils.writeField(mojo, "generatorDirectory", new File(sourceDirectory, "data"), true);
-        FieldUtils.writeField(mojo, "outputDirectory", new File(testCaseOutputDir, "generated-files"), true);
-        FieldUtils.writeField(mojo, "mojo", mojoExecution, true);
-        FieldUtils.writeField(mojo, "session", session, true);
-
-        mojo.execute();
-
-        new Verifications() {{
-            final Properties properties;
-
-            config.setSettings(properties = withCapture());
-            times = 1;
-
-            assertEquals("T,F", properties.getProperty("boolean_format"));
-        }};
-    }
-
-    @Test
-    public void execute_loadFreemarkerPropertiesExceptionTest(
-            @Mocked MavenSession session,
-            @Mocked MavenProject project,
-            @Mocked MojoExecution mojoExecution,
-            @Mocked FactoryUtil factoryUtil,
-            @Mocked Configuration config) throws IOException, IllegalAccessException {
-
-        new Expectations(FactoryUtil.class) {{
-            FactoryUtil.createFileInputStream((File) any);
-            result = new RuntimeException("test exception");
-        }};
-
-        final FreeMarkerMojo mojo = new FreeMarkerMojo();
-
-        final File sourceDirectory = new File("src/test/data/freemarker-mojo");
-        final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "loadFreemarkerPropertiesExceptionTest");
-
-        FieldUtils.writeField(mojo, "freeMarkerVersion", FREEMARKER_VERSION, true);
-        FieldUtils.writeField(mojo, "sourceDirectory", sourceDirectory, true);
-        FieldUtils.writeField(mojo, "templateDirectory", new File(sourceDirectory, "template"), true);
-        FieldUtils.writeField(mojo, "generatorDirectory", new File(sourceDirectory, "data"), true);
-        FieldUtils.writeField(mojo, "outputDirectory", new File(testCaseOutputDir, "generated-files"), true);
-        FieldUtils.writeField(mojo, "mojo", mojoExecution, true);
-        FieldUtils.writeField(mojo, "session", session, true);
-
-        try {
-            assertThatExceptionOfType(MojoExecutionException.class)
-                    .isThrownBy(mojo::execute)
-                    .withMessage(fixSeparators("Failed to load src/test/data/freemarker-mojo/freemarker.properties"));
-        } catch (Throwable t) {
-            t.printStackTrace();
-        }
-    }
-
-    @Test
-    public void execute_setSettingsExceptionTest(
-            @Mocked MavenSession session,
-            @Mocked MavenProject project,
-            @Mocked MojoExecution mojoExecution,
-            @Mocked Configuration config) throws TemplateException, IllegalAccessException {
-
-        new Expectations() {{
-            config.setSettings((Properties) any);
-            result = new RuntimeException("test exception");
-        }};
-
-        final FreeMarkerMojo mojo = new FreeMarkerMojo();
-
-        final File sourceDirectory = new File("src/test/data/freemarker-mojo");
-        final File testCaseOutputDir = new File(TEST_OUTPUT_DIR, "loadFreemarkerProperties");
-
-        FieldUtils.writeField(mojo, "freeMarkerVersion", FREEMARKER_VERSION, true);
-        FieldUtils.writeField(mojo, "sourceDirectory", sourceDirectory, true);
-        FieldUtils.writeField(mojo, "templateDirectory", new File(sourceDirectory, "template"), true);
-        FieldUtils.writeField(mojo, "generatorDirectory", new File(sourceDirectory, "data"), true);
-        FieldUtils.writeField(mojo, "outputDirectory", new File(testCaseOutputDir, "generated-files"), true);
-        FieldUtils.writeField(mojo, "mojo", mojoExecution, true);
-        FieldUtils.writeField(mojo, "session", session, true);
-
-        assertThatExceptionOfType(MojoExecutionException.class)
-                .isThrownBy(mojo::execute)
-                .withMessage(fixSeparators("Invalid setting(s) in src/test/data/freemarker-mojo/freemarker.properties"));
+        verify(project, times(0)).addCompileSourceRoot(anyString());
+        verify(project).addTestCompileSourceRoot(fixSeparators("target/test-output/freemarker-mojo/generateTestSourceTest/generated-files"));
     }
 
     @Test
