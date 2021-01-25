@@ -56,14 +56,7 @@ public class FreeMarkerMojoTest extends Assert {
 
     @BeforeClass
     public static void beforeClass() throws IOException {
-        // Clean output dir before each run.
-        if (TEST_OUTPUT_DIR.exists()) {
-            // Recursively delete output from previous run.
-            Files.walk(TEST_OUTPUT_DIR.toPath())
-                    .sorted(Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .forEach(File::delete);
-        }
+        UnitTestHelper.deleteTestOutputDir(TEST_OUTPUT_DIR);
     }
 
     @Test
