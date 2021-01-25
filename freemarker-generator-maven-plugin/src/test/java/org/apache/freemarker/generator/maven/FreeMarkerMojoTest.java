@@ -26,6 +26,7 @@ import freemarker.template.TemplateException;
 import mockit.Expectations;
 import mockit.Mocked;
 import mockit.Verifications;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.freemarker.generator.base.util.OperatingSystem;
@@ -107,11 +108,13 @@ public class FreeMarkerMojoTest extends Assert {
                 .isThrownBy(mojo::execute)
                 .withMessageStartingWith("Required directory does not exist");
 
-        new File(testCaseOutputDir, "data").mkdirs();
+        FileUtils.forceMkdir(new File(testCaseOutputDir, "data"));
         assertThatExceptionOfType(MojoExecutionException.class)
                 .isThrownBy(mojo::execute)
                 .withMessageStartingWith("Required directory does not exist");
-        new File(testCaseOutputDir, "template").mkdirs();
+
+
+        FileUtils.forceMkdir(new File(testCaseOutputDir, "template"));
 
         // Validate minimum configuration.
         mojo.execute();
@@ -153,7 +156,7 @@ public class FreeMarkerMojoTest extends Assert {
             @Mocked MojoExecution mojoExecution,
             @Mocked GeneratingFileVisitor generatingFileVisitor,
             @Mocked Files files
-    ) throws MojoExecutionException, IllegalAccessException {
+    ) throws MojoExecutionException, IOException, IllegalAccessException {
 
         new Expectations(mojoExecution, generatingFileVisitor) {{
             mojoExecution.getLifecyclePhase();
@@ -173,8 +176,8 @@ public class FreeMarkerMojoTest extends Assert {
         FieldUtils.writeField(mojo, "mojo", mojoExecution, true);
         FieldUtils.writeField(mojo, "session", session, true);
 
-        new File(testCaseOutputDir, "data").mkdirs();
-        new File(testCaseOutputDir, "template").mkdirs();
+        FileUtils.forceMkdir(new File(testCaseOutputDir, "data"));
+        FileUtils.forceMkdir(new File(testCaseOutputDir, "template"));
 
         mojo.execute();
 
@@ -214,8 +217,8 @@ public class FreeMarkerMojoTest extends Assert {
         FieldUtils.writeField(mojo, "mojo", mojoExecution, true);
         FieldUtils.writeField(mojo, "session", session, true);
 
-        new File(testCaseOutputDir, "data").mkdirs();
-        new File(testCaseOutputDir, "template").mkdirs();
+        FileUtils.forceMkdir(new File(testCaseOutputDir, "data"));
+        FileUtils.forceMkdir(new File(testCaseOutputDir, "template"));
 
         assertThatExceptionOfType(MojoExecutionException.class)
                 .isThrownBy(mojo::execute)
@@ -228,7 +231,7 @@ public class FreeMarkerMojoTest extends Assert {
             @Mocked MavenProject project,
             @Mocked MojoExecution mojoExecution,
             @Mocked FactoryUtil factoryUtil,
-            @Mocked Configuration config) throws IllegalAccessException {
+            @Mocked Configuration config) throws IOException, IllegalAccessException {
 
         new Expectations(config, FactoryUtil.class) {{
             FactoryUtil.createConfiguration(FREEMARKER_VERSION);
@@ -249,8 +252,9 @@ public class FreeMarkerMojoTest extends Assert {
         FieldUtils.writeField(mojo, "mojo", mojoExecution, true);
         FieldUtils.writeField(mojo, "session", session, true);
 
-        new File(testCaseOutputDir, "data").mkdirs();
-        new File(testCaseOutputDir, "template").mkdirs();
+
+        FileUtils.forceMkdir(new File(testCaseOutputDir, "data"));
+        FileUtils.forceMkdir(new File(testCaseOutputDir, "template"));
 
         assertThatExceptionOfType(MojoExecutionException.class)
                 .isThrownBy(mojo::execute)
