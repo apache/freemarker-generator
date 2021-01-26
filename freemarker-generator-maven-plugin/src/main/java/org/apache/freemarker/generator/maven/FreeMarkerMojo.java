@@ -16,10 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.freemarker.generator.maven;
 
-import freemarker.cache.FileTemplateLoader;
 import freemarker.template.Configuration;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
@@ -30,11 +28,9 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 @Mojo(name = "generate", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class FreeMarkerMojo extends AbstractMojo {
@@ -69,14 +65,14 @@ public class FreeMarkerMojo extends AbstractMojo {
         }
 
         if (!generatorDirectory.isDirectory()) {
-            throw new MojoExecutionException("Required directory does not exist: " + generatorDirectory);
+            throw new MojoExecutionException("Required generator directory does not exist: " + generatorDirectory);
         }
 
         if (!templateDirectory.isDirectory()) {
-            throw new MojoExecutionException("Required directory does not exist: " + templateDirectory);
+            throw new MojoExecutionException("Required template directory does not exist: " + templateDirectory);
         }
 
-        final Configuration config = freeMarkerConfiguration();
+        final Configuration configuration = configuration();
 
         if ("generate-sources".equals(mojo.getLifecyclePhase())) {
             session.getCurrentProject().addCompileSourceRoot(outputDirectory.toString());
@@ -87,7 +83,7 @@ public class FreeMarkerMojo extends AbstractMojo {
         final Map<String, OutputGeneratorPropertiesProvider> extensionToBuilders = new HashMap<>(1);
         extensionToBuilders.put(".json", JsonPropertiesProvider.create(generatorDirectory, templateDirectory, outputDirectory));
 
-        final GeneratingFileVisitor fileVisitor = GeneratingFileVisitor.create(config, session, extensionToBuilders);
+        final GeneratingFileVisitor fileVisitor = GeneratingFileVisitor.create(configuration, session, extensionToBuilders);
         try {
             Files.walkFileTree(generatorDirectory.toPath(), fileVisitor);
         } catch (Throwable t) {
@@ -96,34 +92,7 @@ public class FreeMarkerMojo extends AbstractMojo {
         }
     }
 
-    private Configuration freeMarkerConfiguration() throws MojoExecutionException{
-        final Configuration configuration = FactoryUtil.createConfiguration(freeMarkerVersion);
-        configuration.setDefaultEncoding("UTF-8");
-
-        try {
-            configuration.setTemplateLoader(new FileTemplateLoader(templateDirectory));
-        } catch (Throwable t) {
-            getLog().error("Could not establish file template loader for directory: " + templateDirectory, t);
-            throw new MojoExecutionException("Could not establish file template loader for directory: " + templateDirectory);
-        }
-
-        final File freeMarkerProps = FactoryUtil.createFile(sourceDirectory, "freemarker.properties");
-        if (freeMarkerProps.isFile()) {
-            final Properties configProperties = new Properties();
-            try (InputStream is = FactoryUtil.createFileInputStream(freeMarkerProps)) {
-                configProperties.load(is);
-            } catch (Throwable t) {
-                getLog().error("Failed to load " + freeMarkerProps, t);
-                throw new MojoExecutionException("Failed to load " + freeMarkerProps);
-            }
-            try {
-                configuration.setSettings(configProperties);
-            } catch (Throwable t) {
-                getLog().error("Invalid setting(s) in " + freeMarkerProps, t);
-                throw new MojoExecutionException("Invalid setting(s) in " + freeMarkerProps);
-            }
-        }
-
-        return configuration;
+    private Configuration configuration() {
+        return new ConfigurationSupplier(freeMarkerVersion, templateDirectory, sourceDirectory).get();
     }
 }

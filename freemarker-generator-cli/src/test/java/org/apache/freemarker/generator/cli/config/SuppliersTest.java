@@ -141,6 +141,7 @@ public class SuppliersTest {
         assertNotNull(outputGenerator.getTemplateOutput().getWriter());
         assertNull(outputGenerator.getTemplateOutput().getFile());
     }
+
     private static String fixSeparators(String str) {
         if (OperatingSystem.isWindows()) {
             return FilenameUtils.separatorsToWindows(str);

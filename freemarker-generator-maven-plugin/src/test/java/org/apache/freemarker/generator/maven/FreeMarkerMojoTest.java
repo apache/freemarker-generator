@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.freemarker.generator.maven;
 
 import org.apache.commons.io.FileUtils;
@@ -165,12 +164,12 @@ public class FreeMarkerMojoTest extends Assert {
 
         assertThatExceptionOfType(MojoExecutionException.class)
                 .isThrownBy(mojo::execute)
-                .withMessageStartingWith("Required directory does not exist");
+                .withMessageStartingWith("Required generator directory does not exist");
 
         FileUtils.forceMkdir(new File(testCaseOutputDir, "data"));
         assertThatExceptionOfType(MojoExecutionException.class)
                 .isThrownBy(mojo::execute)
-                .withMessageStartingWith("Required directory does not exist");
+                .withMessageStartingWith("Required template directory does not exist");
 
         FileUtils.forceMkdir(new File(testCaseOutputDir, "template"));
 

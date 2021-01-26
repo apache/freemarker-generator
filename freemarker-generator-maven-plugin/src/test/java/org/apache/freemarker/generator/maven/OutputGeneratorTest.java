@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.freemarker.generator.maven;
 
 import freemarker.template.Configuration;
@@ -243,47 +242,6 @@ public class OutputGeneratorTest {
                 .withMessage("Parent directory of output file is a file: " + outputFile.getParentFile()
                         .getAbsolutePath());
     }
-
-    /**
-     * No idea what the tests is going to test? I assume the intention
-     * is that "mydir" can't be created because "generating-file-visitor"
-     * directory does not exist but File#mkdirs happily create the missing
-     * directory (unless you pass the mocked file instance).
-     *
-    @Test
-    public void generate_cantCreateOutputFileParentDirTest(
-            @Mocked FactoryUtil factoryUtil,
-            @Mocked File mockOutputFile) {
-
-        final File parentDir = new File("target/test-output/generating-file-visitor/mydir");
-        new Expectations(mockOutputFile, parentDir) {{
-            FactoryUtil.createFile(anyString);
-            result = mockOutputFile;
-            mockOutputFile.exists();
-            result = false;
-            mockOutputFile.getParentFile();
-            result = parentDir;
-            parentDir.isDirectory();
-            result = false;
-        }};
-
-        final OutputGenerator.OutputGeneratorBuilder builder = OutputGenerator.builder();
-        builder.addPomLastModifiedTimestamp(0);
-        final File file = new File(DATA_DIR, "mydir/missing-var-test.txt.json");
-        builder.addGeneratorLocation(file.toPath());
-        final File outputFile = new File(OUTPUT_DIR, "mydir/missing-var-test.txt");
-        builder.addOutputLocation(outputFile.toPath());
-        final File templateFile = new File(TEMPLATE_DIR, "test.ftl"); //this is missing a
-
-        builder.addTemplateLocation(templateFile.toPath());
-        builder.addDataModel(dataModel);
-        final OutputGenerator generator = builder.create();
-
-        Assertions.assertThatExceptionOfType(RuntimeException.class)
-                .isThrownBy(() -> generator.generate(config))
-                .withMessage("Could not create directory: " + parentDir.getAbsoluteFile().toString());
-    }
-    */
 
     @SuppressWarnings("unchecked")
     private static Map<String, Object> dataModel() {

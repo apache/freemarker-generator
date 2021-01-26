@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.freemarker.generator.maven;
 
 import freemarker.template.Configuration;
@@ -141,8 +140,7 @@ class OutputGenerator {
      * @param config Used to load the template from the template name.
      */
     public void generate(Configuration config) {
-        //Use "createFile" for testing purposes only
-        final File outputFile = FactoryUtil.createFile(outputLocation.toFile().toString());
+        final File outputFile = new File(outputLocation.toFile().getAbsolutePath());
         final File templateFile = templateLocation.toFile();
         final File generatorFile = generatorLocation.toFile();
         if (outputFile.exists()) {

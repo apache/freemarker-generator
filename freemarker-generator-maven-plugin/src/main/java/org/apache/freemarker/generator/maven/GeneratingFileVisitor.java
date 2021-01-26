@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.freemarker.generator.maven;
 
 import freemarker.template.Configuration;
@@ -52,8 +51,8 @@ public class GeneratingFileVisitor extends SimpleFileVisitor<Path> {
     /**
      * Factory method that calls constructor, added to facilitate testing with jmockit.
      *
-     * @param config FreeMarker configuration
-     * @param session Maven session
+     * @param config             FreeMarker configuration
+     * @param session            Maven session
      * @param extensionToBuilder builder extension
      * @return GeneratingFileVisitor instance
      */
