@@ -16,191 +16,156 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.freemarker.generator.maven;
 
-import freemarker.cache.FileTemplateLoader;
 import freemarker.template.Configuration;
-import mockit.Expectations;
-import mockit.Mocked;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.project.MavenProject;
 import org.junit.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileVisitResult;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class GeneratingFileVisitorTest extends Assert {
 
-    private static File testDir = new File("src/test/data/generating-file-visitor");
-    private static File dataDir = new File(testDir, "data");
-    private static File templateDir = new File(testDir, "template");
-    private static File outputDir = new File("target/test-output/generating-file-visitor");
-    private static Map<String, OutputGeneratorPropertiesProvider> builders = new HashMap<>();
-    private Configuration config;
-    private Properties pomProperties = new Properties();
+    private static final File TEST_DIR = new File("src/test/data/generating-file-visitor");
+    private static final File DATA_DIR = new File(TEST_DIR, "data");
+    private static final File TEMPLATE_DIR = new File(TEST_DIR, "template");
+    private static final File OUTPUT_DIR = new File("target/test-output/generating-file-visitor");
+    private static final Map<String, OutputGeneratorPropertiesProvider> BUILDERS = new HashMap<>();
+    private final Configuration config;
+    private final Properties pomProperties = new Properties();
 
     @BeforeClass
-    public static void beforeClass() throws IOException {
-        builders.put(".json", JsonPropertiesProvider.create(dataDir, templateDir, outputDir));
-        // Clean output dir before each run.
-        File outputDir = new File("target/test-output/generating-file-visitor");
-        if (outputDir.exists()) {
-            // Recursively delete output from previous run.
-            Files.walk(outputDir.toPath())
-                    .sorted(Comparator.reverseOrder())
-                    .map(Path::toFile)
-                    .forEach(File::delete);
-        }
+    public static void beforeClass() {
+        UnitTestHelper.checkTestDir(TEST_DIR);
+        UnitTestHelper.deleteTestOutputDir(OUTPUT_DIR);
+        BUILDERS.put(".json", JsonPropertiesProvider.create(DATA_DIR, TEMPLATE_DIR, OUTPUT_DIR));
     }
 
-    @BeforeMethod
-    public void before() throws IOException {
-        if (!testDir.isDirectory()) {
-            throw new RuntimeException("Can't find required test data directory. "
-                    + "If running test outside of maven, make sure working directory is the project directory. "
-                    + "Looking for: " + testDir);
-        }
-
-        config = new Configuration(Configuration.VERSION_2_3_23);
-        config.setDefaultEncoding("UTF-8");
-        config.setTemplateLoader(new FileTemplateLoader(templateDir));
+    public GeneratingFileVisitorTest() {
+        config = UnitTestHelper.configuration(TEMPLATE_DIR);
         pomProperties.put("pomVar", "pom value");
     }
 
     @Test
-    public void functionalHappyPathTestNoDataModel(
-            @Mocked MavenSession session,
-            @Mocked MavenProject project,
-            @Mocked File mockFile,
-            @Mocked BasicFileAttributes attrs) throws IOException {
-        List<MavenProject> projects = new ArrayList<>();
-        projects.add(project);
-        new Expectations(session, project, mockFile) {{
-            session.getCurrentProject();
-            result = project;
-            session.getAllProjects();
-            result = projects;
-            project.getProperties();
-            result = pomProperties;
-            attrs.isRegularFile();
-            result = true;
-            project.getFile();
-            result = mockFile;
-            mockFile.lastModified();
-            result = 10;
-        }};
+    public void functionalHappyPathTestNoDataModel() throws IOException {
 
-        File file = new File(dataDir, "mydir/success-test-2.txt.json");
-        GeneratingFileVisitor gfv = GeneratingFileVisitor.create(config, session, builders);
+        final MavenSession session = mock(MavenSession.class);
+        final MavenProject project = mock(MavenProject.class);
+        final File mockFile = mock(File.class);
+        final BasicFileAttributes attrs = mock(BasicFileAttributes.class);
+        final List<MavenProject> projects = new ArrayList<>();
+        projects.add(project);
+
+        when(session.getCurrentProject()).thenReturn(project);
+        when(session.getAllProjects()).thenReturn(projects);
+        when(project.getProperties()).thenReturn(pomProperties);
+        when(attrs.isRegularFile()).thenReturn(true);
+        when(project.getFile()).thenReturn(mockFile);
+        when(mockFile.lastModified()).thenReturn(10L);
+
+        final File file = new File(DATA_DIR, "mydir/success-test-2.txt.json");
+        final GeneratingFileVisitor gfv = GeneratingFileVisitor.create(config, session, BUILDERS);
+
         assertEquals(FileVisitResult.CONTINUE, gfv.visitFile(file.toPath(), attrs));
 
-        File outputFile = new File(outputDir, "mydir/success-test-2.txt");
+        final File outputFile = new File(OUTPUT_DIR, "mydir/success-test-2.txt");
+
         assertTrue(outputFile.isFile());
-        List<String> lines = Files.readAllLines(outputFile.toPath(), StandardCharsets.UTF_8);
+
+        final List<String> lines = Files.readAllLines(outputFile.toPath(), StandardCharsets.UTF_8);
         assertEquals(17, lines.size());
         assertEquals("This is a test freemarker template. Test pom data: 'pom value'.", lines.get(16));
     }
 
     @Test
-    public void functionalHappyPathTest(
-            @Mocked MavenSession session,
-            @Mocked MavenProject project,
-            @Mocked File mockFile,
-            @Mocked BasicFileAttributes attrs) throws IOException {
-        List<MavenProject> projects = new ArrayList<>();
-        projects.add(project);
-        new Expectations(session, project, mockFile) {{
-            session.getCurrentProject();
-            result = project;
-            session.getAllProjects();
-            result = projects;
-            project.getProperties();
-            result = pomProperties;
-            attrs.isRegularFile();
-            result = true;
-            project.getFile();
-            result = mockFile;
-            mockFile.lastModified();
-            result = 10;
-        }};
+    public void functionalHappyPathTest() throws IOException {
 
-        File file = new File(dataDir, "mydir/success-test.txt.json");
-        GeneratingFileVisitor gfv = GeneratingFileVisitor.create(config, session, builders);
+        final MavenSession session = mock(MavenSession.class);
+        final MavenProject project = mock(MavenProject.class);
+        final File mockFile = mock(File.class);
+        final BasicFileAttributes attrs = mock(BasicFileAttributes.class);
+        final List<MavenProject> projects = new ArrayList<>();
+        projects.add(project);
+
+        when(session.getCurrentProject()).thenReturn(project);
+        when(session.getAllProjects()).thenReturn(projects);
+        when(project.getProperties()).thenReturn(pomProperties);
+        when(attrs.isRegularFile()).thenReturn(true);
+        when(project.getFile()).thenReturn(mockFile);
+        when(mockFile.lastModified()).thenReturn(10L);
+
+        final File file = new File(DATA_DIR, "mydir/success-test.txt.json");
+        final GeneratingFileVisitor gfv = GeneratingFileVisitor.create(config, session, BUILDERS);
         assertEquals(FileVisitResult.CONTINUE, gfv.visitFile(file.toPath(), attrs));
 
-        File outputFile = new File(outputDir, "mydir/success-test.txt");
+        final File outputFile = new File(OUTPUT_DIR, "mydir/success-test.txt");
         assertTrue(outputFile.isFile());
-        List<String> lines = Files.readAllLines(outputFile.toPath(), StandardCharsets.UTF_8);
+
+        final List<String> lines = Files.readAllLines(outputFile.toPath(), StandardCharsets.UTF_8);
         assertEquals(17, lines.size());
         assertEquals("This is a test freemarker template. Test json data: 'test value'. Test pom data: 'pom value'.", lines
                 .get(16));
     }
 
     @Test
-    public void visitFile_badExtensionTest(
-            @Mocked MavenSession session,
-            @Mocked MavenProject project,
-            @Mocked File mockFile,
-            @Mocked BasicFileAttributes attrs) throws IOException {
-        List<MavenProject> projects = new ArrayList<>();
+    public void visitFile_badExtensionTest() {
+
+        final MavenSession session = mock(MavenSession.class);
+        final MavenProject project = mock(MavenProject.class);
+        final File mockFile = mock(File.class);
+        final BasicFileAttributes attrs = mock(BasicFileAttributes.class);
+        final List<MavenProject> projects = new ArrayList<>();
         projects.add(project);
-        new Expectations(session, project, mockFile) {{
-            attrs.isRegularFile();
-            result = true;
-            session.getAllProjects();
-            result = projects;
-            project.getFile();
-            result = mockFile;
-            mockFile.lastModified();
-            result = 10;
-        }};
+
+        when(attrs.isRegularFile()).thenReturn(true);
+        when(session.getAllProjects()).thenReturn(projects);
+        when(project.getFile()).thenReturn(mockFile);
+        when(mockFile.lastModified()).thenReturn(10L);
+
         // Test file without .json suffix.
-        File file = new File(dataDir, "mydir/bad-extension-test.txt");
-        GeneratingFileVisitor gfv = GeneratingFileVisitor.create(config, session, builders);
-        assertThatExceptionOfType(RuntimeException.class).isThrownBy(() -> {
-            gfv.visitFile(file.toPath(), attrs);
-        }).withMessage("Unknown file extension: " + file.toPath());
+        final File file = new File(DATA_DIR, "mydir/bad-extension-test.txt");
+        final GeneratingFileVisitor gfv = GeneratingFileVisitor.create(config, session, BUILDERS);
+        assertThatExceptionOfType(RuntimeException.class)
+                .isThrownBy(() -> gfv.visitFile(file.toPath(), attrs))
+                .withMessage("Unknown file extension: " + file.toPath());
     }
 
     @Test
-    public void visitFile_notRegularFileTest(@Mocked MavenSession session,
-                                             @Mocked MavenProject project,
-                                             @Mocked BasicFileAttributes attrs,
-                                             @Mocked File mockFile
-    ) {
-        List<MavenProject> projects = new ArrayList<>();
+    public void visitFile_notRegularFileTest() {
+
+        final MavenSession session = mock(MavenSession.class);
+        final MavenProject project = mock(MavenProject.class);
+        final File mockFile = mock(File.class);
+        final BasicFileAttributes attrs = mock(BasicFileAttributes.class);
+        final List<MavenProject> projects = new ArrayList<>();
         projects.add(project);
-        new Expectations(session, project, mockFile) {{
-            attrs.isRegularFile();
-            result = false;
-            session.getAllProjects();
-            result = projects;
-            project.getFile();
-            result = mockFile;
-            mockFile.lastModified();
-            result = 10;
-        }};
+
+        when(attrs.isRegularFile()).thenReturn(false);
+        when(session.getAllProjects()).thenReturn(projects);
+        when(project.getFile()).thenReturn(mockFile);
+        when(mockFile.lastModified()).thenReturn(10L);
+
         // FYI: if you change above result to true, test will fail trying to read the 'mydir' directory
         // as a json file.
-        File dir = new File(dataDir, "mydir");
-        GeneratingFileVisitor gfv = GeneratingFileVisitor.create(config, session, builders);
+        final File dir = new File(DATA_DIR, "mydir");
+        final GeneratingFileVisitor gfv = GeneratingFileVisitor.create(config, session, BUILDERS);
+
         assertEquals(FileVisitResult.CONTINUE, gfv.visitFile(dir.toPath(), attrs));
     }
 }

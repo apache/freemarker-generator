@@ -9,8 +9,12 @@ All notable changes to this project will be documented in this file. We try to a
 * [FREEMARKER-128] Update `freemarker-maven-plugin` to Apache FreeMarker 2.3.29
 
 ### Fixed
-* [FREEMARKER-151] Ensure that build and and examples are running on Windows
+* [FREEMARKER-151] Ensure that build and examples are running on Windows
+
+### Internal
+* [FREEMARKER-156] Replaced JMockit and TestNG with Mockito and JUnit
 
 [FREEMARKER-128]: https://issues.apache.org/jira/browse/FREEMARKER-128
 [FREEMARKER-129]: https://issues.apache.org/jira/browse/FREEMARKER-129
 [FREEMARKER-151]: https://issues.apache.org/jira/browse/FREEMARKER-151
+[FREEMARKER-156]: https://issues.apache.org/jira/browse/FREEMARKER-156

@@ -42,6 +42,12 @@
             <artifactId>freemarker-generator-base</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <!-- General -->
+        <dependency>
+            <!-- Overwrite version pulled in by fava-faker -->
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
         <!-- CommonsCSVTool -->
         <dependency>
             <groupId>org.apache.commons</groupId>

@@ -16,26 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.freemarker.generator.maven;
 
-import freemarker.cache.FileTemplateLoader;
 import freemarker.template.Configuration;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecution;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.io.File;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 @Mojo(name = "generate", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class FreeMarkerMojo extends AbstractMojo {
@@ -63,46 +58,21 @@ public class FreeMarkerMojo extends AbstractMojo {
     private MojoExecution mojo;
 
     @Override
-    public void execute() throws MojoExecutionException, MojoFailureException {
+    public void execute() throws MojoExecutionException {
 
         if (freeMarkerVersion == null || freeMarkerVersion.isEmpty()) {
             throw new MojoExecutionException("freeMarkerVersion is required");
         }
 
         if (!generatorDirectory.isDirectory()) {
-            throw new MojoExecutionException("Required directory does not exist: " + generatorDirectory);
+            throw new MojoExecutionException("Required generator directory does not exist: " + generatorDirectory);
         }
-
-        final Configuration config = FactoryUtil.createConfiguration(freeMarkerVersion);
-
-        config.setDefaultEncoding("UTF-8");
 
         if (!templateDirectory.isDirectory()) {
-            throw new MojoExecutionException("Required directory does not exist: " + templateDirectory);
-        }
-        try {
-            config.setTemplateLoader(new FileTemplateLoader(templateDirectory));
-        } catch (Throwable t) {
-            getLog().error("Could not establish file template loader for directory: " + templateDirectory, t);
-            throw new MojoExecutionException("Could not establish file template loader for directory: " + templateDirectory);
+            throw new MojoExecutionException("Required template directory does not exist: " + templateDirectory);
         }
 
-        final File freeMarkerProps = FactoryUtil.createFile(sourceDirectory, "freemarker.properties");
-        if (freeMarkerProps.isFile()) {
-            final Properties configProperties = new Properties();
-            try (InputStream is = FactoryUtil.createFileInputStream(freeMarkerProps)) {
-                configProperties.load(is);
-            } catch (Throwable t) {
-                getLog().error("Failed to load " + freeMarkerProps, t);
-                throw new MojoExecutionException("Failed to load " + freeMarkerProps);
-            }
-            try {
-                config.setSettings(configProperties);
-            } catch (Throwable t) {
-                getLog().error("Invalid setting(s) in " + freeMarkerProps, t);
-                throw new MojoExecutionException("Invalid setting(s) in " + freeMarkerProps);
-            }
-        }
+        final Configuration configuration = configuration();
 
         if ("generate-sources".equals(mojo.getLifecyclePhase())) {
             session.getCurrentProject().addCompileSourceRoot(outputDirectory.toString());
@@ -113,12 +83,16 @@ public class FreeMarkerMojo extends AbstractMojo {
         final Map<String, OutputGeneratorPropertiesProvider> extensionToBuilders = new HashMap<>(1);
         extensionToBuilders.put(".json", JsonPropertiesProvider.create(generatorDirectory, templateDirectory, outputDirectory));
 
-        final GeneratingFileVisitor fileVisitor = GeneratingFileVisitor.create(config, session, extensionToBuilders);
+        final GeneratingFileVisitor fileVisitor = GeneratingFileVisitor.create(configuration, session, extensionToBuilders);
         try {
             Files.walkFileTree(generatorDirectory.toPath(), fileVisitor);
         } catch (Throwable t) {
             getLog().error("Failed to process files in generator dir: " + generatorDirectory, t);
             throw new MojoExecutionException("Failed to process files in generator dir: " + generatorDirectory);
         }
+    }
+
+    private Configuration configuration() {
+        return new ConfigurationSupplier(freeMarkerVersion, templateDirectory, sourceDirectory).get();
     }
 }
