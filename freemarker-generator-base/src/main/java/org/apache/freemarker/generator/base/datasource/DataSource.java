@@ -43,7 +43,7 @@ import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_APPLICATI
 
 /**
  * Data source which encapsulates data to be used for rendering
- * a template. When accessing content it is loaded on demand on not
+ * a template. When accessing content it is loaded on demand and not
  * kept in memory to allow processing of large volumes of data.
  * <br>
  * There is also special support of <code>UrlDataSource</code> since
@@ -62,7 +62,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     public static final String METADATA_GROUP = "group";
     public static final String METADATA_NAME = "name";
     public static final String METADATA_URI = "uri";
-    public static final String METADATA_URI_PATH = "uriPath";
+    public static final String METADATA_MIME_TYPE = "mimeType";
 
     /** Human-readable name of the data source */
     private final String name;
@@ -140,14 +140,32 @@ public class DataSource implements Closeable, javax.activation.DataSource {
         return group;
     }
 
+    /**
+     * Get the file name from the underlying "FileDataSource". All
+     * other data sources will return an empty string.
+     *
+     * @return file name or empty string
+     */
     public String getFileName() {
         return isFileDataSource() ? FilenameUtils.getName(dataSource.getName()) : "";
     }
 
+    /**
+     * Get the base name from the underlying "FileDataSource". All
+     * other data sources will return an empty string.
+     *
+     * @return base name or empty string
+     */
     public String getBaseName() {
         return FilenameUtils.getBaseName(getFileName());
     }
 
+    /**
+     * Get the extension from the underlying "FileDataSource". All
+     * other data sources will return an empty string.
+     *
+     * @return base name or empty string
+     */
     public String getExtension() {
         return FilenameUtils.getExtension(getFileName());
     }
@@ -180,11 +198,11 @@ public class DataSource implements Closeable, javax.activation.DataSource {
      * @return Length of data source or UNKNOWN_LENGTH
      */
     public long getLength() {
-        if (dataSource instanceof FileDataSource) {
+        if (isFileDataSource()) {
             return ((FileDataSource) dataSource).getFile().length();
-        } else if (dataSource instanceof StringDataSource) {
+        } else if (isStringDataSource()) {
             return ((StringDataSource) dataSource).length();
-        } else if (dataSource instanceof ByteArrayDataSource) {
+        } else if (isByteArrayDataSource()) {
             return ((ByteArrayDataSource) dataSource).length();
         } else {
             return DATASOURCE_UNKNOWN_LENGTH;
@@ -246,7 +264,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     }
 
     /**
-     * Returns an Iterator for the lines in an <code>InputStream</code>, using
+     * Returns an iterator for the lines in an <code>InputStream</code>, using
      * the default character encoding specified. The exposed iterator is closed
      * by the <code>DataSource</code>.
      *
@@ -282,7 +300,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     }
 
     /**
-     * Expose various parts of the metadata as simple strings to cater for filtering in  a script.
+     * Expose various parts of the metadata as simple strings to cater for filtering in a script.
      *
      * @param key key part key
      * @return value
@@ -302,10 +320,10 @@ public class DataSource implements Closeable, javax.activation.DataSource {
                 return getGroup();
             case METADATA_NAME:
                 return getName();
-            case METADATA_URI_PATH:
-                return uri.getPath();
             case METADATA_URI:
                 return uri.toString();
+            case METADATA_MIME_TYPE:
+                return getMimeType();
             default:
                 throw new IllegalArgumentException("Unknown key: " + key);
         }
@@ -356,12 +374,21 @@ public class DataSource implements Closeable, javax.activation.DataSource {
         if (StringUtils.isNotEmpty(contentType)) {
             return contentType;
         } else {
-            return StringUtils.firstNonEmpty(dataSource.getContentType(), MIME_APPLICATION_OCTET_STREAM);
+            final String contentType = dataSource.getContentType();
+            return StringUtils.firstNonEmpty(contentType, MIME_APPLICATION_OCTET_STREAM);
         }
     }
 
     private boolean isFileDataSource() {
         return dataSource instanceof FileDataSource;
+    }
+
+    private boolean isStringDataSource() {
+        return dataSource instanceof StringDataSource;
+    }
+
+    private boolean isByteArrayDataSource() {
+        return dataSource instanceof ByteArrayDataSource;
     }
 
 }

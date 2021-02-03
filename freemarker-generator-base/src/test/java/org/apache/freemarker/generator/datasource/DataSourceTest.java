@@ -20,6 +20,7 @@ import org.apache.commons.io.LineIterator;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.freemarker.generator.base.mime.Mimetypes;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.Closeable;
@@ -80,8 +81,8 @@ public class DataSourceTest {
         }
     }
 
-    // @Ignore("Requires internet connection")
     @Test
+    @Ignore("Requires internet access")
     public void shouldSupportUrlDataSource() {
         try (DataSource dataSource = DataSourceFactory.fromUrl("www.google.com", DEFAULT_GROUP, toUrl("https://www.google.com/?foo=bar"), null, null)) {
             assertEquals("www.google.com", dataSource.getName());
@@ -89,6 +90,7 @@ public class DataSourceTest {
             assertEquals("", dataSource.getBaseName());
             assertEquals("", dataSource.getExtension());
             assertEquals("https://www.google.com/?foo=bar", dataSource.getUri().toString());
+            assertEquals("text/html; charset=ISO-8859-1", dataSource.getContentType());
             assertEquals(MIME_TEXT_HTML, dataSource.getMimeType());
             assertEquals("ISO-8859-1", dataSource.getCharset().name());
             assertEquals(-1, dataSource.getLength());

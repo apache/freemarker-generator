@@ -49,6 +49,7 @@ public class DataSourceLoaderTest {
             assertEquals(ANY_FILE_NAME, dataSource.getFileName());
             assertEquals(UTF_8, dataSource.getCharset());
             assertEquals(MIME_APPLICATION_XML, dataSource.getContentType());
+            assertEquals(MIME_APPLICATION_XML, dataSource.getMimeType());
             assertEquals(ANY_FILE.toURI(), dataSource.getUri());
             assertFalse(dataSource.getLines().isEmpty());
         }
@@ -62,6 +63,7 @@ public class DataSourceLoaderTest {
             assertEquals(ANY_FILE_NAME, dataSource.getFileName());
             assertEquals(UTF_8, dataSource.getCharset());
             assertEquals(MIME_APPLICATION_XML, dataSource.getContentType());
+            assertEquals(MIME_APPLICATION_XML, dataSource.getMimeType());
             assertEquals(ANY_FILE.toURI(), dataSource.getUri());
             assertFalse(dataSource.getLines().isEmpty());
         }
@@ -75,6 +77,7 @@ public class DataSourceLoaderTest {
             assertEquals(ANY_FILE_NAME, dataSource.getFileName());
             assertEquals(UTF_8, dataSource.getCharset());
             assertEquals(MIME_APPLICATION_XML, dataSource.getContentType());
+            assertEquals(MIME_APPLICATION_XML, dataSource.getMimeType());
             assertEquals(ANY_FILE.toURI(), dataSource.getUri());
             assertFalse(dataSource.getLines().isEmpty());
         }
@@ -87,6 +90,7 @@ public class DataSourceLoaderTest {
             assertEquals("source", dataSource.getName());
             assertEquals(UTF_8, dataSource.getCharset());
             assertEquals(MIME_APPLICATION_XML, dataSource.getContentType());
+            assertEquals(MIME_APPLICATION_XML, dataSource.getMimeType());
             assertEquals(ANY_FILE.toURI(), dataSource.getUri());
             assertFalse(dataSource.getLines().isEmpty());
         }
@@ -105,7 +109,7 @@ public class DataSourceLoaderTest {
     }
 
     @Test
-    @Ignore
+    @Ignore("Requires internet access")
     public void shouldCreateDataSourceFromUrl() {
         try (DataSource dataSource = dataSourceLoader().load("https://jsonplaceholder.typicode.com/posts/2")) {
             assertEquals("https://jsonplaceholder.typicode.com/posts/2", dataSource.getName());
@@ -113,13 +117,14 @@ public class DataSourceLoaderTest {
             assertEquals("", dataSource.getBaseName());
             assertEquals("", dataSource.getExtension());
             assertEquals("application/json; charset=utf-8", dataSource.getContentType());
+            assertEquals("application/json", dataSource.getMimeType());
             assertEquals(UTF_8, dataSource.getCharset());
             assertEquals("https://jsonplaceholder.typicode.com/posts/2", dataSource.getUri().toString());
         }
     }
 
     @Test
-    @Ignore
+    @Ignore("Requires internet access")
     public void shouldCreateDataSourceFromNamedURL() {
         try (DataSource dataSource = dataSourceLoader().load("content:www=https://www.google.com?foo=bar#contenttype=application/json")) {
             assertEquals("content", dataSource.getName());
@@ -128,6 +133,7 @@ public class DataSourceLoaderTest {
             assertEquals("", dataSource.getExtension());
             assertEquals("www", dataSource.getGroup());
             assertEquals("text/html; charset=ISO-8859-1", dataSource.getContentType());
+            assertEquals("text/html", dataSource.getMimeType());
             assertEquals("ISO-8859-1", dataSource.getCharset().toString());
             assertEquals("https://www.google.com?foo=bar#contenttype=application/json", dataSource.getUri().toString());
         }
