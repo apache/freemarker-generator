@@ -19,7 +19,8 @@ package org.apache.freemarker.generator.tools.dataframe;
 import de.unknownreality.dataframe.DataFrame;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
-import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
+import org.apache.freemarker.generator.base.datasource.DataSourceLoader;
+import org.apache.freemarker.generator.base.datasource.DataSourceLoaderFactory;
 import org.apache.freemarker.generator.tools.commonscsv.CommonsCSVTool;
 import org.apache.freemarker.generator.tools.excel.ExcelTool;
 import org.apache.freemarker.generator.tools.gson.GsonTool;
@@ -113,7 +114,7 @@ public class DataFrameToolTest {
     @Test
     public void shouldParseExcelSheet() {
         final ExcelTool excelTool = excelTool();
-        final Workbook workbook = excelTool.parse(DataSourceFactory.create("./src/test/data/excel/test.xls"));
+        final Workbook workbook = excelTool.parse(dataSourceLoader().load("./src/test/data/excel/test.xls"));
         final List<List<Object>> sheet = excelTool.toTable(workbook.getSheetAt(0));
 
         final DataFrame dataFrame = dataFrameTool().fromRows(sheet, true);
@@ -150,4 +151,9 @@ public class DataFrameToolTest {
     private CSVParser csvParser(String csv, CSVFormat csvFormat) {
         return commonsCSVTool().parse(csv, csvFormat);
     }
+
+    private static DataSourceLoader dataSourceLoader() {
+        return DataSourceLoaderFactory.create();
+    }
+
 }
