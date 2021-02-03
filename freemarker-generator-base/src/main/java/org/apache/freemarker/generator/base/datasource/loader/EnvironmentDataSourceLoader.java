@@ -17,23 +17,14 @@
 package org.apache.freemarker.generator.base.datasource.loader;
 
 import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
-import org.apache.freemarker.generator.base.activation.StringDataSource;
 import org.apache.freemarker.generator.base.datasource.DataSource;
+import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.freemarker.generator.base.datasource.DataSourceLoader;
 import org.apache.freemarker.generator.base.mime.Mimetypes;
 import org.apache.freemarker.generator.base.uri.NamedUri;
 import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
-import org.apache.freemarker.generator.base.util.PropertiesFactory;
 import org.apache.freemarker.generator.base.util.StringUtils;
-import org.apache.freemarker.generator.base.util.UriUtils;
-import org.apache.freemarker.generator.base.util.Validate;
 
-import java.io.IOException;
-import java.io.StringWriter;
-import java.net.URI;
-import java.util.Properties;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
 import static org.apache.freemarker.generator.base.util.StringUtils.firstNonEmpty;
 import static org.apache.freemarker.generator.base.util.StringUtils.isNotEmpty;
@@ -58,30 +49,10 @@ public class EnvironmentDataSourceLoader implements DataSourceLoader {
         final String name = firstNonEmpty(namedUri.getName(), key, Location.ENVIRONMENT);
         final String group = namedUri.getGroupOrElse(DEFAULT_GROUP);
         if (StringUtils.isEmpty(key)) {
-            return fromEnvironment(name, group, contentType);
+            return DataSourceFactory.fromEnvironment(name, group, contentType);
         } else {
-            return fromEnvironment(name, group, key, contentType);
+            return DataSourceFactory.fromEnvironment(name, group, key, contentType);
         }
-    }
-
-    private static DataSource fromEnvironment(String name, String group, String contentType) {
-        try {
-            final Properties properties = PropertiesFactory.create(System.getenv());
-            final StringWriter writer = new StringWriter();
-            properties.store(writer, null);
-            final StringDataSource dataSource = new StringDataSource(name, writer.toString(), contentType, UTF_8);
-            final URI uri = UriUtils.toUri(Location.ENVIRONMENT, "");
-            return new DataSource(name, group, uri, dataSource, Mimetypes.MIME_TEXT_PLAIN, UTF_8);
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to load environment variables", e);
-        }
-    }
-
-    private static DataSource fromEnvironment(String name, String group, String key, String contentType) {
-        Validate.notEmpty(System.getenv(key), "Environment variable not found: " + key);
-        final StringDataSource dataSource = new StringDataSource(name, System.getenv(key), contentType, UTF_8);
-        final URI uri = UriUtils.toUri(Location.ENVIRONMENT, key);
-        return new DataSource(name, group, uri, dataSource, contentType, UTF_8);
     }
 
     /**

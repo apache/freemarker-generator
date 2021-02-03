@@ -17,14 +17,12 @@
 package org.apache.freemarker.generator.base.datasource.loader;
 
 import org.apache.freemarker.generator.base.datasource.DataSource;
+import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.freemarker.generator.base.datasource.DataSourceLoader;
-import org.apache.freemarker.generator.base.mime.MimetypesFileTypeMapFactory;
 import org.apache.freemarker.generator.base.uri.NamedUri;
 import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
 import org.apache.freemarker.generator.base.util.UriUtils;
-import org.apache.freemarker.generator.base.util.Validate;
 
-import javax.activation.FileDataSource;
 import java.io.File;
 import java.nio.charset.Charset;
 
@@ -48,17 +46,7 @@ public class FileDataSourceLoader implements DataSourceLoader {
         final Charset charset = namedUri.getCharsetOrElse(UTF_8);
         final File file = namedUri.getFile();
         final String name = namedUri.getNameOrElse(UriUtils.toStringWithoutFragment(file.toURI()));
-        return fromFile(name, group, file, charset);
-    }
-
-    private static DataSource fromFile(String name, String group, File file, Charset charset) {
-        Validate.isTrue(file.isFile(), "File not found: " + file);
-
-        final FileDataSource dataSource = new FileDataSource(file);
-        dataSource.setFileTypeMap(MimetypesFileTypeMapFactory.create());
-        final String contentType = dataSource.getContentType();
-
-        return new DataSource(name, group, file.toURI(), dataSource, contentType, charset);
+        return DataSourceFactory.fromFile(name, group, file, charset);
     }
 
 }

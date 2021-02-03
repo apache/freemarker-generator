@@ -164,7 +164,7 @@ public abstract class DataSourceFactory {
             final URI uri = UriUtils.toUri(Location.ENVIRONMENT, "");
             return create(name, group, uri, dataSource, contentType, UTF_8);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Unable to load environment variables", e);
         }
     }
 

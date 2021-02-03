@@ -19,15 +19,11 @@ package org.apache.freemarker.generator.datasource;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceLoader;
-import org.apache.freemarker.generator.base.datasource.loader.DefaultDataSourceLoader;
-import org.apache.freemarker.generator.base.datasource.loader.EnvironmentDataSourceLoader;
-import org.apache.freemarker.generator.base.datasource.loader.FileDataSourceLoader;
-import org.apache.freemarker.generator.base.datasource.loader.HttpDataSourceLoader;
+import org.apache.freemarker.generator.base.datasource.DataSourceLoaderFactory;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.Arrays;
 
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -47,6 +43,8 @@ public class DataSourceLoaderTest {
     @Test
     public void shouldLoadDataSourceFromFile() {
         try (DataSource dataSource = dataSourceLoader().load(ANY_FILE_NAME)) {
+            // @TODO Clearly define behaviour
+            // assertEquals(ANY_FILE_NAME, dataSource.getName());
             assertEquals(ANY_FILE_NAME, dataSource.getFileName());
             assertEquals(UTF_8, dataSource.getCharset());
             assertEquals(MIME_APPLICATION_XML, dataSource.getContentType());
@@ -59,6 +57,18 @@ public class DataSourceLoaderTest {
     public void shouldLoadDataSourceFromFileUri() {
         try (DataSource dataSource = dataSourceLoader().load(ANY_FILE_URI)) {
             assertEquals(ANY_FILE_NAME, dataSource.getFileName());
+            assertEquals(UTF_8, dataSource.getCharset());
+            assertEquals(MIME_APPLICATION_XML, dataSource.getContentType());
+            assertEquals(ANY_FILE.toURI(), dataSource.getUri());
+            assertFalse(dataSource.getLines().isEmpty());
+        }
+    }
+
+    @Test
+    public void shouldLoadDataSourceFromSimpleNameFileUri() {
+        try (DataSource dataSource = dataSourceLoader().load("source=pom.xml")) {
+            // assertEquals("pom.xml", dataSource.getFileName());
+            assertEquals("source", dataSource.getName());
             assertEquals(UTF_8, dataSource.getCharset());
             assertEquals(MIME_APPLICATION_XML, dataSource.getContentType());
             assertEquals(ANY_FILE.toURI(), dataSource.getUri());
@@ -122,13 +132,7 @@ public class DataSourceLoaderTest {
     }
 
     private DataSourceLoader dataSourceLoader() {
-        return new DefaultDataSourceLoader(
-                Arrays.asList(
-                        new FileDataSourceLoader(),
-                        new HttpDataSourceLoader(),
-                        new EnvironmentDataSourceLoader()
-                )
-        );
+        return DataSourceLoaderFactory.create();
     }
 
 }

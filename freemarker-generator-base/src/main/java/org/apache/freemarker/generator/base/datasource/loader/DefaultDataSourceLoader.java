@@ -25,7 +25,7 @@ import java.util.List;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Loads DataSource by delegating the loading to a list of "DataSourceLoader".
+ * Loads data source by delegating the loading to a list of "DataSourceLoader".
  */
 public class DefaultDataSourceLoader implements DataSourceLoader {
 

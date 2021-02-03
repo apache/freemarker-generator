@@ -18,6 +18,7 @@ package org.apache.freemarker.generator.base.datasource.loader;
 
 import org.apache.freemarker.generator.base.activation.CachingUrlDataSource;
 import org.apache.freemarker.generator.base.datasource.DataSource;
+import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.freemarker.generator.base.datasource.DataSourceLoader;
 import org.apache.freemarker.generator.base.uri.NamedUri;
 import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
@@ -48,7 +49,7 @@ public class HttpDataSourceLoader implements DataSourceLoader {
         final String mimeType = namedUri.getMimeType();
         final URL url = toUrl(uri);
         final String name = namedUri.getNameOrElse(UriUtils.toStringWithoutFragment(uri));
-        return fromUrl(name, group, url, mimeType, charset);
+        return DataSourceFactory.fromUrl(name, group, url, mimeType, charset);
     }
 
     private static URL toUrl(URI uri) {
@@ -57,12 +58,6 @@ public class HttpDataSourceLoader implements DataSourceLoader {
         } catch (MalformedURLException e) {
             throw new IllegalArgumentException(uri.toString(), e);
         }
-    }
-
-    private static DataSource fromUrl(String name, String group, URL url, String contentType, Charset charset) {
-        final URLDataSource dataSource = new CachingUrlDataSource(url);
-        final URI uri = UriUtils.toUri(url);
-        return new DataSource(name, group, uri, dataSource, contentType, charset);
     }
 
 }
