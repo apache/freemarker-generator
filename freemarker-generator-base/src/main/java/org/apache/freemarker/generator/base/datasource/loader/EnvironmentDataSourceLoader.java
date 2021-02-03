@@ -25,6 +25,8 @@ import org.apache.freemarker.generator.base.uri.NamedUri;
 import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
 import org.apache.freemarker.generator.base.util.StringUtils;
 
+import java.nio.charset.Charset;
+
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
 import static org.apache.freemarker.generator.base.util.StringUtils.firstNonEmpty;
 import static org.apache.freemarker.generator.base.util.StringUtils.isNotEmpty;
@@ -53,6 +55,12 @@ public class EnvironmentDataSourceLoader implements DataSourceLoader {
         } else {
             return DataSourceFactory.fromEnvironment(name, group, key, contentType);
         }
+    }
+
+    @Override
+    public DataSource load(String source, Charset charset) {
+        // We already habe internal strings so we can ignore the charset
+        return load(source);
     }
 
     /**

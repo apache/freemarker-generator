@@ -16,7 +16,6 @@
  */
 package org.apache.freemarker.generator.base.datasource.loader;
 
-import org.apache.freemarker.generator.base.activation.CachingUrlDataSource;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.freemarker.generator.base.datasource.DataSourceLoader;
@@ -24,7 +23,6 @@ import org.apache.freemarker.generator.base.uri.NamedUri;
 import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
 import org.apache.freemarker.generator.base.util.UriUtils;
 
-import javax.activation.URLDataSource;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -50,6 +48,12 @@ public class HttpDataSourceLoader implements DataSourceLoader {
         final URL url = toUrl(uri);
         final String name = namedUri.getNameOrElse(UriUtils.toStringWithoutFragment(uri));
         return DataSourceFactory.fromUrl(name, group, url, mimeType, charset);
+    }
+
+    @Override
+    public DataSource load(String source, Charset charset) {
+        // We should pick up the charset from the HTTP server
+        return load(source);
     }
 
     private static URL toUrl(URI uri) {

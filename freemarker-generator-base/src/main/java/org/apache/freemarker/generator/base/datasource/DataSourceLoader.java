@@ -16,6 +16,8 @@
  */
 package org.apache.freemarker.generator.base.datasource;
 
+import java.nio.charset.Charset;
+
 public interface DataSourceLoader {
 
     /**
@@ -33,5 +35,14 @@ public interface DataSourceLoader {
      * @return DataSource
      */
     DataSource load(String source);
+
+    /**
+     * Load a DataSource using the given charset.
+     *
+     * @param source source of the data source
+     * @param charset charset to use
+     * @return DataSource
+     */
+    DataSource load(String source, Charset charset);
 
 }

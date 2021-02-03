@@ -16,6 +16,7 @@
  */
 package org.apache.freemarker.generator.base.datasource.loader;
 
+import org.apache.freemarker.generator.base.FreeMarkerConstants;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.freemarker.generator.base.datasource.DataSourceLoader;
@@ -27,12 +28,9 @@ import java.io.File;
 import java.nio.charset.Charset;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
 import static org.apache.freemarker.generator.base.util.StringUtils.isNotEmpty;
 
 public class FileDataSourceLoader implements DataSourceLoader {
-
-    private static final Charset NO_CHARSET = null;
 
     @Override
     public boolean accept(String source) {
@@ -42,8 +40,17 @@ public class FileDataSourceLoader implements DataSourceLoader {
     @Override
     public DataSource load(String source) {
         final NamedUri namedUri = NamedUriStringParser.parse(source);
-        final String group = namedUri.getGroupOrElse(DEFAULT_GROUP);
+        final String group = namedUri.getGroupOrElse(FreeMarkerConstants.DEFAULT_GROUP);
         final Charset charset = namedUri.getCharsetOrElse(UTF_8);
+        final File file = namedUri.getFile();
+        final String name = namedUri.getNameOrElse(UriUtils.toStringWithoutFragment(file.toURI()));
+        return DataSourceFactory.fromFile(name, group, file, charset);
+    }
+
+    @Override
+    public DataSource load(String source, Charset charset) {
+        final NamedUri namedUri = NamedUriStringParser.parse(source);
+        final String group = namedUri.getGroupOrElse(FreeMarkerConstants.DEFAULT_GROUP);
         final File file = namedUri.getFile();
         final String name = namedUri.getNameOrElse(UriUtils.toStringWithoutFragment(file.toURI()));
         return DataSourceFactory.fromFile(name, group, file, charset);

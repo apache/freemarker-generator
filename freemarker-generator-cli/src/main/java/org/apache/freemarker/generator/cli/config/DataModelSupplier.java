@@ -17,7 +17,8 @@
 package org.apache.freemarker.generator.cli.config;
 
 import org.apache.freemarker.generator.base.datasource.DataSource;
-import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
+import org.apache.freemarker.generator.base.datasource.DataSourceLoader;
+import org.apache.freemarker.generator.base.datasource.DataSourceLoaderFactory;
 import org.apache.freemarker.generator.base.uri.NamedUri;
 import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
 import org.apache.freemarker.generator.base.util.PropertiesFactory;
@@ -48,6 +49,7 @@ import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_TEXT_YAML
  */
 public class DataModelSupplier implements Supplier<Map<String, Object>> {
 
+    private final DataSourceLoader dataSourceLoader;
     private final Collection<String> sources;
 
     /**
@@ -56,6 +58,7 @@ public class DataModelSupplier implements Supplier<Map<String, Object>> {
      * @param sources List of sources
      */
     public DataModelSupplier(Collection<String> sources) {
+        this.dataSourceLoader = DataSourceLoaderFactory.create();
         this.sources = new ArrayList<>(requireNonNull(sources));
     }
 
@@ -63,14 +66,14 @@ public class DataModelSupplier implements Supplier<Map<String, Object>> {
     public Map<String, Object> get() {
         return sources.stream()
                 .filter(StringUtils::isNotEmpty)
-                .map(DataModelSupplier::toDataModel)
+                .map(source -> toDataModel(source))
                 .flatMap(map -> map.entrySet().stream())
                 .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
     }
 
-    private static Map<String, Object> toDataModel(String source) {
+    private Map<String, Object> toDataModel(String source) {
+        final DataSource dataSource = dataSourceLoader.load(source);
         final NamedUri namedUri = NamedUriStringParser.parse(source);
-        final DataSource dataSource = DataSourceFactory.fromNamedUri(namedUri);
         final boolean isExplodedDataModel = !namedUri.hasName();
         final String contentType = dataSource.getContentType();
 
@@ -140,4 +143,5 @@ public class DataModelSupplier implements Supplier<Map<String, Object>> {
 
         return result;
     }
+
 }
