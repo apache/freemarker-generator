@@ -54,7 +54,6 @@ public class DataSourcesTest {
 
             assertEquals(2, dataSources.find("*.*").size());
             assertEquals(1, dataSources.find("*." + ANY_FILE_EXTENSION).size());
-            assertEquals(1, dataSources.find("*/*." + ANY_FILE_EXTENSION).size());
             assertEquals(1, dataSources.find("*.???").size());
             assertEquals(1, dataSources.find("*om*").size());
             assertEquals(1, dataSources.find("*o*.xml").size());
@@ -82,16 +81,16 @@ public class DataSourcesTest {
 
     @Test
     public void shouldGetDataSource() {
-        assertNotNull(dataSources().get("*/" + ANY_FILE_NAME));
+        assertNotNull(dataSources().get(ANY_FILE_NAME));
     }
 
     @Test
     public void shouldGetAllDataSource() {
         try (DataSources dataSources = dataSources()) {
 
-            assertEquals("unknown", dataSources.get(0).getFileName());
-            assertEquals("pom.xml", dataSources.get(1).getFileName());
-            assertEquals("server.invalid?foo=bar", dataSources.get(2).getFileName());
+            assertEquals("unknown", dataSources.get(0).getName());
+            assertEquals("pom.xml", dataSources.get(1).getName());
+            assertEquals("server.invalid?foo=bar", dataSources.get(2).getName());
             assertEquals(3, dataSources.toList().size());
             assertEquals(3, dataSources.toMap().size());
             assertEquals(3, dataSources.size());
@@ -100,13 +99,10 @@ public class DataSourcesTest {
     }
 
     @Test
-    public void shouldGetParts() {
-        assertEquals(3, dataSources().getMetadata("name").size());
-    }
-
-    @Test
-    public void shouldGetFileNamePart() {
-        assertEquals(asList("unknown", "pom.xml", "server.invalid?foo=bar"), dataSources().getMetadata("fileName"));
+    public void shouldGetMetadataParts() {
+        assertEquals(asList("", "pom.xml", ""), dataSources().getMetadata("fileName"));
+        assertEquals(asList("", "xml", ""), dataSources().getMetadata("extension"));
+        assertEquals(asList("unknown", "pom.xml", "server.invalid?foo=bar"), dataSources().getMetadata("name"));
     }
 
     @Test

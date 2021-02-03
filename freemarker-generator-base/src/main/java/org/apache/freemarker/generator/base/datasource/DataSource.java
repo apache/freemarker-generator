@@ -141,7 +141,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     }
 
     public String getFileName() {
-        return FilenameUtils.getName(name);
+        return isFileDataSource() ? FilenameUtils.getName(dataSource.getName()) : "";
     }
 
     public String getBaseName() {
@@ -359,4 +359,9 @@ public class DataSource implements Closeable, javax.activation.DataSource {
             return StringUtils.firstNonEmpty(dataSource.getContentType(), MIME_APPLICATION_OCTET_STREAM);
         }
     }
+
+    private boolean isFileDataSource() {
+        return dataSource instanceof FileDataSource;
+    }
+
 }

@@ -26,10 +26,6 @@ public class ListUtils {
         return list == null || list.isEmpty();
     }
 
-    public static <T> boolean isNotEmpty(final List<T> list) {
-        return !isNullOrEmpty(list);
-    }
-
     /**
      * Transposes the given tabular data, swapping rows with columns.
      *
@@ -68,20 +64,4 @@ public class ListUtils {
                 .orElse(null);
     }
 
-    /**
-     * Copy an array to another array while casting to <code>R</code>.
-     *
-     * @param array array to copy
-     * @param <T>   the source type of the array
-     * @param <R>   the target type of the array
-     * @return copied array
-     */
-    @SuppressWarnings("unchecked")
-    public static <T, R> List<R> copy(final List<T> array) {
-        final List<R> result = new ArrayList<>();
-        for (int i = 0; i < array.size(); i++) {
-            result.set(i, (R) array.get(i));
-        }
-        return result;
-    }
 }

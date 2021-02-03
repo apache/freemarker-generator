@@ -16,7 +16,6 @@
  */
 package org.apache.freemarker.generator.datasource;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
@@ -32,7 +31,6 @@ import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 
-import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
@@ -41,14 +39,10 @@ import static org.junit.Assert.assertEquals;
 
 public class DataSourceFactoryTest {
 
-    private static final String PWD = FilenameUtils.separatorsToUnix(new File("").getAbsolutePath());
     private static final String ANY_TEXT = "Hello World";
     private static final String ANY_FILE_NAME = "pom.xml";
-    private static final String ANY_FILE_URI = format("file:///%s/pom.xml", PWD);
     private static final Charset ANY_CHAR_SET = UTF_8;
     private static final File ANY_FILE = new File(ANY_FILE_NAME);
-    private static final String ANY_ENV_VARIABLE = "HOME";
-    private static final String ANY_NAMED_URL_STRING = "content:www=https://www.google.com?foo=bar#contenttype=application/json";
 
     @Test
     public void shouldCreateDataSourceFromFile() {

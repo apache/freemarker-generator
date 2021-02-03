@@ -61,6 +61,7 @@ public class FreeMarkerConstants {
 
         /** Prefix to extract FreeMarker configuration settings from 'freemarker-generator.properties' */
         public static final String SETTING_PREFIX = "freemarker.configuration.setting.";
+
     }
 
     public static class Location {
@@ -68,13 +69,13 @@ public class FreeMarkerConstants {
         private Location() {
         }
 
-        public static final String BYTES = "bytes";
         public static final String ENVIRONMENT = "env";
         public static final String INTERACTIVE = "interactive";
         public static final String INPUTSTREAM = "inputstream";
         public static final String STDIN = "stdin";
         public static final String SYSTEM = "system";
         public static final String STRING = "string";
+
     }
 
     public static class Model {
@@ -91,6 +92,7 @@ public class FreeMarkerConstants {
         public static final String FREEMARKER_TEMPLATE_DIRECTORIES = "freemarker.template.directories";
         public static final String FREEMARKER_USER_SYSTEM_PROPERTIES = "freemarker.user.system.properties";
         public static final String FREEMARKER_USER_PARAMETERS = "freemarker.user.parameters";
+
     }
 
     public static class SystemProperties {
@@ -103,5 +105,7 @@ public class FreeMarkerConstants {
 
         /** Home directory of the user */
         public static final String USER_HOME = "user.home";
+
     }
+
 }

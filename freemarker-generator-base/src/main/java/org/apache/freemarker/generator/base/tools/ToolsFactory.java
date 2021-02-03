@@ -36,7 +36,8 @@ public class ToolsFactory {
         }
 
         try {
-            return forName(clazzName) != null;
+            forName(clazzName);
+            return true;
         } catch (NoClassDefFoundError | ClassNotFoundException e) {
             return false;
         }
@@ -95,4 +96,5 @@ public class ToolsFactory {
         // Fall back to the defining class loader of the FreeMarker classes
         return Class.forName(className);
     }
+
 }

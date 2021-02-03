@@ -49,7 +49,7 @@ public class DataSourceTest {
         try (DataSource dataSource = DataSourceFactory.fromString("stdin", ANY_GROUP, ANY_TEXT, Mimetypes.MIME_TEXT_PLAIN)) {
             assertEquals("stdin", dataSource.getName());
             assertEquals(ANY_GROUP, dataSource.getGroup());
-            assertEquals("stdin", dataSource.getBaseName());
+            assertEquals("", dataSource.getBaseName());
             assertEquals("", dataSource.getExtension());
             assertTrue(dataSource.getUri().toString().startsWith("string:///"));
             assertEquals(UTF_8, dataSource.getCharset());
@@ -86,8 +86,8 @@ public class DataSourceTest {
         try (DataSource dataSource = DataSourceFactory.fromUrl("www.google.com", DEFAULT_GROUP, toUrl("https://www.google.com/?foo=bar"), null, null)) {
             assertEquals("www.google.com", dataSource.getName());
             assertEquals(DEFAULT_GROUP, dataSource.getGroup());
-            assertEquals("www.google", dataSource.getBaseName());
-            assertEquals("com", dataSource.getExtension());
+            assertEquals("", dataSource.getBaseName());
+            assertEquals("", dataSource.getExtension());
             assertEquals("https://www.google.com/?foo=bar", dataSource.getUri().toString());
             assertEquals(MIME_TEXT_HTML, dataSource.getMimeType());
             assertEquals("ISO-8859-1", dataSource.getCharset().name());

@@ -52,15 +52,4 @@ public class PropertiesTransformer {
         return result;
     }
 
-    /**
-     * Copy a entries in a new <code>java.util.Properties</code> instance.
-     *
-     * @param properties the properties
-     * @return properties
-     */
-    public static Properties copy(Properties properties) {
-        final Properties result = new Properties();
-        properties.forEach((key, value) -> result.setProperty((String) key, (String) value));
-        return result;
-    }
 }

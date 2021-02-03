@@ -81,7 +81,7 @@ public abstract class DataSourceFactory {
     // == File ==============================================================
 
     public static DataSource fromFile(File file, Charset charset) {
-        return fromFile(UriUtils.toStringWithoutFragment(file.toURI()), DEFAULT_GROUP, file, charset);
+        return fromFile(file.getName(), DEFAULT_GROUP, file, charset);
     }
 
     public static DataSource fromFile(String name, String group, File file, Charset charset) {

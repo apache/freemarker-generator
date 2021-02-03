@@ -20,7 +20,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceLoader;
 import org.apache.freemarker.generator.base.datasource.DataSourceLoaderFactory;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -28,6 +27,7 @@ import java.io.File;
 import static java.lang.String.format;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static junit.framework.TestCase.assertFalse;
+import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
 import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_APPLICATION_XML;
 import static org.junit.Assert.assertEquals;
 
@@ -35,16 +35,28 @@ public class DataSourceLoaderTest {
 
     private static final String PWD = FilenameUtils.separatorsToUnix(new File("").getAbsolutePath());
     private static final String ANY_FILE_NAME = "pom.xml";
+    private static final String ANY_ABSOLUTE_FILE_NAME = format("%s/pom.xml", PWD);
     private static final String ANY_FILE_URI = format("file:///%s/pom.xml", PWD);
-    private static final String ANY_HTTP_URL = "https://jsonplaceholder.typicode.com/posts/2";
     private static final File ANY_FILE = new File(ANY_FILE_NAME);
-    private static final String ANY_NAMED_URL_STRING = "content:www=https://www.google.com?foo=bar#contenttype=application/json";
 
     @Test
-    public void shouldLoadDataSourceFromFile() {
+    public void shouldLoadDataSourceFromFileName() {
         try (DataSource dataSource = dataSourceLoader().load(ANY_FILE_NAME)) {
-            // @TODO Clearly define behaviour
-            // assertEquals(ANY_FILE_NAME, dataSource.getName());
+            assertEquals(ANY_FILE_NAME, dataSource.getName());
+            assertEquals(DEFAULT_GROUP, dataSource.getGroup());
+            assertEquals(ANY_FILE_NAME, dataSource.getFileName());
+            assertEquals(UTF_8, dataSource.getCharset());
+            assertEquals(MIME_APPLICATION_XML, dataSource.getContentType());
+            assertEquals(ANY_FILE.toURI(), dataSource.getUri());
+            assertFalse(dataSource.getLines().isEmpty());
+        }
+    }
+
+    @Test
+    public void shouldLoadDataSourceFromAbsoluteFileName() {
+        try (DataSource dataSource = dataSourceLoader().load(ANY_ABSOLUTE_FILE_NAME)) {
+            assertEquals(ANY_FILE_NAME, dataSource.getName());
+            assertEquals(DEFAULT_GROUP, dataSource.getGroup());
             assertEquals(ANY_FILE_NAME, dataSource.getFileName());
             assertEquals(UTF_8, dataSource.getCharset());
             assertEquals(MIME_APPLICATION_XML, dataSource.getContentType());
@@ -56,6 +68,8 @@ public class DataSourceLoaderTest {
     @Test
     public void shouldLoadDataSourceFromFileUri() {
         try (DataSource dataSource = dataSourceLoader().load(ANY_FILE_URI)) {
+            assertEquals(ANY_FILE_NAME, dataSource.getName());
+            assertEquals(DEFAULT_GROUP, dataSource.getGroup());
             assertEquals(ANY_FILE_NAME, dataSource.getFileName());
             assertEquals(UTF_8, dataSource.getCharset());
             assertEquals(MIME_APPLICATION_XML, dataSource.getContentType());
@@ -67,7 +81,7 @@ public class DataSourceLoaderTest {
     @Test
     public void shouldLoadDataSourceFromSimpleNameFileUri() {
         try (DataSource dataSource = dataSourceLoader().load("source=pom.xml")) {
-            // assertEquals("pom.xml", dataSource.getFileName());
+            assertEquals("pom.xml", dataSource.getFileName());
             assertEquals("source", dataSource.getName());
             assertEquals(UTF_8, dataSource.getCharset());
             assertEquals(MIME_APPLICATION_XML, dataSource.getContentType());
@@ -77,20 +91,27 @@ public class DataSourceLoaderTest {
     }
 
     @Test
-    @Ignore
+    // @Ignore
     public void shouldCreateDataSourceFromUrl() {
-        try (DataSource dataSource = dataSourceLoader().load(ANY_HTTP_URL)) {
+        try (DataSource dataSource = dataSourceLoader().load("https://jsonplaceholder.typicode.com/posts/2")) {
             assertEquals("https://jsonplaceholder.typicode.com/posts/2", dataSource.getName());
+            assertEquals("", dataSource.getFileName());
+            assertEquals("", dataSource.getBaseName());
+            assertEquals("", dataSource.getExtension());
             assertEquals("application/json; charset=utf-8", dataSource.getContentType());
             assertEquals(UTF_8, dataSource.getCharset());
+            assertEquals("https://jsonplaceholder.typicode.com/posts/2", dataSource.getUri().toString());
         }
     }
 
     @Test
-    @Ignore
+    // @Ignore
     public void shouldCreateDataSourceFromNamedURL() {
-        try (DataSource dataSource = dataSourceLoader().load(ANY_NAMED_URL_STRING)) {
+        try (DataSource dataSource = dataSourceLoader().load("content:www=https://www.google.com?foo=bar#contenttype=application/json")) {
             assertEquals("content", dataSource.getName());
+            assertEquals("", dataSource.getFileName());
+            assertEquals("", dataSource.getBaseName());
+            assertEquals("", dataSource.getExtension());
             assertEquals("www", dataSource.getGroup());
             assertEquals("text/html; charset=ISO-8859-1", dataSource.getContentType());
             assertEquals("ISO-8859-1", dataSource.getCharset().toString());
