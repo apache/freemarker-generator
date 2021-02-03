@@ -18,7 +18,8 @@ package org.apache.freemarker.generator.base.template;
 
 import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.datasource.DataSource;
-import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
+import org.apache.freemarker.generator.base.datasource.DataSourceLoader;
+import org.apache.freemarker.generator.base.datasource.DataSourceLoaderFactory;
 import org.apache.freemarker.generator.base.file.RecursiveFileSupplier;
 import org.apache.freemarker.generator.base.util.NonClosableWriterWrapper;
 import org.apache.freemarker.generator.base.util.StringUtils;
@@ -40,6 +41,8 @@ import static java.util.Collections.singletonList;
  * list of TemplateTransformation.
  */
 public class TemplateTransformationsBuilder {
+
+    private final DataSourceLoader dataSourceLoader;
 
     /** Interactive template */
     private TemplateSource interactiveTemplate;
@@ -66,6 +69,7 @@ public class TemplateTransformationsBuilder {
     private Writer callerSuppliedWriter;
 
     private TemplateTransformationsBuilder() {
+        this.dataSourceLoader = DataSourceLoaderFactory.create();
         this.templateSource = null;
         this.includes = new ArrayList<>();
         this.excludes = new ArrayList<>();
@@ -228,7 +232,7 @@ public class TemplateTransformationsBuilder {
     }
 
     private TemplateSource templateSource(String source) {
-        try (DataSource dataSource = DataSourceFactory.create(source)) {
+        try (DataSource dataSource = dataSourceLoader.load(source)) {
             return TemplateSource.fromCode(dataSource.getName(), dataSource.getText(templateEncoding.name()));
         }
     }
@@ -300,4 +304,5 @@ public class TemplateTransformationsBuilder {
         // avoid closing System.out after rendering the template
         return new BufferedWriter(new NonClosableWriterWrapper(new OutputStreamWriter(System.out, outputEncoding)));
     }
+
 }

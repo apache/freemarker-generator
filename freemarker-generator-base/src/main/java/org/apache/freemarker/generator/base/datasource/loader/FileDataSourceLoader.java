@@ -43,7 +43,9 @@ public class FileDataSourceLoader implements DataSourceLoader {
         final String group = namedUri.getGroupOrElse(FreeMarkerConstants.DEFAULT_GROUP);
         final Charset charset = namedUri.getCharsetOrElse(UTF_8);
         final File file = namedUri.getFile();
-        final String name = namedUri.getNameOrElse(UriUtils.toStringWithoutFragment(file.toURI()));
+        // TODO
+        // final String name = namedUri.getNameOrElse(UriUtils.toStringWithoutFragment(file.toURI()));
+        final String name = namedUri.getNameOrElse(file.getName());
         return DataSourceFactory.fromFile(name, group, file, charset);
     }
 

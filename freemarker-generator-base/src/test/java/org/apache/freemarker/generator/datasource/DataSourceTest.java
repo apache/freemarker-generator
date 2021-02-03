@@ -20,7 +20,6 @@ import org.apache.commons.io.LineIterator;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.freemarker.generator.base.mime.Mimetypes;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.Closeable;
@@ -31,6 +30,7 @@ import java.util.Iterator;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
+import static org.apache.freemarker.generator.base.datasource.DataSourceFactory.toUrl;
 import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_TEXT_HTML;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -80,10 +80,10 @@ public class DataSourceTest {
         }
     }
 
-    @Ignore("Requires internet connection")
+    // @Ignore("Requires internet connection")
     @Test
     public void shouldSupportUrlDataSource() {
-        try (DataSource dataSource = DataSourceFactory.create("https://www.google.com/?foo=bar")) {
+        try (DataSource dataSource = DataSourceFactory.fromUrl("www.google.com", DEFAULT_GROUP, toUrl("https://www.google.com/?foo=bar"), null, null)) {
             assertEquals("www.google.com", dataSource.getName());
             assertEquals(DEFAULT_GROUP, dataSource.getGroup());
             assertEquals("www.google", dataSource.getBaseName());
@@ -157,5 +157,7 @@ public class DataSourceTest {
         public boolean isClosed() {
             return closed;
         }
+
     }
+
 }

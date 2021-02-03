@@ -17,10 +17,10 @@
 package org.apache.freemarker.generator.datasource;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
-import org.apache.freemarker.generator.base.uri.NamedUri;
-import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
+import org.apache.freemarker.generator.base.util.UriUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -28,6 +28,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 
@@ -46,7 +47,7 @@ public class DataSourceFactoryTest {
     private static final String ANY_FILE_URI = format("file:///%s/pom.xml", PWD);
     private static final Charset ANY_CHAR_SET = UTF_8;
     private static final File ANY_FILE = new File(ANY_FILE_NAME);
-    private static final String ANY_ENV_VARIABLE = "JAVA_HOME";
+    private static final String ANY_ENV_VARIABLE = "HOME";
     private static final String ANY_NAMED_URL_STRING = "content:www=https://www.google.com?foo=bar#contenttype=application/json";
 
     @Test
@@ -58,17 +59,6 @@ public class DataSourceFactoryTest {
         assertEquals(MIME_APPLICATION_XML, dataSource.getContentType());
         assertEquals(ANY_FILE.toURI(), dataSource.getUri());
         assertFalse(dataSource.getLines().isEmpty());
-    }
-
-    @Test
-    public void shouldCreateDataSourceFromFileUri() {
-        final DataSource dataSource = DataSourceFactory.create(ANY_FILE_URI);
-
-        assertEquals(ANY_FILE_NAME, dataSource.getFileName());
-        assertEquals(UTF_8, dataSource.getCharset());
-        assertEquals(MIME_APPLICATION_XML, dataSource.getContentType());
-        assertEquals(ANY_FILE.toURI(), dataSource.getUri());
-        assertTrue(!dataSource.getLines().isEmpty());
     }
 
     @Test
@@ -85,22 +75,10 @@ public class DataSourceFactoryTest {
     }
 
     @Test
-    public void shouldCreateDataSourceFromBytes() {
-        final DataSource dataSource = DataSourceFactory.fromBytes("test.txt", "default", ANY_TEXT.getBytes(UTF_8), "text/plain");
-
-        assertEquals("test.txt", dataSource.getName());
-        assertEquals("default", dataSource.getGroup());
-        assertEquals(UTF_8, dataSource.getCharset());
-        assertEquals("text/plain", dataSource.getContentType());
-        assertTrue(dataSource.getUri().toString().startsWith("bytes:///"));
-        assertEquals(ANY_TEXT, dataSource.getText());
-        assertEquals(1, dataSource.getLines().size());
-    }
-
-    @Test
     public void shouldCreateDataSourceFromInputStream() {
+        final URI uri = UriUtils.toUri(Location.INPUTSTREAM + ":///");
         final InputStream is = new ByteArrayInputStream(ANY_TEXT.getBytes(UTF_8));
-        final DataSource dataSource = DataSourceFactory.fromInputStream("test.txt", "default", is, "text/plain", UTF_8);
+        final DataSource dataSource = DataSourceFactory.fromInputStream("test.txt", "default", uri, is, "text/plain", UTF_8);
 
         assertEquals("test.txt", dataSource.getName());
         assertEquals(UTF_8, dataSource.getCharset());
@@ -116,26 +94,14 @@ public class DataSourceFactoryTest {
         final DataSource dataSource = DataSourceFactory.fromUrl("jsonplaceholder.typicode.com", "default", url, null, null);
 
         assertEquals("jsonplaceholder.typicode.com", dataSource.getName());
+        assertEquals("jsonplaceholder.typicode.com", dataSource.getFileName());
         assertEquals("application/json", dataSource.getContentType());
         assertEquals(UTF_8, dataSource.getCharset());
     }
 
     @Test
-    @Ignore
-    public void shouldCreateDataSourceFromNamedURL() {
-        final NamedUri namedUri = NamedUriStringParser.parse(ANY_NAMED_URL_STRING);
-        final DataSource dataSource = DataSourceFactory.fromNamedUri(namedUri);
-
-        assertEquals(namedUri.getName(), dataSource.getName());
-        assertEquals(namedUri.getGroup(), dataSource.getGroup());
-        assertEquals("ISO-8859-1", dataSource.getCharset().toString());
-        assertEquals(namedUri.getUri().toString(), dataSource.getUri().toString());
-    }
-
-    @Test
     public void shouldCreateDataSourceFromEnvironment() {
-        final NamedUri namedUri = NamedUriStringParser.parse("env:///");
-        final DataSource dataSource = DataSourceFactory.fromNamedUri(namedUri);
+        final DataSource dataSource = DataSourceFactory.fromEnvironment("env", "default", "text/plain");
 
         assertEquals("env", dataSource.getName());
         assertEquals("default", dataSource.getGroup());
@@ -144,28 +110,4 @@ public class DataSourceFactoryTest {
         assertEquals("text/plain", dataSource.getContentType());
     }
 
-    @Test
-    public void shouldCreateDataSourceFromNamedEnvironment() {
-        final NamedUri namedUri = NamedUriStringParser.parse("config=env:///");
-        final DataSource dataSource = DataSourceFactory.fromNamedUri(namedUri);
-
-        assertEquals("config", dataSource.getName());
-        assertEquals("default", dataSource.getGroup());
-        assertEquals(UTF_8, dataSource.getCharset());
-        assertEquals("env:///", dataSource.getUri().toString());
-        assertEquals("text/plain", dataSource.getContentType());
-    }
-
-    @Test
-    public void shouldCreateDataSourceFromEnvironmentVariable() {
-        final String uri = "env:///" + ANY_ENV_VARIABLE;
-        final NamedUri namedUri = NamedUriStringParser.parse("myenv=" + uri);
-        final DataSource dataSource = DataSourceFactory.fromNamedUri(namedUri);
-
-        assertEquals("myenv", dataSource.getName());
-        assertEquals("default", dataSource.getGroup());
-        assertEquals(UTF_8, dataSource.getCharset());
-        assertEquals(uri, dataSource.getUri().toString());
-        assertEquals("text/plain", dataSource.getContentType());
-    }
 }
