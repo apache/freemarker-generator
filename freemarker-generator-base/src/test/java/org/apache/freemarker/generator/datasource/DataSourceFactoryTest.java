@@ -69,6 +69,19 @@ public class DataSourceFactoryTest {
     }
 
     @Test
+    public void shouldCreateDataSourceFromBytes() {
+        final DataSource dataSource = DataSourceFactory.fromBytes("test.txt", "default", ANY_TEXT.getBytes(UTF_8), "text/plain");
+
+        assertEquals("test.txt", dataSource.getName());
+        assertEquals("default", dataSource.getGroup());
+        assertEquals(UTF_8, dataSource.getCharset());
+        assertEquals("text/plain", dataSource.getContentType());
+        assertTrue(dataSource.getUri().toString().startsWith("bytes:///"));
+        assertEquals(ANY_TEXT, dataSource.getText());
+        assertEquals(1, dataSource.getLines().size());
+    }
+
+    @Test
     public void shouldCreateDataSourceFromInputStream() {
         final URI uri = UriUtils.toUri(Location.INPUTSTREAM + ":///");
         final InputStream is = new ByteArrayInputStream(ANY_TEXT.getBytes(UTF_8));
