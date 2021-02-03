@@ -76,7 +76,6 @@ public class DataSourcesTest {
             assertEquals(3, dataSources.find(GROUP_PART, "d*").size());
             assertEquals(3, dataSources.find(GROUP_PART, "d??????").size());
         }
-
     }
 
     @Test

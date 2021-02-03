@@ -20,11 +20,13 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceLoader;
 import org.apache.freemarker.generator.base.datasource.DataSourceLoaderFactory;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
 
 import static java.lang.String.format;
+import static java.nio.charset.StandardCharsets.UTF_16;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static junit.framework.TestCase.assertFalse;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
@@ -91,7 +93,19 @@ public class DataSourceLoaderTest {
     }
 
     @Test
-    // @Ignore
+    public void shouldLoadDataSourceFromComplexNameFileUri() {
+        try (DataSource dataSource = dataSourceLoader().load("source=pom.xml#charset=UTF-8&foo=bar")) {
+            assertEquals("pom.xml", dataSource.getFileName());
+            assertEquals("source", dataSource.getName());
+            assertEquals(UTF_8, dataSource.getCharset());
+            assertEquals(MIME_APPLICATION_XML, dataSource.getContentType());
+            assertEquals(ANY_FILE.toURI(), dataSource.getUri());
+            assertFalse(dataSource.getLines().isEmpty());
+        }
+    }
+
+    @Test
+    @Ignore
     public void shouldCreateDataSourceFromUrl() {
         try (DataSource dataSource = dataSourceLoader().load("https://jsonplaceholder.typicode.com/posts/2")) {
             assertEquals("https://jsonplaceholder.typicode.com/posts/2", dataSource.getName());
@@ -105,7 +119,7 @@ public class DataSourceLoaderTest {
     }
 
     @Test
-    // @Ignore
+    @Ignore
     public void shouldCreateDataSourceFromNamedURL() {
         try (DataSource dataSource = dataSourceLoader().load("content:www=https://www.google.com?foo=bar#contenttype=application/json")) {
             assertEquals("content", dataSource.getName());
@@ -150,6 +164,15 @@ public class DataSourceLoaderTest {
             assertEquals("env:///HOME", dataSource.getUri().toString());
             assertEquals("text/plain", dataSource.getContentType());
         }
+    }
+
+    @Test
+    public void shouldLoadDataSourceWithCharset() {
+        final DataSource utf8DataSource = dataSourceLoader().load("./src/test/data/txt/utf8.txt", UTF_8);
+        final DataSource utf16DataSource = dataSourceLoader().load("./src/test/data/txt/utf16.txt", UTF_16);
+
+        // skip the first line before comparing
+        assertEquals(utf8DataSource.getLines().subList(1, 5), utf16DataSource.getLines().subList(1, 5));
     }
 
     private DataSourceLoader dataSourceLoader() {

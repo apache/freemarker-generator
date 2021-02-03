@@ -35,7 +35,7 @@ public class RecursiveFileSupplierTest {
 
     @Test
     public void shouldResolveAllFilesOfDirectory() {
-        assertEquals(5, fileSupplier(ANY_DIRECTORY, null, null).get().size());
+        assertEquals(7, fileSupplier(ANY_DIRECTORY, null, null).get().size());
         assertTrue(fileSupplier(ANY_DIRECTORY, UNKNOWN_FILE_NAME, null).get().isEmpty());
     }
 
@@ -77,10 +77,12 @@ public class RecursiveFileSupplierTest {
     public void shouldExcludeFiles() {
         final List<File> files = fileSupplier(ANY_DIRECTORY, null, "*.csv").get();
 
-        assertEquals(3, files.size());
+        assertEquals(5, files.size());
         assertEquals("nginx.env", files.get(0).getName());
         assertEquals("test.properties", files.get(1).getName());
         assertEquals("file_01.txt", files.get(2).getName());
+        assertEquals("utf16.txt", files.get(3).getName());
+        assertEquals("utf8.txt", files.get(4).getName());
     }
 
     @Test
@@ -105,4 +107,5 @@ public class RecursiveFileSupplierTest {
     private static RecursiveFileSupplier fileSupplier(List<String> sources, String include, String exclude) {
         return new RecursiveFileSupplier(sources, singletonList(include), singletonList(exclude));
     }
+
 }
