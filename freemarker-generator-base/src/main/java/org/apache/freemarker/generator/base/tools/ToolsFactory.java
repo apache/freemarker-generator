@@ -96,5 +96,4 @@ public class ToolsFactory {
         // Fall back to the defining class loader of the FreeMarker classes
         return Class.forName(className);
     }
-
 }

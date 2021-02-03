@@ -44,5 +44,4 @@ public interface DataSourceLoader {
      * @return DataSource
      */
     DataSource load(String source, Charset charset);
-
 }

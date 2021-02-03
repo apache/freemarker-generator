@@ -142,5 +142,4 @@ public class DataSourcesTest {
             throw new RuntimeException("Failed to create URL:" + value, e);
         }
     }
-
 }

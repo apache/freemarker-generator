@@ -116,5 +116,4 @@ public class DataSourceFactoryTest {
         assertEquals("env:///", dataSource.getUri().toString());
         assertEquals("text/plain", dataSource.getContentType());
     }
-
 }

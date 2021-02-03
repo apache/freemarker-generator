@@ -143,5 +143,4 @@ public class DataModelSupplier implements Supplier<Map<String, Object>> {
 
         return result;
     }
-
 }

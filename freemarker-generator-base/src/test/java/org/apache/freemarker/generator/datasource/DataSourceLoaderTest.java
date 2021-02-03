@@ -184,5 +184,4 @@ public class DataSourceLoaderTest {
     private DataSourceLoader dataSourceLoader() {
         return DataSourceLoaderFactory.create();
     }
-
 }

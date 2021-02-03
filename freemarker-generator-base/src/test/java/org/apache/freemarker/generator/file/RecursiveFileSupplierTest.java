@@ -107,5 +107,4 @@ public class RecursiveFileSupplierTest {
     private static RecursiveFileSupplier fileSupplier(List<String> sources, String include, String exclude) {
         return new RecursiveFileSupplier(sources, singletonList(include), singletonList(exclude));
     }
-
 }

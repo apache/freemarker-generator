@@ -159,7 +159,5 @@ public class DataSourceTest {
         public boolean isClosed() {
             return closed;
         }
-
     }
-
 }

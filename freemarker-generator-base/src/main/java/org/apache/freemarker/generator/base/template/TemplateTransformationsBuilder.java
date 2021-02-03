@@ -304,5 +304,4 @@ public class TemplateTransformationsBuilder {
         // avoid closing System.out after rendering the template
         return new BufferedWriter(new NonClosableWriterWrapper(new OutputStreamWriter(System.out, outputEncoding)));
     }
-
 }

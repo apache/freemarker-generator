@@ -51,5 +51,4 @@ public class PropertiesTransformer {
         properties.forEach((key, value) -> result.put(key.toString().substring(prefix.length()), value));
         return result;
     }
-
 }

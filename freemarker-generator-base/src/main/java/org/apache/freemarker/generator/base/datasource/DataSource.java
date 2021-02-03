@@ -390,5 +390,4 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     private boolean isByteArrayDataSource() {
         return dataSource instanceof ByteArrayDataSource;
     }
-
 }

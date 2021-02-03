@@ -262,5 +262,4 @@ public class NamedUriStringParserTest {
     private static NamedUri parse(String value) {
         return NamedUriStringParser.parse(value);
     }
-
 }

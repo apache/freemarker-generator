@@ -142,5 +142,4 @@ public class DataSourcesSupplierTest {
     private static DataSourcesSupplier supplier(List<String> files, String include, String exclude) {
         return new DataSourcesSupplier(files, include, exclude, Charset.defaultCharset());
     }
-
 }

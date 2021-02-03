@@ -151,5 +151,4 @@ public abstract class DataSourceFactory {
             throw new IllegalArgumentException(url, e);
         }
     }
-
 }
