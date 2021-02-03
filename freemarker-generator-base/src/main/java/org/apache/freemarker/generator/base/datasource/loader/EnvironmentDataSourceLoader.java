@@ -47,7 +47,7 @@ public class EnvironmentDataSourceLoader implements DataSourceLoader {
 
     @Override
     public boolean accept(String source) {
-        return isNotEmpty(source) && source.startsWith("env://");
+        return isNotEmpty(source) && source.contains("env://");
     }
 
     @Override

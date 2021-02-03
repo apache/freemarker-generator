@@ -28,6 +28,7 @@ import javax.activation.FileDataSource;
 import java.io.File;
 import java.nio.charset.Charset;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
 import static org.apache.freemarker.generator.base.util.StringUtils.isNotEmpty;
 
@@ -37,14 +38,14 @@ public class FileDataSourceLoader implements DataSourceLoader {
 
     @Override
     public boolean accept(String source) {
-        return isNotEmpty(source) && (!source.contains("://") || source.startsWith("file://"));
+        return isNotEmpty(source) && (!source.contains("://") || source.contains("file://"));
     }
 
     @Override
     public DataSource load(String source) {
         final NamedUri namedUri = NamedUriStringParser.parse(source);
         final String group = namedUri.getGroupOrElse(DEFAULT_GROUP);
-        final Charset charset = namedUri.getCharset();
+        final Charset charset = namedUri.getCharsetOrElse(UTF_8);
         final File file = namedUri.getFile();
         final String name = namedUri.getNameOrElse(UriUtils.toStringWithoutFragment(file.toURI()));
         return fromFile(name, group, file, charset);
