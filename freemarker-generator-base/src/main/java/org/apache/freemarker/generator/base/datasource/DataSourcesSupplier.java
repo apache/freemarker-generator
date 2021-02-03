@@ -54,7 +54,6 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
     /** The charset for loading text files */
     private final Charset charset;
 
-
     /**
      * Constructor.
      *
