@@ -16,8 +16,11 @@
  */
 package org.apache.freemarker.generator.base.uri;
 
+import org.apache.freemarker.generator.base.util.StringUtils;
+
 import java.io.File;
 import java.net.URI;
+import java.nio.charset.Charset;
 import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
@@ -102,6 +105,24 @@ public class NamedUri {
         return new File(uri.getPath());
     }
 
+    public String getMimeType() {
+        return getParameter(NamedUri.MIMETYPE);
+    }
+
+    public String getMimeTypeOrElse(String def) {
+        return getParameter(NamedUri.MIMETYPE, def);
+    }
+
+    public Charset getCharset() {
+        final String charsetName = getParameter(NamedUri.CHARSET);
+        return Charset.forName(charsetName);
+    }
+
+    public Charset getCharsetOrElse(Charset def) {
+        final String charsetName = getParameter(NamedUri.CHARSET);
+        return StringUtils.isEmpty(charsetName) ? def : Charset.forName(charsetName);
+    }
+
     @Override
     public String toString() {
         return "NamedUri{" +
@@ -111,4 +132,5 @@ public class NamedUri {
                 ", parameters=" + parameters +
                 '}';
     }
+
 }
