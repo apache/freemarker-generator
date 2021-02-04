@@ -32,6 +32,7 @@ public class GeneratorObjectWrapper extends DefaultObjectWrapper {
     @Override
     protected TemplateModel handleUnknownType(Object obj) throws TemplateModelException {
         if (obj instanceof DataSources) {
+            // Expose "DataSources" as map in the FreeMarker data model
             final DataSources dataSources = (DataSources) obj;
             return DefaultMapAdapter.adapt((dataSources).toMap(), this);
         }

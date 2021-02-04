@@ -104,9 +104,12 @@ public class DataSources implements Closeable {
      * @return map of data sources
      */
     public Map<String, DataSource> toMap() {
-        return dataSources.stream().collect(Collectors.toMap(DataSource::getName,
+        return dataSources.stream().collect(Collectors.toMap(
+                DataSource::getName,
                 identity(),
-                (v1, v2) -> v1,
+                (ds1, ds2) -> {
+                    throw new IllegalStateException("Duplicate key detected when generating map: " + ds1 + ", " + ds2);
+                },
                 LinkedHashMap::new));
     }
 
