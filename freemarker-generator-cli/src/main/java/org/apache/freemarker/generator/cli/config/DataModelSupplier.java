@@ -66,7 +66,7 @@ public class DataModelSupplier implements Supplier<Map<String, Object>> {
     public Map<String, Object> get() {
         return sources.stream()
                 .filter(StringUtils::isNotEmpty)
-                .map(source -> toDataModel(source))
+                .map(this::toDataModel)
                 .flatMap(map -> map.entrySet().stream())
                 .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
     }
