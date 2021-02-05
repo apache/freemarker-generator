@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static java.util.function.Function.identity;
@@ -76,7 +77,6 @@ public class DataSources implements Closeable {
         return dataSources.stream()
                 .map(DataSource::getGroup)
                 .filter(StringUtils::isNotEmpty)
-                .sorted()
                 .distinct()
                 .collect(Collectors.toList());
     }
@@ -100,8 +100,14 @@ public class DataSources implements Closeable {
 
     /**
      * Get a map representation of the underlying data sources.
+     * In <code>freemarker-cli</code> the map is also used to
+     * iterate over data source so we need to return a
+     * <code>LinkedHashMap</code>.
+     * <p>
+     * The implementation also throws as <code>IllegalStateException</code>
+     * when finding duplicate keys to avoid "losing" data sources.
      *
-     * @return map of data sources
+     * @return linked hasp map of data sources
      */
     public Map<String, DataSource> toMap() {
         return dataSources.stream().collect(Collectors.toMap(

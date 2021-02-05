@@ -238,7 +238,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     }
 
     /**
-     * Gets the contents of an <code>InputStream</code> as a list of Strings,
+     * Get the content of an <code>InputStream</code> as a list of Strings,
      * one entry per line, using the specified character encoding.
      *
      * @return the list of Strings, never null
@@ -366,7 +366,8 @@ public class DataSource implements Closeable, javax.activation.DataSource {
 
     /**
      * If there is no content type we ask the underlying data source. E.g. for
-     * an URL data source this information is fetched from the remote server.
+     * an <code>URLDataSource</code> this information is fetched from the
+     * remote server.
      *
      * @return content type
      */

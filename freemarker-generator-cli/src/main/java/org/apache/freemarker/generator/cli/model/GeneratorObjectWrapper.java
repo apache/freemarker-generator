@@ -23,6 +23,10 @@ import freemarker.template.TemplateModelException;
 import freemarker.template.Version;
 import org.apache.freemarker.generator.base.datasource.DataSources;
 
+/**
+ * Custom FreeMarker object wrapper to expose <code>DataSources</code>
+ * as <code>Map</code> in the FreeMarker data model.
+ */
 public class GeneratorObjectWrapper extends DefaultObjectWrapper {
 
     public GeneratorObjectWrapper(Version incompatibleImprovements) {
@@ -32,7 +36,6 @@ public class GeneratorObjectWrapper extends DefaultObjectWrapper {
     @Override
     protected TemplateModel handleUnknownType(Object obj) throws TemplateModelException {
         if (obj instanceof DataSources) {
-            // Expose "DataSources" as map in the FreeMarker data model
             final DataSources dataSources = (DataSources) obj;
             return DefaultMapAdapter.adapt((dataSources).toMap(), this);
         }
