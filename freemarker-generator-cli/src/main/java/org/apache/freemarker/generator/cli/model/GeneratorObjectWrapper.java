@@ -25,7 +25,8 @@ import org.apache.freemarker.generator.base.datasource.DataSources;
 
 /**
  * Custom FreeMarker object wrapper to expose <code>DataSources</code>
- * as <code>Map</code> in the FreeMarker data model.
+ * as <code>Map</code> in the FreeMarker data model. Please note that
+ * this hides ALL operation exposed by "DataSources".
  */
 public class GeneratorObjectWrapper extends DefaultObjectWrapper {
 
