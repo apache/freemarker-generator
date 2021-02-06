@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file. We try to a
 * [FREEMARKER-129] Provide a `toString()` method for all tools
 
 ### Changed
+* [FREEMARKER-172] Use lower-case keys for DataSource metadata map
 * [FREEMARKER-148] Make usage of "DataSources" more "Freemarker" like
 * [FREEMARKER-155] Migrate the FTL code to terser dotter form
 * [FREEMARKER-153] Packaged templates are now prefixed with `freemarker-generator`, e.g. `freemarker-generator/info.ftl`
