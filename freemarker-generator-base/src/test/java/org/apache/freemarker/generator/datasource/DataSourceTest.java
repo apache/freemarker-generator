@@ -31,6 +31,7 @@ import java.util.Iterator;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
+import static org.apache.freemarker.generator.base.datasource.DataSourceFactory.toUrl;
 import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_TEXT_HTML;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -49,7 +50,7 @@ public class DataSourceTest {
         try (DataSource dataSource = DataSourceFactory.fromString("stdin", ANY_GROUP, ANY_TEXT, Mimetypes.MIME_TEXT_PLAIN)) {
             assertEquals("stdin", dataSource.getName());
             assertEquals(ANY_GROUP, dataSource.getGroup());
-            assertEquals("stdin", dataSource.getBaseName());
+            assertEquals("", dataSource.getBaseName());
             assertEquals("", dataSource.getExtension());
             assertTrue(dataSource.getUri().toString().startsWith("string:///"));
             assertEquals(UTF_8, dataSource.getCharset());
@@ -76,19 +77,20 @@ public class DataSourceTest {
             assertTrue(dataSource.match("name", "*" + ANY_FILE_NAME));
             assertTrue(dataSource.match("uri", "file:/*/pom.xml"));
             assertTrue(dataSource.match("extension", "xml"));
-            assertTrue(dataSource.match("baseName", "pom"));
+            assertTrue(dataSource.match("basename", "pom"));
         }
     }
 
-    @Ignore("Requires internet connection")
     @Test
+    @Ignore("Requires internet access")
     public void shouldSupportUrlDataSource() {
-        try (DataSource dataSource = DataSourceFactory.create("https://www.google.com/?foo=bar")) {
+        try (DataSource dataSource = DataSourceFactory.fromUrl("www.google.com", DEFAULT_GROUP, toUrl("https://www.google.com/?foo=bar"), null, null)) {
             assertEquals("www.google.com", dataSource.getName());
             assertEquals(DEFAULT_GROUP, dataSource.getGroup());
-            assertEquals("www.google", dataSource.getBaseName());
-            assertEquals("com", dataSource.getExtension());
+            assertEquals("", dataSource.getBaseName());
+            assertEquals("", dataSource.getExtension());
             assertEquals("https://www.google.com/?foo=bar", dataSource.getUri().toString());
+            assertEquals("text/html; charset=ISO-8859-1", dataSource.getContentType());
             assertEquals(MIME_TEXT_HTML, dataSource.getMimeType());
             assertEquals("ISO-8859-1", dataSource.getCharset().name());
             assertEquals(-1, dataSource.getLength());
@@ -98,7 +100,7 @@ public class DataSourceTest {
 
     @Test
     public void shouldSupportLineIterator() throws IOException {
-        try (DataSource dataSource = textDataSource()) {
+        try (DataSource dataSource = stringDataSource()) {
             try (LineIterator iterator = dataSource.getLineIterator()) {
                 assertEquals(1, count(iterator));
             }
@@ -107,7 +109,7 @@ public class DataSourceTest {
 
     @Test
     public void shouldReadLines() {
-        try (DataSource dataSource = textDataSource()) {
+        try (DataSource dataSource = stringDataSource()) {
             assertEquals(1, dataSource.getLines().size());
             assertEquals(ANY_TEXT, dataSource.getLines().get(0));
         }
@@ -115,14 +117,29 @@ public class DataSourceTest {
 
     @Test
     public void shouldGetBytes() {
-        try (DataSource dataSource = textDataSource()) {
+        try (DataSource dataSource = stringDataSource()) {
             assertEquals(11, dataSource.getBytes().length);
         }
     }
 
     @Test
+    public void shouldGetMetadata() {
+        try (DataSource dataSource = stringDataSource()) {
+            assertEquals(8, dataSource.getMetadata().size());
+            assertEquals("", dataSource.getMetadata().get("basename"));
+            assertEquals("", dataSource.getMetadata().get("extension"));
+            assertEquals("", dataSource.getMetadata().get("filename"));
+            assertEquals("/", dataSource.getMetadata().get("filepath"));
+            assertEquals("default", dataSource.getMetadata().get("group"));
+            assertEquals("stdin", dataSource.getMetadata().get("name"));
+            assertTrue(dataSource.getMetadata().get("uri").startsWith("string://"));
+            assertEquals("text/plain", dataSource.getMetadata().get("mimetype"));
+        }
+    }
+
+    @Test
     public void shouldCloseDataSource() {
-        final DataSource dataSource = textDataSource();
+        final DataSource dataSource = stringDataSource();
         final TestClosable closable1 = dataSource.addClosable(new TestClosable());
         final TestClosable closable2 = dataSource.addClosable(new TestClosable());
 
@@ -141,7 +158,7 @@ public class DataSourceTest {
         return count;
     }
 
-    private static DataSource textDataSource() {
+    private static DataSource stringDataSource() {
         return DataSourceFactory.fromString("stdin", "default", ANY_TEXT, "text/plain");
     }
 

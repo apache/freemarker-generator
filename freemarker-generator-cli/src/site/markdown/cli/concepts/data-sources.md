@@ -1,12 +1,12 @@
 ## DataSources
 
-A `DataSource` consists of lazy-loaded data available in Apache FreeMarker's model (context) - it provides
+A `DataSource` consists of lazy-loaded data available in Apache FreeMarker's model - it provides
 
-* a `charset` for reading textual content
-* a `content type`
-* a `name` and a `group`
-* access to textual content directly or using a line iterator
-* access to the data input stream
+* A `name` uniquely identifying a data source
+* An `uri` which as used to create the data source
+* A `content type` and `charset`
+* Access to textual content directly or using a line iterator
+* Access to the underlying data input stream
 
 ### Loading A DataSource
 
@@ -64,7 +64,7 @@ freemarker-generator -t freemarker-generator/info.ftl -s examples/data
 FreeMarker Generator DataSources
 ------------------------------------------------------------------------------
 [#1]: name=file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/accesslog/combined-access.log, group=default, fileName=combined-access.log mimeType=text/plain, charset=UTF-8, length=2,068 Bytes
-URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/accesslog/combined-access.log    ...
+URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/accesslog/combined-access.log
 ...
 [#25]: name=file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/yaml/swagger-spec.yaml, group=default, fileName=swagger-spec.yaml mimeType=text/yaml, charset=UTF-8, length=17,555 Bytes
 URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/yaml/swagger-spec.yaml
@@ -83,7 +83,7 @@ URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-ge
 URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/json/swagger-spec.json```
 ```
 
-Access to `stdin` is implemented as `DataSource` - please not that `stdin` is read lazy to cater for arbitrary large input data
+Access to `stdin` is implemented as `DataSource` - please not that `stdin` is read lazily to cater for arbitrary large input data
 
 ```
 cat examples/data/csv/contract.csv | bin/freemarker-generator -t freemarker-generator/info.ftl --stdin
@@ -98,11 +98,39 @@ URI : system:///stdin
 
 After loading one or more `DataSource` they are accessible as `dataSource` map in the FreeMarker model
 
-* `dataSources?values[0]` selects the first data source
+* `dataSources?values[0]` or `dataSources?values?first` selects the first data source
 * `dataSources["user.csv"]` selects the data source with the name "user.csv"
 
+### Iterating Over DataSources
+
+The data sources are exposed as map within FreeMarker's data model 
+
+```
+<#-- Do something with the data sources -->
+<#if dataSources?has_content>
+Some data sources found
+<#else>
+No data sources found ...
+</#if>
+
+<#-- Get the number of data sources -->
+${dataSources?size}
+
+<#-- Iterate over a map of data sources -->
+<#list dataSources as name, dataSource>
+- ${name} => ${dataSource.length}
+</#list>
+
+<#-- Iterate over a list of data sources -->
+<#list dataSources?values as dataSource>
+- [#${dataSource?counter}]: name=${dataSource.name}
+</#list>
+```
+
+### Filtering of DataSources
+
 Combining FreeMarker's `filter` built-in  with the `DataSource#match` methods allows more advanced 
-selection of data sources (using Apache Commons IO wildcard matching)
+selection of data sources (using Apache Commons IO wild-card matching)
 
 ```
 <#-- List all data sources containing "test" in the name -->
@@ -119,4 +147,64 @@ selection of data sources (using Apache Commons IO wildcard matching)
 <#list dataSources?values?filter(ds -> ds.match("filePath", "*/src/test/data/properties")) as ds>
 - ${ds.name}
 </#list>
+
+<#-- List all data sources of a group -->
+<#list dataSources?values?filter(ds -> ds.match("group", "default")) as ds>
+- ${ds.name}
+</#list>
+
 ```
+
+### Using a DataSource
+
+In most cases the data source will passed to a tool but the are some useful operations available as shown below
+
+```text
+Invoke Arbitrary Methods On DataSource
+---------------------------------------------------------------------------
+<#if dataSources?has_content>
+<#assign dataSource=dataSources?values?first>
+Name            : ${dataSource.name}
+Nr of lines     : ${dataSource.lines?size}
+Content Type    : ${dataSource.contentType}
+Charset         : ${dataSource.charset}
+Extension       : ${dataSource.extension}
+Nr of chars     : ${dataSource.text?length}
+Nr of bytes     : ${dataSource.bytes?size}
+File name       : ${dataSource.metadata["filename"]}
+
+Iterating Over Metadata Of A Datasource
+---------------------------------------------------------------------------
+<#list dataSource.metadata as name, value>
+${name?right_pad(15)} : ${value}
+</#list>
+</#if>
+```
+
+will result in
+
+```text
+Invoke Arbitrary Methods On DataSource
+---------------------------------------------------------------------------
+Name            : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/src/app/examples/data/csv/contract.csv
+Nr of lines     : 23
+Content Type    : text/csv
+Charset         : UTF-8
+Extension       : csv
+Nr of chars     : 6,328
+Nr of bytes     : 6,328
+File name       : contract.csv
+
+Iterating Over Metadata Of A Datasource
+---------------------------------------------------------------------------
+extension       : csv
+filename        : contract.csv
+basename        : contract
+filepath        : /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/src/app/examples/data/csv
+name            : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/src/app/examples/data/csv/contract.csv
+mimetype        : text/csv
+uri             : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/src/app/examples/data/csv/contract.csv
+group           : default
+```
+
+

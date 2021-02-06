@@ -46,7 +46,7 @@ public class MimetypesFileTypeMapFactory {
             mimeTypes.addMimeTypes(MIME_APPLICATION_XML + " xml XML");
             mimeTypes.addMimeTypes(MIME_APPLICATION_XHTML + " xhtml XHTML");
             mimeTypes.addMimeTypes(MIME_TEXT_CSV + " csv CSV");
-            mimeTypes.addMimeTypes(MIME_TEXT_PLAIN + " adoc ADOC bat BAT env ENV ftl FTL ini INI log LOG properties txt TXT");
+            mimeTypes.addMimeTypes(MIME_TEXT_PLAIN + " adoc ADOC bat BAT env ENV ftl FTL ini INI log LOG properties PROPERTIES txt TXT");
             mimeTypes.addMimeTypes(MIME_TEXT_HTML + " htm HTM html HTML");
             mimeTypes.addMimeTypes(MIME_TEXT_MARKDOWM + " md MD");
             mimeTypes.addMimeTypes(MIME_TEXT_RTF + " rtf RTF");

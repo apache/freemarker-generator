@@ -40,6 +40,8 @@ import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_G
  */
 public class DataSourcesSupplier implements Supplier<List<DataSource>> {
 
+    private final DataSourceLoader dataSourceLoader;
+
     /** List of source files and/or directories */
     private final Collection<String> sources;
 
@@ -61,6 +63,7 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
      * @param charset The charset for loading text files
      */
     public DataSourcesSupplier(Collection<String> sources, String include, String exclude, Charset charset) {
+        this.dataSourceLoader = DataSourceLoaderFactory.create();
         this.sources = new ArrayList<>(sources);
         this.include = include;
         this.exclude = exclude;
@@ -97,8 +100,12 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
         }
     }
 
-    private static DataSource resolveHttpUrl(String source) {
-        return DataSourceFactory.create(source);
+    private DataSource resolveHttpUrl(String source) {
+        return dataSourceLoader.load(source);
+    }
+
+    private DataSource resolveEnvironment(String source) {
+        return dataSourceLoader.load(source);
     }
 
     private static List<DataSource> resolveFileOrDirectory(String source, String include, String exclude, Charset charset) {
@@ -109,11 +116,6 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
         return fileSupplier(path, include, exclude).get().stream()
                 .map(file -> DataSourceFactory.fromFile(getDataSourceName(namedUri, file), group, file, currCharset))
                 .collect(toList());
-    }
-
-    private static DataSource resolveEnvironment(String source) {
-        final NamedUri namedUri = NamedUriStringParser.parse(source);
-        return DataSourceFactory.fromNamedUri(namedUri);
     }
 
     private static RecursiveFileSupplier fileSupplier(String source, String include, String exclude) {

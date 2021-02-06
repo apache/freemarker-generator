@@ -5,9 +5,9 @@ All notable changes to this project will be documented in this file. We try to a
 ## 0.1.0-SNAPSHOT
 
 ### Added
-* Parse list of `DataSources` for the various tools
+* Parse a list of `DataSources` for the various tools
+* [FREEMARKER-161] Allow multiple transformations on the CLI
 * [FREEMARKER-163] Integrate Java Faker library for test data generation
-* [FREEMARKER-148] Make usage of "DataSources" more "Freemarker" like
 * [FREEMARKER-149] Support multiple template transformations on the command line
 * [FREEMARKER-144] Proof Of Concept for providing DataFrames
 * [FREEMARKER-142] Support Transformation Of Directories
@@ -17,30 +17,32 @@ All notable changes to this project will be documented in this file. We try to a
 * [FREEMARKER-129] Support `DataSource` exclude pattern in addition to include pattern
 * [FREEMARKER-129] User-defined parameters are passed as `-Pkey=value` instead of using system properties
 * [FREEMARKER-129] Migrate `freemarker-cli` into `freemarker-generator` project (see [https://github.com/sgoeschl/freemarker-cli](https://github.com/sgoeschl/freemarker-cli))
+* [FREEMARKER-129] Provide a `toString()` method for all tools
 
 ### Changed
-* [FREEMARKER-161] Allow multiple transformations on the CLI
-* [FREEMARKER-155] Migrate the FTL code to terser dotter form 
+* [FREEMARKER-172] Use lower-case keys for DataSource metadata map
+* [FREEMARKER-148] Make usage of "DataSources" more "Freemarker" like
+* [FREEMARKER-155] Migrate the FTL code to terser dotter form
 * [FREEMARKER-153] Packaged templates are now prefixed with `freemarker-generator`, e.g. `freemarker-generator/info.ftl`
 * [FREEMARKER-153] Renamed `--basedir` command line option to `--template-dir`
 * [FREEMARKER-153] Renamed `freemarker-cli` to `freemarker-generator`
-* Removing `DataSources.first` and use `dataSources.get(0)` instead
 * [FREEMARKER-146] Cleanly separate example templates and data from user-supplied content
 * `DataSource` use `uri` instead of `location`
 * [FREEMARKER-138] freemarker-generator: Rename `Datasource` to `DataSource`
 * [FREEMARKER-136] Fix broken `site:stage` build
 * [FREEMARKER-134] Rename `Document` to `Datasource` which also changes `--document` to `--datasource`
 * [FREEMARKER-129] Use `freemarker.configuration.setting` in `freemarker-cli.properties` to configure FreeMarker
-* [FREEMARKER-129] Provide a `toString()` method for all tools
 * [FREEMARKER-129] Use version "0.X.Y" to cater for API changes according to [Semantic Versioning](https://semver.org)
 
 ### Fixed
+* [FREEMARKER-156] The Maven plugin unit tests failed randomly
 * [FREEMARKER-153] Configuration files are bootstrapped from "app.home" system property 
 * [FREEMARKER-151] Ensure that build and and examples are running on Windows
 * [FREEMARKER-147] Complete Maven site documentation
 * [FREEMARKER-127] Site build fails with missing "org/apache/maven/doxia/siterenderer/DocumentContent"
 
 ### Internal
+* [FREEMARKER-172] Refactor DataSourceFactory
 * [FREEMARKER-164] Use default unsafe FreeMarker configuration
 * [FREEMARKER-153] FreeMarker Generator release preparations
 * [FREEMARKER-168] Upgrade dependencies of freemarker-generator
@@ -62,7 +64,9 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-151]: https://issues.apache.org/jira/browse/FREEMARKER-151
 [FREEMARKER-153]: https://issues.apache.org/jira/browse/FREEMARKER-153
 [FREEMARKER-155]: https://issues.apache.org/jira/browse/FREEMARKER-155
+[FREEMARKER-156]: https://issues.apache.org/jira/browse/FREEMARKER-156
 [FREEMARKER-161]: https://issues.apache.org/jira/browse/FREEMARKER-161
 [FREEMARKER-163]: https://issues.apache.org/jira/browse/FREEMARKER-163
 [FREEMARKER-164]: https://issues.apache.org/jira/browse/FREEMARKER-164
 [FREEMARKER-168]: https://issues.apache.org/jira/browse/FREEMARKER-168
+[FREEMARKER-172]: https://issues.apache.org/jira/browse/FREEMARKER-172

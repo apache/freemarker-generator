@@ -34,7 +34,10 @@ import java.io.OutputStream;
 import java.io.StringWriter;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
@@ -43,7 +46,7 @@ import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_APPLICATI
 
 /**
  * Data source which encapsulates data to be used for rendering
- * a template. When accessing content it is loaded on demand on not
+ * a template. When accessing content it is loaded on demand and not
  * kept in memory to allow processing of large volumes of data.
  * <br>
  * There is also special support of <code>UrlDataSource</code> since
@@ -55,14 +58,25 @@ import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_APPLICATI
  */
 public class DataSource implements Closeable, javax.activation.DataSource {
 
-    public static final String METADATA_BASE_NAME = "baseName";
+    public static final String METADATA_BASE_NAME = "basename";
     public static final String METADATA_EXTENSION = "extension";
-    public static final String METADATA_FILE_NAME = "fileName";
-    public static final String METADATA_FILE_PATH = "filePath";
+    public static final String METADATA_FILE_NAME = "filename";
+    public static final String METADATA_FILE_PATH = "filepath";
     public static final String METADATA_GROUP = "group";
     public static final String METADATA_NAME = "name";
     public static final String METADATA_URI = "uri";
-    public static final String METADATA_URI_PATH = "uriPath";
+    public static final String METADATA_MIME_TYPE = "mimetype";
+
+    public static final List<String> METADATA_KEYS = Arrays.asList(
+            METADATA_BASE_NAME,
+            METADATA_EXTENSION,
+            METADATA_FILE_NAME,
+            METADATA_FILE_PATH,
+            METADATA_GROUP,
+            METADATA_NAME,
+            METADATA_URI,
+            METADATA_MIME_TYPE
+    );
 
     /** Human-readable name of the data source */
     private final String name;
@@ -140,14 +154,32 @@ public class DataSource implements Closeable, javax.activation.DataSource {
         return group;
     }
 
+    /**
+     * Get the file name from the underlying "FileDataSource". All
+     * other data sources will return an empty string.
+     *
+     * @return file name or empty string
+     */
     public String getFileName() {
-        return FilenameUtils.getName(name);
+        return isFileDataSource() ? FilenameUtils.getName(dataSource.getName()) : "";
     }
 
+    /**
+     * Get the base name from the underlying "FileDataSource". All
+     * other data sources will return an empty string.
+     *
+     * @return base name or empty string
+     */
     public String getBaseName() {
         return FilenameUtils.getBaseName(getFileName());
     }
 
+    /**
+     * Get the extension from the underlying "FileDataSource". All
+     * other data sources will return an empty string.
+     *
+     * @return base name or empty string
+     */
     public String getExtension() {
         return FilenameUtils.getExtension(getFileName());
     }
@@ -180,11 +212,11 @@ public class DataSource implements Closeable, javax.activation.DataSource {
      * @return Length of data source or UNKNOWN_LENGTH
      */
     public long getLength() {
-        if (dataSource instanceof FileDataSource) {
+        if (isFileDataSource()) {
             return ((FileDataSource) dataSource).getFile().length();
-        } else if (dataSource instanceof StringDataSource) {
+        } else if (isStringDataSource()) {
             return ((StringDataSource) dataSource).length();
-        } else if (dataSource instanceof ByteArrayDataSource) {
+        } else if (isByteArrayDataSource()) {
             return ((ByteArrayDataSource) dataSource).length();
         } else {
             return DATASOURCE_UNKNOWN_LENGTH;
@@ -220,7 +252,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     }
 
     /**
-     * Gets the contents of an <code>InputStream</code> as a list of Strings,
+     * Get the content of an <code>InputStream</code> as a list of Strings,
      * one entry per line, using the specified character encoding.
      *
      * @return the list of Strings, never null
@@ -246,7 +278,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     }
 
     /**
-     * Returns an Iterator for the lines in an <code>InputStream</code>, using
+     * Returns an iterator for the lines in an <code>InputStream</code>, using
      * the default character encoding specified. The exposed iterator is closed
      * by the <code>DataSource</code>.
      *
@@ -282,7 +314,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     }
 
     /**
-     * Expose various parts of the metadata as simple strings to cater for filtering in  a script.
+     * Expose various parts of the metadata as simple strings to cater for filtering in a script.
      *
      * @param key key part key
      * @return value
@@ -302,13 +334,23 @@ public class DataSource implements Closeable, javax.activation.DataSource {
                 return getGroup();
             case METADATA_NAME:
                 return getName();
-            case METADATA_URI_PATH:
-                return uri.getPath();
             case METADATA_URI:
                 return uri.toString();
+            case METADATA_MIME_TYPE:
+                return getMimeType();
             default:
                 throw new IllegalArgumentException("Unknown key: " + key);
         }
+    }
+
+    /**
+     * Get all metadata parts as map.
+     *
+     * @return Map of metadata parts
+     */
+    public Map<String, String> getMetadata() {
+        return METADATA_KEYS.stream()
+                .collect(Collectors.toMap(key -> key, this::getMetadata));
     }
 
     /**
@@ -348,7 +390,8 @@ public class DataSource implements Closeable, javax.activation.DataSource {
 
     /**
      * If there is no content type we ask the underlying data source. E.g. for
-     * an URL data source this information is fetched from the remote server.
+     * an <code>URLDataSource</code> this information is fetched from the
+     * remote server.
      *
      * @return content type
      */
@@ -356,7 +399,20 @@ public class DataSource implements Closeable, javax.activation.DataSource {
         if (StringUtils.isNotEmpty(contentType)) {
             return contentType;
         } else {
-            return StringUtils.firstNonEmpty(dataSource.getContentType(), MIME_APPLICATION_OCTET_STREAM);
+            final String contentType = dataSource.getContentType();
+            return StringUtils.firstNonEmpty(contentType, MIME_APPLICATION_OCTET_STREAM);
         }
+    }
+
+    private boolean isFileDataSource() {
+        return dataSource instanceof FileDataSource;
+    }
+
+    private boolean isStringDataSource() {
+        return dataSource instanceof StringDataSource;
+    }
+
+    private boolean isByteArrayDataSource() {
+        return dataSource instanceof ByteArrayDataSource;
     }
 }

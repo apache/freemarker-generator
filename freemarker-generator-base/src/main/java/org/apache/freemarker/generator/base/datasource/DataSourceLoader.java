@@ -14,25 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.base.util;
+package org.apache.freemarker.generator.base.datasource;
 
-import java.util.Locale;
+import java.nio.charset.Charset;
 
-/**
- * Helper class to detect the operting system (mostly Windows).
- */
-public class OperatingSystem {
-    private static final String OS = System.getProperty("os.name", "unknown").toLowerCase(Locale.ROOT);
+public interface DataSourceLoader {
 
-    public static boolean isWindows() {
-        return OS.contains("win");
-    }
+    /**
+     * Check if the source would be accepted
+     *
+     * @param source source
+     * @return true if the instance wold be able to load a data source
+     */
+    boolean accept(String source);
 
-    public static boolean isMac() {
-        return OS.contains("mac");
-    }
+    /**
+     * Load a DataSource.
+     *
+     * @param source source of the data source
+     * @return DataSource
+     */
+    DataSource load(String source);
 
-    public static boolean isUnix() {
-        return OS.contains("nux");
-    }
+    /**
+     * Load a DataSource using the given charset.
+     *
+     * @param source source of the data source
+     * @param charset charset to use
+     * @return DataSource
+     */
+    DataSource load(String source, Charset charset);
 }

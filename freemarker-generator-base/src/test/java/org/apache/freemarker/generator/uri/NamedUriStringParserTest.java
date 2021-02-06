@@ -20,6 +20,7 @@ import org.apache.freemarker.generator.base.uri.NamedUri;
 import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
 import org.junit.Test;
 
+import static java.nio.charset.StandardCharsets.UTF_16;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -184,6 +185,7 @@ public class NamedUriStringParserTest {
         assertNull(namedURI.getGroup());
         assertEquals("file:///users.csv#charset=UTF-16&mimeType=text/csv", namedURI.getUri().toString());
         assertEquals(2, namedURI.getParameters().size());
+        assertEquals(UTF_16, namedURI.getCharset());
         assertEquals("UTF-16", namedURI.getParameters().get("charset"));
         assertEquals("text/csv", namedURI.getParameters().get("mimeType"));
     }

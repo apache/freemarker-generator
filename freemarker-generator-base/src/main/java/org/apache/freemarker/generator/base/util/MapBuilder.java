@@ -45,6 +45,8 @@ public class MapBuilder {
                 case 1:
                     map.put(currKey, value);
                     break;
+                default:
+                    throw new RuntimeException("That should never happen");
             }
         }
 

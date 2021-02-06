@@ -21,6 +21,7 @@ package org.apache.freemarker.generator.maven;
 import freemarker.template.Configuration;
 import org.assertj.core.api.*;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -204,6 +205,7 @@ public class OutputGeneratorTest {
     }
 
     @Test
+    @Ignore("Only pollutes the build output")
     public void generate_missingVarTest() {
         final OutputGenerator.OutputGeneratorBuilder builder = OutputGenerator.builder();
         builder.addPomLastModifiedTimestamp(0);

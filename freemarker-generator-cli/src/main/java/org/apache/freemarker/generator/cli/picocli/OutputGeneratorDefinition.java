@@ -103,10 +103,8 @@ public class OutputGeneratorDefinition {
     private static boolean isFileSource(String source) {
         if (source.contains("file://")) {
             return true;
-        } else if (source.contains("://")) {
-            return false;
         } else {
-            return true;
+            return !source.contains("://");
         }
     }
 }

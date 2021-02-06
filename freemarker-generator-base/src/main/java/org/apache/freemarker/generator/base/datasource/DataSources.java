@@ -76,7 +76,6 @@ public class DataSources implements Closeable {
         return dataSources.stream()
                 .map(DataSource::getGroup)
                 .filter(StringUtils::isNotEmpty)
-                .sorted()
                 .distinct()
                 .collect(Collectors.toList());
     }
@@ -100,13 +99,22 @@ public class DataSources implements Closeable {
 
     /**
      * Get a map representation of the underlying data sources.
+     * In <code>freemarker-cli</code> the map is also used to
+     * iterate over data source so we need to return a
+     * <code>LinkedHashMap</code>.
+     * <p>
+     * The implementation also throws as <code>IllegalStateException</code>
+     * when finding duplicate keys to avoid "losing" data sources.
      *
-     * @return map of data sources
+     * @return linked hasp map of data sources
      */
     public Map<String, DataSource> toMap() {
-        return dataSources.stream().collect(Collectors.toMap(DataSource::getName,
+        return dataSources.stream().collect(Collectors.toMap(
+                DataSource::getName,
                 identity(),
-                (v1, v2) -> v1,
+                (ds1, ds2) -> {
+                    throw new IllegalStateException("Duplicate key detected when generating map: " + ds1 + ", " + ds2);
+                },
                 LinkedHashMap::new));
     }
 

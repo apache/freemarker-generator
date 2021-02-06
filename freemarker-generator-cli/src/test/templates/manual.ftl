@@ -22,44 +22,37 @@ Nr. of Documents: ${dataSources?size}
 
 Use FTL Array-style Access
 ---------------------------------------------------------------------------
-${dataSources[0].toString()}
-
-Use FTL Map-style access
----------------------------------------------------------------------------
-${DataSources["github-users.json"].toString()}
-${DataSources["github-users.json"].name}
+${dataSources?values[0].toString()}
+${dataSources?values?first.toString()}
 
 Get Document Names As Keys
 ---------------------------------------------------------------------------
-<#list DataSources?keys as name>
+<#list dataSources?keys as name>
     ${name}<#lt>
 </#list>
 
 Iterate Over Names & DataSources
 ---------------------------------------------------------------------------
-<#list DataSources as name, dataSource>
-    ${name} => ${dataSource}<#lt>
+<#list dataSources as name, dataSource>
+    ${name} => ${dataSource.uri}<#lt>
 </#list>
 
-Find DataSources By Group
+Invoke Arbitrary Methods On DataSource
 ---------------------------------------------------------------------------
-<#list dataSources.findByGroup("default") as dataSource>
-    ${dataSource}<#lt>
+<#if dataSources?has_content>
+<#assign dataSource=dataSources?values?first>
+Name            : ${dataSource.name}
+Nr of lines     : ${dataSource.lines?size}
+Content Type    : ${dataSource.contentType}
+Charset         : ${dataSource.charset}
+Extension       : ${dataSource.extension}
+Nr of chars     : ${dataSource.text?length}
+Nr of bytes     : ${dataSource.bytes?size}
+File name       : ${dataSource.metadata["filename"]}
+
+Iterating Over Metadata Of A Datasource
+---------------------------------------------------------------------------
+<#list dataSource.metadata as name, value>
+${name?right_pad(15)} : ${value}
 </#list>
-
-Find DataSources By Wildcard
----------------------------------------------------------------------------
-<#list dataSources.find("*.csv") as dataSource>
-    ${dataSource}<#lt>
-</#list>
-
-Java Array-style access
----------------------------------------------------------------------------
-${dataSources?values[0].toString()}
-
-Invoke Arbitrary Methods On DataSources
----------------------------------------------------------------------------
-empty       : ${dataSources.empty?c}
-isEmpty()   : ${dataSources.isEmpty()?c}
-size()      : ${dataSources.size()}
-close()     : ${dataSources.close()}worx
+</#if>
