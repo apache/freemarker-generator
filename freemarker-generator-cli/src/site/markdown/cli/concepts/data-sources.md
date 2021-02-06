@@ -1,12 +1,12 @@
 ## DataSources
 
-A `DataSource` consists of lazy-loaded data available in Apache FreeMarker's model (context) - it provides
+A `DataSource` consists of lazy-loaded data available in Apache FreeMarker's model - it provides
 
-* a `charset` for reading textual content
-* a `content type`
-* a `name` and a `group`
-* access to textual content directly or using a line iterator
-* access to the data input stream
+* A `name` uniquely identifying a data source
+* An `uri` which as used to create the data source
+* A `content type` and `charset`
+* Access to textual content directly or using a line iterator
+* Access to the underlying data input stream
 
 ### Loading A DataSource
 
@@ -64,7 +64,7 @@ freemarker-generator -t freemarker-generator/info.ftl -s examples/data
 FreeMarker Generator DataSources
 ------------------------------------------------------------------------------
 [#1]: name=file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/accesslog/combined-access.log, group=default, fileName=combined-access.log mimeType=text/plain, charset=UTF-8, length=2,068 Bytes
-URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/accesslog/combined-access.log    ...
+URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/accesslog/combined-access.log
 ...
 [#25]: name=file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/yaml/swagger-spec.yaml, group=default, fileName=swagger-spec.yaml mimeType=text/yaml, charset=UTF-8, length=17,555 Bytes
 URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/yaml/swagger-spec.yaml
@@ -83,7 +83,7 @@ URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-ge
 URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/json/swagger-spec.json```
 ```
 
-Access to `stdin` is implemented as `DataSource` - please not that `stdin` is read lazy to cater for arbitrary large input data
+Access to `stdin` is implemented as `DataSource` - please not that `stdin` is read lazily to cater for arbitrary large input data
 
 ```
 cat examples/data/csv/contract.csv | bin/freemarker-generator -t freemarker-generator/info.ftl --stdin
@@ -101,8 +101,36 @@ After loading one or more `DataSource` they are accessible as `dataSource` map i
 * `dataSources?values[0]` selects the first data source
 * `dataSources["user.csv"]` selects the data source with the name "user.csv"
 
+### Iterating Over DataSources
+
+The data sources are exposed as map within FreeMarker's data model 
+
+```
+<#-- Do something with the data sources -->
+<#if dataSources?has_content>
+${dataSources?values[0].name}
+<#else>
+No data sources found ...
+</#if>
+
+<#-- Get the number of data sources -->
+${dataSources?size}
+
+<#-- Iterate over a map of data sources -->
+<#list dataSources as name, ds>
+- ${name} => ${ds.length}
+</#list>
+
+<#-- Iterate over a list of data sources -->
+<#list dataSources?values as dataSource>
+- [#${dataSource?counter}]: name=${dataSource.name}
+</#list>
+```
+
+### Filtering of DataSources
+
 Combining FreeMarker's `filter` built-in  with the `DataSource#match` methods allows more advanced 
-selection of data sources (using Apache Commons IO wildcard matching)
+selection of data sources (using Apache Commons IO wild-card matching)
 
 ```
 <#-- List all data sources containing "test" in the name -->
@@ -119,4 +147,10 @@ selection of data sources (using Apache Commons IO wildcard matching)
 <#list dataSources?values?filter(ds -> ds.match("filePath", "*/src/test/data/properties")) as ds>
 - ${ds.name}
 </#list>
+
+<#-- List all data sources of a group -->
+<#list dataSources?values?filter(ds -> ds.match("group", "default")) as ds>
+- ${ds.name}
+</#list>
+
 ```
