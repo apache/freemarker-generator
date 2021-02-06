@@ -34,7 +34,10 @@ import java.io.OutputStream;
 import java.io.StringWriter;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
@@ -55,14 +58,25 @@ import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_APPLICATI
  */
 public class DataSource implements Closeable, javax.activation.DataSource {
 
-    public static final String METADATA_BASE_NAME = "baseName";
+    public static final String METADATA_BASE_NAME = "basename";
     public static final String METADATA_EXTENSION = "extension";
-    public static final String METADATA_FILE_NAME = "fileName";
-    public static final String METADATA_FILE_PATH = "filePath";
+    public static final String METADATA_FILE_NAME = "filename";
+    public static final String METADATA_FILE_PATH = "filepath";
     public static final String METADATA_GROUP = "group";
     public static final String METADATA_NAME = "name";
     public static final String METADATA_URI = "uri";
-    public static final String METADATA_MIME_TYPE = "mimeType";
+    public static final String METADATA_MIME_TYPE = "mimetype";
+
+    public static final List<String> METADATA_KEYS = Arrays.asList(
+            METADATA_BASE_NAME,
+            METADATA_EXTENSION,
+            METADATA_FILE_NAME,
+            METADATA_FILE_PATH,
+            METADATA_GROUP,
+            METADATA_NAME,
+            METADATA_URI,
+            METADATA_MIME_TYPE
+    );
 
     /** Human-readable name of the data source */
     private final String name;
@@ -327,6 +341,16 @@ public class DataSource implements Closeable, javax.activation.DataSource {
             default:
                 throw new IllegalArgumentException("Unknown key: " + key);
         }
+    }
+
+    /**
+     * Get all metadata parts as map.
+     *
+     * @return Map of metadata parts
+     */
+    public Map<String, String> getMetadata() {
+        return METADATA_KEYS.stream()
+                .collect(Collectors.toMap(key -> key, this::getMetadata));
     }
 
     /**

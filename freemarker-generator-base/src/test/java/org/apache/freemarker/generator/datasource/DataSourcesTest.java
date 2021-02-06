@@ -32,6 +32,7 @@ import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_G
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class DataSourcesTest {
 
@@ -99,7 +100,7 @@ public class DataSourcesTest {
 
     @Test
     public void shouldGetMetadataParts() {
-        assertEquals(asList("", "pom.xml", ""), dataSources().getMetadata("fileName"));
+        assertEquals(asList("", "pom.xml", ""), dataSources().getMetadata("filename"));
         assertEquals(asList("", "xml", ""), dataSources().getMetadata("extension"));
         assertEquals(asList("unknown", "pom.xml", "server.invalid?foo=bar"), dataSources().getMetadata("name"));
     }

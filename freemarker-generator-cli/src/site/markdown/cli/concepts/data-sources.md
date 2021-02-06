@@ -98,7 +98,7 @@ URI : system:///stdin
 
 After loading one or more `DataSource` they are accessible as `dataSource` map in the FreeMarker model
 
-* `dataSources?values[0]` selects the first data source
+* `dataSources?values[0]` or `dataSources?values?first` selects the first data source
 * `dataSources["user.csv"]` selects the data source with the name "user.csv"
 
 ### Iterating Over DataSources
@@ -108,7 +108,7 @@ The data sources are exposed as map within FreeMarker's data model
 ```
 <#-- Do something with the data sources -->
 <#if dataSources?has_content>
-${dataSources?values[0].name}
+Some data sources found
 <#else>
 No data sources found ...
 </#if>
@@ -117,8 +117,8 @@ No data sources found ...
 ${dataSources?size}
 
 <#-- Iterate over a map of data sources -->
-<#list dataSources as name, ds>
-- ${name} => ${ds.length}
+<#list dataSources as name, dataSource>
+- ${name} => ${dataSource.length}
 </#list>
 
 <#-- Iterate over a list of data sources -->
@@ -154,3 +154,57 @@ selection of data sources (using Apache Commons IO wild-card matching)
 </#list>
 
 ```
+
+### Using a DataSource
+
+In most cases the data source will passed to a tool but the are some useful operations available as shown below
+
+```text
+Invoke Arbitrary Methods On DataSource
+---------------------------------------------------------------------------
+<#if dataSources?has_content>
+<#assign dataSource=dataSources?values?first>
+Name            : ${dataSource.name}
+Nr of lines     : ${dataSource.lines?size}
+Content Type    : ${dataSource.contentType}
+Charset         : ${dataSource.charset}
+Extension       : ${dataSource.extension}
+Nr of chars     : ${dataSource.text?length}
+Nr of bytes     : ${dataSource.bytes?size}
+File name       : ${dataSource.metadata["filename"]}
+
+Iterating Over Metadata Of A Datasource
+---------------------------------------------------------------------------
+<#list dataSource.metadata as name, value>
+${name?right_pad(15)} : ${value}
+</#list>
+</#if>
+```
+
+will result in
+
+```text
+Invoke Arbitrary Methods On DataSource
+---------------------------------------------------------------------------
+Name            : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/src/app/examples/data/csv/contract.csv
+Nr of lines     : 23
+Content Type    : text/csv
+Charset         : UTF-8
+Extension       : csv
+Nr of chars     : 6,328
+Nr of bytes     : 6,328
+File name       : contract.csv
+
+Iterating Over Metadata Of A Datasource
+---------------------------------------------------------------------------
+extension       : csv
+filename        : contract.csv
+basename        : contract
+filepath        : /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/src/app/examples/data/csv
+name            : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/src/app/examples/data/csv/contract.csv
+mimetype        : text/csv
+uri             : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/src/app/examples/data/csv/contract.csv
+group           : default
+```
+
+

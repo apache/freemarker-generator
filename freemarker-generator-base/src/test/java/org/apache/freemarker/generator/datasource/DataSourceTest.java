@@ -77,7 +77,7 @@ public class DataSourceTest {
             assertTrue(dataSource.match("name", "*" + ANY_FILE_NAME));
             assertTrue(dataSource.match("uri", "file:/*/pom.xml"));
             assertTrue(dataSource.match("extension", "xml"));
-            assertTrue(dataSource.match("baseName", "pom"));
+            assertTrue(dataSource.match("basename", "pom"));
         }
     }
 
@@ -100,7 +100,7 @@ public class DataSourceTest {
 
     @Test
     public void shouldSupportLineIterator() throws IOException {
-        try (DataSource dataSource = textDataSource()) {
+        try (DataSource dataSource = stringDataSource()) {
             try (LineIterator iterator = dataSource.getLineIterator()) {
                 assertEquals(1, count(iterator));
             }
@@ -109,7 +109,7 @@ public class DataSourceTest {
 
     @Test
     public void shouldReadLines() {
-        try (DataSource dataSource = textDataSource()) {
+        try (DataSource dataSource = stringDataSource()) {
             assertEquals(1, dataSource.getLines().size());
             assertEquals(ANY_TEXT, dataSource.getLines().get(0));
         }
@@ -117,14 +117,29 @@ public class DataSourceTest {
 
     @Test
     public void shouldGetBytes() {
-        try (DataSource dataSource = textDataSource()) {
+        try (DataSource dataSource = stringDataSource()) {
             assertEquals(11, dataSource.getBytes().length);
         }
     }
 
     @Test
+    public void shouldGetMetadata() {
+        try (DataSource dataSource = stringDataSource()) {
+            assertEquals(8, dataSource.getMetadata().size());
+            assertEquals("", dataSource.getMetadata().get("basename"));
+            assertEquals("", dataSource.getMetadata().get("extension"));
+            assertEquals("", dataSource.getMetadata().get("filename"));
+            assertEquals("/", dataSource.getMetadata().get("filepath"));
+            assertEquals("default", dataSource.getMetadata().get("group"));
+            assertEquals("stdin", dataSource.getMetadata().get("name"));
+            assertTrue(dataSource.getMetadata().get("uri").startsWith("string://"));
+            assertEquals("text/plain", dataSource.getMetadata().get("mimetype"));
+        }
+    }
+
+    @Test
     public void shouldCloseDataSource() {
-        final DataSource dataSource = textDataSource();
+        final DataSource dataSource = stringDataSource();
         final TestClosable closable1 = dataSource.addClosable(new TestClosable());
         final TestClosable closable2 = dataSource.addClosable(new TestClosable());
 
@@ -143,7 +158,7 @@ public class DataSourceTest {
         return count;
     }
 
-    private static DataSource textDataSource() {
+    private static DataSource stringDataSource() {
         return DataSourceFactory.fromString("stdin", "default", ANY_TEXT, "text/plain");
     }
 
