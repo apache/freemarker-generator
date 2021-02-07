@@ -50,12 +50,6 @@ public class HttpDataSourceLoader implements DataSourceLoader {
         return DataSourceFactory.fromUrl(name, group, url, mimeType, charset);
     }
 
-    @Override
-    public DataSource load(String source, Charset charset) {
-        // We should pick up the charset from the HTTP server
-        return load(source);
-    }
-
     private static URL toUrl(URI uri) {
         try {
             return uri.toURL();

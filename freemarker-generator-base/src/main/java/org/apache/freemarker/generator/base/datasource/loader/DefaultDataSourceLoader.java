@@ -19,7 +19,6 @@ package org.apache.freemarker.generator.base.datasource.loader;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceLoader;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,16 +46,10 @@ public class DefaultDataSourceLoader implements DataSourceLoader {
         return get(source).load(source);
     }
 
-    @Override
-    public DataSource load(String source, Charset charset) {
-        return get(source).load(source, charset);
-    }
-
     private DataSourceLoader get(String source) {
         return dataSourceLoaders.stream()
                 .filter(loader -> loader.accept(source))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Don't know how to load: " + source));
     }
-
 }

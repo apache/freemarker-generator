@@ -16,14 +16,12 @@
  */
 package org.apache.freemarker.generator.base.datasource;
 
-import java.nio.charset.Charset;
-
 public interface DataSourceLoader {
 
     /**
-     * Check if the source would be accepted
+     * Check if the data source can be loaded by this instance.
      *
-     * @param source source
+     * @param source source to be loaded from
      * @return true if the instance wold be able to load a data source
      */
     boolean accept(String source);
@@ -35,13 +33,4 @@ public interface DataSourceLoader {
      * @return DataSource
      */
     DataSource load(String source);
-
-    /**
-     * Load a DataSource using the given charset.
-     *
-     * @param source source of the data source
-     * @param charset charset to use
-     * @return DataSource
-     */
-    DataSource load(String source, Charset charset);
 }

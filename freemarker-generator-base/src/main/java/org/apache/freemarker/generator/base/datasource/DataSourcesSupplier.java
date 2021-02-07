@@ -123,7 +123,7 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
     }
 
     private static Charset getCharsetOrElse(NamedUri namedUri, Charset def) {
-        return Charset.forName(namedUri.getParameter(NamedUri.CHARSET, def.name()));
+        return namedUri.getCharsetOrElse(def);
     }
 
     private static boolean isHttpUri(String value) {

@@ -240,13 +240,14 @@ public class NamedUriStringParserTest {
 
     @Test
     public void shouldParseNamedGroupUrlWithQueryAndFragment() {
-        final NamedUri namedURI = parse("google:web=http://google.com?foo=bar#charset=UTF-16");
+        final NamedUri namedURI = parse("google:web=http://google.com?foo=bar#charset=UTF-16&name=value");
 
         assertEquals("google", namedURI.getName());
         assertEquals("web", namedURI.getGroup());
-        assertEquals("http://google.com?foo=bar#charset=UTF-16", namedURI.getUri().toString());
-        assertEquals(1, namedURI.getParameters().size());
+        assertEquals("http://google.com?foo=bar#charset=UTF-16&name=value", namedURI.getUri().toString());
+        assertEquals(2, namedURI.getParameters().size());
         assertEquals("UTF-16", namedURI.getParameters().get("charset"));
+        assertEquals("value", namedURI.getParameters().get("name"));
     }
 
     @Test(expected = RuntimeException.class)
