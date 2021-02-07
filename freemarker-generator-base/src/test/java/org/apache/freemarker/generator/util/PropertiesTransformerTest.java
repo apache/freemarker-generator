@@ -18,8 +18,6 @@ package org.apache.freemarker.generator.util;
 
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.Configuration.TOOLS_PREFIX;
@@ -28,8 +26,6 @@ import static org.apache.freemarker.generator.base.util.PropertiesTransformer.re
 import static org.junit.Assert.assertEquals;
 
 public class PropertiesTransformerTest {
-
-    private final Map<String, Object> settings = new HashMap<>();
 
     @Test
     public void shouldFilterKeyPrefix() {

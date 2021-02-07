@@ -17,23 +17,29 @@
 package org.apache.freemarker.generator.base.uri;
 
 import org.apache.freemarker.generator.base.util.StringUtils;
+import org.apache.freemarker.generator.base.util.Validate;
 
 import java.io.File;
 import java.net.URI;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 import java.util.Map;
-
-import static java.util.Objects.requireNonNull;
-import static org.apache.freemarker.generator.base.util.StringUtils.emptyToNull;
-import static org.apache.freemarker.generator.base.util.StringUtils.isEmpty;
 
 /**
  * Captures the information of a user-supplied "named URI".
+ * <p>
+ * <ul>
+ *     <li><code>name</code> is optional</li>
+ *     <li><code>group</code> is optional</li>
+ * </ul>
  */
 public class NamedUri {
 
-    private static final String CHARSET = "charset";
-    private static final String MIMETYPE = "mimeType";
+    // Pre-defined parameter names
+    private static final String NAME_KEY = "name";
+    private static final String GROUP_KEY = "group";
+    private static final String CHARSET_KEY = "charset";
+    private static final String MIMETYPE_KEY = "mimeType";
 
     /** User-supplied name */
     private final String name;
@@ -47,18 +53,43 @@ public class NamedUri {
     /** Name/value pairs parsed from URI fragment */
     private final Map<String, String> parameters;
 
+    /**
+     * Constructor.
+     * <p>
+     * The <code>name</code> and <code>group</code> a read from <code>parameters</code>.
+     *
+     * @param uri        URI
+     * @param parameters map of parameters
+     */
     public NamedUri(URI uri, Map<String, String> parameters) {
-        this.name = null;
-        this.group = null;
-        this.uri = requireNonNull(uri);
-        this.parameters = requireNonNull(parameters);
+        Validate.notNull(uri, "uri is null");
+        Validate.notNull(parameters, "parameters are null");
+
+        this.uri = uri;
+        this.name = StringUtils.emptyToNull(parameters.get(NAME_KEY));
+        this.group = StringUtils.emptyToNull(parameters.get(GROUP_KEY));
+        this.parameters = new HashMap<>(parameters);
     }
 
+    /**
+     * Constructor.
+     * <p>
+     * For empty <code>name</code> and <code>group</code> a fallback to <code>parameters</code> is provided.
+     *
+     * @param name       optional name of the named URI
+     * @param group      optional group of the named URI
+     * @param uri        URI
+     * @param parameters map of parameters
+     */
+
     public NamedUri(String name, String group, URI uri, Map<String, String> parameters) {
-        this.name = emptyToNull(name);
-        this.group = emptyToNull(group);
-        this.uri = requireNonNull(uri);
-        this.parameters = requireNonNull(parameters);
+        Validate.notNull(uri, "uri is null");
+        Validate.notNull(parameters, "parameters are null");
+
+        this.uri = uri;
+        this.name = StringUtils.firstNonEmpty(name, parameters.get(NAME_KEY));
+        this.group = StringUtils.firstNonEmpty(group, parameters.get(GROUP_KEY));
+        this.parameters = new HashMap<>(parameters);
     }
 
     public String getName() {
@@ -66,7 +97,7 @@ public class NamedUri {
     }
 
     public String getNameOrElse(String def) {
-        return isEmpty(name) ? def : name;
+        return StringUtils.isEmpty(name) ? def : name;
     }
 
     public String getGroup() {
@@ -74,7 +105,7 @@ public class NamedUri {
     }
 
     public String getGroupOrElse(String def) {
-        return isEmpty(group) ? def : group;
+        return StringUtils.isEmpty(group) ? def : group;
     }
 
     public URI getUri() {
@@ -94,11 +125,11 @@ public class NamedUri {
     }
 
     public boolean hasName() {
-        return !isEmpty(this.name);
+        return !StringUtils.isEmpty(this.name);
     }
 
     public boolean hasGroup() {
-        return !isEmpty(this.group);
+        return !StringUtils.isEmpty(this.group);
     }
 
     public File getFile() {
@@ -106,20 +137,20 @@ public class NamedUri {
     }
 
     public String getMimeType() {
-        return getParameter(NamedUri.MIMETYPE);
+        return getParameter(NamedUri.MIMETYPE_KEY);
     }
 
     public String getMimeTypeOrElse(String def) {
-        return getParameterOrElse(NamedUri.MIMETYPE, def);
+        return getParameterOrElse(NamedUri.MIMETYPE_KEY, def);
     }
 
     public Charset getCharset() {
-        final String charsetName = getParameter(NamedUri.CHARSET);
+        final String charsetName = getParameter(NamedUri.CHARSET_KEY);
         return Charset.forName(charsetName);
     }
 
     public Charset getCharsetOrElse(Charset def) {
-        final String charsetName = getParameter(NamedUri.CHARSET);
+        final String charsetName = getParameter(NamedUri.CHARSET_KEY);
         return StringUtils.isEmpty(charsetName) ? def : Charset.forName(charsetName);
     }
 
