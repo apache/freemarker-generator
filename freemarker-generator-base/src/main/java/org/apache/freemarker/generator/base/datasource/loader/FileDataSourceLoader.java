@@ -41,10 +41,10 @@ public class FileDataSourceLoader implements DataSourceLoader {
     @Override
     public DataSource load(String source) {
         final NamedUri namedUri = NamedUriStringParser.parse(source);
-        final String group = namedUri.getGroupOrElse(FreeMarkerConstants.DEFAULT_GROUP);
-        final Charset charset = namedUri.getCharsetOrElse(UTF_8);
+        final String group = namedUri.getGroupOrDefault(FreeMarkerConstants.DEFAULT_GROUP);
+        final Charset charset = namedUri.getCharsetOrDefault(UTF_8);
         final File file = namedUri.getFile();
-        final String name = namedUri.getNameOrElse(file.getName());
+        final String name = namedUri.getNameOrDefault(file.getName());
         final Map<String, String> parameters = namedUri.getParameters();
         return DataSourceFactory.fromFile(name, group, file, charset, parameters);
     }
@@ -52,9 +52,9 @@ public class FileDataSourceLoader implements DataSourceLoader {
     @Override
     public DataSource load(String source, Charset charset) {
         final NamedUri namedUri = NamedUriStringParser.parse(source);
-        final String group = namedUri.getGroupOrElse(FreeMarkerConstants.DEFAULT_GROUP);
+        final String group = namedUri.getGroupOrDefault(FreeMarkerConstants.DEFAULT_GROUP);
         final File file = namedUri.getFile();
-        final String name = namedUri.getNameOrElse(UriUtils.toStringWithoutFragment(file.toURI()));
+        final String name = namedUri.getNameOrDefault(UriUtils.toStringWithoutFragment(file.toURI()));
         final Map<String, String> parameters = namedUri.getParameters();
         return DataSourceFactory.fromFile(name, group, file, charset, parameters);
     }

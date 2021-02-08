@@ -137,6 +137,10 @@ public class DataSource implements Closeable, javax.activation.DataSource {
         return name;
     }
 
+    public String getGroup() {
+        return group;
+    }
+
     /**
      * Get the content type.
      *
@@ -165,10 +169,6 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     @Override
     public void close() {
         closeables.close();
-    }
-
-    public String getGroup() {
-        return group;
     }
 
     /**
@@ -225,6 +225,10 @@ public class DataSource implements Closeable, javax.activation.DataSource {
 
     public Map<String, String> getProperties() {
         return properties;
+    }
+
+    public String getProperty(String key) {
+        return getProperties().get(key);
     }
 
     /**
@@ -365,7 +369,8 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     }
 
     /**
-     * Get all metadata parts as map.
+     * Get all metadata parts as map. Please note that a <code>UrlDataSource</code>
+     * triggers multiple network calls to determine the content type and encoding.
      *
      * @return Map of metadata parts
      */

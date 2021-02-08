@@ -112,8 +112,8 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
     private static List<DataSource> resolveFileOrDirectory(String source, String include, String exclude, Charset charset) {
         final NamedUri namedUri = NamedUriStringParser.parse(source);
         final String path = namedUri.getFile().getPath();
-        final String group = namedUri.getGroupOrElse(DEFAULT_GROUP);
-        final Charset currCharset = getCharsetOrElse(namedUri, charset);
+        final String group = namedUri.getGroupOrDefault(DEFAULT_GROUP);
+        final Charset currCharset = getCharsetOrDefault(namedUri, charset);
         final Map<String, String> parameters = namedUri.getParameters();
         return fileSupplier(path, include, exclude).get().stream()
                 .map(file -> fromFile(getDataSourceName(namedUri, file), group, file, currCharset, parameters))
@@ -124,8 +124,8 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
         return new RecursiveFileSupplier(singletonList(source), singletonList(include), singletonList(exclude));
     }
 
-    private static Charset getCharsetOrElse(NamedUri namedUri, Charset def) {
-        return Charset.forName(namedUri.getParameter(NamedUri.CHARSET, def.name()));
+    private static Charset getCharsetOrDefault(NamedUri namedUri, Charset def) {
+        return Charset.forName(namedUri.getParameterOrDefault(NamedUri.CHARSET, def.name()));
     }
 
     private static boolean isHttpUri(String value) {

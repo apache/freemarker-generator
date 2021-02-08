@@ -47,9 +47,9 @@ public class EnvironmentDataSourceLoader implements DataSourceLoader {
     public DataSource load(String source) {
         final NamedUri namedUri = NamedUriStringParser.parse(source);
         final String key = stripRootDir(namedUri.getUri().getPath());
-        final String contentType = namedUri.getMimeTypeOrElse(Mimetypes.MIME_TEXT_PLAIN);
+        final String contentType = namedUri.getMimeTypeOrDefault(Mimetypes.MIME_TEXT_PLAIN);
         final String name = firstNonEmpty(namedUri.getName(), key, Location.ENVIRONMENT);
-        final String group = namedUri.getGroupOrElse(DEFAULT_GROUP);
+        final String group = namedUri.getGroupOrDefault(DEFAULT_GROUP);
         if (StringUtils.isEmpty(key)) {
             return DataSourceFactory.fromEnvironment(name, group, contentType);
         } else {
