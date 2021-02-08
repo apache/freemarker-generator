@@ -171,7 +171,7 @@ Charset         : ${dataSource.charset}
 Extension       : ${dataSource.extension}
 Nr of chars     : ${dataSource.text?length}
 Nr of bytes     : ${dataSource.bytes?size}
-File name       : ${dataSource.metadata["filename"]}
+File name       : ${dataSource.fileName}
 
 Iterating Over Metadata Of A Datasource
 ---------------------------------------------------------------------------
@@ -205,6 +205,40 @@ name            : file:/Users/sgoeschl/work/github/apache/freemarker-generator/f
 mimetype        : text/csv
 uri             : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/src/app/examples/data/csv/contract.csv
 group           : default
+```
+
+### Inspecting A DataSource
+
+```
+> freemarker-generator -t examples/templates/datasources.ftl user:csv=examples/data/csv/transactions.csv#delimiter=TAB
+
+Invoke Arbitrary Methods On DataSource
+---------------------------------------------------------------------------
+Name            : user
+Group           : csv
+Nr of lines     : 101
+Content Type    : text/csv
+Charset         : UTF-8
+Extension       : csv
+Nr of chars     : 12,643
+Nr of bytes     : 12,643
+File name       : transactions.csv
+URI schema      : file
+
+Iterating Over Metadata Of A Datasource
+---------------------------------------------------------------------------
+extension       : csv
+basename        : transactions
+filename        : transactions.csv
+filepath        : /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/csv
+name            : user
+mimetype        : text/csv
+uri             : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/csv/transactions.csv
+group           : csv
+
+Iterating Over Properties Of A Datasource
+---------------------------------------------------------------------------
+delimiter       : TAB
 ```
 
 
