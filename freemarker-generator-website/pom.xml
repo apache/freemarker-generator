@@ -99,102 +99,6 @@
                           <outputFile>${docgenInsertedOutputsDirectory}/info-template-output.txt</outputFile>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>named-uri-my_users-simple</id>
-                        <phase>package</phase>
-                        <goals>
-                          <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                          <executable>java</executable>
-                          <arguments>
-                              <argument>-classpath</argument>
-                              <classpath/>
-
-                              <!-- Setting up things without calling the launcher scripts in app/bin: -->
-                              <argument>-Dapp.home=${freemarkerGeneratorAppHome}</argument>
-
-                              <argument>org.apache.freemarker.generator.cli.Main</argument>
-                              <argument>-t</argument>
-                              <argument>freemarker-generator/info.ftl</argument>
-                              <argument>my_users=examples/data/csv/user.csv</argument>
-                          </arguments>
-                          <workingDirectory>${freemarkerGeneratorAppHome}</workingDirectory>
-                          <outputFile>${docgenInsertedOutputsDirectory}/named-uri-my_users-simple.txt</outputFile>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>named-uri-my_users-charset-fragment</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>java</executable>
-                            <arguments>
-                                <argument>-classpath</argument>
-                                <classpath/>
-
-                                <!-- Setting up things without calling the launcher scripts in app/bin: -->
-                                <argument>-Dapp.home=${freemarkerGeneratorAppHome}</argument>
-
-                                <argument>org.apache.freemarker.generator.cli.Main</argument>
-                                <argument>-t</argument>
-                                <argument>freemarker-generator/info.ftl</argument>
-                                <argument>my_users=examples/data/csv/user.csv#charset=UTF-16</argument>
-                            </arguments>
-                            <workingDirectory>${freemarkerGeneratorAppHome}</workingDirectory>
-                            <outputFile>${docgenInsertedOutputsDirectory}/named-uri-my_users-charset-fragment.txt</outputFile>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>named-uri-example-no-name</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>java</executable>
-                            <arguments>
-                                <argument>-classpath</argument>
-                                <classpath/>
-
-                                <!-- Setting up things without calling the launcher scripts in app/bin: -->
-                                <argument>-Dapp.home=${freemarkerGeneratorAppHome}</argument>
-
-                                <argument>org.apache.freemarker.generator.cli.Main</argument>
-                                <argument>-t</argument>
-                                <argument>freemarker-generator/info.ftl</argument>
-                                <argument>http://google.com?foo=bar</argument>
-                            </arguments>
-                            <workingDirectory>${freemarkerGeneratorAppHome}</workingDirectory>
-                            <outputFile>${docgenInsertedOutputsDirectory}/named-uri-example-no-name.txt</outputFile>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>named-uri-example-with-name</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>exec</goal>
-                        </goals>
-                        <configuration>
-                            <executable>java</executable>
-                            <arguments>
-                                <argument>-classpath</argument>
-                                <classpath/>
-
-                                <!-- Setting up things without calling the launcher scripts in app/bin: -->
-                                <argument>-Dapp.home=${freemarkerGeneratorAppHome}</argument>
-
-                                <argument>org.apache.freemarker.generator.cli.Main</argument>
-                                <argument>-t</argument>
-                                <argument>freemarker-generator/info.ftl</argument>
-                                <argument>page=http://google.com?foo=bar</argument>
-                            </arguments>
-                            <workingDirectory>${freemarkerGeneratorAppHome}</workingDirectory>
-                            <outputFile>${docgenInsertedOutputsDirectory}/named-uri-example-with-name.txt</outputFile>
-                        </configuration>
-                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -220,11 +124,19 @@
                         <exampleOutputs>${docgenInsertedExampleOutputDirectory}/**</exampleOutputs>
                     </insertableFiles>
                     <customVariables>
-                      <version>${project.version}</version>
+                        <version>${project.version}</version>
+                        <freemarkerGeneratorAppHome>${freemarkerGeneratorAppHome}</freemarkerGeneratorAppHome>
                     </customVariables>
                     <!-- TODO set it back to false before release -->
                     <offline>true</offline>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.freemarker.generator</groupId>
+                        <artifactId>freemarker-generator-cli</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>

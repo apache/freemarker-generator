@@ -947,25 +947,29 @@ EDITOR ==&gt; vi</programlisting>
       <para>The following Named URI loads a <literal>user.csv</literal> and
       the data source is available as <literal>my_users</literal>:</para>
 
-      <programlisting>&gt; freemarker-generator -t freemarker-generator/info.ftl my_users=examples/data/csv/user.csv
-[docgen.insertFile "@websitePomGenerated/named-uri-my_users-simple.txt" from="FreeMarker Generator DataSources" toIfPresent=r"^\s*$"]</programlisting>
+      <programlisting>[docgen.insertOutput from="FreeMarker Generator DataSources" to=r"^\s*$" printCommand=true]
+freemarker-generator -t freemarker-generator/info.ftl my_users=[docgen:wd]/examples/data/csv/user.csv
+[/docgen.insertOutput]</programlisting>
 
       <para>A Named URI allows to pass additional information as part of the
       fragment, e.g. the charset of the text file:</para>
 
-      <programlisting>&gt; freemarker-generator -t freemarker-generator/info.ftl my_users=examples/data/csv/user.csv#charset=UTF-16
-[docgen.insertFile "@websitePomGenerated/named-uri-my_users-charset-fragment.txt" from="FreeMarker Generator DataSources" toIfPresent=r"^\s*$"]</programlisting>
+      <programlisting>[docgen.insertOutput from="FreeMarker Generator DataSources" to=r"^\s*$" printCommand=true]
+freemarker-generator -t freemarker-generator/info.ftl my_users=[docgen:wd]/examples/data/csv/user.csv#charset=UTF-16
+[/docgen.insertOutput]</programlisting>
 
       <para>In addition to the simplified file syntax full URIs can be
       used:</para>
 
-      <programlisting>&gt; freemarker-generator -t freemarker-generator/info.ftl http://google.com?foo=bar
-[docgen.insertFile "@websitePomGenerated/named-uri-example-no-name.txt" from="FreeMarker Generator DataSources" toIfPresent=r"^\s*$"]</programlisting>
+      <programlisting>[docgen.insertOutput from="FreeMarker Generator DataSources" to=r"^\s*$" printCommand=true]
+freemarker-generator -t freemarker-generator/info.ftl http://google.com?foo=bar
+[/docgen.insertOutput]</programlisting>
 
       <para>and also combined with a name:</para>
 
-      <programlisting>&gt; freemarker-generator -t freemarker-generator/info.ftl page=http://google.com?foo=bar
-[docgen.insertFile "@websitePomGenerated/named-uri-example-with-name.txt" from="FreeMarker Generator DataSources" toIfPresent=r"^\s*$"]</programlisting>
+      <programlisting>[docgen.insertOutput from="FreeMarker Generator DataSources" to=r"^\s*$" printCommand=true]
+freemarker-generator -t freemarker-generator/info.ftl page=http://google.com?foo=bar
+[/docgen.insertOutput]</programlisting>
     </section>
 
     <section xml:id="datasources">

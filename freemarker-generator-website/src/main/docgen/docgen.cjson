@@ -95,6 +95,7 @@ socialLinks: {
 
 customVariables: {
   version: null // Must be overridden by the caller
+  freemarkerGeneratorAppHome: null // Must be overridden by the caller
 }
 
 insertableFiles: {
@@ -102,4 +103,15 @@ insertableFiles: {
   templates: null // Must be overridden by the caller
   exampleTemplates: null // Must be overridden by the caller
   exampleOutputs: null // Must be overridden by the caller
+}
+
+insertableOutputCommands: {
+  freemarker-generator: {
+    mainClass: org.apache.freemarker.generator.cli.Main
+    mainMethod: execute
+    systemProperties: {
+      app.home: getCustomVariable("freemarkerGeneratorAppHome")
+    }
+    docgenWdReplacedWith: getCustomVariable("freemarkerGeneratorAppHome")
+  }
 }
