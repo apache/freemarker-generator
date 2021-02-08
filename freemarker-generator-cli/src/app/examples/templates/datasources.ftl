@@ -56,7 +56,8 @@ Invoke Arbitrary Methods On DataSource
 Name            : ${dataSource.name}
 Group           : ${dataSource.group}
 Nr of lines     : ${dataSource.lines?size}
-Content Type    : ${dataSource.contentType}
+ContentType     : ${dataSource.contentType}
+MimeType        : ${dataSource.mimeType}
 Charset         : ${dataSource.charset}
 Extension       : ${dataSource.extension}
 Nr of chars     : ${dataSource.text?length}
