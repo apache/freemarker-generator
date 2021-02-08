@@ -24,7 +24,7 @@ import java.io.IOException;
 public class ManualTest extends AbstractMainTest {
 
     // private static final String CMD = "-V";
-    private static final String CMD = "-t src/test/templates/manual.ftl -s src/app/examples/data/csv";
+    private static final String CMD = "-t src/app/examples/templates/datasources.ftl -s :csv-data=src/app/examples/data/csv#separator=COLON https://xkcd.com/info.0.json";
 
     @Override
     public String execute(String commandLine) throws IOException {

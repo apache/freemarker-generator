@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Iterator;
+import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
@@ -84,7 +85,7 @@ public class DataSourceTest {
     @Test
     @Ignore("Requires internet access")
     public void shouldSupportUrlDataSource() {
-        try (DataSource dataSource = DataSourceFactory.fromUrl("www.google.com", DEFAULT_GROUP, toUrl("https://www.google.com/?foo=bar"), null, null)) {
+        try (DataSource dataSource = DataSourceFactory.fromUrl("www.google.com", DEFAULT_GROUP, toUrl("https://www.google.com/?foo=bar"), null, null, null)) {
             assertEquals("www.google.com", dataSource.getName());
             assertEquals(DEFAULT_GROUP, dataSource.getGroup());
             assertEquals("", dataSource.getBaseName());
@@ -125,15 +126,17 @@ public class DataSourceTest {
     @Test
     public void shouldGetMetadata() {
         try (DataSource dataSource = stringDataSource()) {
-            assertEquals(8, dataSource.getMetadata().size());
-            assertEquals("", dataSource.getMetadata().get("basename"));
-            assertEquals("", dataSource.getMetadata().get("extension"));
-            assertEquals("", dataSource.getMetadata().get("filename"));
-            assertEquals("/", dataSource.getMetadata().get("filepath"));
-            assertEquals("default", dataSource.getMetadata().get("group"));
-            assertEquals("stdin", dataSource.getMetadata().get("name"));
-            assertTrue(dataSource.getMetadata().get("uri").startsWith("string://"));
-            assertEquals("text/plain", dataSource.getMetadata().get("mimetype"));
+            final Map<String, String> metadata = dataSource.getMetadata();
+
+            assertEquals(8, metadata.size());
+            assertEquals("", metadata.get("basename"));
+            assertEquals("", metadata.get("extension"));
+            assertEquals("", metadata.get("filename"));
+            assertEquals("/", metadata.get("filepath"));
+            assertEquals("default", metadata.get("group"));
+            assertEquals("stdin", metadata.get("name"));
+            assertTrue(metadata.get("uri").startsWith("string://"));
+            assertEquals("text/plain", metadata.get("mimetype"));
         }
     }
 

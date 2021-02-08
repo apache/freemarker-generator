@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.HashMap;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static junit.framework.TestCase.assertFalse;
@@ -85,7 +86,7 @@ public class DataSourceFactoryTest {
     public void shouldCreateDataSourceFromInputStream() {
         final URI uri = UriUtils.toUri(Location.INPUTSTREAM + ":///");
         final InputStream is = new ByteArrayInputStream(ANY_TEXT.getBytes(UTF_8));
-        final DataSource dataSource = DataSourceFactory.fromInputStream("test.txt", "default", uri, is, "text/plain", UTF_8);
+        final DataSource dataSource = DataSourceFactory.fromInputStream("test.txt", "default", uri, is, "text/plain", UTF_8, new HashMap<>());
 
         assertEquals("test.txt", dataSource.getName());
         assertEquals(UTF_8, dataSource.getCharset());
@@ -98,7 +99,7 @@ public class DataSourceFactoryTest {
     @Ignore
     public void shouldCreateDataSourceFromURL() throws IOException {
         final URL url = new URL("https://jsonplaceholder.typicode.com/posts/2");
-        final DataSource dataSource = DataSourceFactory.fromUrl("jsonplaceholder.typicode.com", "default", url, null, null);
+        final DataSource dataSource = DataSourceFactory.fromUrl("jsonplaceholder.typicode.com", "default", url);
 
         assertEquals("jsonplaceholder.typicode.com", dataSource.getName());
         assertEquals("jsonplaceholder.typicode.com", dataSource.getFileName());

@@ -35,6 +35,7 @@ import java.io.StringWriter;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -90,28 +91,44 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     /** The underlying "javax.activation.DataSource" */
     private final javax.activation.DataSource dataSource;
 
-    /** Content type of data source either provided by the user or fetched directly from the data source */
+    /** Content type of data source either provided by the caller or fetched directly from the data source */
     private final String contentType;
 
     /** Charset for directly accessing text-based content */
     private final Charset charset;
 
+    /** Additional properties as name/value pairs */
+    private final Map<String, String> properties;
+
     /** Collect all closeables handed out to the caller to be closed when the data source is closed itself */
     private final CloseableReaper closeables;
 
+    /**
+     * Constructor.
+     *
+     * @param name        Human-readable name of the data source
+     * @param group       Optional group of data source
+     * @param uri         source URI of the data source
+     * @param dataSource  JAF data source being wrapped
+     * @param contentType content type of data source either provided by the caller or fetched directly from the data source
+     * @param charset     option charset for directly accessing text-based content
+     * @param properties  optional name/value pairs
+     */
     public DataSource(
             String name,
             String group,
             URI uri,
             javax.activation.DataSource dataSource,
             String contentType,
-            Charset charset) {
-        this.name = requireNonNull(name);
+            Charset charset,
+            Map<String, String> properties) {
+        this.name = requireNonNull(name).trim();
         this.group = StringUtils.emptyToNull(group);
         this.uri = requireNonNull(uri);
         this.dataSource = requireNonNull(dataSource);
         this.contentType = contentType;
         this.charset = charset;
+        this.properties = properties != null ? new HashMap<>(properties) : new HashMap<>();
         this.closeables = new CloseableReaper();
     }
 
@@ -204,6 +221,10 @@ public class DataSource implements Closeable, javax.activation.DataSource {
 
     public URI getUri() {
         return uri;
+    }
+
+    public Map<String, String> getProperties() {
+        return properties;
     }
 
     /**
@@ -339,7 +360,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
             case METADATA_MIME_TYPE:
                 return getMimeType();
             default:
-                throw new IllegalArgumentException("Unknown key: " + key);
+                throw new IllegalArgumentException("Unknown metatdata key: " + key);
         }
     }
 

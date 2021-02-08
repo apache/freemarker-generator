@@ -1,4 +1,4 @@
-<#ftl output_format="plainText" strip_whitespace=true>
+<#ftl output_format="plainText">
 <#--
   Licensed to the Apache Software Foundation (ASF) under one
   or more contributor license agreements.  See the NOTICE file
@@ -17,13 +17,13 @@
 -->
 Support FreeMarker Directives
 ==============================================================================
-Has Content: ${dataSources?has_content?c}
-Nr. of Documents: ${dataSources?size}
+has_content: ${dataSources?has_content?c}
+size: ${dataSources?size}
 
 Use FTL Array-style Access
 ==============================================================================
-${dataSources?values[0].toString()}
-${dataSources?values?first.toString()}
+${dataSources?values[0].name}
+${dataSources?values?first.name}
 
 Get Document Names As Keys
 ==============================================================================
@@ -39,20 +39,30 @@ Iterate Over Names & DataSources
 
 <#if dataSources?has_content>
     <#list dataSources?values as dataSource>
-[#${dataSource?counter}] - ${dataSource.name}
+        <@writeDataSource dataSource/>
+    </#list>
+<#else>
+    No data sources found ...
+</#if>
+
+<#macro writeDataSource dataSource>
+
+${dataSource.name}
 ==============================================================================
 
 Invoke Arbitrary Methods On DataSource
 ---------------------------------------------------------------------------
 <#assign dataSource=dataSources?values?first>
 Name            : ${dataSource.name}
+Group           : ${dataSource.group}
 Nr of lines     : ${dataSource.lines?size}
 Content Type    : ${dataSource.contentType}
 Charset         : ${dataSource.charset}
 Extension       : ${dataSource.extension}
 Nr of chars     : ${dataSource.text?length}
 Nr of bytes     : ${dataSource.bytes?size}
-File name       : ${dataSource.metadata["filename"]}
+File name       : ${dataSource.fileName}
+URI schema      : ${dataSource.uri.scheme}
 
 Iterating Over Metadata Of A Datasource
 ---------------------------------------------------------------------------
@@ -65,8 +75,4 @@ Iterating Over Properties Of A Datasource
 <#list dataSource.properties as name, value>
 ${name?right_pad(15)} : ${value}
 </#list>
-
-    </#list>
-<#else>
-No data sources found ...
-</#if>
+</#macro>

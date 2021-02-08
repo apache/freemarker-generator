@@ -27,6 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Map;
 
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
 import static org.apache.freemarker.generator.base.util.StringUtils.isNotEmpty;
@@ -47,7 +48,8 @@ public class HttpDataSourceLoader implements DataSourceLoader {
         final String mimeType = namedUri.getMimeType();
         final URL url = toUrl(uri);
         final String name = namedUri.getNameOrElse(UriUtils.toStringWithoutFragment(uri));
-        return DataSourceFactory.fromUrl(name, group, url, mimeType, charset);
+        final Map<String, String> parameters = namedUri.getParameters();
+        return DataSourceFactory.fromUrl(name, group, url, mimeType, charset, parameters);
     }
 
     @Override
