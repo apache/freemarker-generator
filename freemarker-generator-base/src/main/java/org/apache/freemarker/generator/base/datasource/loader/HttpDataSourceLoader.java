@@ -27,6 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Map;
 
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
 import static org.apache.freemarker.generator.base.util.StringUtils.isNotEmpty;
@@ -42,18 +43,13 @@ public class HttpDataSourceLoader implements DataSourceLoader {
     public DataSource load(String source) {
         final NamedUri namedUri = NamedUriStringParser.parse(source);
         final URI uri = namedUri.getUri();
-        final String group = namedUri.getGroupOrElse(DEFAULT_GROUP);
-        final Charset charset = namedUri.getCharsetOrElse(null);
+        final String group = namedUri.getGroupOrDefault(DEFAULT_GROUP);
+        final Charset charset = namedUri.getCharset();
         final String mimeType = namedUri.getMimeType();
         final URL url = toUrl(uri);
-        final String name = namedUri.getNameOrElse(UriUtils.toStringWithoutFragment(uri));
-        return DataSourceFactory.fromUrl(name, group, url, mimeType, charset);
-    }
-
-    @Override
-    public DataSource load(String source, Charset charset) {
-        // We should pick up the charset from the HTTP server
-        return load(source);
+        final String name = namedUri.getNameOrDefault(UriUtils.toStringWithoutFragment(uri));
+        final Map<String, String> parameters = namedUri.getParameters();
+        return DataSourceFactory.fromUrl(name, group, url, mimeType, charset, parameters);
     }
 
     private static URL toUrl(URI uri) {

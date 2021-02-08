@@ -27,16 +27,17 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 import static java.util.Collections.singletonList;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
+import static org.apache.freemarker.generator.base.datasource.DataSourceFactory.fromFile;
 
 /**
- * Create a list of <code>DataSource</code> based on a list of sources consisting of
- * URIs, directories and files.
+ * Create a list of <code>DataSource</code> based on a list URIs, directories and files.
  */
 public class DataSourcesSupplier implements Supplier<List<DataSource>> {
 
@@ -57,14 +58,14 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
     /**
      * Constructor.
      *
-     * @param sources List of source files and/or directories
+     * @param sources List of source files and/or directories supporting <code>NamedUri</code> syntax
      * @param include Optional include pattern for resolving source files or directory
      * @param exclude Optional exclude pattern for resolving source files or directory
      * @param charset The charset for loading text files
      */
     public DataSourcesSupplier(Collection<String> sources, String include, String exclude, Charset charset) {
         this.dataSourceLoader = DataSourceLoaderFactory.create();
-        this.sources = new ArrayList<>(sources);
+        this.sources = new ArrayList<>(requireNonNull(sources));
         this.include = include;
         this.exclude = exclude;
         this.charset = requireNonNull(charset);
@@ -111,10 +112,11 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
     private static List<DataSource> resolveFileOrDirectory(String source, String include, String exclude, Charset charset) {
         final NamedUri namedUri = NamedUriStringParser.parse(source);
         final String path = namedUri.getFile().getPath();
-        final String group = namedUri.getGroupOrElse(DEFAULT_GROUP);
-        final Charset currCharset = getCharsetOrElse(namedUri, charset);
+        final String group = namedUri.getGroupOrDefault(DEFAULT_GROUP);
+        final Charset currCharset = getCharsetOrDefault(namedUri, charset);
+        final Map<String, String> parameters = namedUri.getParameters();
         return fileSupplier(path, include, exclude).get().stream()
-                .map(file -> DataSourceFactory.fromFile(getDataSourceName(namedUri, file), group, file, currCharset))
+                .map(file -> fromFile(getDataSourceName(namedUri, file), group, file, currCharset, parameters))
                 .collect(toList());
     }
 
@@ -122,8 +124,8 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
         return new RecursiveFileSupplier(singletonList(source), singletonList(include), singletonList(exclude));
     }
 
-    private static Charset getCharsetOrElse(NamedUri namedUri, Charset def) {
-        return Charset.forName(namedUri.getParameter(NamedUri.CHARSET, def.name()));
+    private static Charset getCharsetOrDefault(NamedUri namedUri, Charset def) {
+        return namedUri.getCharsetOrDefault(def);
     }
 
     private static boolean isHttpUri(String value) {

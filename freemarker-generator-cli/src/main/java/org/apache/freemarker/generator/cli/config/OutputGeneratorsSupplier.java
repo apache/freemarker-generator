@@ -31,6 +31,7 @@ import org.apache.freemarker.generator.cli.picocli.TemplateSourceDefinition;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -136,6 +137,6 @@ public class OutputGeneratorsSupplier implements Supplier<List<OutputGenerator>>
 
     private static DataSource stdinDataSource() {
         final URI uri = UriUtils.toUri(Location.SYSTEM, STDIN);
-        return DataSourceFactory.fromInputStream(STDIN, DEFAULT_GROUP, uri, System.in, MIME_TEXT_PLAIN, UTF_8);
+        return DataSourceFactory.fromInputStream(STDIN, DEFAULT_GROUP, uri, System.in, MIME_TEXT_PLAIN, UTF_8, new HashMap<>());
     }
 }

@@ -25,8 +25,6 @@ import org.apache.freemarker.generator.base.uri.NamedUri;
 import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
 import org.apache.freemarker.generator.base.util.StringUtils;
 
-import java.nio.charset.Charset;
-
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
 import static org.apache.freemarker.generator.base.util.StringUtils.firstNonEmpty;
 import static org.apache.freemarker.generator.base.util.StringUtils.isNotEmpty;
@@ -47,20 +45,14 @@ public class EnvironmentDataSourceLoader implements DataSourceLoader {
     public DataSource load(String source) {
         final NamedUri namedUri = NamedUriStringParser.parse(source);
         final String key = stripRootDir(namedUri.getUri().getPath());
-        final String contentType = namedUri.getMimeTypeOrElse(Mimetypes.MIME_TEXT_PLAIN);
+        final String contentType = namedUri.getMimeTypeOrDefault(Mimetypes.MIME_TEXT_PLAIN);
         final String name = firstNonEmpty(namedUri.getName(), key, Location.ENVIRONMENT);
-        final String group = namedUri.getGroupOrElse(DEFAULT_GROUP);
+        final String group = namedUri.getGroupOrDefault(DEFAULT_GROUP);
         if (StringUtils.isEmpty(key)) {
             return DataSourceFactory.fromEnvironment(name, group, contentType);
         } else {
             return DataSourceFactory.fromEnvironment(name, group, key, contentType);
         }
-    }
-
-    @Override
-    public DataSource load(String source, Charset charset) {
-        // We already habe internal strings so we can ignore the charset
-        return load(source);
     }
 
     /**

@@ -24,6 +24,7 @@ import org.junit.Test;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
@@ -32,7 +33,6 @@ import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_G
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class DataSourcesTest {
 
@@ -133,7 +133,7 @@ public class DataSourcesTest {
     }
 
     private static DataSource urlDataSource() {
-        return DataSourceFactory.fromUrl("server.invalid?foo=bar", "default", toUrl(ANY_URL), "plain/text", UTF_8);
+        return DataSourceFactory.fromUrl("server.invalid?foo=bar", "default", toUrl(ANY_URL), "plain/text", UTF_8, new HashMap<>());
     }
 
     private static URL toUrl(String value) {

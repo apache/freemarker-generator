@@ -48,6 +48,11 @@ public class ExamplesTest extends AbstractMainTest {
     }
 
     @Test
+    public void shouldRunDataSourceExamples() throws IOException {
+        assertValid(execute("-t src/app/examples/templates/datasources.ftl -s :csv=src/app/examples/data/csv"));
+    }
+
+    @Test
     public void shouldRunCsvExamples() throws IOException {
         assertValid(execute("-t freemarker-generator/csv/html/transform.ftl src/app/examples/data/csv/contract.csv"));
         assertValid(execute("-t freemarker-generator/csv/md/transform.ftl src/app/examples/data/csv/contract.csv"));

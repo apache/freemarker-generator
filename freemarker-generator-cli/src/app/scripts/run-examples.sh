@@ -43,6 +43,13 @@ echo "examples/templates/demo.ftl"
 $FREEMARKER_CMD -t examples/templates/demo.ftl README.md > target/out/demo.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
+# DataSources
+#############################################################################
+
+echo "examples/templates/datasources.ftl"
+$FREEMARKER_CMD -t examples/templates/datasources.ftl -s :data=examples/data > target/out/datasources.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
+#############################################################################
 # Interactive Mode
 #############################################################################
 

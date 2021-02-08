@@ -23,6 +23,7 @@ import org.apache.freemarker.generator.base.template.TemplateSource.Origin;
 import org.apache.freemarker.generator.base.template.TemplateTransformation;
 import org.apache.freemarker.generator.base.template.TemplateTransformationsBuilder;
 import org.apache.freemarker.generator.base.util.NonClosableWriterWrapper;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.BufferedWriter;
@@ -181,6 +182,7 @@ public class TemplateTransformationsBuilderTest {
     // === Template URL ===============================================
 
     @Test
+    @Ignore("Requires internet access")
     public void shouldCreateFromTemplateUrl() {
         final List<TemplateTransformation> transformations = builder()
                 .setTemplateSource(ANY_TEMPLATE_URL)

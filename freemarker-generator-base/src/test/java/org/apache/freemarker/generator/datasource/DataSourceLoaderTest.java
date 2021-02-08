@@ -26,7 +26,6 @@ import org.junit.Test;
 import java.io.File;
 
 import static java.lang.String.format;
-import static java.nio.charset.StandardCharsets.UTF_16;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static junit.framework.TestCase.assertFalse;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
@@ -174,11 +173,14 @@ public class DataSourceLoaderTest {
 
     @Test
     public void shouldLoadDataSourceWithCharset() {
-        final DataSource utf8DataSource = dataSourceLoader().load("./src/test/data/txt/utf8.txt", UTF_8);
-        final DataSource utf16DataSource = dataSourceLoader().load("./src/test/data/txt/utf16.txt", UTF_16);
-
-        // skip the first line before comparing
-        assertEquals(utf8DataSource.getLines().subList(1, 5), utf16DataSource.getLines().subList(1, 5));
+        final String utf8Uri = "./src/test/data/txt/utf8.txt#charset=UTF-8";
+        final String utf16Uri = "./src/test/data/txt/utf16.txt#charset=UTF-16";
+        try (DataSource utf8DataSource = dataSourceLoader().load(utf8Uri)) {
+            try (DataSource utf16DataSource = dataSourceLoader().load(utf16Uri)) {
+                // skip the first line before comparing
+                assertEquals(utf8DataSource.getLines().subList(1, 5), utf16DataSource.getLines().subList(1, 5));
+            }
+        }
     }
 
     private DataSourceLoader dataSourceLoader() {

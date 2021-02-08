@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file. We try to a
 * [FREEMARKER-129] Provide a `toString()` method for all tools
 
 ### Changed
+* [FREEMARKER-173] Allow to pass arbitrary key/value pairs to DataSource when using NamedURIs
 * [FREEMARKER-172] Use lower-case keys for DataSource metadata map
 * [FREEMARKER-148] Make usage of "DataSources" more "Freemarker" like
 * [FREEMARKER-155] Migrate the FTL code to terser dotter form
@@ -70,3 +71,4 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-164]: https://issues.apache.org/jira/browse/FREEMARKER-164
 [FREEMARKER-168]: https://issues.apache.org/jira/browse/FREEMARKER-168
 [FREEMARKER-172]: https://issues.apache.org/jira/browse/FREEMARKER-172
+[FREEMARKER-173]: https://issues.apache.org/jira/browse/FREEMARKER-175
