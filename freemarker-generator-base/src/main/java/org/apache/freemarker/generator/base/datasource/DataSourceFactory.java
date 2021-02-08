@@ -36,6 +36,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -57,18 +59,39 @@ public abstract class DataSourceFactory {
             String group,
             URI uri,
             javax.activation.DataSource dataSource,
+            Map<String, String> properties) {
+        return new DataSource(name, group, uri, dataSource, null, null, properties);
+    }
+
+    public static DataSource create(
+            String name,
+            String group,
+            URI uri,
+            javax.activation.DataSource dataSource,
             String contentType,
-            Charset charset
-    ) {
-        return new DataSource(name, group, uri, dataSource, contentType, charset);
+            Charset charset,
+            Map<String, String> properties) {
+        return new DataSource(name, group, uri, dataSource, contentType, charset, properties);
     }
 
     // == URL ===============================================================
 
-    public static DataSource fromUrl(String name, String group, URL url, String contentType, Charset charset) {
+    public static DataSource fromUrl(String name, String group, URL url) {
         final URLDataSource dataSource = new CachingUrlDataSource(url);
         final URI uri = UriUtils.toUri(url);
-        return create(name, group, uri, dataSource, contentType, charset);
+        return create(name, group, uri, dataSource, noProperties());
+    }
+
+    public static DataSource fromUrl(
+            String name,
+            String group,
+            URL url,
+            String contentType,
+            Charset charset,
+            Map<String, String> properties) {
+        final URLDataSource dataSource = new CachingUrlDataSource(url);
+        final URI uri = UriUtils.toUri(url);
+        return create(name, group, uri, dataSource, contentType, charset, properties);
     }
 
     // == String ============================================================
@@ -76,22 +99,28 @@ public abstract class DataSourceFactory {
     public static DataSource fromString(String name, String group, String content, String contentType) {
         final StringDataSource dataSource = new StringDataSource(name, content, contentType, UTF_8);
         final URI uri = UriUtils.toUri(Location.STRING, UUID.randomUUID().toString());
-        return create(name, group, uri, dataSource, contentType, UTF_8);
+        return create(name, group, uri, dataSource, contentType, UTF_8, noProperties());
     }
 
     // == File ==============================================================
 
     public static DataSource fromFile(File file, Charset charset) {
-        return fromFile(file.getName(), DEFAULT_GROUP, file, charset);
+        return fromFile(file.getName(), DEFAULT_GROUP, file, charset, noProperties());
     }
 
-    public static DataSource fromFile(String name, String group, File file, Charset charset) {
+    public static DataSource fromFile(
+            String name,
+            String group,
+            File file,
+            Charset charset,
+            Map<String, String> properties) {
         Validate.isTrue(file.exists(), "File not found: " + file);
 
         final FileDataSource dataSource = new FileDataSource(file);
+        // content type is determined from file extension
         dataSource.setFileTypeMap(MimetypesFileTypeMapFactory.create());
         final String contentType = dataSource.getContentType();
-        return create(name, group, file.toURI(), dataSource, contentType, charset);
+        return create(name, group, file.toURI(), dataSource, contentType, charset, properties);
     }
 
     // == Bytes ============================================================
@@ -99,15 +128,10 @@ public abstract class DataSourceFactory {
     public static DataSource fromBytes(String name, String group, byte[] content, String contentType) {
         final ByteArrayDataSource dataSource = new ByteArrayDataSource(name, content);
         final URI uri = UriUtils.toUri(Location.BYTES + ":///");
-        return create(name, group, uri, dataSource, contentType, UTF_8);
+        return create(name, group, uri, dataSource, contentType, UTF_8, noProperties());
     }
 
     // == InputStream =======================================================
-
-    public static DataSource fromInputStream(String name, String group, InputStream is, String contentType, Charset charset) {
-        final URI uri = UriUtils.toUri(Location.INPUTSTREAM + ":///");
-        return fromInputStream(name, group, uri, is, contentType, charset);
-    }
 
     public static DataSource fromInputStream(
             String name,
@@ -115,10 +139,10 @@ public abstract class DataSourceFactory {
             URI uri,
             InputStream is,
             String contentType,
-            Charset charset
-    ) {
+            Charset charset,
+            Map<String, String> properties) {
         final InputStreamDataSource dataSource = new InputStreamDataSource(name, is);
-        return create(name, group, uri, dataSource, contentType, charset);
+        return create(name, group, uri, dataSource, contentType, charset, properties);
     }
 
     // == Environment =======================================================
@@ -130,7 +154,7 @@ public abstract class DataSourceFactory {
             properties.store(writer, null);
             final StringDataSource dataSource = new StringDataSource(name, writer.toString(), contentType, UTF_8);
             final URI uri = UriUtils.toUri(Location.ENVIRONMENT, "");
-            return create(name, group, uri, dataSource, contentType, UTF_8);
+            return create(name, group, uri, dataSource, contentType, UTF_8, noProperties());
         } catch (IOException e) {
             throw new RuntimeException("Unable to load environment variables", e);
         }
@@ -141,7 +165,7 @@ public abstract class DataSourceFactory {
 
         final StringDataSource dataSource = new StringDataSource(name, System.getenv(key), contentType, UTF_8);
         final URI uri = UriUtils.toUri(Location.ENVIRONMENT, key);
-        return create(name, group, uri, dataSource, contentType, UTF_8);
+        return create(name, group, uri, dataSource, contentType, UTF_8, noProperties());
     }
 
     public static URL toUrl(String url) {
@@ -150,5 +174,9 @@ public abstract class DataSourceFactory {
         } catch (MalformedURLException e) {
             throw new IllegalArgumentException(url, e);
         }
+    }
+
+    private static Map<String, String> noProperties() {
+        return new HashMap<>();
     }
 }

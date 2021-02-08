@@ -35,6 +35,8 @@ public class DataSourcesSupplierTest {
 
     private static final String NO_EXCLUDE = null;
     private static final String DATA_DIRECTORY = "./src/test/data";
+    private static final String DATA_DIRECTORY_WITH_FRAGMENT = "./src/test/data#scope=test";
+    private static final String DATA_DIRECTORY_WITH_GROUP = ":data=src/test/data";
     private static final String PWD = FilenameUtils.separatorsToUnix(new File("").getAbsolutePath());
 
     @Test
@@ -106,6 +108,26 @@ public class DataSourcesSupplierTest {
     }
 
     @Test
+    public void shouldUseFragmentForDataSourceWhenResolvingDirectory() {
+        final List<DataSource> dataSources = supplier(DATA_DIRECTORY_WITH_FRAGMENT, "*.*", NO_EXCLUDE).get();
+
+        for (DataSource dataSource : dataSources) {
+            assertEquals(1, dataSource.getProperties().size());
+            assertEquals("test", dataSource.getProperties().get("scope"));
+        }
+    }
+
+    @Test
+    public void shouldUseGroupNameForDataSourceWhenResolvingDirectory() {
+        final List<DataSource> dataSources = supplier(DATA_DIRECTORY_WITH_GROUP, "*.*", NO_EXCLUDE).get();
+
+        for (DataSource dataSource : dataSources) {
+            assertEquals(0, dataSource.getProperties().size());
+            assertEquals("data", dataSource.getGroup());
+        }
+    }
+
+    @Test
     public void shouldResolveEnvironmentVariable() {
         assertEquals(1, supplier("env:///PATH", "*", NO_EXCLUDE).get().size());
         assertEquals(1, supplier("path=env:///PATH", "*", NO_EXCLUDE).get().size());
@@ -118,7 +140,7 @@ public class DataSourcesSupplierTest {
     }
 
     @Test(expected = RuntimeException.class)
-    public void shouldThrowExceptionForNonexistingSourceDirectory() {
+    public void shouldThrowRuntimeExceptionForNonexistingSourceDirectory() {
         assertEquals(0, supplier("/does-not-exist", "*", null).get().size());
     }
 
