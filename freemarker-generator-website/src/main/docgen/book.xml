@@ -962,13 +962,13 @@ freemarker-generator -t freemarker-generator/info.ftl my_users=[docgen:wd]/examp
       used:</para>
 
       <programlisting>[docgen.insertOutput from="FreeMarker Generator DataSources" to=r"^\s*$" printCommand=true]
-freemarker-generator -t freemarker-generator/info.ftl http://google.com?foo=bar
+freemarker-generator -t freemarker-generator/info.ftl https://www.google.com#charset=ISO-8859-1
 [/docgen.insertOutput]</programlisting>
 
       <para>and also combined with a name:</para>
 
       <programlisting>[docgen.insertOutput from="FreeMarker Generator DataSources" to=r"^\s*$" printCommand=true]
-freemarker-generator -t freemarker-generator/info.ftl page=http://google.com?foo=bar
+freemarker-generator -t freemarker-generator/info.ftl page=http://www.google.com#charset=ISO-8859-1
 [/docgen.insertOutput]</programlisting>
     </section>
 
