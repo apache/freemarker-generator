@@ -96,7 +96,7 @@ public class NamedUri {
         return name;
     }
 
-    public String getNameOrElse(String def) {
+    public String getNameOrDefault(String def) {
         return StringUtils.isEmpty(name) ? def : name;
     }
 
@@ -104,7 +104,7 @@ public class NamedUri {
         return group;
     }
 
-    public String getGroupOrElse(String def) {
+    public String getGroupOrDefault(String def) {
         return StringUtils.isEmpty(group) ? def : group;
     }
 
@@ -120,7 +120,7 @@ public class NamedUri {
         return parameters.get(key);
     }
 
-    public String getParameterOrElse(String key, String defaultValue) {
+    public String getParameterOrDefault(String key, String defaultValue) {
         return parameters.getOrDefault(key, defaultValue);
     }
 
@@ -140,8 +140,8 @@ public class NamedUri {
         return getParameter(NamedUri.MIMETYPE_KEY);
     }
 
-    public String getMimeTypeOrElse(String def) {
-        return getParameterOrElse(NamedUri.MIMETYPE_KEY, def);
+    public String getMimeTypeOrDefault(String def) {
+        return getParameterOrDefault(NamedUri.MIMETYPE_KEY, def);
     }
 
     public Charset getCharset() {
@@ -149,7 +149,7 @@ public class NamedUri {
         return Charset.forName(charsetName);
     }
 
-    public Charset getCharsetOrElse(Charset def) {
+    public Charset getCharsetOrDefault(Charset def) {
         final String charsetName = getParameter(NamedUri.CHARSET_KEY);
         return StringUtils.isEmpty(charsetName) ? def : Charset.forName(charsetName);
     }
