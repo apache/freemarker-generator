@@ -37,6 +37,7 @@ All notable changes to this project will be documented in this file. We try to a
 * [FREEMARKER-129] Use version "0.X.Y" to cater for API changes according to [Semantic Versioning](https://semver.org)
 
 ### Fixed
+* [FREEMARKER-176] Running examples on Windows fails
 * [FREEMARKER-156] The Maven plugin unit tests failed randomly
 * [FREEMARKER-153] Configuration files are bootstrapped from "app.home" system property 
 * [FREEMARKER-151] Ensure that build and and examples are running on Windows
@@ -76,3 +77,4 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-173]: https://issues.apache.org/jira/browse/FREEMARKER-173
 [FREEMARKER-174]: https://issues.apache.org/jira/browse/FREEMARKER-174
 [FREEMARKER-175]: https://issues.apache.org/jira/browse/FREEMARKER-175
+[FREEMARKER-176]: https://issues.apache.org/jira/browse/FREEMARKER-176
