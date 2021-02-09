@@ -42,10 +42,10 @@ echo "examples\templates\demo.ftl"
 #############################################################################
 
 echo "examples\templates\datasources.ftl"
-$FREEMARKER_CMD -t examples\templates\datasources.ftl -s :data=examples/data > target\out\datasources.txt
+%FREEMARKER_CMD% -t examples\templates\datasources.ftl -s :data=examples/data > target\out\datasources-01.txt
 
 echo "examples\templates\datasources.ftl"
-$FREEMARKER_CMD -t examples\templates\datasources.ftl -s https://xkcd.com/info.0.json https://www.google.com > target\out\datasources.txt
+%FREEMARKER_CMD% -t examples\templates\datasources.ftl -s https://xkcd.com/info.0.json https://www.google.com > target\out\datasources-02.txt
 
 REM =========================================================================
 REM Interactive Mode
