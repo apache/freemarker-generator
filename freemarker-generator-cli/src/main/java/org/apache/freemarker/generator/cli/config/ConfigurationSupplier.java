@@ -25,7 +25,6 @@ import java.util.Properties;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
-import static freemarker.template.Configuration.VERSION_2_3_29;
 import static java.util.Objects.requireNonNull;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.Configuration.SETTING_PREFIX;
 
@@ -34,7 +33,7 @@ import static org.apache.freemarker.generator.base.FreeMarkerConstants.Configura
  */
 public class ConfigurationSupplier implements Supplier<Configuration> {
 
-    private static final Version FREEMARKER_VERSION = VERSION_2_3_29;
+    private static final Version FREEMARKER_VERSION = Configuration.VERSION_2_3_30;
 
     private final Settings settings;
     private final Supplier<TemplateLoader> templateLoader;
