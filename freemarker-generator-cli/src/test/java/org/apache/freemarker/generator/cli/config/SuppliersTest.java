@@ -39,6 +39,7 @@ import java.util.Properties;
 
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -94,7 +95,7 @@ public class SuppliersTest {
 
         assertNotNull(configuration.getSharedVariable(Model.TOOLS));
         assertTrue(configuration.isTemplateLoaderExplicitlySet());
-        assertTrue(configuration.isObjectWrapperExplicitlySet());
+        assertFalse(configuration.isObjectWrapperExplicitlySet());
     }
 
     @Test

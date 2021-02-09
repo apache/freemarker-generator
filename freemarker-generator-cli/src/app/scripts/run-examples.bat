@@ -44,6 +44,9 @@ echo "examples\templates\demo.ftl"
 echo "examples\templates\datasources.ftl"
 $FREEMARKER_CMD -t examples\templates\datasources.ftl -s :data=examples/data > target\out\datasources.txt
 
+echo "examples\templates\datasources.ftl"
+$FREEMARKER_CMD -t examples\templates\datasources.ftl -s https://xkcd.com/info.0.json https://www.google.com > target\out\datasources.txt
+
 REM =========================================================================
 REM Interactive Mode
 REM =========================================================================

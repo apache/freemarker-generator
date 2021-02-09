@@ -210,11 +210,18 @@ group           : default
 ### Inspecting A DataSource
 
 ```
-> freemarker-generator -t examples/templates/datasources.ftl user:csv=examples/data/csv/transactions.csv#delimiter=TAB
+> freemarker-generator \
+    -t examples/templates/datasources.ftl \
+    transactions:csv=examples/data/csv/transactions.csv#delimiter=TAB \
+    https://xkcd.com/info.0.json \
+    envvars=env:///
+
+transactions
+==============================================================================
 
 Invoke Arbitrary Methods On DataSource
 ---------------------------------------------------------------------------
-Name            : user
+Name            : transactions
 Group           : csv
 Nr of lines     : 101
 Content Type    : text/csv
@@ -231,7 +238,7 @@ extension       : csv
 basename        : transactions
 filename        : transactions.csv
 filepath        : /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/csv
-name            : user
+name            : transactions
 mimetype        : text/csv
 uri             : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/csv/transactions.csv
 group           : csv
@@ -239,6 +246,68 @@ group           : csv
 Iterating Over Properties Of A Datasource
 ---------------------------------------------------------------------------
 delimiter       : TAB
+
+https://xkcd.com/info.0.json
+==============================================================================
+
+Invoke Arbitrary Methods On DataSource
+---------------------------------------------------------------------------
+Name            : https://xkcd.com/info.0.json
+Group           : default
+Nr of lines     : 1
+Content Type    : application/json
+Charset         : UTF-8
+Extension       :
+Nr of chars     : 330
+Nr of bytes     : 330
+File name       :
+URI schema      : https
+
+Iterating Over Metadata Of A Datasource
+---------------------------------------------------------------------------
+extension       :
+basename        :
+filename        :
+filepath        : /
+name            : https://xkcd.com/info.0.json
+mimetype        : application/json
+uri             : https://xkcd.com/info.0.json
+group           : default
+
+Iterating Over Properties Of A Datasource
+---------------------------------------------------------------------------
+
+envvars
+==============================================================================
+
+Invoke Arbitrary Methods On DataSource
+---------------------------------------------------------------------------
+Name            : envvars
+Group           : default
+Nr of lines     : 36
+Content Type    : text/plain
+Charset         : UTF-8
+Extension       :
+Nr of chars     : 1,476
+Nr of bytes     : 1,478
+File name       :
+URI schema      : env
+
+Iterating Over Metadata Of A Datasource
+---------------------------------------------------------------------------
+extension       :
+basename        :
+filename        :
+filepath        : /
+name            : envvars
+mimetype        : text/plain
+uri             : env:///
+group           : default
+
+Iterating Over Properties Of A Datasource
+---------------------------------------------------------------------------
+
+
 ```
 
 

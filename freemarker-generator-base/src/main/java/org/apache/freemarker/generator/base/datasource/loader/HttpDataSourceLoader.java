@@ -44,7 +44,8 @@ public class HttpDataSourceLoader implements DataSourceLoader {
         final NamedUri namedUri = NamedUriStringParser.parse(source);
         final URI uri = namedUri.getUri();
         final String group = namedUri.getGroupOrDefault(DEFAULT_GROUP);
-        final Charset charset = namedUri.getCharset();
+        // if no charset is defined here we delegate that to the underlying data source
+        final Charset charset = namedUri.getCharsetOrDefault(null);
         final String mimeType = namedUri.getMimeType();
         final URL url = toUrl(uri);
         final String name = namedUri.getNameOrDefault(UriUtils.toStringWithoutFragment(uri));

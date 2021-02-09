@@ -20,7 +20,6 @@ import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Version;
 import org.apache.freemarker.generator.base.util.PropertiesTransformer;
-import org.apache.freemarker.generator.cli.model.GeneratorObjectWrapper;
 
 import java.util.Properties;
 import java.util.function.Supplier;
@@ -54,9 +53,6 @@ public class ConfigurationSupplier implements Supplier<Configuration> {
 
             // apply all "freemarker.configuration.setting" values
             configuration.setSettings(freeMarkerConfigurationSettings());
-
-            // TODO sgoeschl 2021-02-05 Probably not needed at all since we use the map of data source
-            configuration.setObjectWrapper(new GeneratorObjectWrapper(FREEMARKER_VERSION));
 
             // override current configuration with caller-provided settings
             configuration.setDefaultEncoding(settings.getTemplateEncoding().name());

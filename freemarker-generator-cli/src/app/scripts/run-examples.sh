@@ -47,7 +47,10 @@ $FREEMARKER_CMD -t examples/templates/demo.ftl README.md > target/out/demo.txt |
 #############################################################################
 
 echo "examples/templates/datasources.ftl"
-$FREEMARKER_CMD -t examples/templates/datasources.ftl -s :data=examples/data > target/out/datasources.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -t examples/templates/datasources.ftl -s :data=examples/data > target/out/file-datasources.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
+echo "examples/templates/datasources.ftl"
+$FREEMARKER_CMD -t examples/templates/datasources.ftl -s https://xkcd.com/info.0.json https://www.google.com > target/out/url-datasources.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
 # Interactive Mode

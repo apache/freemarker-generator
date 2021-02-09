@@ -56,7 +56,7 @@ public class DataSources implements Closeable {
     }
 
     /**
-     * Get the given metadata value for all data sources.
+     * Get the requested metadata value for all data sources.
      *
      * @param key key of the metadata part
      * @return list of metadata values
@@ -68,9 +68,9 @@ public class DataSources implements Closeable {
     }
 
     /**
-     * Get the unique groups of all data sources.
+     * Get a list of unique groups of all data sources.
      *
-     * @return data source names
+     * @return list of groups
      */
     public List<String> getGroups() {
         return dataSources.stream()

@@ -43,6 +43,7 @@ All notable changes to this project will be documented in this file. We try to a
 * [FREEMARKER-127] Site build fails with missing "org/apache/maven/doxia/siterenderer/DocumentContent"
 
 ### Internal
+* [FREEMARKER-174] Don't expose "DataSources" in the FreeMarker context
 * [FREEMARKER-172] Refactor DataSourceFactory
 * [FREEMARKER-164] Use default unsafe FreeMarker configuration
 * [FREEMARKER-153] FreeMarker Generator release preparations
@@ -71,4 +72,5 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-164]: https://issues.apache.org/jira/browse/FREEMARKER-164
 [FREEMARKER-168]: https://issues.apache.org/jira/browse/FREEMARKER-168
 [FREEMARKER-172]: https://issues.apache.org/jira/browse/FREEMARKER-172
-[FREEMARKER-173]: https://issues.apache.org/jira/browse/FREEMARKER-175
+[FREEMARKER-173]: https://issues.apache.org/jira/browse/FREEMARKER-173
+[FREEMARKER-174]: https://issues.apache.org/jira/browse/FREEMARKER-174
