@@ -948,14 +948,14 @@ EDITOR ==&gt; vi</programlisting>
       the data source is available as <literal>my_users</literal>:</para>
 
       <programlisting>[docgen.insertOutput from="FreeMarker Generator DataSources" to=r"^\s*$" printCommand=true]
-freemarker-generator -t freemarker-generator/info.ftl my_users=[docgen:wd]/examples/data/csv/user.csv
+freemarker-generator -t freemarker-generator/info.ftl my_users=[docgen.wd]/examples/data/csv/user.csv
 [/docgen.insertOutput]</programlisting>
 
       <para>A Named URI allows to pass additional information as part of the
       fragment, e.g. the charset of the text file:</para>
 
       <programlisting>[docgen.insertOutput from="FreeMarker Generator DataSources" to=r"^\s*$" printCommand=true]
-freemarker-generator -t freemarker-generator/info.ftl my_users=[docgen:wd]/examples/data/csv/user.csv#charset=UTF-16
+freemarker-generator -t freemarker-generator/info.ftl my_users=[docgen.wd]/examples/data/csv/user.csv#charset=UTF-16
 [/docgen.insertOutput]</programlisting>
 
       <para>In addition to the simplified file syntax full URIs can be
