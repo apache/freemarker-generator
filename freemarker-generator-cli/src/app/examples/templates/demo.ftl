@@ -15,7 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign deductSensitiveInformation = (tools.system.parameters.deductSensitiveInformation!'false') != 'false'>
+<#assign deductSensitiveInformation = (tools.system.systemProperties["freemarkerGenerator.examples.deductSensitiveInformation"]!'false') != 'false'>
 1) FreeMarker Special Variables
 ---------------------------------------------------------------------------
 FreeMarker version     : ${.version}

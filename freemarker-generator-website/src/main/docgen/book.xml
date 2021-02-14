@@ -99,11 +99,11 @@
     </note>
   </chapter>
 
-  <chapter>
+  <chapter xml:id="getting-started">
     <title>Getting started</title>
 
-    <section>
-      <title>Getting started</title>
+    <section xml:id="installation">
+      <title>Installation</title>
 
       <simplesect>
         <title>Installation</title>
@@ -146,11 +146,11 @@
         <programlisting>&gt; which freemarker-generator
 /Applications/Java/freemarker-generator-[docgen.customVariables.version]/bin/freemarker-generator</programlisting>
 
-        <para>and check the version of Apache FreeMarker CLI</para>
+        <para>and check the version of Apache FreeMarker CLI:</para>
 
-        <programlisting>&gt; freemarker-generator -V
-version=[docgen.customVariables.version], time=2020-06-25T21:48:02+0200, commit=b320d00094be8789086ad6153d9d3fcaf4b8c75f
-</programlisting>
+        <programlisting>[docgen.insertWithOutput]
+freemarker-generator -V
+[/docgen.insertWithOutput]</programlisting>
       </simplesect>
 
       <simplesect>
@@ -159,8 +159,9 @@ version=[docgen.customVariables.version], time=2020-06-25T21:48:02+0200, commit=
         <para>Apache FreeMarker Generator provides command line help as shown
         below:</para>
 
-        <programlisting>&gt; freemarker-generator -h
-[docgen.insertFile "@websitePomGenerated/cli-help-output.txt"]</programlisting>
+        <programlisting>[docgen.insertWithOutput]
+freemarker-generator -h
+[/docgen.insertWithOutput]</programlisting>
       </simplesect>
 
       <simplesect>
@@ -170,8 +171,9 @@ version=[docgen.customVariables.version], time=2020-06-25T21:48:02+0200, commit=
         the <literal>templates/info.ftl</literal> is particularly helpful to
         better understand Apache FreeMarker CLI.</para>
 
-        <programlisting>&gt; freemarker-generator -t freemarker-generator/info.ftl
-[docgen.insertFile "@websitePomGenerated/info-template-output.txt"]</programlisting>
+        <programlisting>[docgen.insertWithOutput]
+freemarker-generator -t freemarker-generator/info.ftl
+[/docgen.insertWithOutput]</programlisting>
 
         <para>Above:</para>
 
@@ -227,7 +229,9 @@ version=[docgen.customVariables.version], time=2020-06-25T21:48:02+0200, commit=
 
         <para>You can either use the existing JSON sample</para>
 
-        <programlisting>&gt; freemarker-generator -t examples/templates/json/md/github-users.ftl examples/data/json/github-users.json</programlisting>
+        <programlisting>[docgen.insertWithOutput]
+freemarker-generator -t [docgen.wd]/examples/templates/json/md/github-users.ftl [docgen.wd]/examples/data/json/github-users.json
+[/docgen.insertWithOutput]</programlisting>
 
         <para>or pipe a <literal>curl</literal> response</para>
 
@@ -244,6 +248,8 @@ version=[docgen.customVariables.version], time=2020-06-25T21:48:02+0200, commit=
             <imagedata fileref="images/examples/github.png" width="100%"/>
           </imageobject>
         </mediaobject>
+
+        <remark>Above are real people, so we shouldn't include this.</remark>
       </section>
 
       <section>
@@ -254,8 +260,12 @@ version=[docgen.customVariables.version], time=2020-06-25T21:48:02+0200, commit=
         available<remark>[removed external product link from here]</remark>,
         but having a local solution gives you more flexibility.</para>
 
-        <programlisting>&gt; freemarker-generator -t freemarker-generator/csv/md/transform.ftl examples/data/csv/contract.csv
-&gt; freemarker-generator -t freemarker-generator/csv/html/transform.ftl examples/data/csv/contract.csv</programlisting>
+        <programlisting>[docgen.checkCommand]
+freemarker-generator -t freemarker-generator/csv/md/transform.ftl [docgen.wd]/examples/data/csv/contract.csv
+[/docgen.checkCommand]
+[docgen.checkCommand]
+freemarker-generator -t freemarker-generator/csv/html/transform.ftl [docgen.wd]/examples/data/csv/contract.csv
+[/docgen.checkCommand]</programlisting>
 
         <para>The FreeMarker template is shown below.</para>
 
@@ -276,13 +286,13 @@ version=[docgen.customVariables.version], time=2020-06-25T21:48:02+0200, commit=
 
         <para>Of course you can also transform an XML document:</para>
 
-        <programlisting>&gt; freemarker-generator -t examples/templates/xml/txt/recipients.ftl examples/data/xml/recipients.xml</programlisting>
+        <programlisting>[docgen.insertWithOutput]
+freemarker-generator -t [docgen.wd]/examples/templates/xml/txt/recipients.ftl [docgen.wd]/examples/data/xml/recipients.xml
+[/docgen.insertWithOutput]</programlisting>
 
         <para>This is using the following template:</para>
 
         <programlisting role="template">[docgen.insertFile "@exampleTemplates/xml/txt/recipients.ftl"]</programlisting>
-
-        <programlisting role="output">[docgen.insertFile "@exampleOutputs/recipients.txt"]</programlisting>
       </section>
 
       <section>
@@ -303,50 +313,13 @@ version=[docgen.customVariables.version], time=2020-06-25T21:48:02+0200, commit=
         provide backward compatibility yet, we better stick to runnable
         examples, or else they will become outdated here.</remark></para>
 
-        <programlisting>&lt;#ftl output_format="plainText" strip_text="true"&gt;
-&lt;#assign json = tools.jsonpath.parse(dataSources?values[0])&gt;
-&lt;#assign basePath = json.read("$.basePath")&gt;
-&lt;#assign paths = json.read("$.paths")&gt;
+        <programlisting role="template">[docgen.insertFile "@exampleTemplates/json/csv/swagger-endpoints.ftl"]</programlisting>
 
-&lt;#compress&gt;
-    ENDPOINT;METHOD;CONSUMES;PRODUCES;SUMMARY;DESCRIPTION
-    &lt;#list paths as endpoint,metadata&gt;
-        &lt;#assign relative_url = basePath + endpoint&gt;
-        &lt;#assign methods = metadata?keys&gt;
-        &lt;#list methods as method&gt;
-            &lt;#assign summary = sanitize(paths[endpoint][method]["summary"]!"")&gt;
-            &lt;#assign description = sanitize(paths[endpoint][method]["description"]!"")&gt;
-            &lt;#assign consumes = join(paths[endpoint][method]["consumes"]![])&gt;
-            &lt;#assign produces = join(paths[endpoint][method]["produces"]![])&gt;
-            ${relative_url};${method?upper_case};${consumes};${produces};${summary};${description}
-        &lt;/#list&gt;
-    &lt;/#list&gt;
-&lt;/#compress&gt;
-${'\n'}
+        <para>Invoking the FTL template, and its output:</para>
 
-&lt;#function sanitize str&gt;
-    &lt;#return (((str?replace(";", ","))?replace("(\\n)+", "",'r')))?truncate(250)&gt;
-&lt;/#function&gt;
-
-&lt;#function join list&gt;
-    &lt;#if list?has_content&gt;
-        &lt;#return list?join(", ")&gt;
-    &lt;#else&gt;
-        &lt;#return ""&gt;
-    &lt;/#if&gt;
-&lt;/#function&gt;</programlisting>
-
-        <para>Invoking the FTL template</para>
-
-        <programlisting>&gt; freemarker-generator -t examples/templates/json/csv/swagger-endpoints.ftl examples/data/json/swagger-spec.json</programlisting>
-
-        <para>gives you</para>
-
-        <programlisting role="output">ENDPOINT;METHOD;CONSUMES;PRODUCES;SUMMARY;DESCRIPTION
-/api/pets;GET;;;;Returns all pets from the system that the user has access to
-/api/pets;POST;;;;Creates a new pet in the store. Duplicates are allowed
-/api/pets/{id};GET;;;;Returns a user based on a single ID, if the user does not have access to the pet
-/api/pets/{id};DELETE;;;;Deletes a single pet based on the ID supplied</programlisting>
+        <programlisting>[docgen.insertWithOutput]
+freemarker-generator -t [docgen.wd]/examples/templates/json/csv/swagger-endpoints.ftl [docgen.wd]/examples/data/json/swagger-spec.json
+[/docgen.insertWithOutput]</programlisting>
       </section>
 
       <section>
@@ -361,11 +334,18 @@ ${'\n'}
         transformation was provided to show the transformation of Excel
         documents.</para>
 
-        <programlisting>&gt; freemarker-generator -t freemarker-generator/excel/html/transform.ftl examples/data/excel/test.xls
-&gt; freemarker-generator -t freemarker-generator/excel/html/transform.ftl examples/data/excel/test.xlsx
-&gt; freemarker-generator -t freemarker-generator/excel/html/transform.ftl examples/data/excel/test-multiple-sheets.xlsx
-&gt; freemarker-generator -t freemarker-generator/excel/md/transform.ftl examples/data/excel/test-multiple-sheets.xlsx
-</programlisting>
+        <programlisting>[docgen.checkCommand]
+freemarker-generator -t freemarker-generator/excel/html/transform.ftl [docgen.wd]/examples/data/excel/test.xls
+[/docgen.checkCommand]
+[docgen.checkCommand]
+freemarker-generator -t freemarker-generator/excel/html/transform.ftl [docgen.wd]/examples/data/excel/test.xlsx
+[/docgen.checkCommand]
+[docgen.checkCommand]
+freemarker-generator -t freemarker-generator/excel/html/transform.ftl [docgen.wd]/examples/data/excel/test-multiple-sheets.xlsx
+[/docgen.checkCommand]
+[docgen.checkCommand]
+freemarker-generator -t freemarker-generator/excel/md/transform.ftl [docgen.wd]/examples/data/excel/test-multiple-sheets.xlsx
+[/docgen.checkCommand]</programlisting>
 
         <para>The provided FTL transforms an Excel into a HTML document
         supporting multiple Excel sheets:</para>
@@ -389,11 +369,15 @@ ${'\n'}
         directory (recursive search using include pattern) to a CSV
         file.</para>
 
-        <programlisting>&gt; freemarker-generator --data-source-include *.properties -t examples/templates/properties/csv/locker-test-users.ftl examples/data/properties</programlisting>
+        <programlisting>[docgen.insertWithOutput]
+freemarker-generator --data-source-include *.properties -t [docgen.wd]/examples/templates/properties/csv/locker-test-users.ftl [docgen.wd]/examples/data/properties
+[/docgen.insertWithOutput]</programlisting>
 
-        <programlisting role="output">[docgen.insertFile "@exampleOutputs/locker-test-users.csv"]</programlisting>
+        <para>The template it uses is this:</para>
 
-        <para>The FTL uses a couple of interesting features:</para>
+        <programlisting role="template">[docgen.insertFile "@exampleTemplates/properties/csv/locker-test-users.ftl"]</programlisting>
+
+        <para>The template uses a couple of interesting features:</para>
 
         <itemizedlist>
           <listitem>
@@ -416,8 +400,6 @@ ${'\n'}
           <listitem>
             <para>We add a manual line break using
             <literal>${'\n'}</literal></para>
-
-            <programlisting role="template">[docgen.insertFile "@exampleTemplates/properties/csv/locker-test-users.ftl"]</programlisting>
           </listitem>
         </itemizedlist>
       </section>
@@ -435,7 +417,8 @@ ${'\n'}
         <para>In order to create the PDF you need to execute the following
         commands (assuming that you have Apache FOP installed):</para>
 
-        <programlisting>&gt; freemarker-generator -t examples/templates/csv/fo/transform.ftl examples/data/csv/locker-test-users.csv &gt; sample.fo
+        <programlisting>[docgen.insertWithOutput]freemarker-generator -t [docgen.wd]/examples/templates/csv/fo/transform.ftl [docgen.wd]/examples/data/csv/locker-test-users.csv[/docgen.insertWithOutput] &gt; sample.fo
+
 &gt; fop -fo sample.fo sample.pdf
 Dec 29, 2018 10:24:30 PM org.apache.fop.events.LoggingEventListener processEvent
 WARNING: Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
@@ -459,7 +442,8 @@ INFO: Rendered page #1.</programlisting>
 
         <programlisting role="template">[docgen.insertFile "@exampleTemplates/csv/fo/transactions.ftl"]</programlisting>
 
-        <programlisting>&gt; freemarker-generator -t examples/templates/csv/fo/transactions.ftl examples/data/csv/transactions.csv &gt; transactions.fo
+        <programlisting>[docgen.insertWithOutput]freemarker-generator -t [docgen.wd]/examples/templates/csv/fo/transactions.ftl [docgen.wd]/examples/data/csv/transactions.csv[/docgen.insertWithOutput] &gt; transactions.fo
+
 &gt; fop -fo transactions.fo transactions.pdf
 Jan 16, 2019 11:15:21 PM org.apache.fop.events.LoggingEventListener processEvent
 WARNING: Font "Symbol,normal,700" not found. Substituting with "Symbol,normal,400".
@@ -492,9 +476,9 @@ INFO: Rendered page #2.</programlisting>
 
         <para>Your dependencies as CSV can be generated as shown below:</para>
 
-        <programlisting>&gt; freemarker-generator -t examples/templates/html/csv/dependencies.ftl examples/data/html/dependencies.html</programlisting>
-
-        <programlisting role="output">[docgen.insertFile "@exampleOutputs/dependencies.csv"]</programlisting>
+        <programlisting>[docgen.insertWithOutput]
+freemarker-generator -t [docgen.wd]/examples/templates/html/csv/dependencies.ftl [docgen.wd]/examples/data/html/dependencies.html
+[/docgen.insertWithOutput]</programlisting>
       </section>
 
       <section>
@@ -524,11 +508,7 @@ INFO: Rendered page #2.</programlisting>
 
         <para>Rendering the FreeMarker template:</para>
 
-        <programlisting>&gt; freemarker-generator -t examples/templates/csv/shell/curl.ftl examples/data/csv/user.csv</programlisting>
-
-        <para>generates the following shell script:</para>
-
-        <programlisting role="output">[docgen.insertFile "@exampleOutputs/curl.sh"]</programlisting>
+        <programlisting>freemarker-generator -t examples/templates/csv/shell/curl.ftl examples/data/csv/user.csv</programlisting>
 
         <para>Looks a bit complicated but lets dissect the things</para>
 
@@ -551,7 +531,7 @@ INFO: Rendered page #2.</programlisting>
 
         <para><remark>What specialty with generating shell scripts we want to
         demonstrate in this example? Is it escaping ${...} maybe? That belongs
-        to the FreeMarke documentation. But if we still want to show that
+        to the FreeMarker documentation. But if we still want to show that
         here, I would recommend using the [=...] interpolation syntax when
         generating something that already uses ${...}.</remark></para>
 
@@ -564,7 +544,8 @@ INFO: Rendered page #2.</programlisting>
 2019-09-27T21:02:54,CCCCCCC,200,0.529013,206
 2019-09-27T21:02:54,DDDDDDD,200,0.528268,206</programlisting>
 
-        <remark>Can't generate the above...</remark>
+        <remark>We can't generate the above in Docgen, as curl is might not be
+        available, or can't fetch remote resource.</remark>
       </section>
 
       <section>
@@ -582,11 +563,9 @@ INFO: Rendered page #2.</programlisting>
         more complex regular expression such as
         <literal>COMBINEDAPACHELOG</literal>.</para>
 
-        <programlisting>&gt; bin/freemarker-generator -t examples/templates/accesslog/combined-access.ftl examples/data/accesslog/combined-access.log</programlisting>
-
-        <para>which gives you the following output:</para>
-
-        <programlisting role="output">[docgen.insertFile "@exampleOutputs/combined-access.log.txt"]</programlisting>
+        <programlisting>[docgen.insertWithOutput]
+freemarker-generator -t [docgen.wd]/examples/templates/accesslog/combined-access.ftl [docgen.wd]/examples/data/accesslog/combined-access.log
+[/docgen.insertWithOutput]</programlisting>
 
         <para>using the following FreeMarker template:</para>
 
@@ -675,7 +654,7 @@ h3. AWS EC2 Instance
         <para><remark>Not in runnable examples (see same problem earlier, why
         that matters). Although, it's next to impossible to make a portable
         example of this. Question is, what do we want to demonstrate here? Lot
-        of lines to dig through for the reader, if the point is only
+        of lines to dig through for the reader, and the point is maybe just
         &lt;#local output = tools.exec.execute(line)&gt;.</remark></para>
       </section>
 
@@ -687,27 +666,25 @@ h3. AWS EC2 Instance
         <literal>jq</literal> or <literal>pup</literal> - in this case you can
         pass a FreeMarker template in an interactive fashion.</para>
 
-        <programlisting>&gt; bin/freemarker-generator -i 'Hello ${tools.system.envs.USER}'; echo
-Hello sgoeschl
+        <programlisting>[docgen.insertWithOutput]
+freemarker-generator -i 'Some template here... ${1 + 1}'
+[/docgen.insertWithOutput]
 
-&gt; bin/freemarker-generator -i '${tools.jsonpath.parse(dataSources?values[0]).read("$.info.title")}' examples/data/json/swagger-spec.json; echo
-Swagger Petstore
+[docgen.insertWithOutput]
+freemarker-generator -i '${tools.jsonpath.parse(dataSources?values[0]).read("$.info.title")}' [docgen.wd]/examples/data/json/swagger-spec.json
+[/docgen.insertWithOutput]
 
-&gt; bin/freemarker-generator -i 'Post Title : ${tools.jsonpath.parse(dataSources?values[0]).read("$.title")}' https://jsonplaceholder.typicode.com/posts/2; echo
-Post Title : qui est esse
+[docgen.insertWithOutput]
+freemarker-generator -i '${tools.xml.parse(dataSources?values[0])["recipients/person[1]/name"]}' [docgen.wd]/examples/data/xml/recipients.xml
+[/docgen.insertWithOutput]
 
-&gt; bin/freemarker-generator -i '${tools.xml.parse(dataSources?values[0])["recipients/person[1]/name"]}' examples/data/xml/recipients.xml; echo
-John Smith
+[docgen.insertWithOutput]
+freemarker-generator -i '${tools.jsoup.parse(dataSources?values[0]).select("a")[0]}' [docgen.wd]/examples/data/html/dependencies.html
+[/docgen.insertWithOutput]</programlisting>
 
-&gt; bin/freemarker-generator -i '${tools.jsoup.parse(dataSources?values[0]).select("a")[0]}' examples/data/html/dependencies.html; echo
-&lt;a href="${project.url}" title="FreeMarker Generator"&gt;FreeMarker Generator&lt;/a&gt;
-
-&gt; freemarker-generator -i '&lt;#list tools.system.envs as name,value&gt;${name} ==&gt; ${value}${"\n"}&lt;/#list&gt;'
-TERM ==&gt; xterm-256color
-LANG ==&gt; en_US
-DISPLAY ==&gt; :0.0
-SHELL ==&gt; /bin/bash
-EDITOR ==&gt; vi</programlisting>
+        <remark>I have deleted some examples above, as they were problematic
+        to generate. I think one or two would be enough anyway, as we just
+        demonstrate -i here.</remark>
       </section>
 
       <section>
@@ -720,20 +697,18 @@ EDITOR ==&gt; vi</programlisting>
         filtering (based on some primary key) and and transforming into a
         human-readable output format (Markdown).</para>
 
-        <para>So lets start the filtering &amp; transformation using the
+        <para>So lets start the filtering &amp; transformaction using the
         following command line</para>
 
-        <programlisting>&gt; bin/freemarker-generator -e UTF-8 -l de_AT -Pcolumn="Order ID" \
+        <programlisting>[docgen.insertWithOutput]
+freemarker-generator -e UTF-8 -l de_AT -Pcolumn="Order ID" \
   -Pvalues=226939189,957081544 \
-  -t examples/templates/csv/md/filter.ftl examples/data/csv/sales-records.csv</programlisting>
+  -t [docgen.wd]/examples/templates/csv/md/filter.ftl [docgen.wd]/examples/data/csv/sales-records.csv
+[/docgen.insertWithOutput]</programlisting>
 
-        <para>and Apache FreeMarker template</para>
+        <para>The FreeMarker template referred was this:</para>
 
         <programlisting role="template">[docgen.insertFile "@exampleTemplates/csv/md/filter.ftl"]</programlisting>
-
-        <para>yields</para>
-
-        <programlisting>[docgen.insertFile "@exampleOutputs/sales-records.md"]</programlisting>
       </section>
 
       <section>
@@ -742,13 +717,13 @@ EDITOR ==&gt; vi</programlisting>
         <para>Sometimes we simply need to transform a JSON into an equivalent
         YAML or the other way around.</para>
 
-        <programlisting>&gt; freemarker-generator -t freemarker-generator/yaml/json/transform.ftl examples/data/yaml/swagger-spec.yaml 
-&gt; freemarker-generator -i '${tools.gson.toJson(tools.yaml.parse(dataSources?values[0]))}' examples/data/yaml/swagger-spec.yaml
-&gt; freemarker-generator -i '${tools.gson.toJson(yaml)}' -m yaml=examples/data/yaml/swagger-spec.yaml
+        <programlisting>[docgen.insertWithOutput]freemarker-generator -t freemarker-generator/yaml/json/transform.ftl [docgen.wd]/examples/data/yaml/swagger-spec.yaml[/docgen.insertWithOutput]
+[docgen.insertWithOutput]freemarker-generator -i '${tools.gson.toJson(tools.yaml.parse(dataSources?values[0]))}' [docgen.wd]/examples/data/yaml/swagger-spec.yaml[/docgen.insertWithOutput]
+[docgen.insertWithOutput]freemarker-generator -i '${tools.gson.toJson(yaml)}' -m yaml=[docgen.wd]/examples/data/yaml/swagger-spec.yaml[/docgen.insertWithOutput]
 
-&gt; freemarker-generator -t freemarker-generator/json/yaml/transform.ftl examples/data/json/swagger-spec.json
-&gt; freemarker-generator -i '${tools.yaml.toYaml(tools.gson.parse(dataSources?values[0]))}' examples/data/json/swagger-spec.json
-&gt; freemarker-generator -i '${tools.yaml.toYaml(json)}' -m json=examples/data/json/swagger-spec.json</programlisting>
+[docgen.insertWithOutput]freemarker-generator -t freemarker-generator/json/yaml/transform.ftl [docgen.wd]/examples/data/json/swagger-spec.json[/docgen.insertWithOutput]
+[docgen.insertWithOutput]freemarker-generator -i '${tools.yaml.toYaml(tools.gson.parse(dataSources?values[0]))}' [docgen.wd]/examples/data/json/swagger-spec.json[/docgen.insertWithOutput]
+[docgen.insertWithOutput]freemarker-generator -i '${tools.yaml.toYaml(json)}' -m json=[docgen.wd]/examples/data/json/swagger-spec.json[/docgen.insertWithOutput]</programlisting>
       </section>
 
       <section>
@@ -779,21 +754,15 @@ EDITOR ==&gt; vi</programlisting>
           </listitem>
         </itemizedlist>
 
-        <para>Running</para>
-
-        <programlisting>freemarker-generator -t examples/templates/demo.ftl</programlisting>
-
-        <para>gives you</para>
-
-        <programlisting role="output">[docgen.insertFile "@exampleOutputs/demo.txt" charset="CP1252"]</programlisting>
+        <programlisting>[docgen.insertWithOutput]freemarker-generator -t [docgen.wd]/examples/templates/demo.ftl[/docgen.insertWithOutput]</programlisting>
       </section>
     </section>
   </chapter>
 
-  <chapter>
+  <chapter xml:id="concepts">
     <title>Concepts</title>
 
-    <section>
+    <section xml:id="design-goals">
       <title>Design goals</title>
 
       <itemizedlist>
@@ -879,7 +848,7 @@ EDITOR ==&gt; vi</programlisting>
     </section>
 
     <section xml:id="named-uri">
-      <title>Named URI-s</title>
+      <title xml:id="named-uri">Named URI-s</title>
 
       <para>Named URIs allow to identify <literal>DataSource</literal>-s (not
       a JDBC <literal>DataSource</literal>, <link linkend="datasources">but
@@ -947,29 +916,29 @@ EDITOR ==&gt; vi</programlisting>
       <para>The following Named URI loads a <literal>user.csv</literal> and
       the data source is available as <literal>my_users</literal>:</para>
 
-      <programlisting>[docgen.insertOutput from="FreeMarker Generator DataSources" to=r"^\s*$" printCommand=true]
+      <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
 freemarker-generator -t freemarker-generator/info.ftl my_users=[docgen.wd]/examples/data/csv/user.csv
-[/docgen.insertOutput]</programlisting>
+[/docgen.insertWithOutput]</programlisting>
 
       <para>A Named URI allows to pass additional information as part of the
       fragment, e.g. the charset of the text file:</para>
 
-      <programlisting>[docgen.insertOutput from="FreeMarker Generator DataSources" to=r"^\s*$" printCommand=true]
+      <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
 freemarker-generator -t freemarker-generator/info.ftl my_users=[docgen.wd]/examples/data/csv/user.csv#charset=UTF-16
-[/docgen.insertOutput]</programlisting>
+[/docgen.insertWithOutput]</programlisting>
 
       <para>In addition to the simplified file syntax full URIs can be
       used:</para>
 
-      <programlisting>[docgen.insertOutput from="FreeMarker Generator DataSources" to=r"^\s*$" printCommand=true]
+      <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
 freemarker-generator -t freemarker-generator/info.ftl https://www.google.com#charset=ISO-8859-1
-[/docgen.insertOutput]</programlisting>
+[/docgen.insertWithOutput]</programlisting>
 
       <para>and also combined with a name:</para>
 
-      <programlisting>[docgen.insertOutput from="FreeMarker Generator DataSources" to=r"^\s*$" printCommand=true]
+      <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
 freemarker-generator -t freemarker-generator/info.ftl page=http://www.google.com#charset=ISO-8859-1
-[/docgen.insertOutput]</programlisting>
+[/docgen.insertWithOutput]</programlisting>
     </section>
 
     <section xml:id="datasources">
@@ -1013,45 +982,45 @@ freemarker-generator -t freemarker-generator/info.ftl page=http://www.google.com
       </simplesect>
     </section>
 
-    <section>
+    <section xml:id="data-models">
       <title>Data Models</title>
 
       <para>TODO</para>
     </section>
 
-    <section>
+    <section xml:id="passing-configuration-data">
       <title>Passing Configuration Data</title>
 
       <para>TODO</para>
     </section>
 
-    <section>
+    <section xml:id="template-loading">
       <title>Template Loading</title>
 
       <para>TODO</para>
     </section>
 
-    <section>
+    <section xml:id="transformation">
       <title>Transformation</title>
 
       <para>TODO</para>
     </section>
 
-    <section>
+    <section xml:id="tools">
       <title>Tools</title>
 
       <para>TODO</para>
     </section>
   </chapter>
 
-  <chapter>
+  <chapter xml:id="usage-details">
     <title>Usage details</title>
 
     <remark role="editorialNote">In the markdown version this chapter was
     "Usage", but I though that clashes with "Getting Started" in
     meaning.</remark>
 
-    <section>
+    <section xml:id="transforming-directories">
       <title>Transforming Directories</title>
 
       <section>
@@ -1074,17 +1043,17 @@ freemarker-generator -t freemarker-generator/info.ftl page=http://www.google.com
     </section>
   </chapter>
 
-  <chapter>
+  <chapter xml:id="advanced-topics">
     <title>Advanced topics</title>
 
-    <section>
+    <section xml:id="freemarker-cli-configuration">
       <title>FreeMarker CLI Configuration</title>
 
       <para>TODO</para>
     </section>
   </chapter>
 
-  <chapter>
+  <chapter xml:id="appendixes">
     <title>Appendixes</title>
 
     <section xml:id="download">

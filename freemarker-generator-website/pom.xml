@@ -53,55 +53,6 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>generateCliHelp</id>
-                        <phase>package</phase>
-                        <goals>
-                          <goal>exec</goal>
-                        </goals>
-                        <configuration>   
-                          <executable>java</executable>
-                          <arguments>
-                              <argument>-classpath</argument>
-                              <classpath/>
-
-                              <!-- Setting up things without calling the launcher scripts in app/bin: -->
-                              <argument>-Dapp.home=${freemarkerGeneratorAppHome}</argument>
-
-                              <argument>org.apache.freemarker.generator.cli.Main</argument>
-                              <argument>--help</argument>
-                          </arguments>
-                          <outputFile>${docgenInsertedOutputsDirectory}/cli-help-output.txt</outputFile>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>generateInfoTemplateOutput</id>
-                        <phase>package</phase>
-                        <goals>
-                          <goal>exec</goal>
-                        </goals>
-                        <configuration>   
-                          <executable>java</executable>
-                          <arguments>
-                              <argument>-classpath</argument>
-                              <classpath/>
-
-                              <!-- Setting up things without calling the launcher scripts in app/bin: -->
-                              <argument>-Dapp.home=${freemarkerGeneratorAppHome}</argument>
-
-                              <argument>org.apache.freemarker.generator.cli.Main</argument>
-                              <argument>-t</argument>
-                              <argument>freemarker-generator/info.ftl</argument>
-                          </arguments>
-                          <outputFile>${docgenInsertedOutputsDirectory}/info-template-output.txt</outputFile>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.freemarker.docgen</groupId>
                 <artifactId>freemarker-docgen-maven</artifactId>
                 <version>0.0.2-SNAPSHOT</version>

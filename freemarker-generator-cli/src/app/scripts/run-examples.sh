@@ -40,7 +40,7 @@ $FREEMARKER_CMD -t freemarker-generator/info.ftl README.md > target/out/info.txt
 #############################################################################
 
 echo "examples/templates/demo.ftl"
-$FREEMARKER_CMD -t examples/templates/demo.ftl -PdeductSensitiveInformation=true README.md > target/out/demo.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -t examples/templates/demo.ftl -DfreemarkerGenerator.examples.deductSensitiveInformation=true README.md > target/out/demo.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
 # Interactive Mode
