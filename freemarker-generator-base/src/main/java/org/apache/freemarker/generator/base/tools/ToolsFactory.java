@@ -36,7 +36,8 @@ public class ToolsFactory {
         }
 
         try {
-            return forName(clazzName) != null;
+            forName(clazzName);
+            return true;
         } catch (NoClassDefFoundError | ClassNotFoundException e) {
             return false;
         }

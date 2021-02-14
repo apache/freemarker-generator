@@ -37,6 +37,16 @@ REM =========================================================================
 echo "examples\templates\demo.ftl"
 %FREEMARKER_CMD% -t examples\templates\demo.ftl --output-encoding CP1252 -DfreemarkerGenerator.examples.deductSensitiveInformation=true  README.md > target\out\demo.txt
 
+#############################################################################
+# DataSources
+#############################################################################
+
+echo "examples\templates\datasources.ftl"
+%FREEMARKER_CMD% -t examples\templates\datasources.ftl -s :data=examples/data > target\out\datasources-01.txt
+
+echo "examples\templates\datasources.ftl"
+%FREEMARKER_CMD% -t examples\templates\datasources.ftl -s https://xkcd.com/info.0.json https://www.google.com > target\out\datasources-02.txt
+
 REM =========================================================================
 REM Interactive Mode
 REM =========================================================================
@@ -130,7 +140,7 @@ REM =========================================================================
 REM Java Faker
 REM =========================================================================
 echo "examples/templates/javafaker/csv/testdata.ftl"
-%FREEMARKER_CMD% -t examples/templates/javafaker/csv/testdata.ftl > target/out/testdata.csv
+%FREEMARKER_CMD% -DNR_OF_RECORDS=10 -t examples/templates/javafaker/csv/testdata.ftl > target/out/testdata.csv
 
 REM =========================================================================
 REM JSON

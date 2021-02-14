@@ -122,7 +122,7 @@ List all data sources having "json" extension
 - ${ds.name}
 </#list>
 List all data sources having "src/test/data/properties" in their file path
-<#list dataSources?values?filter(ds -> ds.match("filePath", "*/src/test/data/properties")) as ds>
+<#list dataSources?values?filter(ds -> ds.match("filepath", "*/src/test/data/properties")) as ds>
 - ${ds.name}
 </#list>
 
@@ -145,7 +145,10 @@ UUIDTool Named UUID   : ${tools.uuid.namedUUID("value and salt")}
 
 15) Printing Special Characters
 ---------------------------------------------------------------------------
+Windows 1252 Characters: €¥§ÆÇæ®
 German Special Characters: äöüßÄÖÜ
+Cyrillic Characters: Кириллица
+Chinese Characters: 你好吗
 
 16) Locale-specific output
 ---------------------------------------------------------------------------

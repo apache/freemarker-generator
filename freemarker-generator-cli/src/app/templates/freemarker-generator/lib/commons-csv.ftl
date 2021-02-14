@@ -17,6 +17,24 @@
 -->
 
 <#---
+    Detemine the CSV format for reading a CSV files from properties of the data source.
+
+    * format - see https://commons.apache.org/proper/commons-csv/apidocs/org/apache/commons/csv/CSVFormat.html
+    * delimiter - symbolic name of delimiter, e.g. "COLON" or "SEMICOLON"
+    * header - whether the first rows are headers
+-->
+<#function dataSourceFormat dataSource>
+    <#assign format = tools.csv.formats[dataSource.properties.format!"DEFAULT"]>
+    <#assign delimiter = tools.csv.toDelimiter(dataSource.properties.delimiter!format.getDelimiter())>
+    <#assign withHeader = dataSource.properties.header!"true">
+    <#assign format = format.withDelimiter(delimiter)>
+    <#if withHeader?boolean>
+        <#assign format = format.withFirstRecordAsHeader()>
+    </#if>
+    <#return format>
+</#function>
+
+<#---
     Detemine the CSV format for reading a CSV files using user-supplied
     parameters from the data model.
 

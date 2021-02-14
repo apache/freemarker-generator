@@ -43,7 +43,7 @@ public class ConfigurationSupplierTest {
         assertTrue(configuration.isOutputEncodingSet());
 
         assertFalse(configuration.isCacheStorageExplicitlySet());
-        assertTrue(configuration.isObjectWrapperExplicitlySet());
+        assertFalse(configuration.isObjectWrapperExplicitlySet());
         assertFalse(configuration.isOutputFormatExplicitlySet());
         assertFalse(configuration.isTemplateExceptionHandlerExplicitlySet());
         assertFalse(configuration.isTimeZoneExplicitlySet());
@@ -51,7 +51,7 @@ public class ConfigurationSupplierTest {
     }
 
     private ConfigurationSupplier configurationSupplier(Settings settings) {
-        return new ConfigurationSupplier(settings, templateLoaderSupplier());
+        return new ConfigurationSupplier(settings, templateLoaderSupplier(), Suppliers.toolsSupplier(settings));
     }
 
     private TemplateLoaderSupplier templateLoaderSupplier() {
@@ -60,7 +60,6 @@ public class ConfigurationSupplierTest {
 
     private SettingsBuilder settingsBuilder() {
         return Settings.builder()
-                .setTemplateNames(singletonList(ANY_TEMPLATE_NAME))
-                .setWriter(new StringWriter());
+                .setCallerSuppliedWriter(new StringWriter());
     }
 }

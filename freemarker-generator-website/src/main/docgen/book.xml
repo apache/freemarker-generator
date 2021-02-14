@@ -99,11 +99,11 @@
     </note>
   </chapter>
 
-  <chapter xml:id="getting-started">
-    <title>Getting started</title>
+  <chapter xml:id="first-steps">
+    <title>First Steps</title>
 
-    <section xml:id="installation">
-      <title>Installation</title>
+    <section xml:id="getting-started">
+      <title>Getting Started</title>
 
       <simplesect>
         <title>Installation</title>
@@ -138,13 +138,13 @@
         recognized by the launcher script something (like JAVA_HOME, ANT_HOME,
         etc).</remark>
 
-        <programlisting>export PATH=$PATH:/Applications/Java/freemarker-generator-[docgen.customVariables.version]/bin</programlisting>
+        <programlisting>export PATH=$PATH:/Applications/Java/freemarker-generator/bin</programlisting>
 
         <para>Afterwards Apache FreeMarker Generator can be executed from the
         command line:</para>
 
         <programlisting>&gt; which freemarker-generator
-/Applications/Java/freemarker-generator-[docgen.customVariables.version]/bin/freemarker-generator</programlisting>
+/Applications/Java/freemarker-generator/bin/freemarker-generator</programlisting>
 
         <para>and check the version of Apache FreeMarker CLI:</para>
 
@@ -205,7 +205,7 @@ freemarker-generator -t freemarker-generator/info.ftl
     </section>
 
     <section>
-      <title>Running the examples</title>
+      <title>Running the Examples</title>
 
       <para>There a many examples (see below) available you can execute - The
       examples were tested with Java 1.8 on Mac OS X.</para>
@@ -837,6 +837,11 @@ freemarker-generator -e UTF-8 -l de_AT -Pcolumn="Order ID" \
         </listitem>
 
         <listitem>
+          <para>Support creation of test data using <link
+          xlink:href="https://github.com/DiUS/java-faker/">JavaFaker</link></para>
+        </listitem>
+
+        <listitem>
           <para>Add some commonly useful information such as Java System
           Properties, environment variables</para>
         </listitem>
@@ -913,73 +918,69 @@ freemarker-generator -e UTF-8 -l de_AT -Pcolumn="Order ID" \
         </listitem>
       </orderedlist>
 
-      <para>The following Named URI loads a <literal>user.csv</literal> and
-      the data source is available as <literal>my_users</literal>:</para>
+      <section>
+        <title>Using Named URIs For A File</title>
 
-      <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
+        <para>The following Named URI loads a <literal>user.csv</literal> and
+        the data source is available as <literal>my_users</literal>:</para>
+
+        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
 freemarker-generator -t freemarker-generator/info.ftl my_users=[docgen.wd]/examples/data/csv/user.csv
 [/docgen.insertWithOutput]</programlisting>
 
-      <para>A Named URI allows to pass additional information as part of the
-      fragment, e.g. the charset of the text file:</para>
+        <para>A Named URI allows to pass additional information as part of the
+        fragment, e.g. the charset of the text file:</para>
 
-      <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
+        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
 freemarker-generator -t freemarker-generator/info.ftl my_users=[docgen.wd]/examples/data/csv/user.csv#charset=UTF-16
 [/docgen.insertWithOutput]</programlisting>
 
-      <para>In addition to the simplified file syntax full URIs can be
-      used:</para>
+        <para>In addition to the simplified file syntax full URIs can be
+        used:</para>
 
-      <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
+        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
 freemarker-generator -t freemarker-generator/info.ftl https://www.google.com#charset=ISO-8859-1
 [/docgen.insertWithOutput]</programlisting>
 
-      <para>and also combined with a name:</para>
+        <para>and also combined with a name:</para>
 
-      <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
+        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
 freemarker-generator -t freemarker-generator/info.ftl page=http://www.google.com#charset=ISO-8859-1
 [/docgen.insertWithOutput]</programlisting>
+      </section>
+
+      <section>
+        <title>Using Named URIs For Directories</title>
+
+        <para>A Name URI can be also combined with file directories.</para>
+
+        <para>Load all CVS files of a directory using the group "csv":</para>
+
+        <programlisting>[docgen.insertWithOutput]
+freemarker-generator -t freemarker-generator/info.ftl :csv=[docgen.wd]/examples/data/csv
+[/docgen.insertWithOutput]</programlisting>
+
+        <para>or use a charset for all files of a directory</para>
+
+        <programlisting>[docgen.insertWithOutput]
+freemarker-generator -t freemarker-generator/info.ftl '[docgen.wd]/examples/data/csv#charset=UTF-16&amp;mimetype=text/plain'
+[/docgen.insertWithOutput]</programlisting>
+
+        <para>It is also possible to provide data source properties to all
+        files being loaded</para>
+
+        <programlisting>[docgen.insertWithOutput]
+freemarker-generator -t [docgen.wd]/examples/templates/datasources.ftl '[docgen.wd]/examples/data/csv#format=DEFAULT'
+[/docgen.insertWithOutput]</programlisting>
+
+        <para/>
+      </section>
     </section>
 
     <section xml:id="datasources">
       <title>Data sources</title>
 
-      <para>A <literal>DataSource</literal> consists of lazy-loaded data
-      available in Apache FreeMarker's model (context) - it provides:</para>
-
-      <itemizedlist>
-        <listitem>
-          <para>a <literal>charset</literal> for reading textual
-          content</para>
-        </listitem>
-
-        <listitem>
-          <para>a <literal>content type</literal></para>
-        </listitem>
-
-        <listitem>
-          <para>a <literal>name</literal> and a
-          <literal>group</literal></para>
-        </listitem>
-
-        <listitem>
-          <para>access to textual content directly or using a line
-          iterator</para>
-        </listitem>
-
-        <listitem>
-          <para>access to the data input stream</para>
-        </listitem>
-      </itemizedlist>
-
-      <simplesect>
-        <title>Loading a <literal>DataSource</literal></title>
-
-        <para>A <literal>DataSource</literal> can be loaded from the file
-        system, for example with a positional command line argument:</para>
-
-        <programlisting/>
-      </simplesect>
+      <para>TODO</para>
     </section>
 
     <section xml:id="data-models">
@@ -1037,6 +1038,12 @@ freemarker-generator -t freemarker-generator/info.ftl page=http://www.google.com
 
       <section>
         <title>Transforming CSV</title>
+
+        <para>TODO</para>
+      </section>
+
+      <section>
+        <title>Generating test data</title>
 
         <para>TODO</para>
       </section>

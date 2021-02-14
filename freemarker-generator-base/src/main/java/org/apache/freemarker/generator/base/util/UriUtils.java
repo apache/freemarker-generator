@@ -21,7 +21,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 import static org.apache.commons.io.FilenameUtils.separatorsToUnix;
-import static org.apache.freemarker.generator.base.util.StringUtils.isNotEmpty;
 
 public class UriUtils {
 
@@ -50,25 +49,7 @@ public class UriUtils {
     public static String toStringWithoutFragment(URI uri) {
         final String str = uri.toString();
         final int index = str.indexOf('#');
-        return (index > 0) ? str.substring(0, index) : str;
-    }
-
-    public static boolean isUri(String str) {
-        return isNotEmpty(str) && str.contains("://");
-    }
-
-    public static boolean isHttpUri(URI uri) {
-        if (uri == null) {
-            return false;
-        }
-        return "http".equalsIgnoreCase(uri.getScheme()) || "https".equalsIgnoreCase(uri.getScheme());
-    }
-
-    public static boolean isFileUri(URI uri) {
-        if (uri == null) {
-            return false;
-        }
-        return "file".equalsIgnoreCase(uri.getScheme());
+        return index > 0 ? str.substring(0, index) : str;
     }
 
     public static boolean isEnvUri(URI uri) {

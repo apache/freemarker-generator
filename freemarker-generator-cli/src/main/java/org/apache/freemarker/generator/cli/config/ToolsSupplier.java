@@ -16,20 +16,19 @@
  */
 package org.apache.freemarker.generator.cli.config;
 
+import org.apache.freemarker.generator.base.FreeMarkerConstants.Configuration;
 import org.apache.freemarker.generator.base.FreeMarkerConstants.Model;
 import org.apache.freemarker.generator.base.tools.ToolsFactory;
+import org.apache.freemarker.generator.base.util.PropertiesTransformer;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toMap;
-import static java.util.stream.Stream.of;
-import static org.apache.freemarker.generator.base.FreeMarkerConstants.Configuration.TOOLS_PREFIX;
-import static org.apache.freemarker.generator.base.util.PropertiesTransformer.filterKeyPrefix;
-import static org.apache.freemarker.generator.base.util.PropertiesTransformer.removeKeyPrefix;
 
 /**
  * Supplies FreeMarker tools based on the provided settings.
@@ -76,9 +75,9 @@ public class ToolsSupplier implements Supplier<Map<String, Object>> {
      * @return tool properties
      */
     private Properties toolsProperties() {
-        return of(configuration)
-                .map(p -> filterKeyPrefix(p, TOOLS_PREFIX))
-                .map(p -> removeKeyPrefix(p, TOOLS_PREFIX))
+        return Stream.of(configuration)
+                .map(p -> PropertiesTransformer.filterKeyPrefix(p, Configuration.TOOLS_PREFIX))
+                .map(p -> PropertiesTransformer.removeKeyPrefix(p, Configuration.TOOLS_PREFIX))
                 .findFirst().get();
     }
 

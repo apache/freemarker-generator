@@ -20,42 +20,30 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import org.apache.commons.io.FileUtils;
-import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.datasource.DataSource;
-import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.freemarker.generator.base.datasource.DataSources;
+import org.apache.freemarker.generator.base.output.OutputGenerator;
 import org.apache.freemarker.generator.base.template.TemplateOutput;
 import org.apache.freemarker.generator.base.template.TemplateSource;
-import org.apache.freemarker.generator.base.template.TemplateTransformation;
-import org.apache.freemarker.generator.base.template.TemplateTransformations;
-import org.apache.freemarker.generator.base.util.UriUtils;
-import org.apache.freemarker.generator.cli.config.Settings;
 
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.net.URI;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
-import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
-import static org.apache.freemarker.generator.base.FreeMarkerConstants.Location.STDIN;
-import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model.DATASOURCES;
-import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_TEXT_PLAIN;
-import static org.apache.freemarker.generator.cli.config.Suppliers.configurationSupplier;
-import static org.apache.freemarker.generator.cli.config.Suppliers.dataModelSupplier;
-import static org.apache.freemarker.generator.cli.config.Suppliers.dataSourcesSupplier;
-import static org.apache.freemarker.generator.cli.config.Suppliers.parameterSupplier;
-import static org.apache.freemarker.generator.cli.config.Suppliers.templateTransformationsSupplier;
-import static org.apache.freemarker.generator.cli.config.Suppliers.toolsSupplier;
+import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model;
 
 /**
  * Renders a FreeMarker template.
@@ -64,105 +52,84 @@ public class FreeMarkerTask implements Callable<Integer> {
 
     private static final int SUCCESS = 0;
 
-    private final Settings settings;
-    private final Supplier<Map<String, Object>> toolsSupplier;
-    private final Supplier<List<DataSource>> dataSourcesSupplier;
-    private final Supplier<Map<String, Object>> dataModelsSupplier;
-    private final Supplier<Map<String, Object>> parameterModelSupplier;
     private final Supplier<Configuration> configurationSupplier;
-    private final Supplier<TemplateTransformations> templateTransformationsSupplier;
+    private final Supplier<List<OutputGenerator>> outputGeneratorsSupplier;
+    private final Supplier<Map<String, Object>> sharedDataModelSupplier;
+    private final Supplier<List<DataSource>> sharedDataSourcesSupplier;
+    private final Supplier<Map<String, Object>> sharedParametersSupplier;
 
-
-    public FreeMarkerTask(Settings settings) {
-        this(settings,
-                configurationSupplier(settings),
-                templateTransformationsSupplier(settings),
-                dataSourcesSupplier(settings),
-                dataModelSupplier(settings),
-                parameterSupplier(settings),
-                toolsSupplier(settings)
-        );
-    }
-
-    public FreeMarkerTask(Settings settings,
-                          Supplier<Configuration> configurationSupplier,
-                          Supplier<TemplateTransformations> templateTransformationsSupplier,
-                          Supplier<List<DataSource>> dataSourcesSupplier,
-                          Supplier<Map<String, Object>> dataModelsSupplier,
-                          Supplier<Map<String, Object>> parameterModelSupplier,
-                          Supplier<Map<String, Object>> toolsSupplier) {
-        this.settings = requireNonNull(settings);
-        this.toolsSupplier = requireNonNull(toolsSupplier);
-        this.dataSourcesSupplier = requireNonNull(dataSourcesSupplier);
-        this.dataModelsSupplier = requireNonNull(dataModelsSupplier);
-        this.parameterModelSupplier = requireNonNull(parameterModelSupplier);
-        this.configurationSupplier = requireNonNull(configurationSupplier);
-        this.templateTransformationsSupplier = requireNonNull(templateTransformationsSupplier);
+    public FreeMarkerTask(Supplier<Configuration> configurationSupplier,
+                          Supplier<List<OutputGenerator>> outputGeneratorsSupplier,
+                          Supplier<Map<String, Object>> sharedDataModelSupplier,
+                          Supplier<List<DataSource>> sharedDataSourcesSupplier,
+                          Supplier<Map<String, Object>> sharedParametersSupplier) {
+        this.configurationSupplier = requireNonNull(configurationSupplier, "configurationSupplier");
+        this.outputGeneratorsSupplier = requireNonNull(outputGeneratorsSupplier, "outputGeneratorsSupplier");
+        this.sharedDataModelSupplier = requireNonNull(sharedDataModelSupplier, "sharedDataModelSupplier");
+        this.sharedDataSourcesSupplier = requireNonNull(sharedDataSourcesSupplier, "sharedDataSourcesSupplier");
+        this.sharedParametersSupplier = requireNonNull(sharedParametersSupplier, "parametersSupplier");
     }
 
     @Override
     public Integer call() {
-        try {
-            final Configuration configuration = configurationSupplier.get();
-            final TemplateTransformations templateTransformations = templateTransformationsSupplier.get();
-            final DataSources dataSources = dataSources(settings, dataSourcesSupplier);
-            final Map<String, Object> dataModel = dataModel(dataSources, parameterModelSupplier, dataModelsSupplier, toolsSupplier);
-            templateTransformations.getList().forEach(t -> process(configuration, t, dataModel));
-            return SUCCESS;
-        } catch (RuntimeException e) {
-            throw new RuntimeException("Failed to process templates", e);
-        }
+        final Configuration configuration = configurationSupplier.get();
+        final List<OutputGenerator> outputGenerators = outputGeneratorsSupplier.get();
+        final Map<String, Object> sharedDataModel = sharedDataModelSupplier.get();
+        final List<DataSource> sharedDataSources = sharedDataSourcesSupplier.get();
+        final Map<String, Object> sharedParameters = sharedParametersSupplier.get();
+
+        outputGenerators.forEach(outputGenerator -> process(
+                configuration,
+                outputGenerator,
+                sharedDataModel,
+                sharedDataSources,
+                sharedParameters));
+
+        return SUCCESS;
     }
 
     private void process(Configuration configuration,
-                         TemplateTransformation templateTransformation,
-                         Map<String, Object> dataModel) {
-        final TemplateSource templateSource = templateTransformation.getTemplateSource();
-        final TemplateOutput templateOutput = templateTransformation.getTemplateOutput();
+                         OutputGenerator outputGenerator,
+                         Map<String, Object> sharedDataModelMap,
+                         List<DataSource> sharedDataSources,
+                         Map<String, Object> sharedParameters) {
+        final TemplateSource templateSource = outputGenerator.getTemplateSource();
+        final TemplateOutput templateOutput = outputGenerator.getTemplateOutput();
+        final DataSources dataSources = toDataSources(outputGenerator, sharedDataSources);
+        final Map<String, Object> variables = outputGenerator.getVariables();
+        final Map<String, Object> templateDataModel = toTemplateDataModel(dataSources, variables, sharedDataModelMap, sharedParameters);
+
         try (Writer writer = writer(templateOutput)) {
             final Template template = template(configuration, templateSource);
-            template.process(dataModel, writer);
+            template.process(templateDataModel, writer);
         } catch (TemplateException | IOException e) {
             throw new RuntimeException("Failed to process template: " + templateSource.getName(), e);
         }
     }
 
-    private static DataSources dataSources(Settings settings, Supplier<List<DataSource>> dataSourcesSupplier) {
-        final List<DataSource> dataSources = new ArrayList<>(dataSourcesSupplier.get());
-
-        // Add optional data source from STDIN at the start of the list since
-        // this allows easy sequence slicing in FreeMarker.
-        if (settings.isReadFromStdin()) {
-            final URI uri = UriUtils.toUri(Location.SYSTEM, "in");
-            dataSources.add(0, DataSourceFactory.fromInputStream(STDIN, DEFAULT_GROUP, uri, System.in, MIME_TEXT_PLAIN, UTF_8));
-        }
-
-        return new DataSources(dataSources);
+    private static DataSources toDataSources(OutputGenerator outputGenerator, List<DataSource> sharedDataSources) {
+        return new DataSources(Stream.of(outputGenerator.getDataSources(), sharedDataSources)
+                .flatMap(Collection::stream).collect(Collectors.toList()));
     }
 
-    private static Map<String, Object> dataModel(
-            DataSources dataSources,
-            Supplier<Map<String, Object>> parameterModelSupplier,
-            Supplier<Map<String, Object>> dataModelsSupplier,
-            Supplier<Map<String, Object>> tools) {
+    @SafeVarargs
+    private static Map<String, Object> toTemplateDataModel(DataSources dataSources, Map<String, Object>... maps) {
         final Map<String, Object> result = new HashMap<>();
-        result.putAll(dataModelsSupplier.get());
-        result.put(DATASOURCES, dataSources);
-        result.putAll(parameterModelSupplier.get());
-        result.putAll(tools.get());
+        Arrays.stream(maps).forEach(result::putAll);
+        // expose only the map and not the "DataSources" instance (see FREEMARKER-174)
+        result.put(Model.DATASOURCES, dataSources.toMap());
         return result;
     }
 
-    // ==============================================================
-
     private static Writer writer(TemplateOutput templateOutput) throws IOException {
-        if (templateOutput.getWriter() != null) {
+        if (templateOutput.hasWriter()) {
             return templateOutput.getWriter();
+        } else {
+            final File file = templateOutput.getFile();
+            FileUtils.forceMkdirParent(file);
+            // We need to explicitly set our output encoding here - see https://freemarker.apache.org/docs/pgui_misc_charset.html
+            return new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), templateOutput.getCharset()));
         }
-
-        final File file = templateOutput.getFile();
-        FileUtils.forceMkdirParent(file);
-        return new BufferedWriter(new FileWriter(file));
     }
 
     /**
@@ -177,12 +144,12 @@ public class FreeMarkerTask implements Callable<Integer> {
      */
     private static Template template(Configuration configuration, TemplateSource templateSource) {
         switch (templateSource.getOrigin()) {
-            case PATH:
+            case TEMPLATE_LOADER:
                 return fromTemplatePath(configuration, templateSource);
-            case CODE:
+            case TEMPLATE_CODE:
                 return fromTemplateCode(configuration, templateSource);
             default:
-                throw new IllegalArgumentException("Don't know how to handle: " + templateSource.getOrigin());
+                throw new IllegalArgumentException("Don't know how to create a template: " + templateSource.getOrigin());
         }
     }
 
@@ -197,7 +164,6 @@ public class FreeMarkerTask implements Callable<Integer> {
 
     private static Template fromTemplateCode(Configuration configuration, TemplateSource templateSource) {
         final String name = templateSource.getName();
-
         try {
             return new Template(name, templateSource.getCode(), configuration);
         } catch (IOException e) {

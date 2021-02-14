@@ -17,6 +17,9 @@
 package org.apache.freemarker.generator.base.template;
 
 import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
+import org.apache.freemarker.generator.base.datasource.DataSource;
+import org.apache.freemarker.generator.base.datasource.DataSourceLoader;
+import org.apache.freemarker.generator.base.datasource.DataSourceLoaderFactory;
 import org.apache.freemarker.generator.base.file.RecursiveFileSupplier;
 import org.apache.freemarker.generator.base.util.NonClosableWriterWrapper;
 import org.apache.freemarker.generator.base.util.StringUtils;
@@ -26,24 +29,26 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.singletonList;
 
 /**
- * Provide the logic to define multiple transformations from the user input.
+ * Maps user-supplied templates (interactive, files, directories, paths) to a
+ * list of TemplateTransformation.
  */
 public class TemplateTransformationsBuilder {
 
-    /** Interactive template */
-    private TemplateSource template;
+    private final DataSourceLoader dataSourceLoader;
 
-    /** List of templates and/or template directories to be rendered */
-    private final List<String> sources;
+    /** Interactive template */
+    private TemplateSource interactiveTemplate;
+
+    /** Template source - either a single template or a directory */
+    private String templateSource;
 
     /** Optional include patterns for resolving source templates or template directories */
     private final List<String> includes;
@@ -51,72 +56,63 @@ public class TemplateTransformationsBuilder {
     /** Optional exclude patterns for resolving source templates or template directories */
     private final List<String> excludes;
 
-    /** Optional output file or directory */
-    private final List<String> outputs;
+    /** Encoding used to load templates */
+    private Charset templateEncoding;
 
-    /** Optional user-supplied writer */
-    private Writer writer;
+    /** Optional output file or directory - if none is defined everything is written to STDOUT */
+    private String output;
+
+    /** Optional output encoding */
+    private Charset outputEncoding;
+
+    /** Optional caller-supplied writer used for testing */
+    private Writer callerSuppliedWriter;
 
     private TemplateTransformationsBuilder() {
-        this.sources = new ArrayList<>();
+        this.dataSourceLoader = DataSourceLoaderFactory.create();
+        this.templateSource = null;
         this.includes = new ArrayList<>();
         this.excludes = new ArrayList<>();
-        this.outputs = new ArrayList<>();
-        this.writer = null;
+        this.templateEncoding = UTF_8;
+        this.output = null;
+        this.callerSuppliedWriter = null;
+        this.outputEncoding = UTF_8;
     }
 
     public static TemplateTransformationsBuilder builder() {
         return new TemplateTransformationsBuilder();
     }
 
-    public TemplateTransformations build() {
+    public List<TemplateTransformation> build() {
         validate();
 
         final List<TemplateTransformation> result = new ArrayList<>();
+        final File outputFile = getOutputFile();
 
         if (hasInteractiveTemplate()) {
-            final File outputFile = getOutputFile(0).orElse(null);
             result.add(resolveInteractiveTemplate(outputFile));
         } else {
-            for (int i = 0; i < sources.size(); i++) {
-                final String source = sources.get(i);
-                final File output = getOutputFile(i).orElse(null);
-                result.addAll(resolve(source, output));
-            }
+            result.addAll(resolve(templateSource, outputFile));
         }
 
-        return new TemplateTransformations(result);
+        return result;
     }
 
-    public TemplateTransformationsBuilder setTemplate(String name, String code) {
+    public TemplateTransformationsBuilder setInteractiveTemplate(String code) {
         if (StringUtils.isNotEmpty(code)) {
-            this.template = TemplateSource.fromCode(name, code);
+            this.interactiveTemplate = TemplateSource.fromCode(Location.INTERACTIVE, code);
         }
         return this;
     }
 
-    public TemplateTransformationsBuilder addSource(String source) {
-        if (StringUtils.isNotEmpty(source)) {
-            this.sources.add(source);
-        }
-        return this;
-    }
-
-    public TemplateTransformationsBuilder addSources(Collection<String> sources) {
-        sources.forEach(this::addSource);
+    public TemplateTransformationsBuilder setTemplateSource(String source) {
+        this.templateSource = source;
         return this;
     }
 
     public TemplateTransformationsBuilder addInclude(String include) {
         if (StringUtils.isNotEmpty(include)) {
             this.includes.add(include);
-        }
-        return this;
-    }
-
-    public TemplateTransformationsBuilder addIncludes(Collection<String> includes) {
-        if (includes != null) {
-            this.includes.addAll(includes);
         }
         return this;
     }
@@ -128,40 +124,34 @@ public class TemplateTransformationsBuilder {
         return this;
     }
 
-    public TemplateTransformationsBuilder addExcludes(Collection<String> excludes) {
-        if (excludes != null) {
-            this.excludes.addAll(excludes);
+    public TemplateTransformationsBuilder setTemplateEncoding(Charset charset) {
+        if (charset != null) {
+            this.templateEncoding = charset;
         }
         return this;
     }
 
-    public TemplateTransformationsBuilder addOutputs(Collection<String> outputs) {
-        if (outputs != null) {
-            this.outputs.addAll(outputs);
+    public TemplateTransformationsBuilder setOutput(String output) {
+        this.output = output;
+        return this;
+    }
+
+    public TemplateTransformationsBuilder setOutputEncoding(Charset outputEncoding) {
+        if (outputEncoding != null) {
+            // keep UTF-8 here
+            this.outputEncoding = outputEncoding;
         }
+
         return this;
     }
 
-    public TemplateTransformationsBuilder addOutput(String output) {
-        if (StringUtils.isNotEmpty(output)) {
-            this.outputs.add(output);
-        }
-        return this;
-    }
-
-    public TemplateTransformationsBuilder setWriter(Writer writer) {
-        this.writer = writer;
-        return this;
-    }
-
-    public TemplateTransformationsBuilder setStdOut() {
-        this.writer = new NonClosableWriterWrapper(new BufferedWriter(new OutputStreamWriter(System.out, UTF_8)));
+    public TemplateTransformationsBuilder setCallerSuppliedWriter(Writer callerSuppliedWriter) {
+        this.callerSuppliedWriter = callerSuppliedWriter;
         return this;
     }
 
     private void validate() {
-        Validate.isTrue(template != null || !sources.isEmpty(), "No template was provided");
-        Validate.isTrue(template == null || sources.isEmpty(), "Interactive template does not support multiple sources");
+        Validate.isTrue(interactiveTemplate == null || templateSource == null, "No template was provided");
     }
 
     /**
@@ -172,14 +162,16 @@ public class TemplateTransformationsBuilder {
      * @return list of <code>TemplateTransformation</code>
      */
     private List<TemplateTransformation> resolve(String source, File output) {
-        if (isTemplateFile(source)) {
+        if (isTemplateFileFound(source)) {
             return resolveTemplateFile(source, output);
-        } else if (isTemplateDirectory(source)) {
+        } else if (isTemplateDirectoryFound(source)) {
             return resolveTemplateDirectory(source, output);
-        } else if (isTemplatePath(source)) {
-            return resolveTemplatePath(source, output);
+        } else if (isTemplateHttpUrl(source)) {
+            return resolveTemplateHttpUrl(source, output);
+        } else if (isTemplateUri(source)) {
+            return resolveTemplateUri(source, output);
         } else {
-            return resolveTemplateCode(source, output);
+            return resolveTemplatePath(source, output);
         }
     }
 
@@ -206,33 +198,43 @@ public class TemplateTransformationsBuilder {
         return templateTransformations;
     }
 
-    private List<TemplateTransformation> resolveTemplatePath(String source, File out) {
+    private List<TemplateTransformation> resolveTemplateHttpUrl(String source, File out) {
         final TemplateSource templateSource = templateSource(source);
+        final TemplateOutput templateOutput = templateOutput(out);
+        return singletonList(new TemplateTransformation(templateSource, templateOutput));
+    }
+
+    private List<TemplateTransformation> resolveTemplateUri(String source, File out) {
+        final TemplateSource templateSource = templateSource(source);
+        final TemplateOutput templateOutput = templateOutput(out);
+        return singletonList(new TemplateTransformation(templateSource, templateOutput));
+    }
+
+    private List<TemplateTransformation> resolveTemplatePath(String source, File out) {
+        final TemplateSource templateSource = TemplateSource.fromPath(source, templateEncoding);
         final TemplateOutput templateOutput = templateOutput(out);
         return singletonList(new TemplateTransformation(templateSource, templateOutput));
     }
 
     private TemplateTransformation resolveInteractiveTemplate(File out) {
         final TemplateOutput templateOutput = templateOutput(out);
-        return new TemplateTransformation(template, templateOutput);
-    }
-
-    private List<TemplateTransformation> resolveTemplateCode(String source, File out) {
-        final TemplateSource templateSource = TemplateSource.fromCode(Location.INTERACTIVE, source);
-        final TemplateOutput templateOutput = templateOutput(out);
-        return singletonList(new TemplateTransformation(templateSource, templateOutput));
+        return new TemplateTransformation(interactiveTemplate, templateOutput);
     }
 
     private TemplateOutput templateOutput(File templateOutputFile) {
-        if (writer == null && templateOutputFile != null) {
-            return TemplateOutput.fromFile(templateOutputFile);
+        if (callerSuppliedWriter != null) {
+            return TemplateOutput.fromWriter(callerSuppliedWriter);
+        } else if (templateOutputFile != null) {
+            return TemplateOutput.fromFile(templateOutputFile, outputEncoding);
         } else {
-            return TemplateOutput.fromWriter(writer);
+            return TemplateOutput.fromWriter(stdoutWriter(outputEncoding));
         }
     }
 
     private TemplateSource templateSource(String source) {
-        return TemplateSourceFactory.create(source);
+        try (DataSource dataSource = dataSourceLoader.load(source)) {
+            return TemplateSource.fromCode(dataSource.getName(), dataSource.getText(templateEncoding.name()));
+        }
     }
 
     private String getInclude() {
@@ -244,37 +246,40 @@ public class TemplateTransformationsBuilder {
     }
 
     private boolean hasInteractiveTemplate() {
-        return template != null;
+        return interactiveTemplate != null;
     }
 
-    private Optional<File> getOutputFile(int i) {
-        if (outputs.isEmpty()) {
-            return Optional.empty();
-        } else if (i < outputs.size()) {
-            return Optional.of(new File(outputs.get(i)));
-        } else {
-            return Optional.of(new File(outputs.get(0)));
-        }
+    private File getOutputFile() {
+        return output == null ? null : new File(output);
     }
 
     private static File getTemplateOutputFile(File templateDirectory, File templateFile, File outputDirectory) {
+        if (outputDirectory == null) {
+            // missing output directory uses STDOUT
+            return null;
+        }
+
         final String relativePath = relativePath(templateDirectory, templateFile);
         final String relativeOutputFileName = mapExtension(relativePath);
         return new File(outputDirectory, relativeOutputFileName);
     }
 
-    private static boolean isTemplateFile(String source) {
+    private static boolean isTemplateFileFound(String source) {
         final File file = new File(source);
         return file.exists() && file.isFile();
     }
 
-    private static boolean isTemplateDirectory(String source) {
+    private static boolean isTemplateDirectoryFound(String source) {
         final File file = new File(source);
         return file.exists() && file.isDirectory();
     }
 
-    private static boolean isTemplatePath(String source) {
-        return !isTemplateFile(source) && !isTemplateDirectory(source);
+    private static boolean isTemplateHttpUrl(String source) {
+        return source.contains("http://") || source.contains("https://");
+    }
+
+    private static boolean isTemplateUri(String source) {
+        return source.contains("://");
     }
 
     private static RecursiveFileSupplier templateFilesSupplier(String source, String include, String exclude) {
@@ -293,5 +298,10 @@ public class TemplateTransformationsBuilder {
         } else {
             return fileName;
         }
+    }
+
+    private Writer stdoutWriter(Charset outputEncoding) {
+        // avoid closing System.out after rendering the template
+        return new BufferedWriter(new NonClosableWriterWrapper(new OutputStreamWriter(System.out, outputEncoding)));
     }
 }

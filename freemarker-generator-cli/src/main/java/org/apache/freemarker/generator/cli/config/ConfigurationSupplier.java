@@ -19,31 +19,30 @@ package org.apache.freemarker.generator.cli.config;
 import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Version;
-import org.apache.freemarker.generator.cli.model.GeneratorObjectWrapper;
+import org.apache.freemarker.generator.base.util.PropertiesTransformer;
 
 import java.util.Properties;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
-import static freemarker.template.Configuration.VERSION_2_3_29;
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Stream.of;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.Configuration.SETTING_PREFIX;
-import static org.apache.freemarker.generator.base.util.PropertiesTransformer.filterKeyPrefix;
-import static org.apache.freemarker.generator.base.util.PropertiesTransformer.removeKeyPrefix;
 
 /**
  * Supply a FreeMarker configuration.
  */
 public class ConfigurationSupplier implements Supplier<Configuration> {
 
-    private static final Version FREEMARKER_VERSION = VERSION_2_3_29;
+    private static final Version FREEMARKER_VERSION = Configuration.VERSION_2_3_30;
 
     private final Settings settings;
     private final Supplier<TemplateLoader> templateLoader;
+    private final ToolsSupplier toolsSupplier;
 
-    public ConfigurationSupplier(Settings settings, Supplier<TemplateLoader> templateLoader) {
+    public ConfigurationSupplier(Settings settings, Supplier<TemplateLoader> templateLoader, ToolsSupplier toolsSupplier) {
         this.settings = requireNonNull(settings);
         this.templateLoader = requireNonNull(templateLoader);
+        this.toolsSupplier = requireNonNull(toolsSupplier);
     }
 
     @Override
@@ -54,14 +53,14 @@ public class ConfigurationSupplier implements Supplier<Configuration> {
             // apply all "freemarker.configuration.setting" values
             configuration.setSettings(freeMarkerConfigurationSettings());
 
-            // provide custom models for "DataSources"
-            configuration.setObjectWrapper(new GeneratorObjectWrapper(FREEMARKER_VERSION));
-
             // override current configuration with caller-provided settings
             configuration.setDefaultEncoding(settings.getTemplateEncoding().name());
             configuration.setLocale(settings.getLocale());
             configuration.setOutputEncoding(settings.getOutputEncoding().name());
             configuration.setTemplateLoader(templateLoader.get());
+
+            // instantiate the tools as shared FreeMarker variables
+            configuration.setSharedVariables(toolsSupplier.get());
 
             return configuration;
         } catch (Exception e) {
@@ -76,9 +75,9 @@ public class ConfigurationSupplier implements Supplier<Configuration> {
      * @return FreeMarker configuration settings
      */
     private Properties freeMarkerConfigurationSettings() {
-        return of(settings.getConfiguration())
-                .map(p -> filterKeyPrefix(p, SETTING_PREFIX))
-                .map(p -> removeKeyPrefix(p, SETTING_PREFIX))
+        return Stream.of(settings.getConfiguration())
+                .map(p -> PropertiesTransformer.filterKeyPrefix(p, SETTING_PREFIX))
+                .map(p -> PropertiesTransformer.removeKeyPrefix(p, SETTING_PREFIX))
                 .findFirst().get();
     }
 }

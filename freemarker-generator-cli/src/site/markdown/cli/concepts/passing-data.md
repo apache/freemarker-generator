@@ -5,7 +5,7 @@
 * System properties
 * Parameters 
 
-### User-Supplied System Poperties
+### User-Supplied System Properties
 
 User-supplied system properties are added to the JVM's system properties
 

@@ -29,8 +29,8 @@ import java.nio.charset.StandardCharsets;
 public class TemplateSource {
 
     public enum Origin {
-        PATH,
-        CODE
+        TEMPLATE_LOADER,
+        TEMPLATE_CODE
     }
 
     /** Name of template for diagnostics */
@@ -50,7 +50,7 @@ public class TemplateSource {
 
     private TemplateSource(String name, String code) {
         this.name = name;
-        this.origin = Origin.CODE;
+        this.origin = Origin.TEMPLATE_CODE;
         this.code = code;
         this.path = null;
         this.encoding = StandardCharsets.UTF_8;
@@ -58,21 +58,10 @@ public class TemplateSource {
 
     private TemplateSource(String name, String path, Charset encoding) {
         this.name = name;
-        this.origin = Origin.PATH;
+        this.origin = Origin.TEMPLATE_LOADER;
         this.code = null;
         this.path = path;
         this.encoding = encoding;
-    }
-
-    /**
-     * Template will be loaded from path using a file-base template loader.
-     *
-     * @param path template path
-     * @return file-based template source
-     */
-    public static TemplateSource fromPath(String path) {
-        Validate.notEmpty(path, "Template path is empty");
-        return new TemplateSource(path, path, StandardCharsets.UTF_8);
     }
 
     /**
@@ -82,7 +71,6 @@ public class TemplateSource {
      * @param encoding character encoding og template
      * @return file-based template source
      */
-
     public static TemplateSource fromPath(String path, Charset encoding) {
         Validate.notEmpty(path, "Template path is empty");
         Validate.notNull(encoding, "Template encoding is null");

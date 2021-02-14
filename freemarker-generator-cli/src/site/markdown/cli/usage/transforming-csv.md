@@ -20,7 +20,7 @@ freemarker-generator \
  -PCSV_TARGET_FORMAT=EXCEL \
  -PCSV_TARGET_DELIMITER=SEMICOLON \
  -t freemarker-generator/csv/csv/transform.ftl \
- https://raw.githubusercontent.com/apache/freemarker-generator/master/freemarker-generator-cli/examples/data/csv/contract.csv 
+ https://raw.githubusercontent.com/apache/freemarker-generator/master/freemarker-generator-cli/src/app/examples/data/csv/contract.csv 
 ```  
 
 The command line invocation seems a bit complex at first so let's look at it more closely
@@ -40,7 +40,7 @@ The following command line prints the resulting MarkDown to `stdout`
 freemarker-generator \
  -PCSV_SOURCE_FORMAT=DEFAULT \
  -t freemarker-generator/csv/md/transform.ftl \
- https://raw.githubusercontent.com/apache/freemarker-generator/master/freemarker-generator-cli/examples/data/csv/contract.csv 
+ https://raw.githubusercontent.com/apache/freemarker-generator/master/freemarker-generator-cli/src/app/examples/data/csv/contract.csv 
 ```  
 
 Please note that most MarkDown tools expect a header row (see [Create a table without a header in Markdown](https://stackoverflow.com/questions/17536216/create-a-table-without-a-header-in-markdown))
@@ -53,7 +53,7 @@ Of course it is possible to convert a CSV to HTML as well
 freemarker-generator \
  -PCSV_SOURCE_FORMAT=DEFAULT \
  -t freemarker-generator/csv/html/transform.ftl \
- https://raw.githubusercontent.com/apache/freemarker-generator/master/freemarker-generator-cli/examples/data/csv/contract.csv 
+ https://raw.githubusercontent.com/apache/freemarker-generator/master/freemarker-generator-cli/src/app/examples/data/csv/contract.csv 
 ```  
 
 ### CSV Configuration Options

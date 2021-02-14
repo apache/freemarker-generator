@@ -16,17 +16,19 @@
  */
 package org.apache.freemarker.generator.cli;
 
+import org.apache.freemarker.generator.cli.picocli.OutputGeneratorDefinition;
 import org.junit.Test;
 import picocli.CommandLine;
-import picocli.CommandLine.ParameterException;
+
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class PicocliTest {
 
     private static final String ANY_TEMPLATE = "any.ftl";
-    private static final String OTHER_TEMPLATE = "other.ftl";
     private static final String INTERACTIVE_TEMPLATE = "interactive-template";
     private static final String ANY_FILE = "users.csv";
     private static final String OTHER_FILE = "transctions.csv";
@@ -35,52 +37,64 @@ public class PicocliTest {
 
     @Test
     public void shouldParseSinglePositionalParameter() {
-        assertEquals(ANY_FILE_URI, parse("-t", ANY_TEMPLATE, ANY_FILE_URI).sources.get(0));
-        assertNull(ANY_FILE, parse("-t", ANY_TEMPLATE, ANY_FILE_URI).dataSources);
+        final Main main = parse("-t", ANY_TEMPLATE, ANY_FILE_URI);
+
+        assertEquals(1, main.outputGeneratorDefinitions.size());
+        assertEquals(ANY_FILE_URI, main.sharedDataSources.get(0));
     }
 
     @Test
     public void shouldParseMultiplePositionalParameter() {
-        assertEquals(ANY_FILE, parse("-t", ANY_TEMPLATE, ANY_FILE, OTHER_FILE).sources.get(0));
-        assertEquals(OTHER_FILE, parse("-t", ANY_TEMPLATE, ANY_FILE, OTHER_FILE).sources.get(1));
+        assertEquals(ANY_FILE, parse("-t", ANY_TEMPLATE, ANY_FILE, OTHER_FILE).sharedDataSources.get(0));
+        assertEquals(OTHER_FILE, parse("-t", ANY_TEMPLATE, ANY_FILE, OTHER_FILE).sharedDataSources.get(1));
 
-        assertEquals(ANY_FILE, parse("-t", ANY_TEMPLATE, ANY_FILE, OTHER_FILE_URI).sources.get(0));
-        assertEquals(OTHER_FILE_URI, parse("-t", ANY_TEMPLATE, ANY_FILE, OTHER_FILE_URI).sources.get(1));
+        assertEquals(ANY_FILE, parse("-t", ANY_TEMPLATE, ANY_FILE, OTHER_FILE_URI).sharedDataSources.get(0));
+        assertEquals(OTHER_FILE_URI, parse("-t", ANY_TEMPLATE, ANY_FILE, OTHER_FILE_URI).sharedDataSources.get(1));
 
-        assertEquals(ANY_FILE_URI, parse("-t", ANY_TEMPLATE, ANY_FILE_URI, OTHER_FILE_URI).sources.get(0));
-        assertEquals(OTHER_FILE_URI, parse("-t", ANY_TEMPLATE, ANY_FILE_URI, OTHER_FILE_URI).sources.get(1));
+        assertEquals(ANY_FILE_URI, parse("-t", ANY_TEMPLATE, ANY_FILE_URI, OTHER_FILE_URI).sharedDataSources.get(0));
+        assertEquals(OTHER_FILE_URI, parse("-t", ANY_TEMPLATE, ANY_FILE_URI, OTHER_FILE_URI).sharedDataSources.get(1));
     }
 
     @Test
     public void shouldParseSingleNamedDataSource() {
-        assertEquals(ANY_FILE, parse("-t", ANY_TEMPLATE, ANY_FILE).sources.get(0));
-        assertEquals(ANY_FILE, parse("-t", ANY_TEMPLATE, "-s", ANY_FILE).dataSources.get(0));
-        assertEquals(ANY_FILE, parse("-t", ANY_TEMPLATE, "--data-source", ANY_FILE).dataSources.get(0));
-        assertEquals(ANY_FILE_URI, parse("-t", ANY_TEMPLATE, "--data-source", ANY_FILE_URI).dataSources.get(0));
+        assertEquals(ANY_FILE, parse("-t", ANY_TEMPLATE, "-s", ANY_FILE).outputGeneratorDefinitions.get(0)
+                .getDataSources()
+                .get(0));
+        assertEquals(ANY_FILE, parse("-t", ANY_TEMPLATE, "--data-source", ANY_FILE).outputGeneratorDefinitions.get(0)
+                .getDataSources()
+                .get(0));
+        assertEquals(ANY_FILE_URI, parse("-t", ANY_TEMPLATE, "--data-source", ANY_FILE_URI).outputGeneratorDefinitions.get(0)
+                .getDataSources()
+                .get(0));
     }
 
     @Test
-    public void shouldParseMultipleNamedDataSource() {
+    public void shouldParseMultipleNamedDataSources() {
         final Main main = parse("-t", ANY_TEMPLATE, "-s", ANY_FILE, "--data-source", OTHER_FILE_URI);
 
-        assertEquals(ANY_FILE, main.dataSources.get(0));
-        assertEquals(OTHER_FILE_URI, main.dataSources.get(1));
-        assertNull(main.sources);
+        assertEquals(ANY_FILE, main.outputGeneratorDefinitions.get(0).getDataSources().get(0));
+        assertEquals(OTHER_FILE_URI, main.outputGeneratorDefinitions.get(0).getDataSources().get(1));
+        assertNull(main.sharedDataSources);
     }
 
     @Test
     public void shouldParseSingleDataModel() {
-        assertEquals(ANY_FILE, parse("-t", ANY_TEMPLATE, "-m", ANY_FILE).dataModels.get(0));
-        assertEquals(ANY_FILE, parse("-t", ANY_TEMPLATE, "--data-model", ANY_FILE).dataModels.get(0));
+        assertEquals(ANY_FILE, parse("-t", ANY_TEMPLATE, "-m", ANY_FILE).outputGeneratorDefinitions.get(0)
+                .getDataModels()
+                .get(0));
+        assertEquals(ANY_FILE, parse("-t", ANY_TEMPLATE, "--data-model", ANY_FILE).outputGeneratorDefinitions.get(0)
+                .getDataModels()
+                .get(0));
     }
 
     @Test
     public void shouldParseMultipleDataModels() {
         final Main main = parse("-t", ANY_TEMPLATE, "-m", ANY_FILE, "--data-model", OTHER_FILE_URI);
+        final OutputGeneratorDefinition outputGeneratorDefinition = main.outputGeneratorDefinitions.get(0);
 
-        assertEquals(ANY_FILE, main.dataModels.get(0));
-        assertEquals(OTHER_FILE_URI, main.dataModels.get(1));
-        assertNull(main.sources);
+        assertEquals(ANY_FILE, outputGeneratorDefinition.getDataModels().get(0));
+        assertEquals(OTHER_FILE_URI, outputGeneratorDefinition.getDataModels().get(1));
+        assertNull(main.sharedDataSources);
     }
 
     @Test
@@ -102,25 +116,64 @@ public class PicocliTest {
     public void shouldParseSingleTemplate() {
         final Main main = parse("-t", ANY_TEMPLATE);
 
-        assertEquals(ANY_TEMPLATE, main.templateSourceOptions.templates.get(0));
+        assertEquals(ANY_TEMPLATE, main.outputGeneratorDefinitions.get(0).templateSourceDefinition.template);
     }
 
     @Test
     public void shouldParseInteractiveTemplate() {
         final Main main = parse("-i", INTERACTIVE_TEMPLATE);
 
-        assertEquals(INTERACTIVE_TEMPLATE, main.templateSourceOptions.interactiveTemplate);
+        assertEquals(INTERACTIVE_TEMPLATE, main.outputGeneratorDefinitions.get(0).templateSourceDefinition.interactiveTemplate);
     }
 
-    @Test(expected = ParameterException.class)
-    public void shouldThrowParameterExceptionForMismatchedTemplateOutput() {
-        final Main main = parse("-t", "foo.ftl", "-t", "bar.ftl", "-o", "foo.out");
+    @Test
+    public void shouldParseMultipleTemplates() {
+        final Main main = parse("-t", ANY_TEMPLATE, "--template", ANY_TEMPLATE);
+
+        assertEquals(2, main.outputGeneratorDefinitions.size());
+    }
+
+    @Test
+    public void shouldParseStdin() {
+        final Main main = parse("-t", ANY_TEMPLATE, "--stdin");
+
+        assertTrue(main.readFromStdin);
+    }
+
+    @Test
+    public void shouldParseComplexCommandLine01() {
+        final Main main = parse(
+                "--template", "template01.ftl", "--data-source", "datasource10.csv",
+                "-t", "template02.ftl", "-s", "datasource20.csv", "-s", "datasource21.csv",
+                "-i", "some-interactive-template01", "-s", "datasource30.csv", "-o", "out.txt",
+                "-i", "some-interactive-template02");
 
         main.validate();
+
+        final List<OutputGeneratorDefinition> defs = main.outputGeneratorDefinitions;
+        assertEquals(4, defs.size());
+
+        assertEquals("template01.ftl", defs.get(0).templateSourceDefinition.template);
+        assertEquals(1, defs.get(0).dataSourceDefinition.dataSources.size());
+        assertEquals("datasource10.csv", defs.get(0).dataSourceDefinition.dataSources.get(0));
+        assertNull(defs.get(0).templateOutputDefinition);
+
+        assertEquals("template02.ftl", defs.get(1).templateSourceDefinition.template);
+        assertEquals(2, defs.get(1).dataSourceDefinition.dataSources.size());
+        assertEquals("datasource20.csv", defs.get(1).dataSourceDefinition.dataSources.get(0));
+        assertEquals("datasource21.csv", defs.get(1).dataSourceDefinition.dataSources.get(1));
+        assertNull(defs.get(0).templateOutputDefinition);
+
+        assertEquals("some-interactive-template01", defs.get(2).templateSourceDefinition.interactiveTemplate);
+        assertEquals(1, defs.get(2).dataSourceDefinition.dataSources.size());
+        assertEquals("datasource30.csv", defs.get(2).dataSourceDefinition.dataSources.get(0));
+        assertEquals("out.txt", defs.get(2).templateOutputDefinition.outputs.get(0));
+
+        assertEquals("some-interactive-template02", defs.get(3).templateSourceDefinition.interactiveTemplate);
     }
 
     private static Main parse(String... args) {
-        final Main main = new Main();
+        final Main main = new Main(args);
         new CommandLine(main).parseArgs(args);
         return main;
     }

@@ -16,13 +16,26 @@
  */
 package org.apache.freemarker.generator.base.util;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.Map;
 import java.util.Properties;
 
+/**
+ * Various helper methods to load property files.
+ */
 public class PropertiesFactory {
+
+    public static Properties create(File file) {
+        try (InputStream is = new FileInputStream(file)) {
+            return create(is);
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to load properties file: " + file.getAbsolutePath());
+        }
+    }
 
     public static Properties create(InputStream is) {
         try {

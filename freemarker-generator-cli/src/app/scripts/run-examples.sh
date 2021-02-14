@@ -43,6 +43,16 @@ echo "examples/templates/demo.ftl"
 $FREEMARKER_CMD -t examples/templates/demo.ftl -DfreemarkerGenerator.examples.deductSensitiveInformation=true README.md > target/out/demo.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
+# DataSources
+#############################################################################
+
+echo "examples/templates/datasources.ftl"
+$FREEMARKER_CMD -t examples/templates/datasources.ftl -s :data=examples/data > target/out/datasources-01.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
+echo "examples/templates/datasources.ftl"
+$FREEMARKER_CMD -t examples/templates/datasources.ftl -s https://xkcd.com/info.0.json https://www.google.com > target/out/datasources-02.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
+#############################################################################
 # Interactive Mode
 #############################################################################
 
@@ -151,7 +161,7 @@ $FREEMARKER_CMD -t examples/templates/html/txt/licence.ftl examples/data/html/de
 #############################################################################
 
 echo "examples/templates/javafaker/csv/testdata.ftl"
-$FREEMARKER_CMD -t examples/templates/javafaker/csv/testdata.ftl > target/out/testdata.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -DNR_OF_RECORDS=10 -t examples/templates/javafaker/csv/testdata.ftl > target/out/testdata.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
 # JSON

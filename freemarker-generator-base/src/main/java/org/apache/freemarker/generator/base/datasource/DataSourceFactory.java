@@ -22,10 +22,7 @@ import org.apache.freemarker.generator.base.activation.CachingUrlDataSource;
 import org.apache.freemarker.generator.base.activation.InputStreamDataSource;
 import org.apache.freemarker.generator.base.activation.StringDataSource;
 import org.apache.freemarker.generator.base.mime.MimetypesFileTypeMapFactory;
-import org.apache.freemarker.generator.base.uri.NamedUri;
-import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
 import org.apache.freemarker.generator.base.util.PropertiesFactory;
-import org.apache.freemarker.generator.base.util.StringUtils;
 import org.apache.freemarker.generator.base.util.UriUtils;
 import org.apache.freemarker.generator.base.util.Validate;
 
@@ -39,74 +36,62 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
-import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_TEXT_PLAIN;
-import static org.apache.freemarker.generator.base.util.StringUtils.firstNonEmpty;
 
 /**
- * Creates a FreeMarker data source from various sources.
+ * Low-level factory to create FreeMarker data sources.
  */
 public abstract class DataSourceFactory {
-
-    private static final String NO_MIME_TYPE = null;
-    private static final Charset NO_CHARSET = null;
-    private static final String ROOT_DIR = "/";
 
     private DataSourceFactory() {
     }
 
-    // == NamedUri ==========================================================
+    // == General ===========================================================
 
-    public static DataSource fromNamedUri(String str) {
-        Validate.notNull(str, "namedUri is null");
-
-        return fromNamedUri(NamedUriStringParser.parse(str));
+    public static DataSource create(
+            String name,
+            String group,
+            URI uri,
+            javax.activation.DataSource dataSource,
+            Map<String, String> properties) {
+        return new DataSource(name, group, uri, dataSource, null, null, properties);
     }
 
-    public static DataSource fromNamedUri(NamedUri namedUri) {
-        Validate.notNull(namedUri, "namedUri is null");
-
-        final URI uri = namedUri.getUri();
-        final String group = namedUri.getGroupOrElse(DEFAULT_GROUP);
-        final Charset charset = getCharsetOrElse(namedUri, NO_CHARSET);
-        final String mimeType = getMimeTypeOrElse(namedUri, NO_MIME_TYPE);
-
-        if (UriUtils.isHttpUri(uri)) {
-            final URL url = toUrl(uri);
-            final String name = namedUri.getNameOrElse(UriUtils.toStringWithoutFragment(uri));
-            return fromUrl(name, group, url, mimeType, charset);
-        } else if (UriUtils.isFileUri(uri)) {
-            final File file = namedUri.getFile();
-            final String name = namedUri.getNameOrElse(UriUtils.toStringWithoutFragment(file.toURI()));
-            return fromFile(name, group, file, charset);
-        } else if (UriUtils.isEnvUri(uri)) {
-            // environment variables come with a leading "/" to be removed
-            final String key = stripRootDir(uri.getPath());
-            final String contentType = getMimeTypeOrElse(namedUri, MIME_TEXT_PLAIN);
-            final String name = firstNonEmpty(namedUri.getName(), key, Location.ENVIRONMENT);
-            if (StringUtils.isEmpty(key)) {
-                return fromEnvironment(name, group, contentType);
-            } else {
-                return fromEnvironment(name, group, key, contentType);
-            }
-        } else {
-            // handle things such as "foo=some.file"
-            final File file = namedUri.getFile();
-            final String name = namedUri.getNameOrElse(UriUtils.toStringWithoutFragment(file.toURI()));
-            return fromFile(name, group, file, charset);
-        }
+    public static DataSource create(
+            String name,
+            String group,
+            URI uri,
+            javax.activation.DataSource dataSource,
+            String contentType,
+            Charset charset,
+            Map<String, String> properties) {
+        return new DataSource(name, group, uri, dataSource, contentType, charset, properties);
     }
 
     // == URL ===============================================================
 
-    public static DataSource fromUrl(String name, String group, URL url, String contentType, Charset charset) {
+    public static DataSource fromUrl(String name, String group, URL url) {
         final URLDataSource dataSource = new CachingUrlDataSource(url);
         final URI uri = UriUtils.toUri(url);
-        return create(name, group, uri, dataSource, contentType, charset);
+        return create(name, group, uri, dataSource, noProperties());
+    }
+
+    public static DataSource fromUrl(
+            String name,
+            String group,
+            URL url,
+            String contentType,
+            Charset charset,
+            Map<String, String> properties) {
+        final URLDataSource dataSource = new CachingUrlDataSource(url);
+        final URI uri = UriUtils.toUri(url);
+        return create(name, group, uri, dataSource, contentType, charset, properties);
     }
 
     // == String ============================================================
@@ -114,22 +99,28 @@ public abstract class DataSourceFactory {
     public static DataSource fromString(String name, String group, String content, String contentType) {
         final StringDataSource dataSource = new StringDataSource(name, content, contentType, UTF_8);
         final URI uri = UriUtils.toUri(Location.STRING, UUID.randomUUID().toString());
-        return create(name, group, uri, dataSource, contentType, UTF_8);
+        return create(name, group, uri, dataSource, contentType, UTF_8, noProperties());
     }
 
     // == File ==============================================================
 
     public static DataSource fromFile(File file, Charset charset) {
-        return fromFile(UriUtils.toStringWithoutFragment(file.toURI()), DEFAULT_GROUP, file, charset);
+        return fromFile(file.getName(), DEFAULT_GROUP, file, charset, noProperties());
     }
 
-    public static DataSource fromFile(String name, String group, File file, Charset charset) {
+    public static DataSource fromFile(
+            String name,
+            String group,
+            File file,
+            Charset charset,
+            Map<String, String> properties) {
         Validate.isTrue(file.exists(), "File not found: " + file);
 
         final FileDataSource dataSource = new FileDataSource(file);
+        // content type is determined from file extension
         dataSource.setFileTypeMap(MimetypesFileTypeMapFactory.create());
         final String contentType = dataSource.getContentType();
-        return create(name, group, file.toURI(), dataSource, contentType, charset);
+        return create(name, group, file.toURI(), dataSource, contentType, charset, properties);
     }
 
     // == Bytes ============================================================
@@ -137,20 +128,21 @@ public abstract class DataSourceFactory {
     public static DataSource fromBytes(String name, String group, byte[] content, String contentType) {
         final ByteArrayDataSource dataSource = new ByteArrayDataSource(name, content);
         final URI uri = UriUtils.toUri(Location.BYTES + ":///");
-        return create(name, group, uri, dataSource, contentType, UTF_8);
+        return create(name, group, uri, dataSource, contentType, UTF_8, noProperties());
     }
 
     // == InputStream =======================================================
 
-    public static DataSource fromInputStream(String name, String group, InputStream is, String contentType, Charset charset) {
+    public static DataSource fromInputStream(
+            String name,
+            String group,
+            URI uri,
+            InputStream is,
+            String contentType,
+            Charset charset,
+            Map<String, String> properties) {
         final InputStreamDataSource dataSource = new InputStreamDataSource(name, is);
-        final URI uri = UriUtils.toUri(Location.INPUTSTREAM + ":///");
-        return create(name, group, uri, dataSource, contentType, charset);
-    }
-
-    public static DataSource fromInputStream(String name, String group, URI uri, InputStream is, String contentType, Charset charset) {
-        final InputStreamDataSource dataSource = new InputStreamDataSource(name, is);
-        return create(name, group, uri, dataSource, contentType, charset);
+        return create(name, group, uri, dataSource, contentType, charset, properties);
     }
 
     // == Environment =======================================================
@@ -162,9 +154,9 @@ public abstract class DataSourceFactory {
             properties.store(writer, null);
             final StringDataSource dataSource = new StringDataSource(name, writer.toString(), contentType, UTF_8);
             final URI uri = UriUtils.toUri(Location.ENVIRONMENT, "");
-            return create(name, group, uri, dataSource, contentType, UTF_8);
+            return create(name, group, uri, dataSource, contentType, UTF_8, noProperties());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Unable to load environment variables", e);
         }
     }
 
@@ -173,63 +165,18 @@ public abstract class DataSourceFactory {
 
         final StringDataSource dataSource = new StringDataSource(name, System.getenv(key), contentType, UTF_8);
         final URI uri = UriUtils.toUri(Location.ENVIRONMENT, key);
-        return create(name, group, uri, dataSource, contentType, UTF_8);
+        return create(name, group, uri, dataSource, contentType, UTF_8, noProperties());
     }
 
-    // == General ===========================================================
-
-    /**
-     * Create a data source based on a
-     * <ul>
-     *  <li>URI</li>
-     *  <li>Named URI</li>
-     *  <li>file name</li>
-     * </ul>
-     *
-     * @param source source of the data source
-     * @return DataSource
-     */
-    public static DataSource create(String source) {
-        if (UriUtils.isUri(source)) {
-            return fromNamedUri(source);
-        } else {
-            final File file = new File(source);
-            return fromFile(file.getName(), DEFAULT_GROUP, file, UTF_8);
-        }
-    }
-
-    public static DataSource create(
-            String name,
-            String group,
-            URI uri,
-            javax.activation.DataSource dataSource,
-            String contentType,
-            Charset charset) {
-        return new DataSource(name, group, uri, dataSource, contentType, charset);
-    }
-
-    private static String getMimeTypeOrElse(NamedUri namedUri, String def) {
-        return namedUri.getParameter(NamedUri.MIMETYPE, def);
-    }
-
-    private static Charset getCharsetOrElse(NamedUri namedUri, Charset def) {
-        final String charsetName = namedUri.getParameter(NamedUri.CHARSET);
-        return StringUtils.isEmpty(charsetName) ? def : Charset.forName(charsetName);
-    }
-
-    private static URL toUrl(URI uri) {
+    public static URL toUrl(String url) {
         try {
-            return uri.toURL();
+            return new URL(url);
         } catch (MalformedURLException e) {
-            throw new IllegalArgumentException(uri.toString(), e);
+            throw new IllegalArgumentException(url, e);
         }
     }
 
-    private static String stripRootDir(String str) {
-        if (str.startsWith(ROOT_DIR)) {
-            return str.substring(ROOT_DIR.length());
-        } else {
-            return str;
-        }
+    private static Map<String, String> noProperties() {
+        return new HashMap<>();
     }
 }

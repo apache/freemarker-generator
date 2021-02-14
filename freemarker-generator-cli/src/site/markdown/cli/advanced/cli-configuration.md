@@ -16,7 +16,6 @@ The `Apache FreeMarker Generator` configuration can be tweaked to
 # See https://freemarker.apache.org/docs/api/freemarker/template/Configuration.html#setSetting-java.lang.String-java.lang.String-
 #############################################################################
 # freemarker.configuration.setting.locale=JVM default
-
 #############################################################################
 # Configure FreeMarker Tools (name -> implementation class)
 #############################################################################
@@ -27,7 +26,8 @@ freemarker.tools.exec=org.apache.freemarker.generator.tools.commonsexec.CommonsE
 freemarker.tools.freemarker=org.apache.freemarker.generator.tools.freemarker.FreeMarkerTool
 freemarker.tools.grok=org.apache.freemarker.generator.tools.grok.GrokTool
 freemarker.tools.gson=org.apache.freemarker.generator.tools.gson.GsonTool
-freemarker.tools.jsonpath=org.apache.freemarker.generator.tools.json.JsonPathTool
+freemarker.tools.javafaker=org.apache.freemarker.generator.tools.javafaker.JavaFakerTool
+freemarker.tools.jsonpath=org.apache.freemarker.generator.tools.jsonpath.JsonPathTool
 freemarker.tools.jsoup=org.apache.freemarker.generator.tools.jsoup.JsoupTool
 freemarker.tools.properties=org.apache.freemarker.generator.tools.properties.PropertiesTool
 freemarker.tools.system=org.apache.freemarker.generator.tools.system.SystemTool
@@ -71,7 +71,6 @@ You can easily check this, e.g.
 
 FreeMarker Generator Template Loader Directories
 ------------------------------------------------------------------------------
-[#1] /Users/sgoeschl
-[#2] /Users/sgoeschl/.freemarker-generator
-[#3] /Applications/Java/freemarker-generator-2.0.0
+[#1] /Users/sgoeschl/.freemarker-generator/templates
+[#2] /Applications/Java/freemarker-generator/templates
 ``` 

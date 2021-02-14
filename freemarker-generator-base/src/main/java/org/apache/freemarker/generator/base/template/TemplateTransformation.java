@@ -44,7 +44,7 @@ public class TemplateTransformation {
 
     @Override
     public String toString() {
-        return "TemplateTransformation{" +
+        return "OutputGenerator{" +
                 "templateSource=" + templateSource +
                 ", templateOutput=" + templateOutput +
                 '}';

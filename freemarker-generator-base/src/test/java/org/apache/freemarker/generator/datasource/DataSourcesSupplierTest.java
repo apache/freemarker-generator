@@ -35,6 +35,8 @@ public class DataSourcesSupplierTest {
 
     private static final String NO_EXCLUDE = null;
     private static final String DATA_DIRECTORY = "./src/test/data";
+    private static final String DATA_DIRECTORY_WITH_FRAGMENT = "./src/test/data#scope=test";
+    private static final String DATA_DIRECTORY_WITH_GROUP = ":data=src/test/data";
     private static final String PWD = FilenameUtils.separatorsToUnix(new File("").getAbsolutePath());
 
     @Test
@@ -64,12 +66,12 @@ public class DataSourcesSupplierTest {
 
     @Test
     public void shouldResolveDirectory() {
-        assertEquals(5, supplier(DATA_DIRECTORY, null, null).get().size());
-        assertEquals(5, supplier(DATA_DIRECTORY, "", null).get().size());
-        assertEquals(5, supplier(DATA_DIRECTORY, "*", null).get().size());
-        assertEquals(5, supplier(DATA_DIRECTORY, "*.*", null).get().size());
+        assertEquals(7, supplier(DATA_DIRECTORY, null, null).get().size());
+        assertEquals(7, supplier(DATA_DIRECTORY, "", null).get().size());
+        assertEquals(7, supplier(DATA_DIRECTORY, "*", null).get().size());
+        assertEquals(7, supplier(DATA_DIRECTORY, "*.*", null).get().size());
         assertEquals(2, supplier(DATA_DIRECTORY, "*.csv", null).get().size());
-        assertEquals(1, supplier(DATA_DIRECTORY, "*.t*", null).get().size());
+        assertEquals(3, supplier(DATA_DIRECTORY, "*.t*", null).get().size());
         assertEquals(0, supplier(DATA_DIRECTORY, "*.bin", null).get().size());
     }
 
@@ -77,12 +79,12 @@ public class DataSourcesSupplierTest {
     public void shouldResolveFilesAndDirectory() {
         final List<String> sources = Arrays.asList("pom.xml", "README.md", DATA_DIRECTORY);
 
-        assertEquals(7, supplier(sources, null, null).get().size());
-        assertEquals(7, supplier(sources, "", null).get().size());
-        assertEquals(7, supplier(sources, "*", null).get().size());
-        assertEquals(7, supplier(sources, "*.*", null).get().size());
+        assertEquals(9, supplier(sources, null, null).get().size());
+        assertEquals(9, supplier(sources, "", null).get().size());
+        assertEquals(9, supplier(sources, "*", null).get().size());
+        assertEquals(9, supplier(sources, "*.*", null).get().size());
         assertEquals(2, supplier(sources, "*.csv", null).get().size());
-        assertEquals(1, supplier(sources, "*.t*", null).get().size());
+        assertEquals(3, supplier(sources, "*.t*", null).get().size());
         assertEquals(1, supplier(sources, "*.xml", null).get().size());
         assertEquals(0, supplier(sources, "*.bin", null).get().size());
 
@@ -90,8 +92,8 @@ public class DataSourcesSupplierTest {
         assertEquals(0, supplier(sources, null, "*.*").get().size());
         assertEquals(0, supplier(sources, "*", "*").get().size());
 
-        assertEquals(6, supplier(sources, "*", "*.md").get().size());
-        assertEquals(4, supplier(sources, "*", "file*.*").get().size());
+        assertEquals(8, supplier(sources, "*", "*.md").get().size());
+        assertEquals(6, supplier(sources, "*", "file*.*").get().size());
     }
 
     @Test
@@ -103,6 +105,26 @@ public class DataSourcesSupplierTest {
         assertEquals(1, dataSources.size());
         assertEquals("test.properties", dataSource.getFileName());
         assertTrue(dataSource.getUri().getPath().contains("src/test/data/properties/test.properties"));
+    }
+
+    @Test
+    public void shouldUseFragmentForDataSourceWhenResolvingDirectory() {
+        final List<DataSource> dataSources = supplier(DATA_DIRECTORY_WITH_FRAGMENT, "*.*", NO_EXCLUDE).get();
+
+        for (DataSource dataSource : dataSources) {
+            assertEquals(1, dataSource.getProperties().size());
+            assertEquals("test", dataSource.getProperties().get("scope"));
+        }
+    }
+
+    @Test
+    public void shouldUseGroupNameForDataSourceWhenResolvingDirectory() {
+        final List<DataSource> dataSources = supplier(DATA_DIRECTORY_WITH_GROUP, "*.*", NO_EXCLUDE).get();
+
+        for (DataSource dataSource : dataSources) {
+            assertEquals(0, dataSource.getProperties().size());
+            assertEquals("data", dataSource.getGroup());
+        }
     }
 
     @Test
@@ -118,7 +140,7 @@ public class DataSourcesSupplierTest {
     }
 
     @Test(expected = RuntimeException.class)
-    public void shouldThrowExceptionForNonexistingSourceDirectory() {
+    public void shouldThrowRuntimeExceptionForNonexistingSourceDirectory() {
         assertEquals(0, supplier("/does-not-exist", "*", null).get().size());
     }
 
