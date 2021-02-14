@@ -848,7 +848,7 @@ freemarker-generator -e UTF-8 -l de_AT -Pcolumn="Order ID" \
     </section>
 
     <section xml:id="named-uri">
-      <title xml:id="named-uri">Named URI-s</title>
+      <title>Named URI-s</title>
 
       <para>Named URIs allow to identify <literal>DataSource</literal>-s (not
       a JDBC <literal>DataSource</literal>, <link linkend="datasources">but

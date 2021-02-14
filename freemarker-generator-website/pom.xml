@@ -72,7 +72,6 @@
                         <websitePomGenerated>${docgenInsertedOutputsDirectory}/**</websitePomGenerated>
                         <templates>${docgenInsertedTemplatesDirectory}/**</templates>
                         <exampleTemplates>${docgenInsertedExampleTemplatesDirectory}/**</exampleTemplates>
-                        <exampleOutputs>${docgenInsertedExampleOutputDirectory}/**</exampleOutputs>
                     </insertableFiles>
                     <customVariables>
                         <version>${project.version}</version>

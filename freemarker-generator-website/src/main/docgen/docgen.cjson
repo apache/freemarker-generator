@@ -102,7 +102,6 @@ insertableFiles: {
   websitePomGenerated: null // Must be overridden by the caller
   templates: null // Must be overridden by the caller
   exampleTemplates: null // Must be overridden by the caller
-  exampleOutputs: null // Must be overridden by the caller
 }
 
 insertableOutputCommands: {
@@ -111,6 +110,7 @@ insertableOutputCommands: {
     mainMethod: execute
     systemProperties: {
       app.home: getCustomVariable("freemarkerGeneratorAppHome")
+      freemarkerGenerator.examples.deductSensitiveInformation: "true"
     }
     docgenWdReplacedWith: getCustomVariable("freemarkerGeneratorAppHome")
   }
