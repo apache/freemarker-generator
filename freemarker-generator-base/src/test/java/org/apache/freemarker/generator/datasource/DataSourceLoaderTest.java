@@ -31,6 +31,7 @@ import static junit.framework.TestCase.assertFalse;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
 import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_APPLICATION_XML;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class DataSourceLoaderTest {
 
@@ -162,11 +163,18 @@ public class DataSourceLoaderTest {
 
     @Test
     public void shouldCreateDataSourceFromEnvironmentVariable() {
-        try (DataSource dataSource = dataSourceLoader().load("myenv=env:///HOME")) {
+        if (!hasEnvironmentVariables()) {
+            return;
+        }
+
+        final String anyEnvironmentVariable = System.getenv().keySet().iterator().next();
+        final String namedUriString = String.format("myenv=env:///%s", anyEnvironmentVariable);
+
+        try (DataSource dataSource = dataSourceLoader().load(namedUriString)) {
             assertEquals("myenv", dataSource.getName());
             assertEquals("default", dataSource.getGroup());
             assertEquals(UTF_8, dataSource.getCharset());
-            assertEquals("env:///HOME", dataSource.getUri().toString());
+            assertTrue(dataSource.getUri().toString().contains(anyEnvironmentVariable));
             assertEquals("text/plain", dataSource.getContentType());
         }
     }
@@ -185,5 +193,9 @@ public class DataSourceLoaderTest {
 
     private DataSourceLoader dataSourceLoader() {
         return DataSourceLoaderFactory.create();
+    }
+
+    private boolean hasEnvironmentVariables() {
+        return !System.getenv().isEmpty();
     }
 }

@@ -37,9 +37,9 @@ REM =========================================================================
 echo "examples\templates\demo.ftl"
 %FREEMARKER_CMD% -t examples\templates\demo.ftl README.md --output-encoding CP1252 > target\out\demo.txt
 
-#############################################################################
-# DataSources
-#############################################################################
+REM =========================================================================
+REM DataSources
+REM =========================================================================
 
 echo "examples\templates\datasources.ftl"
 %FREEMARKER_CMD% -t examples\templates\datasources.ftl -s :data=examples/data > target\out\datasources-01.txt
