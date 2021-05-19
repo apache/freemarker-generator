@@ -20,17 +20,59 @@ import io.krakens.grok.api.Grok;
 import io.krakens.grok.api.GrokCompiler;
 import org.apache.freemarker.generator.tools.grok.impl.GrokWrapper;
 
+import java.util.Map;
+
 public class GrokTool {
 
-    private static final String DEFAULT_PATTERN = "/patterns/patterns";
+    private static final String DEFAULT_PATTERN_FILE = "/patterns/patterns";
 
+    /**
+     * Compile the Grok pattern.
+     *
+     * @param pattern Grok pattern to compile
+     * @return Grok wrapper
+     */
     public GrokWrapper compile(String pattern) {
-        return compile(DEFAULT_PATTERN, pattern);
+        return compile(DEFAULT_PATTERN_FILE, pattern);
     }
 
+    /**
+     * Compile the Grok pattern.
+     *
+     * @param pattern            Grok pattern to compile
+     * @param patternDefinitions custom patterns to be registered
+     * @return Grok wrapper
+     */
+    public GrokWrapper compile(String pattern, Map<String, String> patternDefinitions) {
+        return compile(DEFAULT_PATTERN_FILE, pattern, patternDefinitions);
+    }
+
+    /**
+     * Compile the Grok pattern.
+     *
+     * @param path    classpath file for default patterns to register
+     * @param pattern Grok pattern to compile
+     * @return Grok wrapper
+     */
     public GrokWrapper compile(String path, String pattern) {
         final GrokCompiler grokCompiler = GrokCompiler.newInstance();
         grokCompiler.registerPatternFromClasspath(path);
+        final Grok grok = grokCompiler.compile(pattern);
+        return new GrokWrapper(grok);
+    }
+
+    /**
+     * Compile the Grok pattern.
+     *
+     * @param path               classpath file for default patterns to register
+     * @param pattern            Grok pattern to compile
+     * @param patternDefinitions custom patterns to be registered
+     * @return Grok wrapper
+     */
+    public GrokWrapper compile(String path, String pattern, Map<String, String> patternDefinitions) {
+        final GrokCompiler grokCompiler = GrokCompiler.newInstance();
+        grokCompiler.registerPatternFromClasspath(path);
+        grokCompiler.register(patternDefinitions);
         final Grok grok = grokCompiler.compile(pattern);
         return new GrokWrapper(grok);
     }

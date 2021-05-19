@@ -105,6 +105,9 @@ REM =========================================================================
 echo "examples\templates\accesslog\combined-access.ftl"
 %FREEMARKER_CMD% -t examples\templates\accesslog\combined-access.ftl examples\data\accesslog\combined-access.log > target\out\combined-access.log.txt
 
+echo "examples\templates\logs\csv\serverlog-to-csv.ftl"
+%FREEMARKER_CMD% -t examples\templates\logs\csv\serverlog-to-csv.ftl examples\data\logs > target\out\server.log.csv 
+
 REM =========================================================================
 REM Excel
 REM =========================================================================

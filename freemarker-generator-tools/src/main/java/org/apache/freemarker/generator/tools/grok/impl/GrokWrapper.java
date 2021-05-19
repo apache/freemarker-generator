@@ -24,6 +24,9 @@ import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * Convenience wrapper around Grok instance.
+ */
 public class GrokWrapper {
 
     private final Grok grok;
