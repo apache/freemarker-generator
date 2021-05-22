@@ -25,7 +25,7 @@
 "MY_TIMESTAMP": "%{MY_DATE:date} %{TIME:time},%{INT:millis}",
 "MY_MODULE": "\\[%{NOTSPACE}\\]",
 "MY_THREAD": "\\(%{NOTSPACE}\\)",
-"MY_SERVERLOG": "%{MY_TIMESTAMP} %{LOGLEVEL}%{SPACE:UNWANTED}%{MY_MODULE} %{MY_THREAD} message response handled in: %{INT:response_time} ms; %{GREEDYDATA:UNWANTED}"
+"MY_SERVERLOG": "^%{MY_TIMESTAMP} %{LOGLEVEL}%{SPACE:UNWANTED}%{MY_MODULE} %{MY_THREAD} message response handled in: %{INT:response_time} ms; %{GREEDYDATA:UNWANTED}$"
 }>
 
 <#-- Instantiante the grok tool -->

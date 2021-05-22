@@ -83,7 +83,7 @@ In technical terms the FTL
 "MY_TIMESTAMP": "%{MY_DATE:date} %{TIME:time},%{INT:millis}",
 "MY_MODULE": "\\[%{NOTSPACE}\\]",
 "MY_THREAD": "\\(%{NOTSPACE}\\)",
-"MY_SERVERLOG": "%{MY_TIMESTAMP} %{LOGLEVEL}%{SPACE:UNWANTED}%{MY_MODULE} %{MY_THREAD} message response handled in: %{INT:response_time} ms; %{GREEDYDATA:UNWANTED}"
+"MY_SERVERLOG": "^%{MY_TIMESTAMP} %{LOGLEVEL}%{SPACE:UNWANTED}%{MY_MODULE} %{MY_THREAD} message response handled in: %{INT:response_time} ms; %{GREEDYDATA:UNWANTED}$"
 }>
 
 <#-- Instantiante the grok tool -->
@@ -116,3 +116,6 @@ TIMESTAMP;MILLIS
 2021-05-18T21:00:32.140;162
 ```
 
+### Performance Considerations
+
+When processing large logfiles you may experience performance issues - using regexp anchors as decribed in [Killing your Logstash performance with Grok](https://medium.com/@momchil.dev/killing-your-logstash-performance-with-grok-f5f23ae47956) might help. Using regexp anchors reduced the execution time by 50% when parsing through 3 GB of logs with only small percentage of matching lines.
