@@ -125,6 +125,9 @@ $FREEMARKER_CMD -PCSV_SOURCE_DELIMITER=SEMICOLON -PCSV_SOURCE_WITH_HEADER=true -
 echo "examples/templates/accesslog/combined-access.ftl"
 $FREEMARKER_CMD -t examples/templates/accesslog/combined-access.ftl examples/data/accesslog/combined-access.log > target/out/combined-access.log.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
+echo "examples/templates/logs/csv/serverlog-to-csv.ftl"
+$FREEMARKER_CMD -t examples/templates/logs/csv/serverlog-to-csv.ftl examples/data/logs > target/out/server.log.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
 #############################################################################
 # Excel
 #############################################################################

@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. We try to a
 ## 0.1.0-SNAPSHOT
 
 ### Added
+* [FREEMARKER-181] Support custom pattern definitions for Grok tool
 * Parse a list of `DataSources` for the various tools
 * [FREEMARKER-161] Allow multiple transformations on the CLI
 * [FREEMARKER-163] Integrate Java Faker library for test data generation
@@ -78,3 +79,5 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-174]: https://issues.apache.org/jira/browse/FREEMARKER-174
 [FREEMARKER-175]: https://issues.apache.org/jira/browse/FREEMARKER-175
 [FREEMARKER-176]: https://issues.apache.org/jira/browse/FREEMARKER-176
+[FREEMARKER-181]: https://issues.apache.org/jira/browse/FREEMARKER-181
+

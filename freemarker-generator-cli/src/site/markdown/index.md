@@ -31,6 +31,7 @@
 * [Using DataFrames](cli/usage/using-dataframes.html)
 * [Transforming CSV](cli/usage/transforming-csv.html)
 * [Generating Test Data](cli/usage/generating-testdata.html)
+* [Parsing with Grok](cli/usage/parsing-with-grok.html)
 
 ### Advanced Topics
 

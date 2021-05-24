@@ -1,0 +1,109 @@
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+# Proof of concept for pioclo's @-files support for Linux/MacOS
+
+#############################################################################
+# Info
+#############################################################################
+
+-t freemarker-generator/info.ftl -s README.md -o target/out/info.txt
+
+#############################################################################
+# Demo
+#############################################################################
+
+-t examples/templates/demo.ftl -s README.md -o target/out/demo.txt
+
+#############################################################################
+# DataSources
+#############################################################################
+
+-t examples/templates/datasources.ftl -s :data=examples/data -o target/out/datasources-01.txt
+-t examples/templates/datasources.ftl -s https://xkcd.com/info.0.json -s https://www.google.com -o target/out/datasources-02.txt
+
+#############################################################################
+# CSV
+#############################################################################
+
+-t freemarker-generator/csv/html/transform.ftl -s examples/data/csv/contract.csv -o target/out/contract.html
+-t freemarker-generator/csv/md/transform.ftl -s examples/data/csv/contract.csv -o target/out/contract.md
+-t examples/templates/csv/shell/curl.ftl -s examples/data/csv/user.csv -o target/out/curl.sh
+
+#############################################################################
+# Grok
+#############################################################################
+
+-t examples/templates/accesslog/combined-access.ftl -s examples/data/accesslog/combined-access.log -o target/out/combined-access.log.txt
+-t examples/templates/logs/csv/serverlog-to-csv.ftl -s examples/data/logs -o target/out/server.log.csv
+
+#############################################################################
+# Excel
+#############################################################################
+
+-t examples/templates/excel/dataframe/transform.ftl -s examples/data/excel/test.xls -o target/out/test.xls.dataframe.txt
+-t freemarker-generator/excel/html/transform.ftl -s examples/data/excel/test.xls -o target/out/test.xls.html
+-t freemarker-generator/excel/html/transform.ftl -s examples/data/excel/test.xlsx -o target/out/test.xslx.html
+-t freemarker-generator/excel/html/transform.ftl -s examples/data/excel/test-multiple-sheets.xlsx -o target/out/test-multiple-sheets.xlsx.html
+-t freemarker-generator/excel/md/transform.ftl -s examples/data/excel/test-multiple-sheets.xlsx -o target/out/test-multiple-sheets.xlsx.md
+-t freemarker-generator/excel/csv/transform.ftl -s examples/data/excel/test-multiple-sheets.xlsx -o target/out/test-multiple-sheets.xlsx.csv
+
+#############################################################################
+# HTML
+#############################################################################
+
+-t examples/templates/html/csv/dependencies.ftl -s examples/data/html/dependencies.html -o target/out/dependencies.csv
+-t examples/templates/html/txt/licence.ftl -s examples/data/html/dependencies.html -o target/out/licence.txt
+
+#############################################################################
+# Java Faker
+#############################################################################
+
+-t examples/templates/javafaker/csv/testdata.ftl -o target/out/testdata.csv
+
+#############################################################################
+# JSON
+#############################################################################
+
+-t examples/templates/json/csv/swagger-endpoints.ftl -s examples/data/json/swagger-spec.json -o target/out/swagger-spec.csv
+-t freemarker-generator/json/yaml/transform.ftl -s examples/data/json/swagger-spec.json -o target/out/swagger-spec.yaml
+-t examples/templates/json/md/github-users.ftl -s examples/data/json/github-users.json -o target/out/github-users.md
+
+#############################################################################
+# Properties
+#############################################################################
+
+-t examples/templates/properties/csv/locker-test-users.ftl -s examples/data/properties -o target/out/locker-test-users.csv
+
+#############################################################################
+# Template Directory
+#############################################################################
+
+-t examples/data/template -PNGINX_HOSTNAME=localhost -o target/out/template
+
+#############################################################################
+# XML
+#############################################################################
+
+-t examples/templates/xml/txt/recipients.ftl -s examples/data/xml/recipients.xml -o target/out/recipients.txt
+
+#############################################################################
+# YAML
+#############################################################################
+
+-t examples/templates/yaml/txt/transform.ftl -s examples/data/yaml/customer.yaml -o target/out/customer.txt
+-t freemarker-generator/yaml/json/transform.ftl -s examples/data/yaml/swagger-spec.yaml -o target/out/swagger-spec.json

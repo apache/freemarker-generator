@@ -18,21 +18,52 @@ package org.apache.freemarker.generator.tools.grok;
 
 import io.krakens.grok.api.Grok;
 import io.krakens.grok.api.GrokCompiler;
-import org.apache.freemarker.generator.tools.grok.impl.GrokWrapper;
+import org.apache.freemarker.generator.base.util.Validate;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class GrokTool {
 
-    private static final String DEFAULT_PATTERN = "/patterns/patterns";
+    private static final String DEFAULT_PATTERN_FILE = "/patterns/patterns";
 
-    public GrokWrapper compile(String pattern) {
-        return compile(DEFAULT_PATTERN, pattern);
+    /**
+     * Create a default Grok instance using the the default pattern files loaded
+     * from the classpath.
+     *
+     * @param pattern Grok pattern to compile
+     * @return Grok object
+     */
+    public Grok create(String pattern) {
+        return create(pattern, new HashMap<>());
     }
 
-    public GrokWrapper compile(String path, String pattern) {
-        final GrokCompiler grokCompiler = GrokCompiler.newInstance();
-        grokCompiler.registerPatternFromClasspath(path);
-        final Grok grok = grokCompiler.compile(pattern);
-        return new GrokWrapper(grok);
+    /**
+     * Get a default Grok instance using the the default pattern files loaded
+     * from the classpath.
+     *
+     * @param pattern            Grok pattern to compile
+     * @param patternDefinitions custom patterns to be registered
+     * @return Grok object
+     */
+    public Grok create(String pattern, Map<String, String> patternDefinitions) {
+        Validate.notEmpty(pattern, "Grok pattern to compile is empty");
+        final GrokCompiler grokCompiler = grokCompiler();
+        grokCompiler.registerPatternFromClasspath(DEFAULT_PATTERN_FILE);
+        if (patternDefinitions != null) {
+            grokCompiler.register(patternDefinitions);
+        }
+        return grokCompiler.compile(pattern);
+    }
+
+    /**
+     * Create a new Grok compiler instance. This is just
+     * a convinience method if the caller requires full control.
+     *
+     * @return Grok compiler
+     */
+    public GrokCompiler grokCompiler() {
+        return GrokCompiler.newInstance();
     }
 
     @Override

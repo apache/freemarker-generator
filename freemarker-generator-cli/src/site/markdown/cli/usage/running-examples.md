@@ -649,62 +649,7 @@ time,user,status,duration,size
 2019-09-27T21:02:54,DDDDDDD,200,0.528268,206
 ```
 
-### 10. Unleashing The Power Of Grok
-
-Think of `Grok` as modular regular expressions with a pre-defined functionality to parse access logs or any other data where you can't comprehend the regular expression any longer, one very simple example is `QUOTEDSTRING`
-
-```
-QUOTEDSTRING (?>(?<!\\)(?>"(?>\\.|[^\\"]+)+"|""|(?>'(?>\\.|[^\\']+)+')|''|(?>`(?>\\.|[^\\`]+)+`)|``))
-```
-
-And with `Grok` the `QUOTEDSTRING` is just a building block for an even more complex regular expression such as `COMBINEDAPACHELOG`
-
-> bin/freemarker-generator -t examples/templates/accesslog/combined-access.ftl examples/data/accesslog/combined-access.log 
-
-which gives you the following output
-
-```
-TIMESTAMP;VERB;REQUEST;HTTPVERSION
-19/Jun/2005:06:44:17 +0200;GET;/wximages/wxwidgets02-small.png;1.1
-19/Jun/2005:06:46:05 +0200;GET;/wximages/wxwidgets02-small.png;1.1
-19/Jun/2005:06:47:37 +0200;GET;/wximages/wxwidgets02-small.png;1.1
-19/Jun/2005:06:48:40 +0200;GET;/wiki.pl?WxWidgets_Bounties;1.1
-19/Jun/2005:06:50:49 +0200;GET;/wiki.pl?WxWidgets_Compared_To_Other_Toolkits;1.1
-19/Jun/2005:06:50:49 +0200;GET;/wxwiki.css;1.1
-19/Jun/2005:06:50:49 +0200;GET;/wximages/wxwidgets02-small.png;1.1
-19/Jun/2005:06:50:50 +0200;GET;/favicon.ico;1.1
-19/Jun/2005:06:52:36 +0200;GET;/wximages/wxwidgets02-small.png;1.1
-19/Jun/2005:06:53:14 +0200;GET;/;1.0
-```
-
-using the following FreeMarker template
-
-```text
-<#ftl output_format="plainText" strip_whitespace=true>
-<#assign grok = tools.grok.compile("%{COMBINEDAPACHELOG}")>
-<#assign dataSource = dataSources?values[0]>
-<#assign lines = dataSource.getLineIterator()>
-
-<#compress>
-    TIMESTAMP;VERB;REQUEST;HTTPVERSION
-    <#list lines as line>
-        <#assign parts = grok.match(line)>
-        <#assign timestamp = parts["timestamp"]>
-        <#assign verb = parts["verb"]>
-        <#assign request = parts["request"]>
-        <#assign httpversion = parts["httpversion"]>
-        ${timestamp};${verb};${request};${httpversion}
-    </#list>
-</#compress>
-```
-
-While this looks small and tidy there are some nifty features
-
-* `tools.grok.compile("%{COMBINEDAPACHELOG}")` builds the `Grok` instance to parse access logs in `Combined Format`
-* The data source is streamed line by line and not loaded into memory in one piece
-* This also works for using `stdin` so are able to parse GB of access log or other files
-
-### 11. Executing Arbitrary Commands
+### 10. Executing Arbitrary Commands
 
 Using Apache Commons Exec allows to execute arbitrary commands - nice but dangerous. It was recently quite useful to to invoke AWS CLI to generate a Confluence page about the overall setup of our AWS accounts. 
 
@@ -760,7 +705,7 @@ h3. AWS EC2 Instance
 </#macro>
 ```
 
-## 12. Interactive Templates
+## 11. Interactive Templates
 
 Sometime you need to apply a CSS, JSON or XPath query in ad ad-hoc way without installing `xmllint`, `jq` or `pup` - in this case you can pass a FreeMarker template in an interactive fashion
 
@@ -788,7 +733,7 @@ SHELL ==> /bin/bash
 EDITOR ==> vi
 ```
 
-## 13. Filtering & Transforming CSV
+## 12. Filtering & Transforming CSV
 
 During an integration project we imported large transactions CSV files (500.000+ records) and in case of import failures the developers would be happy to get a nice outline of the transactions causing the problem (the CSV records have 60+ columns) - in essence it is filtering (based on some primary key) and and transforming into a human-readable output format (Markdown).
 
@@ -884,7 +829,7 @@ yields
 | Total Profit | 498855.44 |
 ```
 
-### 14. Converting Between JSON And YAML
+### 13. Converting Between JSON And YAML
 
 Sometimes we simply need to transform a JSON into an equivalent YAML or the other way around
 
@@ -898,7 +843,7 @@ Sometimes we simply need to transform a JSON into an equivalent YAML or the othe
 > freemarker-generator -i '${tools.yaml.toYaml(json)}' -m json=examples/data/json/swagger-spec.json
 ```
 
-### 15. Using Advanced FreeMarker Features
+### 14. Using Advanced FreeMarker Features
 
 There is a `demo.ftl` which shows some advanced FreeMarker functionality
 
