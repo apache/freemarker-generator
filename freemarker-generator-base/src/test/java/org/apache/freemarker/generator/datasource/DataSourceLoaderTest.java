@@ -20,6 +20,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceLoader;
 import org.apache.freemarker.generator.base.datasource.DataSourceLoaderFactory;
+import org.apache.freemarker.generator.base.util.StringUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -162,13 +163,12 @@ public class DataSourceLoaderTest {
     }
 
     @Test
-    @Ignore("TODO Travis build failed with: 'Environment variable not found: TRAVIS_TAG'")
     public void shouldCreateDataSourceFromEnvironmentVariable() {
         if (!hasEnvironmentVariables()) {
             return;
         }
 
-        final String anyEnvironmentVariable = System.getenv().keySet().iterator().next();
+        final String anyEnvironmentVariable = anyEnvironmentVariable();
         final String namedUriString = String.format("myenv=env:///%s", anyEnvironmentVariable);
 
         try (DataSource dataSource = dataSourceLoader().load(namedUriString)) {
@@ -198,5 +198,13 @@ public class DataSourceLoaderTest {
 
     private boolean hasEnvironmentVariables() {
         return !System.getenv().isEmpty();
+    }
+
+    private String anyEnvironmentVariable() {
+        return System.getenv().keySet()
+                .stream()
+                .filter(env -> StringUtils.isNotEmpty(System.getenv(env)))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No matching environment variable found"));
     }
 }
