@@ -31,7 +31,7 @@ public class UnitTestHelper {
 
     public static Configuration configuration(File testDir) {
         try {
-            final Configuration configuration = new Configuration(Configuration.VERSION_2_3_30);
+            final Configuration configuration = new Configuration(Configuration.VERSION_2_3_31);
             configuration.setDefaultEncoding("UTF-8");
             configuration.setTemplateLoader(new FileTemplateLoader(testDir));
             return configuration;
@@ -58,8 +58,7 @@ public class UnitTestHelper {
                         .map(Path::toFile)
                         .forEach(File::delete);
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException("Failed to delete output directory", e);
         }
 
