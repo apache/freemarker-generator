@@ -18,8 +18,9 @@ package org.apache.freemarker.generator.tools.grok;
 
 import io.krakens.grok.api.Grok;
 import io.krakens.grok.api.GrokCompiler;
-import org.apache.freemarker.generator.tools.grok.impl.GrokWrapper;
+import org.apache.freemarker.generator.base.util.Validate;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class GrokTool {
@@ -27,54 +28,42 @@ public class GrokTool {
     private static final String DEFAULT_PATTERN_FILE = "/patterns/patterns";
 
     /**
-     * Compile the Grok pattern.
+     * Create a default Grok instance using the the default pattern files loaded
+     * from the classpath.
      *
      * @param pattern Grok pattern to compile
-     * @return Grok wrapper
+     * @return Grok object
      */
-    public GrokWrapper compile(String pattern) {
-        return compile(DEFAULT_PATTERN_FILE, pattern);
+    public Grok create(String pattern) {
+        return create(pattern, new HashMap<>());
     }
 
     /**
-     * Compile the Grok pattern.
+     * Get a default Grok instance using the the default pattern files loaded
+     * from the classpath.
      *
      * @param pattern            Grok pattern to compile
      * @param patternDefinitions custom patterns to be registered
-     * @return Grok wrapper
+     * @return Grok object
      */
-    public GrokWrapper compile(String pattern, Map<String, String> patternDefinitions) {
-        return compile(DEFAULT_PATTERN_FILE, pattern, patternDefinitions);
+    public Grok create(String pattern, Map<String, String> patternDefinitions) {
+        Validate.notEmpty(pattern, "Grok pattern to compile is empty");
+        final GrokCompiler grokCompiler = grokCompiler();
+        grokCompiler.registerPatternFromClasspath(DEFAULT_PATTERN_FILE);
+        if (patternDefinitions != null) {
+            grokCompiler.register(patternDefinitions);
+        }
+        return grokCompiler.compile(pattern);
     }
 
     /**
-     * Compile the Grok pattern.
+     * Create a new Grok compiler instance. This is just
+     * a convinience method if the caller requires full control.
      *
-     * @param path    classpath file for default patterns to register
-     * @param pattern Grok pattern to compile
-     * @return Grok wrapper
+     * @return Grok compiler
      */
-    public GrokWrapper compile(String path, String pattern) {
-        final GrokCompiler grokCompiler = GrokCompiler.newInstance();
-        grokCompiler.registerPatternFromClasspath(path);
-        final Grok grok = grokCompiler.compile(pattern);
-        return new GrokWrapper(grok);
-    }
-
-    /**
-     * Compile the Grok pattern.
-     *
-     * @param path               classpath file for default patterns to register
-     * @param pattern            Grok pattern to compile
-     * @param patternDefinitions custom patterns to be registered
-     * @return Grok wrapper
-     */
-    public GrokWrapper compile(String path, String pattern, Map<String, String> patternDefinitions) {
-        final GrokCompiler grokCompiler = GrokCompiler.newInstance();
-        grokCompiler.registerPatternFromClasspath(path);
-        grokCompiler.register(patternDefinitions);
-        final Grok grok = grokCompiler.compile(pattern);
-        return new GrokWrapper(grok);
+    public GrokCompiler grokCompiler() {
+        return GrokCompiler.newInstance();
     }
 
     @Override

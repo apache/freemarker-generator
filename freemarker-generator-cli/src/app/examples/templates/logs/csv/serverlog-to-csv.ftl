@@ -29,7 +29,7 @@
 }>
 
 <#-- Instantiante the grok tool -->
-<#assign grok = tools.grok.compile("%{MY_SERVERLOG}", patternDefinitions)>
+<#assign grok = tools.grok.create("%{MY_SERVERLOG}", patternDefinitions)>
 
 <#-- Iterate over all data sources and convert matching lines to CSV output -->
 <#compress>
@@ -37,7 +37,7 @@
     <#if dataSources?has_content>
         <#list dataSources?values as dataSource>
             <#list dataSource.getLineIterator() as line>
-                <#assign parts = grok.match(line)>
+                <#assign parts = grok.match(line).capture()>
                 <#if parts?has_content>
                     <#-- Skip all response times less than 5 ms because these are boring pings -->
                     <#if parts.response_time?number gt 5>

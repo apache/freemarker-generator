@@ -16,7 +16,8 @@
  */
 package org.apache.freemarker.generator.tools.grok;
 
-import org.apache.freemarker.generator.tools.grok.impl.GrokWrapper;
+import io.krakens.grok.api.Grok;
+import io.krakens.grok.api.Match;
 import org.junit.Test;
 
 import java.util.Map;
@@ -30,9 +31,10 @@ public class GrokToolTest {
     @Test
     public void shallParseCombinedAccessLog() {
         final String line = "112.169.19.192 - - [06/Mar/2013:01:36:30 +0900] \"GET / HTTP/1.1\" 200 44346 \"-\" \"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.22 (KHTML, like Gecko) Chrome/25.0.1364.152 Safari/537.22\"";
-        final GrokWrapper grok = grokTool().compile("%{COMBINEDAPACHELOG}");
+        final Grok grok = grokTool().create("%{COMBINEDAPACHELOG}");
 
-        final Map<String, Object> map = grok.match(line);
+        final Match match = grok.match(line);
+        final Map<String, Object> map = match.capture();
 
         assertEquals("GET", map.get("verb"));
         assertEquals("06/Mar/2013:01:36:30 +0900", map.get("timestamp"));
@@ -52,9 +54,9 @@ public class GrokToolTest {
                 { "MY_SERVERLOG", "%{MY_TIMESTAMP} %{LOGLEVEL}%{SPACE:UNWANTED}%{MY_MODULE} %{MY_THREAD} message response handled in: %{INT:response_time} ms; %{GREEDYDATA:UNWANTED}" },
         }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
 
-        final GrokWrapper grok = grokTool().compile("%{MY_SERVERLOG}", patternDefinitions);
+        final Grok grok = grokTool().create("%{MY_SERVERLOG}", patternDefinitions);
 
-        final Map<String, Object> map = grok.match(line);
+        final Map<String, Object> map = grok.match(line).capture();
 
         assertEquals(16, map.size());
         assertEquals("2019-05-17", map.get("date"));

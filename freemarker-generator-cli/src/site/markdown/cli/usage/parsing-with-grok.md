@@ -32,14 +32,14 @@ using the following FreeMarker template
 
 ```text
 <#ftl output_format="plainText" strip_whitespace=true>
-<#assign grok = tools.grok.compile("%{COMBINEDAPACHELOG}")>
+<#assign grok = tools.grok.create("%{COMBINEDAPACHELOG}")>
 <#assign dataSource = dataSources?values[0]>
 <#assign lines = dataSource.getLineIterator()>
 
 <#compress>
     TIMESTAMP;VERB;REQUEST;HTTPVERSION
     <#list lines as line>
-        <#assign parts = grok.match(line)>
+        <#assign parts = grok.match(line).capture()>
         <#assign timestamp = parts["timestamp"]>
         <#assign verb = parts["verb"]>
         <#assign request = parts["request"]>
@@ -87,7 +87,7 @@ In technical terms the FTL
 }>
 
 <#-- Instantiante the grok tool -->
-<#assign grok = tools.grok.compile("%{MY_SERVERLOG}", patternDefinitions)>
+<#assign grok = tools.grok.create("%{MY_SERVERLOG}", patternDefinitions)>
 
 <#-- Iterate over all data sources and convert matching lines to CSV output -->
 <#compress>
@@ -95,7 +95,7 @@ In technical terms the FTL
     <#if dataSources?has_content>
         <#list dataSources?values as dataSource>
             <#list dataSource.getLineIterator() as line>
-                <#assign parts = grok.match(line)>
+                <#assign parts = grok.match(line).capture()>
                 <#if parts?has_content>
                     <#-- Skip all response times less than 5 ms because these are boring pings -->
                     <#if parts.response_time?number gt 5>
