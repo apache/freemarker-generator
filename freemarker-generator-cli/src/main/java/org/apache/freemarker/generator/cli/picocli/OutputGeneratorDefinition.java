@@ -73,7 +73,6 @@ public class OutputGeneratorDefinition {
         } else {
             return emptyList();
         }
-
     }
 
     public TemplateSourceDefinition getTemplateSourceDefinition() {

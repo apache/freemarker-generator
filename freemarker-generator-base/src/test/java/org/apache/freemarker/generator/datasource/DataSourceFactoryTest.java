@@ -96,7 +96,7 @@ public class DataSourceFactoryTest {
     }
 
     @Test
-    @Ignore
+    @Ignore("Requires internet access")
     public void shouldCreateDataSourceFromURL() throws IOException {
         final URL url = new URL("https://jsonplaceholder.typicode.com/posts/2");
         final DataSource dataSource = DataSourceFactory.fromUrl("jsonplaceholder.typicode.com", "default", url);

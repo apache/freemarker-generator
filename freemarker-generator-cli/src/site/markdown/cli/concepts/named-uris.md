@@ -1,6 +1,6 @@
 ## Named URIs
 
-Named URIs allow to identify `DataSources` and pass additional information 
+Named URIs allow identifying `DataSources` and pass additional information 
 
 A Named URI consists of
 

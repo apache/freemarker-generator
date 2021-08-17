@@ -19,6 +19,8 @@ package org.apache.freemarker.generator.tools.javafaker;
 import com.github.javafaker.Faker;
 import org.junit.Test;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -52,6 +54,47 @@ public class JavaFakerToolTest {
     @Test
     public void shouldGetTimeUnits() {
         assertEquals(6, javaFakerTool().getTimeUnits().size());
+    }
+
+    @Test
+    public void shouldShowGeneralUsage() {
+        final String language = "de";
+        final String country = "DE";
+        final Locale locale = new Locale(language, country);
+        final Faker faker = javaFakerTool().getFaker(locale);
+        final String iban = faker.finance().iban(country);
+        final String firstName = faker.name().firstName();
+        final String lastName = faker.name().lastName();
+        final String email = String.format("%s.%s@gmail.com", firstName, lastName).toLowerCase();
+        final Date birthday = faker.date().birthday(21, 65);
+        final String streetAddress = faker.address().streetAddress();
+        final String state = faker.address().stateAbbr();
+        final String zipCode = faker.address().zipCode();
+        final int numberBetween = faker.number().numberBetween(10, 99);
+        final List<String> words = faker.lorem().words(10);
+
+        assertTrue(iban.startsWith("DE"));
+        assertFalse(firstName.isEmpty());
+        assertFalse(lastName.isEmpty());
+        assertFalse(email.isEmpty());
+        assertNotNull(birthday);
+        assertFalse(streetAddress.isEmpty());
+        assertFalse(state.isEmpty());
+        assertFalse(zipCode.isEmpty());
+        assertTrue(numberBetween >= 10 && numberBetween <= 99);
+        assertFalse(words.isEmpty());
+
+        /*
+        System.out.println("iban: " + iban);
+        System.out.println("name: " + firstName + " " + lastName);
+        System.out.println("email: " + email);
+        System.out.println("birthday: " + birthday);
+        System.out.println("streetName: " + streetAddress);
+        System.out.println("state: " + state);
+        System.out.println("zipCode: " + zipCode);
+        System.out.println("numberBetween: " + numberBetween);
+        System.out.println("words: " + words);
+        */
     }
 
     private static JavaFakerTool javaFakerTool() {

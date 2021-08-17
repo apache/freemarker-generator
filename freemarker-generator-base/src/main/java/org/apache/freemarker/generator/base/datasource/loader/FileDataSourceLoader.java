@@ -22,7 +22,6 @@ import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.freemarker.generator.base.datasource.DataSourceLoader;
 import org.apache.freemarker.generator.base.uri.NamedUri;
 import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
-import org.apache.freemarker.generator.base.util.UriUtils;
 
 import java.io.File;
 import java.nio.charset.Charset;

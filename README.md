@@ -3,7 +3,7 @@ Apache FreeMarker Generator
 
 For documentation or to report bugs visit: [https://freemarker.apache.org](https://freemarker.apache.org)
 
-Regarding pull requests on Github
+Regarding pull requests on GitHub
 -----------------------------------------------------------------------------
 
 By sending a pull request you grant the Apache Software Foundation

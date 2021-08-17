@@ -1,6 +1,6 @@
 ## Passing Configuration Data
 
-`Apache FreeMarker Generator CLI` provides multiple ways to pass configuration data used in in templates
+`Apache FreeMarker Generator CLI` provides multiple ways to pass configuration data used in templates
 
 * System properties
 * Parameters 
