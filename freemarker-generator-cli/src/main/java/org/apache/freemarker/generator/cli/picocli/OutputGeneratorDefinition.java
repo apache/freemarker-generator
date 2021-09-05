@@ -16,6 +16,7 @@
  */
 package org.apache.freemarker.generator.cli.picocli;
 
+import org.apache.freemarker.generator.base.FreeMarkerConstants.Mode;
 import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.ParameterException;
@@ -36,10 +37,16 @@ public class OutputGeneratorDefinition {
     public TemplateOutputDefinition templateOutputDefinition;
 
     @ArgGroup(exclusive = false)
+    public TemplateOutputMapperDefinition templateOutputMapperDefinition;
+
+    @ArgGroup(exclusive = false)
     public DataSourceDefinition dataSourceDefinition;
 
     @ArgGroup(exclusive = false)
     public DataModelDefinition dataModelDefinition;
+
+    @ArgGroup(exclusive = false)
+    public OutputGeneratorModeDefinition outputGeneratorModeDefinition;
 
     public void validate(CommandLine commandLine) {
         if (templateSourceDefinition == null) {
@@ -97,6 +104,15 @@ public class OutputGeneratorDefinition {
         return getTemplateSourceFilterDefinition() != null &&
                 getTemplateSourceFilterDefinition().templateExcludePatterns != null &&
                 !getTemplateSourceFilterDefinition().templateExcludePatterns.isEmpty();
+    }
+
+    public String getOutputGeneratorMode() {
+        if (outputGeneratorModeDefinition != null &&
+                outputGeneratorModeDefinition.outputGeneratorMode != null) {
+            return outputGeneratorModeDefinition.outputGeneratorMode;
+        } else {
+            return Mode.AGGREGATE;
+        }
     }
 
     private static boolean isFileSource(String source) {

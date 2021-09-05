@@ -26,7 +26,8 @@ import java.util.Map;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Information about loading templates and writing their output.
+ * Information about loading templates and writing their output. An instance
+ * describes a transformation of 0..N data sources to an output file.
  */
 public class OutputGenerator {
 
