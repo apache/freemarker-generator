@@ -128,11 +128,11 @@ URI schema      : file
 Iterating Over Metadata Of A Datasource
 ---------------------------------------------------------------------------
 extension       : csv
-basename        : user
-filename        : user.csv
-filepath        : /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/csv
+baseName        : user
+fileName        : user.csv
+filePath        : /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/csv
 name            : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/csv/user.csv
-mimetype        : text/csv
+mimeType        : text/csv
 uri             : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/csv/user.csv
 group           : default
 
