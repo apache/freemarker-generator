@@ -11,12 +11,12 @@ public class FileUtilsTest {
 
     @Test
     public void shouldGetRelativePathForSameDirectory() {
-        assertEquals(".", FileUtils.getRelativePath(new File("."), new File("pom.xml")));
-        assertEquals(".", FileUtils.getRelativePath(new File("."), new File("./pom.xml")));
-        assertEquals(".", FileUtils.getRelativePath(new File("."), new File("./pom.xml")));
-        assertEquals(".", FileUtils.getRelativePath(new File("../freemarker-generator-base"), new File("pom.xml")));
-        assertEquals(".", FileUtils.getRelativePath(new File("../freemarker-generator-base"), new File("./pom.xml")));
-        assertEquals(".", FileUtils.getRelativePath(new File("../freemarker-generator-base"), new File("../freemarker-generator-base/pom.xml")));
+        assertEquals("", FileUtils.getRelativePath(new File("."), new File("pom.xml")));
+        assertEquals("", FileUtils.getRelativePath(new File("."), new File("./pom.xml")));
+        assertEquals("", FileUtils.getRelativePath(new File("."), new File("./pom.xml")));
+        assertEquals("", FileUtils.getRelativePath(new File("../freemarker-generator-base"), new File("pom.xml")));
+        assertEquals("", FileUtils.getRelativePath(new File("../freemarker-generator-base"), new File("./pom.xml")));
+        assertEquals("", FileUtils.getRelativePath(new File("../freemarker-generator-base"), new File("../freemarker-generator-base/pom.xml")));
     }
 
     @Test
@@ -32,9 +32,9 @@ public class FileUtilsTest {
 
     @Test
     public void shouldHandleInvalidArgumentsGracefully() {
-        assertEquals(".", FileUtils.getRelativePath(new File("."), new File(".")));
-        assertEquals(".", FileUtils.getRelativePath(new File("pom.xml"), new File("pom.xml")));
-        assertEquals(".", FileUtils.getRelativePath(new File("."), new File("does-not-exist.xml")));
+        assertEquals("", FileUtils.getRelativePath(new File("."), new File(".")));
+        assertEquals("", FileUtils.getRelativePath(new File("pom.xml"), new File("pom.xml")));
+        assertEquals("", FileUtils.getRelativePath(new File("."), new File("does-not-exist.xml")));
         assertEquals("foo", FileUtils.getRelativePath(new File("."), new File("foo/does-not-exist.xml")));
         assertEquals("foo", FileUtils.getRelativePath(new File("."), new File("foo/./does-not-exist.xml")));
     }

@@ -7,11 +7,11 @@ import java.nio.file.Paths;
 public class FileUtils {
 
     /**
-     * Determines the relative path between a directory and a file within the directory (excluding the file name)
+     * Determines the relative path between a directory and a file within the directory (excluding the file name).
      *
      * @param directory the directory
      * @param file      the file
-     * @return relative path
+     * @return relative path or an empty string if no relative path exists
      */
     public static String getRelativePath(File directory, File file) {
         Validate.notNull(directory, "directory is null");
@@ -22,10 +22,11 @@ public class FileUtils {
         final Path directoryPath = Paths.get(directory.toURI()).normalize();
         final String relativePath = directoryPath.relativize(filePath).normalize().toString();
 
-        if (relativePath.lastIndexOf('/') > 0) {
+        // strip last path segment
+        if (relativePath.lastIndexOf('/') >= 0) {
             return relativePath.substring(0, relativePath.lastIndexOf("/"));
         } else {
-            return ".";
+            return "";
         }
     }
 }

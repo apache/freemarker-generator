@@ -24,7 +24,7 @@ import org.apache.freemarker.generator.base.datasource.loader.HttpDataSourceLoad
 import java.util.Arrays;
 
 /**
- * Creates a FreeMarker data source from various sources.
+ * Factory method to create a <code>DataSourceLoader</code>.
  */
 public abstract class DataSourceLoaderFactory {
 

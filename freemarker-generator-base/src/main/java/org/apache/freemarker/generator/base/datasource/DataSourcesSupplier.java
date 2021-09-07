@@ -39,7 +39,7 @@ import static java.util.stream.Collectors.toList;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
 
 /**
- * Create a list of <code>DataSource</code> based on a list URIs, directories and files.
+ * Supply a list of <code>DataSource</code> based on a list URIs, directories and files.
  */
 public class DataSourcesSupplier implements Supplier<List<DataSource>> {
 

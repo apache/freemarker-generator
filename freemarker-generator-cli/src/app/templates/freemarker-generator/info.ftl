@@ -28,13 +28,13 @@ Output format          : ${.output_format}
 FreeMarker Command-line Parameters
 ------------------------------------------------------------------------------
 <#list tools.system.getCommandLineArgs() as arg>
-    [#${arg?counter}] ${arg}
+[#${arg?counter}] ${arg}
 </#list>
 
 FreeMarker Generator Template Loader Directories
 ------------------------------------------------------------------------------
 <#list tools.system.getTemplateDirectories() as directory>
-    [#${directory?counter}] ${directory}
+[#${directory?counter}] ${directory}
 </#list>
 
 FreeMarker Generator Data Model
