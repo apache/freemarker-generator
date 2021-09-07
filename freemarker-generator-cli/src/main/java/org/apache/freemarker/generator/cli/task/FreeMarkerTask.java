@@ -25,6 +25,7 @@ import org.apache.freemarker.generator.base.datasource.DataSources;
 import org.apache.freemarker.generator.base.output.OutputGenerator;
 import org.apache.freemarker.generator.base.template.TemplateOutput;
 import org.apache.freemarker.generator.base.template.TemplateSource;
+import org.apache.freemarker.generator.base.util.ListUtils;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -33,14 +34,11 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model;
@@ -108,8 +106,12 @@ public class FreeMarkerTask implements Callable<Integer> {
     }
 
     private static DataSources toDataSources(OutputGenerator outputGenerator, List<DataSource> sharedDataSources) {
-        return new DataSources(Stream.of(outputGenerator.getDataSources(), sharedDataSources)
-                .flatMap(Collection::stream).collect(Collectors.toList()));
+        // TODO FREEMARKER-188 06.09.2021 sgoeschl - make this more explicit
+        if (outputGenerator.getDataSources().isEmpty()) {
+            return new DataSources(ListUtils.concatenate(outputGenerator.getDataSources(), sharedDataSources));
+        } else {
+            return new DataSources(outputGenerator.getDataSources());
+        }
     }
 
     @SafeVarargs

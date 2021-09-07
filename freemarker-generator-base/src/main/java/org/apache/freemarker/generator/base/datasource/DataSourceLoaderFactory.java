@@ -28,17 +28,12 @@ import java.util.Arrays;
  */
 public abstract class DataSourceLoaderFactory {
 
-    private static DataSourceLoader dataSourceLoader;
-
-    public static synchronized DataSourceLoader create() {
-        if (dataSourceLoader == null) {
-            dataSourceLoader = new DefaultDataSourceLoader(
-                    Arrays.asList(
-                            new FileDataSourceLoader(),
-                            new HttpDataSourceLoader(),
-                            new EnvironmentDataSourceLoader()
-                    ));
-        }
-        return dataSourceLoader;
+    public static DataSourceLoader create() {
+        return new DefaultDataSourceLoader(
+                Arrays.asList(
+                        new FileDataSourceLoader(),
+                        new HttpDataSourceLoader(),
+                        new EnvironmentDataSourceLoader()
+                ));
     }
 }
