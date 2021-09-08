@@ -63,7 +63,9 @@ public class DataSourceSeedingOutputMapperTest {
     private static String path(File file) {
         final File workingDir = new File(".");
         final String relativePath = FileUtils.getRelativePath(workingDir, file);
-        return StringUtils.isEmpty(relativePath) ?
-                file.getName() : fixSeparators(relativePath) + File.separatorChar + file.getName();
+
+        return fixSeparators(StringUtils.isEmpty(relativePath) ?
+                file.getName() :
+                relativePath + File.separatorChar + file.getName());
     }
 }
