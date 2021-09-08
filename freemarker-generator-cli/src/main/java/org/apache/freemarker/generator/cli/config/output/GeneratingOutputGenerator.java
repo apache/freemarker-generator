@@ -18,6 +18,7 @@ package org.apache.freemarker.generator.cli.config.output;
 
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.output.OutputGenerator;
+import org.apache.freemarker.generator.base.output.OutputGenerator.SeedType;
 import org.apache.freemarker.generator.base.template.TemplateOutput;
 import org.apache.freemarker.generator.base.template.TemplateSource;
 import org.apache.freemarker.generator.base.util.ListUtils;
@@ -33,10 +34,11 @@ import org.apache.freemarker.generator.cli.util.TemplateSourceFactory;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+
+import static java.util.Collections.singletonList;
 
 public class GeneratingOutputGenerator
         extends AbstractOutputGenerator
@@ -66,8 +68,9 @@ public class GeneratingOutputGenerator
             final OutputGenerator outputGenerator = new OutputGenerator(
                     templateSource,
                     templateOutput,
-                    Collections.singletonList(dataSource),
-                    dataModels
+                    singletonList(dataSource),
+                    dataModels,
+                    SeedType.DATASOURCE
             );
             result.add(outputGenerator);
         }

@@ -23,8 +23,8 @@ public class FileUtils {
         final String relativePath = directoryPath.relativize(filePath).normalize().toString();
 
         // strip last path segment
-        if (relativePath.lastIndexOf('/') >= 0) {
-            return relativePath.substring(0, relativePath.lastIndexOf("/"));
+        if (relativePath.lastIndexOf(File.separatorChar) >= 0) {
+            return relativePath.substring(0, relativePath.lastIndexOf(File.separatorChar));
         } else {
             return "";
         }

@@ -21,6 +21,7 @@ import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceFactory;
 import org.apache.freemarker.generator.base.datasource.DataSourcesSupplier;
 import org.apache.freemarker.generator.base.output.OutputGenerator;
+import org.apache.freemarker.generator.base.output.OutputGenerator.SeedType;
 import org.apache.freemarker.generator.base.template.TemplateTransformation;
 import org.apache.freemarker.generator.base.template.TemplateTransformationsBuilder;
 import org.apache.freemarker.generator.base.util.UriUtils;
@@ -95,7 +96,8 @@ public class AggregatingOutputGenerator implements Function<OutputGeneratorDefin
                     templateTransformation.getTemplateSource(),
                     templateTransformation.getTemplateOutput(),
                     dataSources(settings, definition),
-                    dataModels(definition)
+                    dataModels(definition),
+                    SeedType.TEMPLATE
             );
             result.add(outputGenerator);
         }

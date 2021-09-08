@@ -23,9 +23,11 @@ import org.apache.commons.io.FileUtils;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSources;
 import org.apache.freemarker.generator.base.output.OutputGenerator;
+import org.apache.freemarker.generator.base.output.OutputGenerator.SeedType;
 import org.apache.freemarker.generator.base.template.TemplateOutput;
 import org.apache.freemarker.generator.base.template.TemplateSource;
 import org.apache.freemarker.generator.base.util.ListUtils;
+import org.apache.freemarker.generator.base.util.Validate;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -106,11 +108,13 @@ public class FreeMarkerTask implements Callable<Integer> {
     }
 
     private static DataSources toDataSources(OutputGenerator outputGenerator, List<DataSource> sharedDataSources) {
-        // TODO FREEMARKER-188 06.09.2021 sgoeschl - make this more explicit
-        if (outputGenerator.getDataSources().isEmpty()) {
-            return new DataSources(ListUtils.concatenate(outputGenerator.getDataSources(), sharedDataSources));
+        final List<DataSource> dataSources = outputGenerator.getDataSources();
+        if (outputGenerator.getSeedType() == SeedType.TEMPLATE) {
+            return new DataSources(ListUtils.concatenate(dataSources, sharedDataSources));
         } else {
-            return new DataSources(outputGenerator.getDataSources());
+            // Since every data source shall generate an output there can be only 1 datasource supplied
+            Validate.isTrue(dataSources.size() == 1, "One data source expected for generation driven by data sources");
+            return new DataSources(dataSources);
         }
     }
 

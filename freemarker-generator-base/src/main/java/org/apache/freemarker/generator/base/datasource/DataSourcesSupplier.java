@@ -112,13 +112,13 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
     }
 
     private static List<DataSource> resolveFileOrDirectory(String source, String include, String exclude, Charset charset) {
-        final NamedUri namedUri = NamedUriStringParser.parse(source);
-        final String path = namedUri.getFile().getPath();
-        final String group = namedUri.getGroupOrDefault(DEFAULT_GROUP);
-        final Charset currCharset = getCharsetOrDefault(namedUri, charset);
-        final Map<String, String> parameters = namedUri.getParameters();
+        final NamedUri sourceUri = NamedUriStringParser.parse(source);
+        final String path = sourceUri.getFile().getPath();
+        final String group = sourceUri.getGroupOrDefault(DEFAULT_GROUP);
+        final Charset currCharset = getCharsetOrDefault(sourceUri, charset);
+        final Map<String, String> parameters = sourceUri.getParameters();
         return fileSupplier(path, include, exclude).get().stream()
-                .map(file -> fromFile(namedUri, getDataSourceName(namedUri, file), group, file, currCharset, parameters))
+                .map(file -> fromFile(sourceUri, getDataSourceName(sourceUri, file), group, file, currCharset, parameters))
                 .collect(toList());
     }
 
@@ -148,7 +148,6 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
                 .properties(properties)
                 .build();
     }
-
 
     private static RecursiveFileSupplier fileSupplier(String source, String include, String exclude) {
         return new RecursiveFileSupplier(singletonList(source), singletonList(include), singletonList(exclude));

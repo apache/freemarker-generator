@@ -36,7 +36,6 @@ import static org.apache.freemarker.generator.base.datasource.DataSourceFactory.
 import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_TEXT_HTML;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class DataSourceTest {
@@ -55,7 +54,7 @@ public class DataSourceTest {
             assertEquals("", dataSource.getBaseName());
             assertEquals("", dataSource.getExtension());
             assertTrue(dataSource.getUri().toString().startsWith("string:///"));
-            assertEquals(".", dataSource.getRelativeFilePath());
+            assertEquals("", dataSource.getRelativeFilePath());
             assertEquals(UTF_8, dataSource.getCharset());
             assertEquals("text/plain", dataSource.getContentType());
             assertTrue(dataSource.getLength() > 0);
@@ -74,7 +73,7 @@ public class DataSourceTest {
             assertEquals("xml", dataSource.getExtension());
             assertEquals(ANY_FILE.toURI().toString(), dataSource.getUri().toString());
             assertEquals(ANY_CHAR_SET.name(), dataSource.getCharset().name());
-            assertEquals(".", dataSource.getRelativeFilePath());
+            assertEquals("", dataSource.getRelativeFilePath());
             assertEquals("application/xml", dataSource.getContentType());
             assertTrue(dataSource.getLength() > 0);
             assertFalse(dataSource.getText().isEmpty());
@@ -94,7 +93,7 @@ public class DataSourceTest {
             assertEquals("", dataSource.getBaseName());
             assertEquals("", dataSource.getExtension());
             assertEquals("https://www.google.com/?foo=bar", dataSource.getUri().toString());
-            assertNull(dataSource.getRelativeFilePath());
+            assertEquals("", dataSource.getRelativeFilePath());
             assertEquals("text/html; charset=ISO-8859-1", dataSource.getContentType());
             assertEquals(MIME_TEXT_HTML, dataSource.getMimeType());
             assertEquals("ISO-8859-1", dataSource.getCharset().name());
@@ -137,7 +136,7 @@ public class DataSourceTest {
             assertEquals("", metadata.get("extension"));
             assertEquals("", metadata.get("fileName"));
             assertEquals("/", metadata.get("filePath"));
-            assertEquals(".", metadata.get("relativeFilePath"));
+            assertEquals("", metadata.get("relativeFilePath"));
 
             assertEquals("default", metadata.get("group"));
             assertEquals("stdin", metadata.get("name"));

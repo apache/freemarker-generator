@@ -31,6 +31,11 @@ import static java.util.Objects.requireNonNull;
  */
 public class OutputGenerator {
 
+    public enum SeedType {
+        DATASOURCE,
+        TEMPLATE
+    }
+
     /** Source of template */
     private final TemplateSource templateSource;
 
@@ -43,15 +48,19 @@ public class OutputGenerator {
     /** Variables (as a map) used for the transformation */
     private final Map<String, Object> variables;
 
+    private final SeedType seedType;
+
     public OutputGenerator(
             TemplateSource templateSource,
             TemplateOutput templateOutput,
             List<DataSource> dataSources,
-            Map<String, Object> variables) {
+            Map<String, Object> variables,
+            SeedType seedType) {
         this.templateSource = requireNonNull(templateSource);
         this.templateOutput = requireNonNull(templateOutput);
         this.dataSources = requireNonNull(dataSources);
         this.variables = requireNonNull(variables);
+        this.seedType = requireNonNull(seedType);
     }
 
     public TemplateSource getTemplateSource() {
@@ -70,6 +79,10 @@ public class OutputGenerator {
         return variables;
     }
 
+    public SeedType getSeedType() {
+        return seedType;
+    }
+
     @Override
     public String toString() {
         return "OutputGenerator{" +
@@ -77,6 +90,7 @@ public class OutputGenerator {
                 ", templateOutput=" + templateOutput +
                 ", dataSources=" + dataSources +
                 ", variables=" + variables +
+                ", seedType=" + seedType +
                 '}';
     }
 }

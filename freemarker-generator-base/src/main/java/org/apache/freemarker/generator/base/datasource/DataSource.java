@@ -133,7 +133,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
         this.group = StringUtils.emptyToNull(group);
         this.uri = requireNonNull(uri);
         this.dataSource = requireNonNull(dataSource);
-        this.relativeFilePath = relativeFilePath != null ? relativeFilePath : ".";
+        this.relativeFilePath = relativeFilePath != null ? relativeFilePath : "";
         this.contentType = contentType;
         this.charset = charset;
         this.properties = properties != null ? new HashMap<>(properties) : new HashMap<>();

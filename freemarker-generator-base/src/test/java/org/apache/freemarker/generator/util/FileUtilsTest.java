@@ -11,6 +11,7 @@ public class FileUtilsTest {
 
     @Test
     public void shouldGetRelativePathForSameDirectory() {
+        assertEquals("", FileUtils.getRelativePath(new File("/"), new File("/pom.xml")));
         assertEquals("", FileUtils.getRelativePath(new File("."), new File("pom.xml")));
         assertEquals("", FileUtils.getRelativePath(new File("."), new File("./pom.xml")));
         assertEquals("", FileUtils.getRelativePath(new File("."), new File("./pom.xml")));
