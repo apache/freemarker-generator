@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file. We try to a
 ## 0.1.0-SNAPSHOT
 
 ### Added
+* Use `-Xverify:none -XX:TieredStopAtLevel=1` to improve startup time of CLI
+* [FREEMARKER-188] Support an output "generation" mode
 * [FREEMARKER-181] Support custom pattern definitions for Grok tool
 * Parse a list of `DataSources` for the various tools
 * [FREEMARKER-161] Allow multiple transformations on the CLI
@@ -82,4 +84,5 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-176]: https://issues.apache.org/jira/browse/FREEMARKER-176
 [FREEMARKER-181]: https://issues.apache.org/jira/browse/FREEMARKER-181
 [FREEMARKER-182]: https://issues.apache.org/jira/browse/FREEMARKER-182
+[FREEMARKER-188]: https://issues.apache.org/jira/browse/FREEMARKER-188
 
