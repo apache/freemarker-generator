@@ -16,10 +16,10 @@
  */
 package org.apache.freemarker.generator.cli.config;
 
-import org.apache.freemarker.generator.base.FreeMarkerConstants.Mode;
+import org.apache.freemarker.generator.base.FreeMarkerConstants.SeedType;
 import org.apache.freemarker.generator.base.output.OutputGenerator;
-import org.apache.freemarker.generator.cli.config.output.AggregatingOutputGenerator;
-import org.apache.freemarker.generator.cli.config.output.GeneratingOutputGenerator;
+import org.apache.freemarker.generator.cli.config.output.DataSourceSeedingOutputGenerator;
+import org.apache.freemarker.generator.cli.config.output.TemplateSeedingOutputGenerator;
 import org.apache.freemarker.generator.cli.picocli.OutputGeneratorDefinition;
 
 import java.util.Collection;
@@ -27,37 +27,35 @@ import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static java.util.Objects.requireNonNull;
+
 /**
  * Supplies a list of list of <code>OutputGenerators</code> based on the user input.
  */
 public class OutputGeneratorsSupplier implements Supplier<List<OutputGenerator>> {
 
     private final Settings settings;
-    private final AggregatingOutputGenerator aggregatingOutputGenerator;
-    private final GeneratingOutputGenerator generatingOutputGenerator;
 
     public OutputGeneratorsSupplier(Settings settings) {
-        this.settings = settings;
-        aggregatingOutputGenerator = new AggregatingOutputGenerator(settings);
-        generatingOutputGenerator = new GeneratingOutputGenerator(settings);
+        this.settings = requireNonNull(settings);
     }
 
     @Override
     public List<OutputGenerator> get() {
         return settings.getOutputGeneratorDefinitions().stream()
-                .map(this::outputGenerator)
+                .map(definition -> outputGenerator(settings, definition))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
 
-    private List<OutputGenerator> outputGenerator(OutputGeneratorDefinition definition) {
-        final String mode = definition.getOutputGeneratorMode();
-        if (Mode.AGGREGATE.equalsIgnoreCase(mode)) {
-            return aggregatingOutputGenerator.apply(definition);
-        } else if (Mode.GENERATE.equalsIgnoreCase(mode)) {
-            return generatingOutputGenerator.apply(definition);
+    private List<OutputGenerator> outputGenerator(Settings settings, OutputGeneratorDefinition definition) {
+        final String seedType = definition.getOutputSeedType();
+        if (SeedType.TEMPLATE.equalsIgnoreCase(seedType)) {
+            return new TemplateSeedingOutputGenerator(settings).apply(definition);
+        } else if (SeedType.DATASOURCE.equalsIgnoreCase(seedType)) {
+            return new DataSourceSeedingOutputGenerator(settings).apply(definition);
         } else {
-            throw new RuntimeException("Unknown output generator mode:" + mode);
+            throw new RuntimeException("Unknown seed type:" + seedType);
         }
     }
 }

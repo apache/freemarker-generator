@@ -18,7 +18,7 @@ package org.apache.freemarker.generator.cli.picocli;
 
 import picocli.CommandLine.Option;
 
-public class TemplateOutputMapperDefinition {
+public class OutputMapperDefinition {
 
     @Option(names = { "--output-mapper" }, description = "maps the name of the output file")
     public String outputMapper;

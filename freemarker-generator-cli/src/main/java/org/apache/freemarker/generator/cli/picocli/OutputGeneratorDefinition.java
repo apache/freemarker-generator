@@ -16,7 +16,7 @@
  */
 package org.apache.freemarker.generator.cli.picocli;
 
-import org.apache.freemarker.generator.base.FreeMarkerConstants.Mode;
+import org.apache.freemarker.generator.base.FreeMarkerConstants.SeedType;
 import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.ParameterException;
@@ -25,6 +25,9 @@ import java.util.List;
 
 import static java.util.Collections.emptyList;
 
+/**
+ * Collects the setting for an output generator.
+ */
 public class OutputGeneratorDefinition {
 
     @ArgGroup(multiplicity = "1")
@@ -37,16 +40,16 @@ public class OutputGeneratorDefinition {
     public TemplateOutputDefinition templateOutputDefinition;
 
     @ArgGroup(exclusive = false)
-    public TemplateOutputMapperDefinition templateOutputMapperDefinition;
-
-    @ArgGroup(exclusive = false)
     public DataSourceDefinition dataSourceDefinition;
 
     @ArgGroup(exclusive = false)
     public DataModelDefinition dataModelDefinition;
 
     @ArgGroup(exclusive = false)
-    public OutputGeneratorModeDefinition outputGeneratorModeDefinition;
+    public OutputSeedDefinition outputSeedDefinition;
+
+    @ArgGroup(exclusive = false)
+    public OutputMapperDefinition outputMapperDefinition;
 
     public void validate(CommandLine commandLine) {
         if (templateSourceDefinition == null) {
@@ -106,13 +109,16 @@ public class OutputGeneratorDefinition {
                 !getTemplateSourceFilterDefinition().templateExcludePatterns.isEmpty();
     }
 
-    public String getOutputGeneratorMode() {
-        if (outputGeneratorModeDefinition != null &&
-                outputGeneratorModeDefinition.outputGeneratorMode != null) {
-            return outputGeneratorModeDefinition.outputGeneratorMode;
+    public String getOutputSeedType() {
+        if (outputSeedDefinition != null && outputSeedDefinition.type != null) {
+            return outputSeedDefinition.type;
         } else {
-            return Mode.AGGREGATE;
+            return SeedType.TEMPLATE;
         }
+    }
+
+    public String getOutputMapper() {
+        return (outputMapperDefinition != null) ? outputMapperDefinition.outputMapper : null;
     }
 
     private static boolean isFileSource(String source) {

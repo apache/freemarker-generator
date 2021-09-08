@@ -22,7 +22,6 @@ import org.apache.freemarker.generator.base.output.OutputGenerator.SeedType;
 import org.apache.freemarker.generator.base.template.TemplateOutput;
 import org.apache.freemarker.generator.base.template.TemplateSource;
 import org.apache.freemarker.generator.base.util.ListUtils;
-import org.apache.freemarker.generator.base.util.StringUtils;
 import org.apache.freemarker.generator.base.util.Validate;
 import org.apache.freemarker.generator.cli.config.Settings;
 import org.apache.freemarker.generator.cli.config.Suppliers;
@@ -40,31 +39,35 @@ import java.util.function.Function;
 
 import static java.util.Collections.singletonList;
 
-public class GeneratingOutputGenerator
+/**
+ * Generates an <code>OutputGenerator</code> per <code>DataSource</code>.
+ */
+public class DataSourceSeedingOutputGenerator
         extends AbstractOutputGenerator
         implements Function<OutputGeneratorDefinition, List<OutputGenerator>> {
 
     private final Settings settings;
 
-    public GeneratingOutputGenerator(Settings settings) {
+    public DataSourceSeedingOutputGenerator(Settings settings) {
         this.settings = settings;
     }
 
     @Override
-    public List<OutputGenerator> apply(OutputGeneratorDefinition definition) {
-        Validate.notNull(definition, "definition must not be null");
+    public List<OutputGenerator> apply(OutputGeneratorDefinition outputGeneratorDefinition) {
+        Validate.notNull(outputGeneratorDefinition, "outputGeneratorDefinition must not be null");
 
         final List<OutputGenerator> result = new ArrayList<>();
-        final TemplateSourceDefinition templateSourceDefinition = definition.getTemplateSourceDefinition();
-        final TemplateOutputDefinition templateOutputDefinition = definition.getTemplateOutputDefinition();
-        final Map<String, Object> dataModels = super.dataModels(definition);
-        final List<DataSource> dataSources = super.dataSources(settings, definition);
+        final TemplateSourceDefinition templateSourceDefinition = outputGeneratorDefinition.getTemplateSourceDefinition();
+        final TemplateOutputDefinition templateOutputDefinition = outputGeneratorDefinition.getTemplateOutputDefinition();
+        final Map<String, Object> dataModels = super.dataModels(outputGeneratorDefinition);
+        final List<DataSource> dataSources = super.dataSources(settings, outputGeneratorDefinition);
         final List<DataSource> sharedDataSources = Suppliers.sharedDataSourcesSupplier(settings).get();
         final List<DataSource> combinedDataSources = ListUtils.concatenate(dataSources, sharedDataSources);
         final TemplateSource templateSource = TemplateSourceFactory.create(templateSourceDefinition, settings.getTemplateEncoding());
+        final DataSourceSeedingOutputMapper outputMapper = outputMapper(outputGeneratorDefinition.getOutputMapper());
 
         for (DataSource dataSource : combinedDataSources) {
-            final TemplateOutput templateOutput = templateOutput(templateOutputDefinition, settings, dataSource);
+            final TemplateOutput templateOutput = templateOutput(templateOutputDefinition, settings, dataSource, outputMapper);
             final OutputGenerator outputGenerator = new OutputGenerator(
                     templateSource,
                     templateOutput,
@@ -78,9 +81,9 @@ public class GeneratingOutputGenerator
         return result;
     }
 
-    private TemplateOutput templateOutput(TemplateOutputDefinition templateOutputDefinition, Settings settings, DataSource dataSource) {
+    private TemplateOutput templateOutput(TemplateOutputDefinition templateOutputDefinition, Settings settings, DataSource dataSource, DataSourceSeedingOutputMapper outputMapper) {
         final Charset outputEncoding = settings.getOutputEncoding();
-        final File templateOutputFile = templateOutputFile(templateOutputDefinition, dataSource);
+        final File templateOutputFile = templateOutputFile(templateOutputDefinition, dataSource, outputMapper);
         if (settings.getCallerSuppliedWriter() != null) {
             return TemplateOutput.fromWriter(settings.getCallerSuppliedWriter());
         } else if (templateOutputFile != null) {
@@ -90,19 +93,20 @@ public class GeneratingOutputGenerator
         }
     }
 
-    private File templateOutputFile(TemplateOutputDefinition templateOutputDefinition, DataSource dataSource) {
+    private File templateOutputFile(
+            TemplateOutputDefinition templateOutputDefinition,
+            DataSource dataSource,
+            DataSourceSeedingOutputMapper outputMapper) {
+
         if (templateOutputDefinition == null || !templateOutputDefinition.hasOutput()) {
             return null;
         }
 
         final File outputDirectory = new File(templateOutputDefinition.outputs.get(0));
-        final String relativeFilePath = dataSource.getRelativeFilePath();
-        final String fileName = dataSource.getBaseName() + ".html";
+        return outputMapper.map(outputDirectory, dataSource);
+    }
 
-        if (StringUtils.isEmpty(relativeFilePath)) {
-            return new File(outputDirectory, fileName);
-        } else {
-            return new File(outputDirectory, relativeFilePath + "/" + fileName);
-        }
+    private DataSourceSeedingOutputMapper outputMapper(String template) {
+        return new DataSourceSeedingOutputMapper(template);
     }
 }

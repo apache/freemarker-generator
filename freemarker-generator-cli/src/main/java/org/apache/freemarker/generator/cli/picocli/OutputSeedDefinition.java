@@ -19,10 +19,10 @@ package org.apache.freemarker.generator.cli.picocli;
 import picocli.CommandLine.Option;
 
 /**
- * Aggregate multiple data source into one output file or generate an output file per data source.
+ * Seeding of template output.
  */
-public class OutputGeneratorModeDefinition {
+public class OutputSeedDefinition {
 
-    @Option(names = { "-M", "--output-mode" }, defaultValue = "aggregate", description = "Output mode: [generate|aggregate]")
-    public String outputGeneratorMode;
+    @Option(names = { "--seed" }, defaultValue = "template", description = "seed mode: [template|datasource]")
+    public String type;
 }

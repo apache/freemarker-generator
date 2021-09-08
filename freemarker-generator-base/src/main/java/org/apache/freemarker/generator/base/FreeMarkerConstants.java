@@ -93,13 +93,13 @@ public class FreeMarkerConstants {
         public static final String FREEMARKER_USER_PARAMETERS = "freemarker.user.parameters";
     }
 
-    public static class Mode {
+    public static class SeedType {
 
-        private Mode() {
+        private SeedType() {
         }
 
-        public static final String AGGREGATE = "aggregate";
-        public static final String GENERATE = "generate";
+        public static final String TEMPLATE = "template";
+        public static final String DATASOURCE = "datasource";
     }
 
     public static class SystemProperties {
