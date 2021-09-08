@@ -16,6 +16,7 @@
  */
 package org.apache.freemarker.generator.cli.config;
 
+import org.apache.freemarker.generator.base.FreeMarkerConstants;
 import org.apache.freemarker.generator.base.FreeMarkerConstants.Model;
 import org.apache.freemarker.generator.base.util.LocaleUtils;
 import org.apache.freemarker.generator.base.util.NonClosableWriterWrapper;
@@ -36,8 +37,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.emptyList;
 import static java.util.Objects.requireNonNull;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.Configuration.LOCALE_KEY;
-import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_CHARSET;
-import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_LOCALE;
 
 /**
  * Capture all the settings required for rendering a FreeMarker template.
@@ -275,11 +274,11 @@ public class Settings {
             this.sourceIncludePattern = null;
             this.sourceExcludePattern = null;
             this.configuration = new Properties();
-            this.locale = DEFAULT_LOCALE.toString();
+            this.locale = FreeMarkerConstants.DEFAULT_LOCALE.toString();
             this.parameters = new HashMap<>();
             this.systemProperties = new Properties();
-            this.setInputEncoding(DEFAULT_CHARSET.name());
-            this.setOutputEncoding(DEFAULT_CHARSET.name());
+            this.setInputEncoding(FreeMarkerConstants.DEFAULT_CHARSET.name());
+            this.setOutputEncoding(FreeMarkerConstants.DEFAULT_CHARSET.name());
         }
 
         public SettingsBuilder setCommandLineArgs(String[] args) {
@@ -406,7 +405,7 @@ public class Settings {
         private String getDefaultLocale() {
             return configuration.getProperty(
                     LOCALE_KEY,
-                    System.getProperty(LOCALE_KEY, DEFAULT_LOCALE.toString()));
+                    System.getProperty(LOCALE_KEY, FreeMarkerConstants.DEFAULT_LOCALE.toString()));
         }
     }
 }

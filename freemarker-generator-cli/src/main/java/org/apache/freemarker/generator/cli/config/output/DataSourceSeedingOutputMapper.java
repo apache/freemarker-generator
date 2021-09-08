@@ -17,7 +17,7 @@ public class DataSourceSeedingOutputMapper {
         final String relativeFilePath = dataSource.getRelativeFilePath();
         final String fileName = expand(template, dataSource);
 
-        return (StringUtils.isEmpty(relativeFilePath)) ?
+        return StringUtils.isEmpty(relativeFilePath) ?
                 new File(outputDirectory, fileName) :
                 new File(new File(outputDirectory, relativeFilePath), fileName);
     }
