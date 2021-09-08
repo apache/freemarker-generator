@@ -46,7 +46,11 @@
                 <configuration>
                     <repositoryLayout>flat</repositoryLayout>
                     <repositoryName>lib</repositoryName>
-                    <extraJvmArguments>-Xms64m -Xmx512m</extraJvmArguments>
+                    <!--
+                        See https://ryanharrison.co.uk/2018/04/29/faster-java-startup-time.html
+                        "-Xverify:none -XX:TieredStopAtLevel=1" improves startup time by 40%
+                     -->
+                    <extraJvmArguments>-Xms64m -Xmx512m -Xverify:none -XX:TieredStopAtLevel=1</extraJvmArguments>
                     <endorsedDir>endorsed</endorsedDir>
                     <useWildcardClassPath>true</useWildcardClassPath>
                     <configurationDirectory>config</configurationDirectory>
