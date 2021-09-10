@@ -60,25 +60,28 @@ import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_APPLICATI
 public class DataSource implements Closeable, javax.activation.DataSource {
 
     public static final String METADATA_BASE_NAME = "baseName";
+    public static final String METADATA_CHARSET = "charset";
     public static final String METADATA_EXTENSION = "extension";
     public static final String METADATA_FILE_NAME = "fileName";
     public static final String METADATA_FILE_PATH = "filePath";
-    public static final String METADATA_RELATIVE_FILE_PATH = "relativeFilePath";
     public static final String METADATA_GROUP = "group";
-    public static final String METADATA_NAME = "name";
-    public static final String METADATA_URI = "uri";
     public static final String METADATA_MIME_TYPE = "mimeType";
+    public static final String METADATA_NAME = "name";
+    public static final String METADATA_RELATIVE_FILE_PATH = "relativeFilePath";
+    public static final String METADATA_URI = "uri";
 
+    /** List of metadata keys */
     public static final List<String> METADATA_KEYS = Arrays.asList(
             METADATA_BASE_NAME,
+            METADATA_CHARSET,
             METADATA_EXTENSION,
             METADATA_FILE_NAME,
             METADATA_FILE_PATH,
-            METADATA_RELATIVE_FILE_PATH,
             METADATA_GROUP,
+            METADATA_MIME_TYPE,
             METADATA_NAME,
-            METADATA_URI,
-            METADATA_MIME_TYPE
+            METADATA_RELATIVE_FILE_PATH,
+            METADATA_URI
     );
 
     /** Human-readable name of the data source */
@@ -191,6 +194,16 @@ public class DataSource implements Closeable, javax.activation.DataSource {
      */
     public String getFileName() {
         return isFileDataSource() ? FilenameUtils.getName(dataSource.getName()) : "";
+    }
+
+    /**
+     * Get the path from the underlying "FileDataSource". All
+     * other data sources will return an empty string.
+     *
+     * @return file name or empty string
+     */
+    public String getFilePath() {
+        return isFileDataSource() ? FilenameUtils.getFullPathNoEndSeparator(uri.getPath()) : "";
     }
 
     /**
@@ -363,12 +376,14 @@ public class DataSource implements Closeable, javax.activation.DataSource {
         switch (key) {
             case METADATA_BASE_NAME:
                 return getBaseName();
+            case METADATA_CHARSET:
+                return getCharset().name();
             case METADATA_EXTENSION:
                 return getExtension();
             case METADATA_FILE_NAME:
                 return getFileName();
             case METADATA_FILE_PATH:
-                return FilenameUtils.getFullPathNoEndSeparator(uri.getPath());
+                return getFilePath();
             case METADATA_RELATIVE_FILE_PATH:
                 return getRelativeFilePath();
             case METADATA_GROUP:
@@ -456,7 +471,6 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     private boolean isByteArrayDataSource() {
         return dataSource instanceof ByteArrayDataSource;
     }
-
 
     public static final class DataSourceBuilder {
         private String name;

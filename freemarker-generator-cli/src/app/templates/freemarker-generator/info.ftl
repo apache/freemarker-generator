@@ -50,21 +50,22 @@ FreeMarker Generator Data Model
 FreeMarker Generator Data Sources
 ==============================================================================
 <#if dataSources?has_content>
-<#list dataSources?values as ds>
+<#list dataSources?values as dataSource>
 
-DataSource #${ds?counter}
+DataSource #${dataSource?counter}
 ------------------------------------------------------------------------------
-name=${ds.name}
-group=${ds.group}
-contentType=${ds.contentType}
-fileName=${ds.fileName}
-baseName=${ds.baseName}
-extension=${ds.extension}
-relativeFilePath=${ds.relativeFilePath}
-charset=${ds.charset}
-mimeType=${ds.mimeType}
-uri=${ds.uri}
-length=${ds.length} Bytes
+name                  : ${dataSource.name}
+group                 : ${dataSource.group}
+contentType           : ${dataSource.contentType}
+fileName              : ${dataSource.fileName}
+baseName              : ${dataSource.baseName}
+extension             : ${dataSource.extension}
+relativeFilePath      : ${dataSource.relativeFilePath}
+charset               : ${dataSource.charset}
+mimeType              : ${dataSource.mimeType}
+uri                   : ${dataSource.uri}
+length                : ${dataSource.length} bytes
+metadata              : ${dataSource.metadata?size} entries
 </#list>
 <#else>
 
@@ -90,5 +91,5 @@ FreeMarker Generator Tools
 ==============================================================================
 
 <#list tools?keys?sort as name>
-- ${name?right_pad(20)} : ${tools[name]}
+- ${name?right_pad(19)} : ${tools[name]}
 </#list>

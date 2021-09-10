@@ -131,17 +131,18 @@ public class DataSourceTest {
         try (DataSource dataSource = stringDataSource()) {
             final Map<String, String> metadata = dataSource.getMetadata();
 
-            assertEquals(9, metadata.size());
+            assertEquals(10, metadata.size());
             assertEquals("", metadata.get("baseName"));
             assertEquals("", metadata.get("extension"));
             assertEquals("", metadata.get("fileName"));
-            assertEquals("/", metadata.get("filePath"));
+            assertEquals("", metadata.get("filePath"));
             assertEquals("", metadata.get("relativeFilePath"));
 
             assertEquals("default", metadata.get("group"));
             assertEquals("stdin", metadata.get("name"));
             assertTrue(metadata.get("uri").startsWith("string://"));
             assertEquals("text/plain", metadata.get("mimeType"));
+            assertEquals("UTF-8", metadata.get("charset"));
         }
     }
 
