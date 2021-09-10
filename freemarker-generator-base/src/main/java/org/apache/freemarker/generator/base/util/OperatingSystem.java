@@ -19,7 +19,7 @@ package org.apache.freemarker.generator.base.util;
 import java.util.Locale;
 
 /**
- * Helper class to detect the operting system (mostly Windows).
+ * Helper class to detect the operating system.
  */
 public class OperatingSystem {
     private static final String OS = System.getProperty("os.name", "unknown").toLowerCase(Locale.ROOT);

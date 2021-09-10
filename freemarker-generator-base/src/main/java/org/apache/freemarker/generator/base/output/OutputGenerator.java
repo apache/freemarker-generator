@@ -48,6 +48,7 @@ public class OutputGenerator {
     /** Variables (as a map) used for the transformation */
     private final Map<String, Object> variables;
 
+    /** Seed type of "DATASOURCE* only takes a single data soure */
     private final SeedType seedType;
 
     public OutputGenerator(

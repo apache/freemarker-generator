@@ -50,7 +50,7 @@ import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model;
  */
 public class FreeMarkerTask implements Callable<Integer> {
 
-    private static final int SUCCESS = 0;
+        private static final int SUCCESS_CODE = 0;
 
     private final Supplier<Configuration> configurationSupplier;
     private final Supplier<List<OutputGenerator>> outputGeneratorsSupplier;
@@ -85,7 +85,7 @@ public class FreeMarkerTask implements Callable<Integer> {
                 sharedDataSources,
                 sharedParameters));
 
-        return SUCCESS;
+        return SUCCESS_CODE;
     }
 
     private void process(Configuration configuration,
@@ -102,19 +102,35 @@ public class FreeMarkerTask implements Callable<Integer> {
         try (Writer writer = writer(templateOutput)) {
             final Template template = template(configuration, templateSource);
             template.process(templateDataModel, writer);
-        } catch (TemplateException | IOException e) {
+        } catch (TemplateException | IOException | RuntimeException e) {
             throw new RuntimeException("Failed to process template: " + templateSource.getName(), e);
         }
     }
 
+    /**
+     * Merge the <code>DataSourced</code>.
+     * The data sources to be used are determined by the seed type
+     * <ul>
+     *     <li>TEMPLATE: aggregates a list of data source</li>
+     *     <li>DATASOURCE: only takes a single data source</li>
+     * </ul>
+     *
+     * @param outputGenerator   current output generator
+     * @param sharedDataSources shared data sources
+     * @return <code>DataSources</code> to be passed to FreeMarker
+     */
     private static DataSources toDataSources(OutputGenerator outputGenerator, List<DataSource> sharedDataSources) {
         final List<DataSource> dataSources = outputGenerator.getDataSources();
-        if (outputGenerator.getSeedType() == SeedType.TEMPLATE) {
+        final SeedType seedType = outputGenerator.getSeedType();
+
+        if (seedType == SeedType.TEMPLATE) {
             return new DataSources(ListUtils.concatenate(dataSources, sharedDataSources));
-        } else {
-            // Since every data source shall generate an output there can be only 1 datasource supplied
+        } else if (seedType == SeedType.DATASOURCE) {
+            // Since every data source shall generate an output there can be only 1 datasource supplied.
             Validate.isTrue(dataSources.size() == 1, "One data source expected for generation driven by data sources");
             return new DataSources(dataSources);
+        } else {
+            throw new IllegalArgumentException("Don't know how to handle the seed type: " + seedType);
         }
     }
 
