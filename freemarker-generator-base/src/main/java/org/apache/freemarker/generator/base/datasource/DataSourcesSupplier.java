@@ -169,7 +169,7 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
         if (namedUri.hasName()) {
             return namedUri.getName();
         } else {
-            return UriUtils.toStringWithoutFragment(file.toURI());
+            return file.getAbsolutePath();
         }
     }
 }

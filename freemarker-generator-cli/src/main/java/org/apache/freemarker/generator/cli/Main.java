@@ -147,7 +147,7 @@ public class Main implements Callable<Integer> {
 
     private Integer onCall() {
         final String currentConfigFile = isNotEmpty(configFile) ? configFile : getDefaultConfigFileName();
-        final Properties configuration = loadFreeMarkerCliConfiguration(currentConfigFile);
+        final Properties configuration = loadFreeMarkerGeneratorConfiguration(currentConfigFile);
         final List<File> templateDirectories = getTemplateDirectories(templateDir);
         final Settings settings = settings(configuration, templateDirectories, outputGeneratorDefinitions);
 
@@ -229,7 +229,7 @@ public class Main implements Callable<Integer> {
         return isNotEmpty(appHome) ? new File(appHome, Configuration.CONFIG_FILE_NAME).getAbsolutePath() : null;
     }
 
-    private static Properties loadFreeMarkerCliConfiguration(String fileName) {
+    private static Properties loadFreeMarkerGeneratorConfiguration(String fileName) {
         if (isEmpty(fileName)) {
             return new Properties();
         }

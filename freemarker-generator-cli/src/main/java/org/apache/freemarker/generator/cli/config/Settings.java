@@ -85,10 +85,10 @@ public class Settings {
     /** Read from stdin? */
     private final boolean isReadFromStdin;
 
-    /** User-supplied parameters */
+    /** User-supplied parameters available for template processing */
     private final Map<String, Object> userParameters;
 
-    /** User-supplied system properties */
+    /** User-supplied properties to be copied to global system properties */
     private final Properties userSystemProperties;
 
     /** Caller-supplied writer */
