@@ -37,13 +37,13 @@ Iterate Over Names & DataSources
     ${name} => ${dataSource.uri}<#lt>
 </#list>
 
-<#if dataSources?has_content>
-    <#list dataSources?values as dataSource>
+<#list dataSources?values>
+    <#items as dataSource>
         <@writeDataSource dataSource/>
-    </#list>
+    </#items>
 <#else>
     No data sources found ...
-</#if>
+</#list>
 
 <#macro writeDataSource dataSource>
 
