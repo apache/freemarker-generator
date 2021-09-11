@@ -1,0 +1,13 @@
+2021-05-18 21:00:32,124 INFO  [aa.bb.ccc] (Thread-97) FinancialAdviceServiceImpl.createPostingLines() : 123456789012345678
+2021-05-18 21:00:32,124 INFO  [aa.bb.ccc] (Thread-97) FinancialAdviceDAO.getCountryCode() countryCode : 40
+2021-05-18 21:00:32,124 INFO  [aa.bb.ccc] (Thread-97) FinancialAdviceServiceImpl.createPostingLines() :  123456789012345678
+2021-05-18 21:00:32,124 INFO  [aa.bb.ccc] (Thread-97) AuthorizationDAO.insertAuthorization() Start ...
+2021-05-18 21:00:32,124 INFO  [aa.bb.ccc] (Thread-97) FinancialAdviceServiceImpl.processFinancialAdvice() successfully insert before AUTHORIZATIONS: true
+2021-05-18 21:00:32,124 INFO  [aa.bb.ccc] (Thread-97) AuthorizationDAO.insertInterface() Start ...
+2021-05-18 21:00:32,124 INFO  [aa.bb.ccc] (Thread-97) FinancialAdviceServiceImpl.processFinancialAdvice() successfully inserted into DB: true
+2021-05-18 21:00:32,124 INFO  [aa.bb.ccc] (Thread-97) responding message 1230 data
+2021-05-18 21:00:32,124 INFO  [aa.bb.ccc] (Thread-97) no remote configuration available, will create local context
+2021-05-18 21:00:32,140 INFO  [aa.bb.ccc] (Thread-97) writing bytes of message 1230
+2021-05-18 21:00:32,140 INFO  [aa.bb.ccc] (Thread-97) message response handled in: 162 ms; message counter: 2049; total message counter: 7095
+2021-05-18 21:00:32,187 INFO  [aa.bb.ccc] (Thread-97) no remote configuration available, will create local context
+2021-05-18 21:00:32,187 INFO  [aa.bb.ccc] (Thread-97) no remote configuration available, will create local context

@@ -27,7 +27,6 @@ import java.util.Map;
 
 /**
  * Captures the information of a user-supplied "named URI".
- * <p>
  * <ul>
  *     <li><code>name</code> is optional</li>
  *     <li><code>group</code> is optional</li>

@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file. We try to a
 ## 0.1.0-SNAPSHOT
 
 ### Added
+* [FREEMARKER-181] Support custom pattern definitions for Grok tool
 * Parse a list of `DataSources` for the various tools
 * [FREEMARKER-161] Allow multiple transformations on the CLI
 * [FREEMARKER-163] Integrate Java Faker library for test data generation
@@ -20,6 +21,7 @@ All notable changes to this project will be documented in this file. We try to a
 * [FREEMARKER-129] Provide a `toString()` method for all tools
 
 ### Changed
+* [FREEMARKER-182] Upgrade to Apache FreeMarker 2.3.31
 * [FREEMARKER-175] Use latest FreeMarker version
 * [FREEMARKER-173] Allow to pass arbitrary key/value pairs to DataSource when using NamedURIs
 * [FREEMARKER-172] Use lower-case keys for DataSource metadata map
@@ -78,3 +80,6 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-174]: https://issues.apache.org/jira/browse/FREEMARKER-174
 [FREEMARKER-175]: https://issues.apache.org/jira/browse/FREEMARKER-175
 [FREEMARKER-176]: https://issues.apache.org/jira/browse/FREEMARKER-176
+[FREEMARKER-181]: https://issues.apache.org/jira/browse/FREEMARKER-181
+[FREEMARKER-182]: https://issues.apache.org/jira/browse/FREEMARKER-182
+

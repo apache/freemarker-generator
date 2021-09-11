@@ -57,13 +57,10 @@ public class ConverterUtils {
                 return builder.addLongColumn(columnName);
             case "java.lang.Short":
                 return builder.addShortColumn(columnName);
-            case "java.lang.String":
-                return builder.addStringColumn(columnName);
-            case "java.time.LocalDate":
-                return builder.addStringColumn(columnName);
-            case "java.time.LocalTime":
-                return builder.addStringColumn(columnName);
             case "java.util.Date":
+            case "java.time.LocalDate":
+            case "java.time.LocalTime":
+            case "java.lang.String":
                 return builder.addStringColumn(columnName);
             default:
                 throw new RuntimeException("Unable to add column for the following type: " + columnType.getName());

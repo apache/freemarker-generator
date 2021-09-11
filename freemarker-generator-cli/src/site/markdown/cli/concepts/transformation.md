@@ -12,7 +12,7 @@ The `freemarker-generator` generates text output based on processing FreeMarker 
 * When the output is written to a directory
     * the structure of the input directory is preserved
     * any `ftl` file extension is removed
-* Positional command line arguments are interpreted as `data sources` (or directories) and accessible by a `output generators`   
+* Positional command line arguments are interpreted as `data sources` (or directories) and accessible by a all `output generators`   
 
 ### Examples
 
@@ -69,14 +69,19 @@ target
         `-- nginx.conf
 ```
 
-Transforming multiple templates and data sources to multiple output files
+Defining multiple transformation on the command line can be clumsy but [Picolic's @-Files](https://picocli.info/#AtFiles) can help - the following `@-File` defined, e.g. `@examples.args`
 
 ```
-freemarker-generator \
--t freemarker-generator/yaml/json/transform.ftl -s examples/data/yaml/customer.yaml -o customer.json \
--t freemarker-generator/yaml/json/transform.ftl -s examples/data/yaml/swagger-spec.yaml -o swagger-spec.json
+#############################################################################
+# CSV
+#############################################################################
 
-> ls -l *.json
--rw-r--r--  1 sgoeschl  staff   332B Jan  5 21:30 customer.json
--rw-r--r--  1 sgoeschl  staff    25K Jan  5 21:30 swagger-spec.json
-```  
+-t freemarker-generator/csv/html/transform.ftl -s examples/data/csv/contract.csv -o target/out/contract.html
+-t freemarker-generator/csv/md/transform.ftl -s examples/data/csv/contract.csv -o target/out/contract.md
+```
+
+than multiple transformation can be invoked using the following command line
+
+```
+bin/freemarker-generator @examples.args 
+```

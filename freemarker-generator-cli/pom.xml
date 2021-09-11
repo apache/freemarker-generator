@@ -76,6 +76,8 @@
                                 <copy file="NOTICE" todir="./target/appassembler" />
                                 <copy file="./src/app/scripts/run-examples.bat" todir="./target/appassembler" />
                                 <copy file="./src/app/scripts/run-examples.sh" todir="./target/appassembler" />
+                                <copy file="./src/app/scripts/examples.args" todir="./target/appassembler" />
+                                <copy file="./src/app/scripts/examples-win.args" todir="./target/appassembler" />
                                 <copy todir="./target/appassembler/config">
                                     <fileset dir="src/app/config" />
                                 </copy>

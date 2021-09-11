@@ -1,7 +1,7 @@
 Apache FreeMarker Generator CLI
 =============================================================================
 
-This module provides provides the CLI for `Apache FreeMarker`.
+This module provides the CLI for `Apache FreeMarker`.
 
 * Requires JDK 1.8+ on Linux, Mac OSX and Windows
 * Add the bin/freemarker-generator or bin/freemarker-generator.bat to your PATH variable

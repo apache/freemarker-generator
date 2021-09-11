@@ -253,7 +253,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
         try {
             return dataSource.getInputStream();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to get input stream: " + toString(), e);
+            throw new RuntimeException("Failed to get input stream: " + this, e);
         }
     }
 
@@ -268,7 +268,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
             IOUtils.copy(is, writer, Charset.forName(charsetName));
             return writer.toString();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to get text: " + toString(), e);
+            throw new RuntimeException("Failed to get text: " + this, e);
         }
     }
 
@@ -294,7 +294,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
         try (InputStream inputStream = getUnsafeInputStream()) {
             return IOUtils.readLines(inputStream, charsetName);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to get lines: " + toString(), e);
+            throw new RuntimeException("Failed to get lines: " + this, e);
         }
     }
 
@@ -319,18 +319,14 @@ public class DataSource implements Closeable, javax.activation.DataSource {
      */
     public LineIterator getLineIterator(String charsetName) {
         Validate.notEmpty(charsetName, "No charset name provided");
-        try {
-            return closeables.add(IOUtils.lineIterator(getUnsafeInputStream(), Charset.forName(charsetName)));
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to create line iterator: " + toString(), e);
-        }
+        return closeables.add(IOUtils.lineIterator(getUnsafeInputStream(), Charset.forName(charsetName)));
     }
 
     public byte[] getBytes() {
         try (InputStream inputStream = getUnsafeInputStream()) {
             return IOUtils.toByteArray(inputStream);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to get bytes: " + toString(), e);
+            throw new RuntimeException("Failed to get bytes: " + this, e);
         }
     }
 
@@ -360,7 +356,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
             case METADATA_MIME_TYPE:
                 return getMimeType();
             default:
-                throw new IllegalArgumentException("Unknown metatdata key: " + key);
+                throw new IllegalArgumentException("Unknown metadata key: " + key);
         }
     }
 

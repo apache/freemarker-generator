@@ -37,9 +37,9 @@ REM =========================================================================
 echo "examples\templates\demo.ftl"
 %FREEMARKER_CMD% -t examples\templates\demo.ftl --output-encoding CP1252 -DfreemarkerGenerator.examples.deductSensitiveInformation=true  README.md > target\out\demo.txt
 
-#############################################################################
-# DataSources
-#############################################################################
+REM =========================================================================
+REM DataSources
+REM =========================================================================
 
 echo "examples\templates\datasources.ftl"
 %FREEMARKER_CMD% -t examples\templates\datasources.ftl -s :data=examples/data > target\out\datasources-01.txt
@@ -104,6 +104,9 @@ REM =========================================================================
 
 echo "examples\templates\accesslog\combined-access.ftl"
 %FREEMARKER_CMD% -t examples\templates\accesslog\combined-access.ftl examples\data\accesslog\combined-access.log > target\out\combined-access.log.txt
+
+echo "examples\templates\logs\csv\serverlog-to-csv.ftl"
+%FREEMARKER_CMD% -t examples\templates\logs\csv\serverlog-to-csv.ftl examples\data\logs > target\out\server.log.csv 
 
 REM =========================================================================
 REM Excel

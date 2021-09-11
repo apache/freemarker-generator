@@ -83,7 +83,7 @@ URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-ge
 URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/json/swagger-spec.json```
 ```
 
-Access to `stdin` is implemented as `DataSource` - please not that `stdin` is read lazily to cater for arbitrary large input data
+Access to `stdin` is implemented as `DataSource` - please note that `stdin` is read lazily to cater for arbitrary large input data
 
 ```
 cat examples/data/csv/contract.csv | bin/freemarker-generator -t freemarker-generator/info.ftl --stdin
@@ -157,7 +157,7 @@ selection of data sources (using Apache Commons IO wild-card matching)
 
 ### Using a DataSource
 
-In most cases the data source will passed to a tool but the are some useful operations available as shown below
+In most cases the data source will be passed to a tool, but there are some useful operations available as shown below
 
 ```text
 Invoke Arbitrary Methods On DataSource

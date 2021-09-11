@@ -105,6 +105,7 @@ public class ExamplesTest extends AbstractMainTest {
     @Test
     public void shouldRunGrokExamples() throws IOException {
         assertValid(execute("-t src/app/examples/templates/accesslog/combined-access.ftl src/app/examples/data/accesslog/combined-access.log"));
+        assertValid(execute("-t src/app/examples/templates/logs/csv/serverlog-to-csv.ftl src/app/examples/data/logs/server.01.log"));
     }
 
     @Test

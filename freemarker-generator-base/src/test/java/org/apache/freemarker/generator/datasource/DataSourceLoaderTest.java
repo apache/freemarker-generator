@@ -20,6 +20,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceLoader;
 import org.apache.freemarker.generator.base.datasource.DataSourceLoaderFactory;
+import org.apache.freemarker.generator.base.util.StringUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -31,6 +32,7 @@ import static junit.framework.TestCase.assertFalse;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
 import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_APPLICATION_XML;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class DataSourceLoaderTest {
 
@@ -162,11 +164,18 @@ public class DataSourceLoaderTest {
 
     @Test
     public void shouldCreateDataSourceFromEnvironmentVariable() {
-        try (DataSource dataSource = dataSourceLoader().load("myenv=env:///HOME")) {
+        if (!hasEnvironmentVariables()) {
+            return;
+        }
+
+        final String anyEnvironmentVariable = anyEnvironmentVariable();
+        final String namedUriString = String.format("myenv=env:///%s", anyEnvironmentVariable);
+
+        try (DataSource dataSource = dataSourceLoader().load(namedUriString)) {
             assertEquals("myenv", dataSource.getName());
             assertEquals("default", dataSource.getGroup());
             assertEquals(UTF_8, dataSource.getCharset());
-            assertEquals("env:///HOME", dataSource.getUri().toString());
+            assertTrue(dataSource.getUri().toString().contains(anyEnvironmentVariable));
             assertEquals("text/plain", dataSource.getContentType());
         }
     }
@@ -185,5 +194,17 @@ public class DataSourceLoaderTest {
 
     private DataSourceLoader dataSourceLoader() {
         return DataSourceLoaderFactory.create();
+    }
+
+    private boolean hasEnvironmentVariables() {
+        return !System.getenv().isEmpty();
+    }
+
+    private String anyEnvironmentVariable() {
+        return System.getenv().keySet()
+                .stream()
+                .filter(env -> StringUtils.isNotEmpty(System.getenv(env)))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No matching environment variable found"));
     }
 }

@@ -27,7 +27,6 @@ import java.util.Map;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class DataModelSupplierTest {
 
@@ -60,7 +59,7 @@ public class DataModelSupplierTest {
     }
 
     @Test
-    public void shouldCopySingleEnvironmentVariablesToTopLevelDataModel() {
+    public void shouldCopySingleEnvironmentVariableToTopLevelDataModel() {
         final DataModelSupplier supplier = supplier("env:///" + ANY_ENV_VARIABLE);
 
         final Map<String, Object> model = supplier.get();
@@ -87,7 +86,7 @@ public class DataModelSupplierTest {
     // === Properties ===
 
     @Test
-    public void shouldCopeyPropertiesFileToTopLevelDataModel() {
+    public void shouldCopyPropertiesFileToTopLevelDataModel() {
         final DataModelSupplier supplier = supplier("./src/test/data/properties/test.properties");
 
         final Map<String, Object> model = supplier.get();
@@ -133,6 +132,7 @@ public class DataModelSupplierTest {
     }
 
     @Test
+    @SuppressWarnings("rawtypes")
     public void shouldCopyJsonArrayFileToDataModelVariable() {
         final DataModelSupplier supplier = supplier("list=./src/test/data/json/list.json");
 
@@ -164,17 +164,17 @@ public class DataModelSupplierTest {
     // == URL ===
 
     @Test
-    @Ignore
+    @Ignore("Requires internet access")
     public void shouldResolveUrlToTopLevelDataModel() {
         final DataModelSupplier supplier = supplier("https://jsonplaceholder.typicode.com/posts/2");
 
         final Map<String, Object> model = supplier.get();
 
-        assertTrue(model.size() == 4);
+        assertEquals(4, model.size());
     }
 
     @Test
-    @Ignore
+    @Ignore("Requires internet access")
     public void shouldResolveUrlToDataModelVariable() {
         final DataModelSupplier supplier = supplier("post=https://jsonplaceholder.typicode.com/posts/2");
 
@@ -185,7 +185,7 @@ public class DataModelSupplierTest {
     }
 
     @Test
-    @Ignore
+    @Ignore("Requires internet access")
     public void shouldResolveUrlToDataModelVariables() {
         supplier("https://jsonplaceholder.typicode.com/posts/does-not-exist").get();
     }

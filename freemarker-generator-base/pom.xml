@@ -63,6 +63,7 @@
                         <exclude>src/site/markdown/**/*.md</exclude>
                         <exclude>**/*.csv</exclude>
                         <exclude>src/test/data/txt/file_01.txt</exclude>
+                        <exclude>src/test/data/txt/utf8.txt</exclude>
                     </excludes>
                 </configuration>
             </plugin>

@@ -33,7 +33,7 @@ import static org.apache.freemarker.generator.base.FreeMarkerConstants.Configura
  */
 public class ConfigurationSupplier implements Supplier<Configuration> {
 
-    private static final Version FREEMARKER_VERSION = Configuration.VERSION_2_3_30;
+    private static final Version FREEMARKER_VERSION = Configuration.VERSION_2_3_31;
 
     private final Settings settings;
     private final Supplier<TemplateLoader> templateLoader;

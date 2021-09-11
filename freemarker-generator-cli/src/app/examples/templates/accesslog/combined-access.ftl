@@ -15,14 +15,14 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign grok = tools.grok.compile("%{COMBINEDAPACHELOG}")>
+<#assign grok = tools.grok.create("%{COMBINEDAPACHELOG}")>
 <#assign dataSource = dataSources?values[0]>
 <#assign lines = dataSource.getLineIterator()>
 
 <#compress>
     TIMESTAMP;VERB;REQUEST;HTTPVERSION
     <#list lines as line>
-        <#assign parts = grok.match(line)>
+        <#assign parts = grok.match(line).capture()>
         <#assign timestamp = parts.timestamp>
         <#assign verb = parts.verb>
         <#assign request = parts.request>
