@@ -36,13 +36,13 @@ public class SystemToolTest {
     }
 
     @Test
-    public void shouldGetString() {
-        assertEquals(USER, systemTool().getString("USER"));
+    public void shouldGetProperty() {
+        assertEquals(USER, systemTool().getProperty("USER"));
     }
 
     @Test
-    public void shouldGetStringWithDefault() {
-        assertEquals("foo", systemTool().getString("_DOES_NOT_EXIST_", "foo"));
+    public void shouldGetPropertyWithDefault() {
+        assertEquals("foo", systemTool().getProperty("_DOES_NOT_EXIST_", "foo"));
     }
 
     @Test
