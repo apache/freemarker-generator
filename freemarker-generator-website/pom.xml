@@ -36,7 +36,6 @@
         
         <websiteOutputDirectory>${project.build.directory}/website</websiteOutputDirectory>
         <freemarkerGeneratorAppHome>${project.basedir}/../freemarker-generator-cli/target/appassembler</freemarkerGeneratorAppHome>
-        <docgenInsertedOutputsDirectory>${project.build.directory}/docgen-insertable-outputs</docgenInsertedOutputsDirectory>
         <docgenInsertedExampleTemplatesDirectory>${freemarkerGeneratorAppHome}/examples/templates</docgenInsertedExampleTemplatesDirectory>
         <docgenInsertedExampleOutputDirectory>${freemarkerGeneratorAppHome}/target/out</docgenInsertedExampleOutputDirectory>
         <docgenInsertedTemplatesDirectory>${freemarkerGeneratorAppHome}/templates</docgenInsertedTemplatesDirectory>
@@ -69,7 +68,6 @@
                     <sourceDirectory>src/main/docgen</sourceDirectory>
                     <outputDirectory>${websiteOutputDirectory}</outputDirectory>
                     <insertableFiles>
-                        <websitePomGenerated>${docgenInsertedOutputsDirectory}/**</websitePomGenerated>
                         <templates>${docgenInsertedTemplatesDirectory}/**</templates>
                         <exampleTemplates>${docgenInsertedExampleTemplatesDirectory}/**</exampleTemplates>
                     </insertableFiles>
