@@ -168,8 +168,9 @@ freemarker-generator -h
         <title>The Info Template</title>
 
         <para>The distribution ships with a couple of FreeMarker templates and
-        the <literal>templates/info.ftl</literal> is particularly helpful to
-        better understand Apache FreeMarker CLI.</para>
+        the <literal>templates/freemarker-generator/info.ftl</literal> is
+        particularly helpful to better understand Apache FreeMarker
+        CLI.</para>
 
         <programlisting>[docgen.insertWithOutput]
 freemarker-generator -t freemarker-generator/info.ftl
@@ -204,11 +205,11 @@ freemarker-generator -t freemarker-generator/info.ftl
       </simplesect>
     </section>
 
-    <section>
+    <section xml:id="running-examples">
       <title>Running the Examples</title>
 
-      <para>There a many examples (see below) available you can execute - The
-      examples were tested with Java 1.8 on Mac OS X.</para>
+      <para>There are many examples (see below) available you can execute -
+      The examples were tested with Java 1.8 on Mac OS X.</para>
 
       <para>Run <literal>run-examples.sh</literal> or
       <literal>run-examples.bat</literal> in the Apache FreeMarker Generator
@@ -549,51 +550,6 @@ freemarker-generator -t [docgen.wd]/examples/templates/html/csv/dependencies.ftl
       </section>
 
       <section>
-        <title>Unleashing The Power Of Grok</title>
-
-        <para>Think of <literal>Grok</literal> as modular regular expressions
-        with a pre-defined functionality to parse access logs or any other
-        data where you can't comprehend the regular expression any longer, one
-        very simple example is <literal>QUOTEDSTRING</literal>.</para>
-
-        <programlisting>QUOTEDSTRING (?&gt;(?&lt;!\\)(?&gt;"(?&gt;\\.|[^\\"]+)+"|""|(?&gt;'(?&gt;\\.|[^\\']+)+')|''|(?&gt;`(?&gt;\\.|[^\\`]+)+`)|``))</programlisting>
-
-        <para>And with <literal>Grok</literal> the
-        <literal>QUOTEDSTRING</literal> is just a building block for an even
-        more complex regular expression such as
-        <literal>COMBINEDAPACHELOG</literal>.</para>
-
-        <programlisting>[docgen.insertWithOutput]
-freemarker-generator -t [docgen.wd]/examples/templates/accesslog/combined-access.ftl [docgen.wd]/examples/data/accesslog/combined-access.log
-[/docgen.insertWithOutput]</programlisting>
-
-        <para>using the following FreeMarker template:</para>
-
-        <programlisting>[docgen.insertFile "@exampleTemplates/accesslog/combined-access.ftl"]</programlisting>
-
-        <para>While this looks small and tidy there are some nifty
-        features:</para>
-
-        <itemizedlist>
-          <listitem>
-            <para><literal>tools.grok.compile("%{COMBINEDAPACHELOG}")</literal>
-            builds the <literal>Grok</literal> instance to parse access logs
-            in <literal>Combined Format</literal></para>
-          </listitem>
-
-          <listitem>
-            <para>The data source is streamed line by line and not loaded into
-            memory in one piece</para>
-          </listitem>
-
-          <listitem>
-            <para>This also works for using <literal>stdin</literal> so are
-            able to parse GB of access log or other files</para>
-          </listitem>
-        </itemizedlist>
-      </section>
-
-      <section>
         <title>Executing Arbitrary Commands</title>
 
         <para>Using Apache Commons Exec allows to execute arbitrary commands -
@@ -754,7 +710,9 @@ freemarker-generator -e UTF-8 -l de_AT -Pcolumn="Order ID" \
           </listitem>
         </itemizedlist>
 
-        <programlisting>[docgen.insertWithOutput]freemarker-generator -t [docgen.wd]/examples/templates/demo.ftl[/docgen.insertWithOutput]</programlisting>
+        <programlisting>[docgen.insertWithOutput]
+freemarker-generator -t [docgen.wd]/examples/templates/demo.ftl
+[/docgen.insertWithOutput]</programlisting>
       </section>
     </section>
   </chapter>
@@ -763,7 +721,7 @@ freemarker-generator -e UTF-8 -l de_AT -Pcolumn="Order ID" \
     <title>Concepts</title>
 
     <section xml:id="design-goals">
-      <title>Design goals</title>
+      <title>Design Goals</title>
 
       <itemizedlist>
         <listitem>
@@ -852,10 +810,201 @@ freemarker-generator -e UTF-8 -l de_AT -Pcolumn="Order ID" \
       </itemizedlist>
     </section>
 
+    <section xml:id="datasources">
+      <title>Data Sources</title>
+
+      <para>A <literal>DataSource</literal> consists of lazy-loaded data
+      available in Apache FreeMarker's model. It provides:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para>A <literal>name</literal> uniquely identifying a data
+          source</para>
+        </listitem>
+
+        <listitem>
+          <para>An <literal>uri</literal> which as used to create the data
+          source</para>
+        </listitem>
+
+        <listitem>
+          <para>A <literal>contentType</literal> and
+          <literal>charset</literal></para>
+        </listitem>
+
+        <listitem>
+          <para>Access to textual content directly or using a line
+          iterator</para>
+        </listitem>
+
+        <listitem>
+          <para>Access to the underlying data input stream</para>
+        </listitem>
+      </itemizedlist>
+
+      <section>
+        <title>Loading a Data Source</title>
+
+        <para>A <literal>DataSource</literal> can be loaded from the file
+        system, e.g., as positional command line argument:</para>
+
+        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
+freemarker-generator -t freemarker-generator/info.ftl [docgen.wd]/README.md
+[/docgen.insertWithOutput]</programlisting>
+
+        <para>from an URL:</para>
+
+        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
+freemarker-generator -t freemarker-generator/info.ftl --data-source xkcd=https://xkcd.com/info.0.json
+[/docgen.insertWithOutput]</programlisting>
+
+        <para>or from an environment variable, e.g.
+        <literal>NGINX_CONF</literal> having a JSON payload:</para>
+
+        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"
+  systemProperties={'freemarker.generator.datasource.envOverride.NGINX_CONF': '{"NGINX_PORT":"8443","NGINX_HOSTNAME":"localhost"}'}
+]
+freemarker-generator -t freemarker-generator/info.ftl --data-source conf=env:///NGINX_CONF#mimeType=application/json
+[/docgen.insertWithOutput]</programlisting>
+
+        <para>Of course you can load multiple data sources directly:</para>
+
+        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
+freemarker-generator -t freemarker-generator/info.ftl [docgen.wd]/README.md xkcd=https://xkcd.com/info.0.json
+[/docgen.insertWithOutput]</programlisting>
+
+        <para>or load them from a directory:</para>
+
+        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
+freemarker-generator -t freemarker-generator/info.ftl --data-source [docgen.wd]/examples/data
+[/docgen.insertWithOutput]</programlisting>
+
+        <para>which can be combined with <literal>include</literal> and
+        <literal>exclude</literal> filters:</para>
+
+        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
+freemarker-generator -t freemarker-generator/info.ftl -s [docgen.wd]/examples/data --data-source-include='*.json' 
+[/docgen.insertWithOutput]</programlisting>
+
+        <para>Access to <literal>stdin</literal> is implemented as
+        <literal>DataSource</literal> - please note that
+        <literal>stdin</literal> is read lazily to cater for arbitrary large
+        input data<remark> (TODO: Docgen can't generate this yet, because of
+        the cat and pipe)</remark>:</para>
+
+        <programlisting>cat examples/data/csv/contract.csv | bin/freemarker-generator -t freemarker-generator/info.ftl --stdin
+
+FreeMarker Generator DataSources
+------------------------------------------------------------------------------
+[#1]: name=stdin, group=default, fileName=stdin mimeType=text/plain, charset=UTF-8, length=-1 Bytes
+URI : system:///stdin</programlisting>
+      </section>
+
+      <section>
+        <title>Selecting a Data Source</title>
+
+        <para>After loading one or more <literal>DataSource</literal> they are
+        accessible as <literal>dataSource</literal> map in the FreeMarker
+        model:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para><literal>dataSources?values[0]</literal> or
+            <literal>dataSources?values?first</literal> selects the first data
+            source</para>
+          </listitem>
+
+          <listitem>
+            <para><literal>dataSources["user.csv"]</literal> selects the data
+            source with the name <literal>"user.csv"</literal></para>
+          </listitem>
+        </itemizedlist>
+      </section>
+
+      <section>
+        <title>Iterating Over Data Sources</title>
+
+        <para>The data sources are exposed as map within FreeMarker's data
+        model<remark> (TODO: There's no example template to insert
+        here)</remark>:</para>
+
+        <programlisting>&lt;#-- Do something with the data sources --&gt;
+&lt;#if dataSources?has_content&gt;
+Some data sources found
+&lt;#else&gt;
+No data sources found ...
+&lt;/#if&gt;
+
+&lt;#-- Get the number of data sources --&gt;
+${dataSources?size}
+
+&lt;#-- Iterate over a map of data sources --&gt;
+&lt;#list dataSources as name, dataSource&gt;
+- ${name} =&gt; ${dataSource.length}
+&lt;/#list&gt;
+
+&lt;#-- Iterate over a list of data sources --&gt;
+&lt;#list dataSources?values as dataSource&gt;
+- [#${dataSource?counter}]: name=${dataSource.name}
+&lt;/#list&gt;</programlisting>
+      </section>
+
+      <section>
+        <title>Filtering of Data Sources</title>
+
+        <para>Combining FreeMarker's <literal>filter</literal> built-in with
+        the <literal>DataSource.match</literal> methods allows more advanced
+        selection of data sources (using Apache Commons IO wild-card
+        matching)<remark> (TODO: There's no example template to insert
+        here)</remark>:</para>
+
+        <programlisting>&lt;#-- List all data sources containing "test" in the name --&gt;
+&lt;#list dataSources?values?filter(ds -&gt; ds.match("name", "*test*")) as ds&gt;
+- ${ds.name}
+&lt;/#list&gt;
+
+&lt;#-- List all data sources having "json" extension --&gt;
+&lt;#list dataSources?values?filter(ds -&gt; ds.match("extension", "json")) as ds&gt;
+- ${ds.name}
+&lt;/#list&gt;
+
+&lt;#-- List all data sources having "src/test/data/properties" in their file path --&gt;
+&lt;#list dataSources?values?filter(ds -&gt; ds.match("filePath", "*/src/test/data/properties")) as ds&gt;
+- ${ds.name}
+&lt;/#list&gt;
+
+&lt;#-- List all data sources of a group --&gt;
+&lt;#list dataSources?values?filter(ds -&gt; ds.match("group", "default")) as ds&gt;
+- ${ds.name}
+&lt;/#list&gt;</programlisting>
+      </section>
+
+      <section>
+        <title>Using and Inspecting Data Sources</title>
+
+        <para><remark>These were two separate chapters, but they both shown
+        parts of datasources.ftl, so I unified them.</remark></para>
+
+        <para>In most cases the data source will be passed to a tool, but
+        there are some useful operations available as shown below:</para>
+
+        <programlisting>[docgen.insertFile "@exampleTemplates/datasources.ftl"]</programlisting>
+
+        <para>will result in:</para>
+
+        <programlisting>[docgen.insertWithOutput]
+freemarker-generator -t [docgen.wd]/examples/templates/datasources.ftl --data-source [docgen.wd]/examples/data/csv/contract.csv
+[/docgen.insertWithOutput]</programlisting>
+
+        <para>You can also use similar command like above to inspect what data
+        source you have.</para>
+      </section>
+    </section>
+
     <section xml:id="named-uri">
       <title>Named URI-s</title>
 
-      <para>Named URIs allow to identify <literal>DataSource</literal>-s (not
+      <para>Named URIs allow identifying <literal>DataSource</literal>-s (not
       a JDBC <literal>DataSource</literal>, <link linkend="datasources">but
       this</link><remark> - added this, or else it can confuse Java
       developers</remark>) and pass additional information.</para>
@@ -956,13 +1105,13 @@ freemarker-generator -t freemarker-generator/info.ftl page=http://www.google.com
 
         <para>Load all CVS files of a directory using the group "csv":</para>
 
-        <programlisting>[docgen.insertWithOutput]
+        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
 freemarker-generator -t freemarker-generator/info.ftl :csv=[docgen.wd]/examples/data/csv
 [/docgen.insertWithOutput]</programlisting>
 
         <para>or use a charset for all files of a directory</para>
 
-        <programlisting>[docgen.insertWithOutput]
+        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
 freemarker-generator -t freemarker-generator/info.ftl '[docgen.wd]/examples/data/csv#charset=UTF-16&amp;mimetype=text/plain'
 [/docgen.insertWithOutput]</programlisting>
 
@@ -975,12 +1124,6 @@ freemarker-generator -t [docgen.wd]/examples/templates/datasources.ftl '[docgen.
 
         <para/>
       </section>
-    </section>
-
-    <section xml:id="datasources">
-      <title>Data sources</title>
-
-      <para>TODO</para>
     </section>
 
     <section xml:id="data-models">
@@ -1021,32 +1164,73 @@ freemarker-generator -t [docgen.wd]/examples/templates/datasources.ftl '[docgen.
     "Usage", but I though that clashes with "Getting Started" in
     meaning.</remark>
 
-    <section xml:id="transforming-directories">
+    <section>
       <title>Transforming Directories</title>
 
-      <section>
-        <title>Transforming Directories</title>
+      <para>TODO</para>
+    </section>
 
-        <para>TODO</para>
-      </section>
+    <section>
+      <title>Using DataFrames</title>
 
-      <section>
-        <title>Using DataFrames</title>
+      <para>TODO</para>
+    </section>
 
-        <para>TODO</para>
-      </section>
+    <section>
+      <title>Transforming CSV</title>
 
-      <section>
-        <title>Transforming CSV</title>
+      <para>TODO</para>
+    </section>
 
-        <para>TODO</para>
-      </section>
+    <section>
+      <title>Generating test data</title>
 
-      <section>
-        <title>Generating test data</title>
+      <para>TODO</para>
+    </section>
 
-        <para>TODO</para>
-      </section>
+    <section>
+      <title>Parsing with Grok</title>
+
+      <para>Think of <literal>Grok</literal> as modular regular expressions
+      with a pre-defined functionality to parse access logs or any other data
+      where you can't comprehend the regular expression any longer, one very
+      simple example is <literal>QUOTEDSTRING</literal>.</para>
+
+      <programlisting>QUOTEDSTRING (?&gt;(?&lt;!\\)(?&gt;"(?&gt;\\.|[^\\"]+)+"|""|(?&gt;'(?&gt;\\.|[^\\']+)+')|''|(?&gt;`(?&gt;\\.|[^\\`]+)+`)|``))</programlisting>
+
+      <para>And with <literal>Grok</literal> the
+      <literal>QUOTEDSTRING</literal> is just a building block for an even
+      more complex regular expression such as
+      <literal>COMBINEDAPACHELOG</literal>.</para>
+
+      <programlisting>[docgen.insertWithOutput]
+freemarker-generator -t [docgen.wd]/examples/templates/accesslog/combined-access.ftl [docgen.wd]/examples/data/accesslog/combined-access.log
+[/docgen.insertWithOutput]</programlisting>
+
+      <para>using the following FreeMarker template:</para>
+
+      <programlisting>[docgen.insertFile "@exampleTemplates/accesslog/combined-access.ftl"]</programlisting>
+
+      <para>While this looks small and tidy there are some nifty
+      features:</para>
+
+      <itemizedlist>
+        <listitem>
+          <para><literal>tools.grok.compile("%{COMBINEDAPACHELOG}")</literal>
+          builds the <literal>Grok</literal> instance to parse access logs in
+          <literal>Combined Format</literal></para>
+        </listitem>
+
+        <listitem>
+          <para>The data source is streamed line by line and not loaded into
+          memory in one piece</para>
+        </listitem>
+
+        <listitem>
+          <para>This also works for using <literal>stdin</literal> so are able
+          to parse GB of access log or other files</para>
+        </listitem>
+      </itemizedlist>
     </section>
   </chapter>
 
