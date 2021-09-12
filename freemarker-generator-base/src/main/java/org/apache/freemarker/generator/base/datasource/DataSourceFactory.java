@@ -49,6 +49,8 @@ import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_G
  */
 public abstract class DataSourceFactory {
 
+    private static final String ENV_VARIABLE_OVERRIDE_SYSTEM_PROPERTY_PREFIX = "freemarker.generator.datasource.envOverride.";
+
     private DataSourceFactory() {
     }
 
@@ -161,9 +163,15 @@ public abstract class DataSourceFactory {
     }
 
     public static DataSource fromEnvironment(String name, String group, String key, String contentType) {
-        Validate.notEmpty(System.getenv(key), "Environment variable not found: " + key);
+        // Overriding the value with system property is useful when running examples for the documentation, and in tests,
+        // because Java can't set environment variables.
+        String value = System.getProperty(ENV_VARIABLE_OVERRIDE_SYSTEM_PROPERTY_PREFIX + key);
+        if (value == null) {
+            value = System.getenv(key);
+        }
+        Validate.notEmpty(value, "Environment variable not found: " + key);
 
-        final StringDataSource dataSource = new StringDataSource(name, System.getenv(key), contentType, UTF_8);
+        final StringDataSource dataSource = new StringDataSource(name, value, contentType, UTF_8);
         final URI uri = UriUtils.toUri(Location.ENVIRONMENT, key);
         return create(name, group, uri, dataSource, contentType, UTF_8, noProperties());
     }
