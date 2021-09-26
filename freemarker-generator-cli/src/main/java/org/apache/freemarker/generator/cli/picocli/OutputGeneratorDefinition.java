@@ -121,6 +121,19 @@ public class OutputGeneratorDefinition {
         return (outputMapperDefinition != null) ? outputMapperDefinition.outputMapper : null;
     }
 
+    @Override
+    public String toString() {
+        return "OutputGeneratorDefinition{" +
+                "templateSourceDefinition=" + templateSourceDefinition +
+                ", templateSourceFilterDefinition=" + templateSourceFilterDefinition +
+                ", templateOutputDefinition=" + templateOutputDefinition +
+                ", dataSourceDefinition=" + dataSourceDefinition +
+                ", dataModelDefinition=" + dataModelDefinition +
+                ", outputSeedDefinition=" + outputSeedDefinition +
+                ", outputMapperDefinition=" + outputMapperDefinition +
+                '}';
+    }
+
     private static boolean isFileSource(String source) {
         if (source.contains("file://")) {
             return true;

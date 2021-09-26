@@ -27,4 +27,11 @@ public class DataSourceDefinition {
 
     @Option(names = { "-s", "--data-source" }, description = "data source used for rendering")
     public List<String> dataSources;
+
+    @Override
+    public String toString() {
+        return "DataSourceDefinition{" +
+                "dataSources=" + dataSources +
+                '}';
+    }
 }

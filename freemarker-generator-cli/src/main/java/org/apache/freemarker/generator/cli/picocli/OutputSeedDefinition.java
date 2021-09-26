@@ -25,4 +25,11 @@ public class OutputSeedDefinition {
 
     @Option(names = { "--seed" }, defaultValue = "template", description = "seed mode: [template|datasource]")
     public String type;
+
+    @Override
+    public String toString() {
+        return "OutputSeedDefinition{" +
+                "type='" + type + '\'' +
+                '}';
+    }
 }

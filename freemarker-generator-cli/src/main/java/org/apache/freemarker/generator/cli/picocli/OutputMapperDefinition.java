@@ -22,4 +22,11 @@ public class OutputMapperDefinition {
 
     @Option(names = { "--output-mapper" }, description = "maps the name of the output file")
     public String outputMapper;
+
+    @Override
+    public String toString() {
+        return "OutputMapperDefinition{" +
+                "outputMapper='" + outputMapper + '\'' +
+                '}';
+    }
 }

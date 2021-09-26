@@ -28,4 +28,11 @@ public class TemplateOutputDefinition {
     public boolean hasOutput() {
         return outputs != null && !outputs.isEmpty();
     }
+
+    @Override
+    public String toString() {
+        return "TemplateOutputDefinition{" +
+                "outputs=" + outputs +
+                '}';
+    }
 }
