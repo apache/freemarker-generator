@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Supplies a list of list of <code>OutputGenerators</code> based on the user input.
+ * Supplies a list of <code>OutputGenerators</code> based on the user input.
  */
 public class OutputGeneratorsSupplier implements Supplier<List<OutputGenerator>> {
 
