@@ -12,15 +12,52 @@ import static org.junit.Assert.assertEquals;
 
 public class DataSourceSeedingOutputGeneratorTest extends AbstractOutputGeneratorTest {
 
+    /**
+     * Edge case - a single data source shall create a single output generator
+     */
     @Test
-    public void shouldCreateOutputGeneratorForAllDataSourcesInDirectory() {
+    public void shouldCreateOutputGeneratorForSingleDataSource() {
         final OutputGeneratorDefinition outputGeneratorDefinition = outputGeneratorDefinition();
         outputGeneratorDefinition.templateSourceDefinition = templateSourceDefinition(ANY_TEMPLATE);
         outputGeneratorDefinition.templateOutputDefinition = templateOutputDirectoryDefinition(ANY_OUTPUT_DIRECTORY_NAME);
-        outputGeneratorDefinition.dataSourceDefinition = dataSourceDefinition(ANY_DATASOURCE_DIRECTORY);
+        outputGeneratorDefinition.dataSourceDefinition = dataSourceDefinition(ANY_DATASOURCE_FILE_01);
         outputGeneratorDefinition.outputSeedDefinition = outputSeedDefinition(SeedType.DATASOURCE);
         outputGeneratorDefinition.outputMapperDefinition = outputMapperDefinition("*.txt");
         final Settings settings = settings(outputGeneratorDefinition);
+        final OutputGeneratorsSupplier outputGeneratorsSupplier = new OutputGeneratorsSupplier(settings);
+
+        final List<OutputGenerator> outputGenerators = outputGeneratorsSupplier.get();
+        final OutputGenerator outputGenerator = outputGenerators.get(0);
+
+        assertEquals(1, outputGenerators.size());
+
+        assertEquals(1, outputGenerator.getDataSources().size());
+        assertEquals(OutputGenerator.SeedType.DATASOURCE, outputGenerator.getSeedType());
+        assertEquals(ANY_TEMPLATE_NAME, outputGenerator.getTemplateSource().getName());
+        assertEquals(new File(ANY_OUTPUT_DIRECTORY_NAME, "environments.txt"), outputGenerator.getTemplateOutput().getFile());
+        assertEquals("environments.json", outputGenerator.getDataSources().get(0).getFileName());
+    }
+
+    /**
+     * N given data sources -> N output generators
+     */
+    @Test
+    public void shouldCreateOutputGeneratorForEachDataSource() {
+        final OutputGeneratorDefinition outputGeneratorDefinition_01 = outputGeneratorDefinition();
+        outputGeneratorDefinition_01.templateSourceDefinition = templateSourceDefinition(ANY_TEMPLATE);
+        outputGeneratorDefinition_01.templateOutputDefinition = templateOutputDirectoryDefinition(ANY_OUTPUT_DIRECTORY_NAME);
+        outputGeneratorDefinition_01.dataSourceDefinition = dataSourceDefinition(ANY_DATASOURCE_FILE_01);
+        outputGeneratorDefinition_01.outputSeedDefinition = outputSeedDefinition(SeedType.DATASOURCE);
+        outputGeneratorDefinition_01.outputMapperDefinition = outputMapperDefinition("*.txt");
+
+        final OutputGeneratorDefinition outputGeneratorDefinition_02 = outputGeneratorDefinition();
+        outputGeneratorDefinition_02.templateSourceDefinition = templateSourceDefinition(ANY_TEMPLATE);
+        outputGeneratorDefinition_02.templateOutputDefinition = templateOutputDirectoryDefinition(ANY_OUTPUT_DIRECTORY_NAME);
+        outputGeneratorDefinition_02.dataSourceDefinition = dataSourceDefinition(ANY_DATASOURCE_FILE_02);
+        outputGeneratorDefinition_02.outputSeedDefinition = outputSeedDefinition(SeedType.DATASOURCE);
+        outputGeneratorDefinition_02.outputMapperDefinition = outputMapperDefinition("*.txt");
+
+        final Settings settings = settings(outputGeneratorDefinition_01, outputGeneratorDefinition_02);
         final OutputGeneratorsSupplier outputGeneratorsSupplier = new OutputGeneratorsSupplier(settings);
 
         final List<OutputGenerator> outputGenerators = outputGeneratorsSupplier.get();
@@ -42,23 +79,18 @@ public class DataSourceSeedingOutputGeneratorTest extends AbstractOutputGenerato
         assertEquals("list.json", outputGenerator_02.getDataSources().get(0).getFileName());
     }
 
+    /**
+     * N file data sources in a given directory -> N output generators
+     */
     @Test
-    public void shouldCreateOutputGeneratorForEachDataSource() {
-        final OutputGeneratorDefinition outputGeneratorDefinition_01 = outputGeneratorDefinition();
-        outputGeneratorDefinition_01.templateSourceDefinition = templateSourceDefinition(ANY_TEMPLATE);
-        outputGeneratorDefinition_01.templateOutputDefinition = templateOutputDirectoryDefinition(ANY_OUTPUT_DIRECTORY_NAME);
-        outputGeneratorDefinition_01.dataSourceDefinition = dataSourceDefinition(ANY_DATASOURCE_FILE_01);
-        outputGeneratorDefinition_01.outputSeedDefinition = outputSeedDefinition(SeedType.DATASOURCE);
-        outputGeneratorDefinition_01.outputMapperDefinition = outputMapperDefinition("*.txt");
-
-        final OutputGeneratorDefinition outputGeneratorDefinition_02 = outputGeneratorDefinition();
-        outputGeneratorDefinition_02.templateSourceDefinition = templateSourceDefinition(ANY_TEMPLATE);
-        outputGeneratorDefinition_02.templateOutputDefinition = templateOutputDirectoryDefinition(ANY_OUTPUT_DIRECTORY_NAME);
-        outputGeneratorDefinition_02.dataSourceDefinition = dataSourceDefinition(ANY_DATASOURCE_FILE_02);
-        outputGeneratorDefinition_02.outputSeedDefinition = outputSeedDefinition(SeedType.DATASOURCE);
-        outputGeneratorDefinition_02.outputMapperDefinition = outputMapperDefinition("*.txt");
-
-        final Settings settings = settings(outputGeneratorDefinition_01, outputGeneratorDefinition_02);
+    public void shouldCreateOutputGeneratorsForAllDataSourcesInDirectory() {
+        final OutputGeneratorDefinition outputGeneratorDefinition = outputGeneratorDefinition();
+        outputGeneratorDefinition.templateSourceDefinition = templateSourceDefinition(ANY_TEMPLATE);
+        outputGeneratorDefinition.templateOutputDefinition = templateOutputDirectoryDefinition(ANY_OUTPUT_DIRECTORY_NAME);
+        outputGeneratorDefinition.dataSourceDefinition = dataSourceDefinition(ANY_DATASOURCE_DIRECTORY);
+        outputGeneratorDefinition.outputSeedDefinition = outputSeedDefinition(SeedType.DATASOURCE);
+        outputGeneratorDefinition.outputMapperDefinition = outputMapperDefinition("*.txt");
+        final Settings settings = settings(outputGeneratorDefinition);
         final OutputGeneratorsSupplier outputGeneratorsSupplier = new OutputGeneratorsSupplier(settings);
 
         final List<OutputGenerator> outputGenerators = outputGeneratorsSupplier.get();

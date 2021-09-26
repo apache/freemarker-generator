@@ -12,6 +12,9 @@ import static org.junit.Assert.assertEquals;
 
 public class TemplateSeedingOutputGeneratorTest extends AbstractOutputGeneratorTest {
 
+    /**
+     * One data source -> one output generator
+     */
     @Test
     public void shouldCreateSingleOutputGeneratorForMultipleDataSources() {
         final OutputGeneratorDefinition outputGeneratorDefinition = outputGeneratorDefinition();
@@ -35,8 +38,11 @@ public class TemplateSeedingOutputGeneratorTest extends AbstractOutputGeneratorT
         assertEquals("list.json", outputGenerator.getDataSources().get(1).getFileName());
     }
 
+    /**
+     * N file data sources for a given directory -> one output generator
+     */
     @Test
-    public void shouldCreateSingleOutputGeneratorForAllDataSourcesInDirectory() {
+    public void shouldCreateSingleOutputGeneratorForMultipleDataSourcesInDirectory() {
         final OutputGeneratorDefinition outputGeneratorDefinition = outputGeneratorDefinition();
         outputGeneratorDefinition.templateSourceDefinition = templateSourceDefinition(ANY_TEMPLATE);
         outputGeneratorDefinition.templateOutputDefinition = templateOutputDirectoryDefinition(ANY_OUTPUT_DIRECTORY_NAME);
@@ -58,8 +64,11 @@ public class TemplateSeedingOutputGeneratorTest extends AbstractOutputGeneratorT
         assertEquals("list.json", outputGenerator.getDataSources().get(1).getFileName());
     }
 
+    /**
+     * N output generator definitions -> N output generators
+     */
     @Test
-    public void shouldCreateMultipleOutputGenerators() {
+    public void shouldCreateOutputGeneratorForEachOutputGeneratorDefinition() {
         final OutputGeneratorDefinition outputGeneratorDefinition_01 = outputGeneratorDefinition();
         outputGeneratorDefinition_01.templateSourceDefinition = templateSourceDefinition(ANY_TEMPLATE);
         outputGeneratorDefinition_01.templateOutputDefinition = templateOutputDirectoryDefinition(ANY_OUTPUT_DIRECTORY_NAME);

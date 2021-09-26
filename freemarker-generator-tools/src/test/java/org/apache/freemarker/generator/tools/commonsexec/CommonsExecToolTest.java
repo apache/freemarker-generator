@@ -18,9 +18,31 @@ package org.apache.freemarker.generator.tools.commonsexec;
 
 import org.junit.Test;
 
+import java.util.Collections;
+
+import static junit.framework.TestCase.assertEquals;
 import static junit.framework.TestCase.assertFalse;
 
 public class CommonsExecToolTest {
+
+    @Test
+    public void shouldExecuteCommandLine() {
+        final String output = commonsExecTool().execute("echo Hello World!");
+
+        assertEquals("Hello World!\n", output);
+    }
+
+    @Test
+    public void shouldExecuteCommandLineArgs() {
+        final String output = commonsExecTool().execute("echo", Collections.singletonList("Hello World!"));
+
+        assertEquals("\"Hello World!\"\n", output);
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void shouldThrowExceptionForInvalidCommand() {
+        commonsExecTool().execute("does-not-exist.bat");
+    }
 
     @Test
     public void shouldReturnDescription() {
