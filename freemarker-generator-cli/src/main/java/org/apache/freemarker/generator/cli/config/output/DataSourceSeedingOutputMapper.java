@@ -17,9 +17,11 @@
 package org.apache.freemarker.generator.cli.config.output;
 
 import org.apache.freemarker.generator.base.datasource.DataSource;
-import org.apache.freemarker.generator.base.util.StringUtils;
 
 import java.io.File;
+
+import static org.apache.freemarker.generator.base.util.StringUtils.firstNonEmpty;
+import static org.apache.freemarker.generator.base.util.StringUtils.isEmpty;
 
 public class DataSourceSeedingOutputMapper {
 
@@ -31,18 +33,26 @@ public class DataSourceSeedingOutputMapper {
 
     public File map(File outputDirectory, DataSource dataSource) {
         final String relativeFilePath = dataSource.getRelativeFilePath();
-        final String fileName = expand(template, dataSource);
+        final String fileName = isEmpty(template) ? fromDataSource(dataSource) : fromTemplate(template, dataSource);
 
-        return StringUtils.isEmpty(relativeFilePath) ?
+        return isEmpty(relativeFilePath) ?
                 new File(outputDirectory, fileName) :
                 new File(new File(outputDirectory, relativeFilePath), fileName);
     }
 
-    private static String expand(String value, DataSource dataSource) {
-        if (StringUtils.isEmpty(value)) {
-            return dataSource.getBaseName() + "." + dataSource.getExtension();
-        }
+    private static String fromTemplate(String value, DataSource dataSource) {
+        return value.replace("*", firstNonEmpty(dataSource.getBaseName(), dataSource.getName()));
+    }
 
-        return value.replace("*", dataSource.getBaseName());
+    private static String fromDataSource(DataSource dataSource) {
+        if (isEmpty(dataSource.getBaseName())) {
+            return dataSource.getName();
+        } else {
+            if (isEmpty(dataSource.getExtension())) {
+                return dataSource.getBaseName();
+            } else {
+                return dataSource.getBaseName() + "." + dataSource.getExtension();
+            }
+        }
     }
 }

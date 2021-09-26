@@ -64,11 +64,11 @@ public class Settings {
     /** List of additional shared data models */
     private final List<String> sharedDataModels;
 
-    /** Include pattern for sources */
-    private final String sourceIncludePattern;
+    /** Global include pattern for data sources */
+    private final String dataSourceIncludePattern;
 
-    /** Exclude pattern for sources */
-    private final String sourceExcludePattern;
+    /** Global exclude pattern for data sources */
+    private final String dataSourceExcludePattern;
 
     /** Encoding of input files */
     private final Charset inputEncoding;
@@ -102,8 +102,8 @@ public class Settings {
             List<OutputGeneratorDefinition> outputGeneratorDefinitions,
             List<String> sharedDataSources,
             List<String> sharedDataModels,
-            String sourceIncludePattern,
-            String sourceExcludePattern,
+            String dataSourceIncludePattern,
+            String dataSourceExcludePattern,
             Charset inputEncoding,
             Charset outputEncoding,
             boolean verbose,
@@ -119,8 +119,8 @@ public class Settings {
         this.outputGeneratorDefinitions = requireNonNull(outputGeneratorDefinitions);
         this.sharedDataSources = requireNonNull(sharedDataSources);
         this.sharedDataModels = requireNonNull(sharedDataModels);
-        this.sourceIncludePattern = sourceIncludePattern;
-        this.sourceExcludePattern = sourceExcludePattern;
+        this.dataSourceIncludePattern = dataSourceIncludePattern;
+        this.dataSourceExcludePattern = dataSourceExcludePattern;
         this.inputEncoding = inputEncoding;
         this.outputEncoding = outputEncoding;
         this.verbose = verbose;
@@ -160,12 +160,12 @@ public class Settings {
         return sharedDataModels;
     }
 
-    public String getSourceIncludePattern() {
-        return sourceIncludePattern;
+    public String getDataSourceIncludePattern() {
+        return dataSourceIncludePattern;
     }
 
-    public String getSourceExcludePattern() {
-        return sourceExcludePattern;
+    public String getDataSourceExcludePattern() {
+        return dataSourceExcludePattern;
     }
 
     public Charset getInputEncoding() {
@@ -230,8 +230,8 @@ public class Settings {
                 ", outputGeneratorDefinitions=" + outputGeneratorDefinitions +
                 ", sharedDataSources=" + sharedDataSources +
                 ", sharedDataModels=" + sharedDataModels +
-                ", sourceIncludePattern='" + sourceIncludePattern + '\'' +
-                ", sourceExcludePattern='" + sourceExcludePattern + '\'' +
+                ", dataSourceIncludePattern='" + dataSourceIncludePattern +
+                ", dataSourceExcludePattern='" + dataSourceExcludePattern +
                 ", inputEncoding=" + inputEncoding +
                 ", outputEncoding=" + outputEncoding +
                 ", verbose=" + verbose +

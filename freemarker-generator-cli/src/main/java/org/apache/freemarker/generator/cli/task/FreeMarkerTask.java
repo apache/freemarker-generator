@@ -50,7 +50,7 @@ import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model;
  */
 public class FreeMarkerTask implements Callable<Integer> {
 
-        private static final int SUCCESS_CODE = 0;
+    private static final int SUCCESS_CODE = 0;
 
     private final Supplier<Configuration> configurationSupplier;
     private final Supplier<List<OutputGenerator>> outputGeneratorsSupplier;

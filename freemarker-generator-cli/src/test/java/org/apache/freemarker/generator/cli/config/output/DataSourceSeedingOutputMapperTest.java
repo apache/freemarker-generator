@@ -19,33 +19,41 @@ public class DataSourceSeedingOutputMapperTest {
     private final File PARENT_DIRECTORY = new File("..");
     private final File ANY_DIRECTORY = new File("target");
     private final File ANY_FILE = new File("pom.xml");
-    private final DataSource ANY_DATA_SOURCE = DataSourceFactory.fromFile(ANY_FILE, StandardCharsets.UTF_8);
+    private final DataSource FILE_DATA_SOURCE = DataSourceFactory.fromFile(ANY_FILE, StandardCharsets.UTF_8);
+    private final DataSource URL_DATA_SOURCE = DataSourceFactory.fromUrl("google.com", "group", DataSourceFactory.toUrl("https://www.google.com"));
 
     @Test
     public void shouldGenerateOutputFileForCurrentDirectory() {
-        assertEquals("pom.xml", path(outputMapper(null).map(CURRENT_DIRECTORY, ANY_DATA_SOURCE)));
-        assertEquals("pom.xml", path(outputMapper("").map(CURRENT_DIRECTORY, ANY_DATA_SOURCE)));
-        assertEquals("pom.html", path(outputMapper("*.html").map(CURRENT_DIRECTORY, ANY_DATA_SOURCE)));
-        assertEquals("pom.html", path(outputMapper("pom.html").map(CURRENT_DIRECTORY, ANY_DATA_SOURCE)));
-        assertEquals("html/pom.html", path(outputMapper("html/*.html").map(CURRENT_DIRECTORY, ANY_DATA_SOURCE)));
+        assertEquals("pom.xml", path(outputMapper(null).map(CURRENT_DIRECTORY, FILE_DATA_SOURCE)));
+        assertEquals("pom.xml", path(outputMapper("").map(CURRENT_DIRECTORY, FILE_DATA_SOURCE)));
+        assertEquals("pom.html", path(outputMapper("*.html").map(CURRENT_DIRECTORY, FILE_DATA_SOURCE)));
+        assertEquals("pom.html", path(outputMapper("pom.html").map(CURRENT_DIRECTORY, FILE_DATA_SOURCE)));
+        assertEquals("html/pom.html", path(outputMapper("html/*.html").map(CURRENT_DIRECTORY, FILE_DATA_SOURCE)));
     }
 
     @Test
     public void shouldGenerateOutputFileForParentDirectory() {
-        assertEquals("../pom.xml", path(outputMapper(null).map(PARENT_DIRECTORY, ANY_DATA_SOURCE)));
-        assertEquals("../pom.xml", path(outputMapper("").map(PARENT_DIRECTORY, ANY_DATA_SOURCE)));
-        assertEquals("../pom.html", path(outputMapper("*.html").map(PARENT_DIRECTORY, ANY_DATA_SOURCE)));
-        assertEquals("../pom.html", path(outputMapper("pom.html").map(PARENT_DIRECTORY, ANY_DATA_SOURCE)));
-        assertEquals("../html/pom.html", path(outputMapper("html/*.html").map(PARENT_DIRECTORY, ANY_DATA_SOURCE)));
+        assertEquals("../pom.xml", path(outputMapper(null).map(PARENT_DIRECTORY, FILE_DATA_SOURCE)));
+        assertEquals("../pom.xml", path(outputMapper("").map(PARENT_DIRECTORY, FILE_DATA_SOURCE)));
+        assertEquals("../pom.html", path(outputMapper("*.html").map(PARENT_DIRECTORY, FILE_DATA_SOURCE)));
+        assertEquals("../pom.html", path(outputMapper("pom.html").map(PARENT_DIRECTORY, FILE_DATA_SOURCE)));
+        assertEquals("../html/pom.html", path(outputMapper("html/*.html").map(PARENT_DIRECTORY, FILE_DATA_SOURCE)));
     }
 
     @Test
     public void shouldGenerateOutputFileForAnyDirectory() {
-        assertEquals("target/pom.xml", path(outputMapper(null).map(ANY_DIRECTORY, ANY_DATA_SOURCE)));
-        assertEquals("target/pom.xml", path(outputMapper("").map(ANY_DIRECTORY, ANY_DATA_SOURCE)));
-        assertEquals("target/pom.html", path(outputMapper("*.html").map(ANY_DIRECTORY, ANY_DATA_SOURCE)));
-        assertEquals("target/pom.html", path(outputMapper("pom.html").map(ANY_DIRECTORY, ANY_DATA_SOURCE)));
-        assertEquals("target/html/pom.html", path(outputMapper("html/*.html").map(ANY_DIRECTORY, ANY_DATA_SOURCE)));
+        assertEquals("target/pom.xml", path(outputMapper(null).map(ANY_DIRECTORY, FILE_DATA_SOURCE)));
+        assertEquals("target/pom.xml", path(outputMapper("").map(ANY_DIRECTORY, FILE_DATA_SOURCE)));
+        assertEquals("target/pom.html", path(outputMapper("*.html").map(ANY_DIRECTORY, FILE_DATA_SOURCE)));
+        assertEquals("target/pom.html", path(outputMapper("pom.html").map(ANY_DIRECTORY, FILE_DATA_SOURCE)));
+        assertEquals("target/html/pom.html", path(outputMapper("html/*.html").map(ANY_DIRECTORY, FILE_DATA_SOURCE)));
+    }
+
+    @Test
+    public void shouldHandleUrlDataSources() {
+        assertEquals("target/google.com", path(outputMapper(null).map(ANY_DIRECTORY, URL_DATA_SOURCE)));
+        assertEquals("target/google.com", path(outputMapper("").map(ANY_DIRECTORY, URL_DATA_SOURCE)));
+        assertEquals("target/google.com.html", path(outputMapper("*.html").map(ANY_DIRECTORY, URL_DATA_SOURCE)));
     }
 
     private static DataSourceSeedingOutputMapper outputMapper(String template) {

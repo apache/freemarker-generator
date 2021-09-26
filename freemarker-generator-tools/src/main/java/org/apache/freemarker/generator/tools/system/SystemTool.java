@@ -109,6 +109,7 @@ public class SystemTool {
      * Get the value of a user-supplied parameter.
      *
      * @param name name of the parameter
+     * @param def  default value
      * @return value or default value
      */
     public String getParameter(String name, String def) {

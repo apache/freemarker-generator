@@ -54,8 +54,8 @@ public abstract class AbstractOutputGenerator {
 
         final DataSourcesSupplier outputGeneratorDataSourcesSupplier = new DataSourcesSupplier(
                 outputGeneratorDefinition.getDataSources(),
-                settings.getSourceIncludePattern(),
-                settings.getSourceExcludePattern(),
+                settings.getDataSourceIncludePattern(),
+                settings.getDataSourceExcludePattern(),
                 settings.getInputEncoding()
         );
 
