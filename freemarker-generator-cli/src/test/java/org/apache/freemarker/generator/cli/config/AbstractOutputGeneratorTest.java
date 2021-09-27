@@ -18,7 +18,8 @@ public abstract class AbstractOutputGeneratorTest {
     protected static final String ANY_DATASOURCE_DIRECTORY = "src/test/data/json";
     protected static final String ANY_DATASOURCE_FILE_01 = ANY_DATASOURCE_DIRECTORY + "/environments.json";
     protected static final String ANY_DATASOURCE_FILE_02 = ANY_DATASOURCE_DIRECTORY + "/list.json";
-    protected static final String ANY_OUTPUT_DIRECTORY_NAME = "target";
+    protected static final String ANY_OUTPUT_DIRECTORY = "target";
+    protected static final String ANY_OUTPUT_FILE = "target/out.txt";
 
     protected static OutputGeneratorDefinition outputGeneratorDefinition() {
         return new OutputGeneratorDefinition();

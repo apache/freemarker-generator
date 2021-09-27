@@ -19,7 +19,7 @@ public class TemplateSeedingOutputGeneratorTest extends AbstractOutputGeneratorT
     public void shouldCreateSingleOutputGeneratorForMultipleDataSources() {
         final OutputGeneratorDefinition outputGeneratorDefinition = outputGeneratorDefinition();
         outputGeneratorDefinition.templateSourceDefinition = templateSourceDefinition(ANY_TEMPLATE);
-        outputGeneratorDefinition.templateOutputDefinition = templateOutputDirectoryDefinition(ANY_OUTPUT_DIRECTORY_NAME);
+        outputGeneratorDefinition.templateOutputDefinition = templateOutputDirectoryDefinition(ANY_OUTPUT_FILE);
         outputGeneratorDefinition.dataSourceDefinition = dataSourceDefinition(ANY_DATASOURCE_FILE_01, ANY_DATASOURCE_FILE_02);
         outputGeneratorDefinition.outputSeedDefinition = outputSeedDefinition(SeedType.TEMPLATE);
         final Settings settings = settings(outputGeneratorDefinition);
@@ -33,7 +33,7 @@ public class TemplateSeedingOutputGeneratorTest extends AbstractOutputGeneratorT
 
         assertEquals(OutputGenerator.SeedType.TEMPLATE, outputGenerator.getSeedType());
         assertEquals(ANY_TEMPLATE_NAME, outputGenerator.getTemplateSource().getName());
-        assertEquals(new File(ANY_OUTPUT_DIRECTORY_NAME), outputGenerator.getTemplateOutput().getFile());
+        assertEquals(new File(ANY_OUTPUT_FILE), outputGenerator.getTemplateOutput().getFile());
         assertEquals("environments.json", outputGenerator.getDataSources().get(0).getFileName());
         assertEquals("list.json", outputGenerator.getDataSources().get(1).getFileName());
     }
@@ -45,7 +45,7 @@ public class TemplateSeedingOutputGeneratorTest extends AbstractOutputGeneratorT
     public void shouldCreateSingleOutputGeneratorForMultipleDataSourcesInDirectory() {
         final OutputGeneratorDefinition outputGeneratorDefinition = outputGeneratorDefinition();
         outputGeneratorDefinition.templateSourceDefinition = templateSourceDefinition(ANY_TEMPLATE);
-        outputGeneratorDefinition.templateOutputDefinition = templateOutputDirectoryDefinition(ANY_OUTPUT_DIRECTORY_NAME);
+        outputGeneratorDefinition.templateOutputDefinition = templateOutputDirectoryDefinition(ANY_OUTPUT_FILE);
         outputGeneratorDefinition.dataSourceDefinition = dataSourceDefinition(ANY_DATASOURCE_DIRECTORY);
         outputGeneratorDefinition.outputSeedDefinition = outputSeedDefinition(SeedType.TEMPLATE);
         final Settings settings = settings(outputGeneratorDefinition);
@@ -59,7 +59,7 @@ public class TemplateSeedingOutputGeneratorTest extends AbstractOutputGeneratorT
 
         assertEquals(OutputGenerator.SeedType.TEMPLATE, outputGenerator.getSeedType());
         assertEquals(ANY_TEMPLATE_NAME, outputGenerator.getTemplateSource().getName());
-        assertEquals(new File(ANY_OUTPUT_DIRECTORY_NAME), outputGenerator.getTemplateOutput().getFile());
+        assertEquals(new File(ANY_OUTPUT_FILE), outputGenerator.getTemplateOutput().getFile());
         assertEquals("environments.json", outputGenerator.getDataSources().get(0).getFileName());
         assertEquals("list.json", outputGenerator.getDataSources().get(1).getFileName());
     }
@@ -71,13 +71,13 @@ public class TemplateSeedingOutputGeneratorTest extends AbstractOutputGeneratorT
     public void shouldCreateOutputGeneratorForEachOutputGeneratorDefinition() {
         final OutputGeneratorDefinition outputGeneratorDefinition_01 = outputGeneratorDefinition();
         outputGeneratorDefinition_01.templateSourceDefinition = templateSourceDefinition(ANY_TEMPLATE);
-        outputGeneratorDefinition_01.templateOutputDefinition = templateOutputDirectoryDefinition(ANY_OUTPUT_DIRECTORY_NAME);
+        outputGeneratorDefinition_01.templateOutputDefinition = templateOutputDirectoryDefinition(ANY_OUTPUT_FILE);
         outputGeneratorDefinition_01.dataSourceDefinition = dataSourceDefinition(ANY_DATASOURCE_FILE_01);
         outputGeneratorDefinition_01.outputSeedDefinition = outputSeedDefinition(SeedType.TEMPLATE);
 
         final OutputGeneratorDefinition outputGeneratorDefinition_02 = outputGeneratorDefinition();
         outputGeneratorDefinition_02.templateSourceDefinition = templateSourceDefinition(ANY_TEMPLATE);
-        outputGeneratorDefinition_02.templateOutputDefinition = templateOutputDirectoryDefinition(ANY_OUTPUT_DIRECTORY_NAME);
+        outputGeneratorDefinition_02.templateOutputDefinition = templateOutputDirectoryDefinition(ANY_OUTPUT_FILE);
         outputGeneratorDefinition_02.dataSourceDefinition = dataSourceDefinition(ANY_DATASOURCE_FILE_02);
         outputGeneratorDefinition_02.outputSeedDefinition = outputSeedDefinition(SeedType.TEMPLATE);
 
@@ -93,13 +93,13 @@ public class TemplateSeedingOutputGeneratorTest extends AbstractOutputGeneratorT
         assertEquals(1, outputGenerator_01.getDataSources().size());
         assertEquals(OutputGenerator.SeedType.TEMPLATE, outputGenerator_01.getSeedType());
         assertEquals(ANY_TEMPLATE_NAME, outputGenerator_01.getTemplateSource().getName());
-        assertEquals(new File(ANY_OUTPUT_DIRECTORY_NAME), outputGenerator_01.getTemplateOutput().getFile());
+        assertEquals(new File(ANY_OUTPUT_FILE), outputGenerator_01.getTemplateOutput().getFile());
         assertEquals("environments.json", outputGenerator_01.getDataSources().get(0).getFileName());
 
         assertEquals(1, outputGenerator_02.getDataSources().size());
         assertEquals(OutputGenerator.SeedType.TEMPLATE, outputGenerator_02.getSeedType());
         assertEquals(ANY_TEMPLATE_NAME, outputGenerator_02.getTemplateSource().getName());
-        assertEquals(new File(ANY_OUTPUT_DIRECTORY_NAME), outputGenerator_02.getTemplateOutput().getFile());
+        assertEquals(new File(ANY_OUTPUT_FILE), outputGenerator_02.getTemplateOutput().getFile());
         assertEquals("list.json", outputGenerator_02.getDataSources().get(0).getFileName());
     }
 }
