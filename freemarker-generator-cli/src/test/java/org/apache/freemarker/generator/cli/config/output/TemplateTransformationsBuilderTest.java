@@ -14,14 +14,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.template;
+package org.apache.freemarker.generator.cli.config.output;
 
 import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.template.TemplateOutput;
 import org.apache.freemarker.generator.base.template.TemplateSource;
 import org.apache.freemarker.generator.base.template.TemplateSource.Origin;
-import org.apache.freemarker.generator.base.template.TemplateTransformation;
-import org.apache.freemarker.generator.base.template.TemplateTransformationsBuilder;
 import org.apache.freemarker.generator.base.util.NonClosableWriterWrapper;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -41,10 +39,9 @@ import static org.junit.Assert.assertTrue;
 
 public class TemplateTransformationsBuilderTest {
 
-    private static final String ANY_TEMPLATE_FILE_NAME = "src/test/template/application.properties";
-    private static final String OTHER_TEMPLATE_FILE_NAME = "src/test/template/nginx/nginx.conf.ftl";
+    private static final String ANY_TEMPLATE_FILE_NAME = "src/test/data/template/application.properties";
     private static final String ANY_TEMPLATE_PATH = "template/info.ftl";
-    private static final String ANY_TEMPLATE_DIRECTORY_NAME = "src/test/template";
+    private static final String ANY_TEMPLATE_DIRECTORY_NAME = "src/test/data/template";
     private static final String ANY_TEMPLATE_URL = "https://raw.githubusercontent.com/apache/freemarker-generator/master/freemarker-generator-cli/src/app/templates/freemarker-generator/info.ftl";
     private static final String ANY_ENV_URI = "env:///JAVA_HOME";
 

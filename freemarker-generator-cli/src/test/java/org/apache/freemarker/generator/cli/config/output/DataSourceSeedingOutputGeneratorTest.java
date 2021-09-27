@@ -1,7 +1,10 @@
-package org.apache.freemarker.generator.cli.config;
+package org.apache.freemarker.generator.cli.config.output;
 
 import org.apache.freemarker.generator.base.FreeMarkerConstants.SeedType;
 import org.apache.freemarker.generator.base.output.OutputGenerator;
+import org.apache.freemarker.generator.cli.config.AbstractOutputGeneratorTest;
+import org.apache.freemarker.generator.cli.config.OutputGeneratorsSupplier;
+import org.apache.freemarker.generator.cli.config.Settings;
 import org.apache.freemarker.generator.cli.picocli.OutputGeneratorDefinition;
 import org.junit.Test;
 
@@ -69,7 +72,8 @@ public class DataSourceSeedingOutputGeneratorTest extends AbstractOutputGenerato
         assertEquals(1, outputGenerator_01.getDataSources().size());
         assertEquals(OutputGenerator.SeedType.DATASOURCE, outputGenerator_01.getSeedType());
         assertEquals(ANY_TEMPLATE_NAME, outputGenerator_01.getTemplateSource().getName());
-        assertEquals(new File(ANY_OUTPUT_DIRECTORY, "environments.txt"), outputGenerator_01.getTemplateOutput().getFile());
+        assertEquals(new File(ANY_OUTPUT_DIRECTORY, "environments.txt"), outputGenerator_01.getTemplateOutput()
+                .getFile());
         assertEquals("environments.json", outputGenerator_01.getDataSources().get(0).getFileName());
 
         assertEquals(1, outputGenerator_02.getDataSources().size());
@@ -102,7 +106,8 @@ public class DataSourceSeedingOutputGeneratorTest extends AbstractOutputGenerato
         assertEquals(1, outputGenerator_01.getDataSources().size());
         assertEquals(OutputGenerator.SeedType.DATASOURCE, outputGenerator_01.getSeedType());
         assertEquals(ANY_TEMPLATE_NAME, outputGenerator_01.getTemplateSource().getName());
-        assertEquals(new File(ANY_OUTPUT_DIRECTORY, "environments.txt"), outputGenerator_01.getTemplateOutput().getFile());
+        assertEquals(new File(ANY_OUTPUT_DIRECTORY, "environments.txt"), outputGenerator_01.getTemplateOutput()
+                .getFile());
         assertEquals("environments.json", outputGenerator_01.getDataSources().get(0).getFileName());
 
         assertEquals(1, outputGenerator_02.getDataSources().size());

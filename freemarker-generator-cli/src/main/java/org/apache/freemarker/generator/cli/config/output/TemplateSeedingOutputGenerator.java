@@ -18,8 +18,6 @@ package org.apache.freemarker.generator.cli.config.output;
 
 import org.apache.freemarker.generator.base.output.OutputGenerator;
 import org.apache.freemarker.generator.base.output.OutputGenerator.SeedType;
-import org.apache.freemarker.generator.base.template.TemplateTransformation;
-import org.apache.freemarker.generator.base.template.TemplateTransformationsBuilder;
 import org.apache.freemarker.generator.cli.config.Settings;
 import org.apache.freemarker.generator.cli.picocli.OutputGeneratorDefinition;
 import org.apache.freemarker.generator.cli.picocli.TemplateOutputDefinition;
