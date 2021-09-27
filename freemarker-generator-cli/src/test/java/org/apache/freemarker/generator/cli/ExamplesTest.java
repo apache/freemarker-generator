@@ -178,6 +178,20 @@ public class ExamplesTest extends AbstractMainTest {
     }
 
     @Test
+    public void shouldSupportDataSourceSeedingTransformation() throws IOException {
+        final String output = execute("--seed=datasource " +
+                "--template freemarker-generator/csv/html/transform.ftl " +
+                "--data-source src/app/examples/data/csv " +
+                "--data-source-include=*.csv " +
+                "--output target " +
+                "--output-mapper=*.html");
+
+        assertTrue(output.startsWith("<!DOCTYPE html>"));
+        assertTrue(output.contains("The Electric Company"));
+        assertTrue(output.contains("test user DDDDDDD"));
+    }
+
+    @Test
     @Ignore("Manual test to check memory consumption and resource handling")
     public void shouldCloseAllResources() throws IOException {
         for (int i = 0; i < 500; i++) {

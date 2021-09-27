@@ -16,6 +16,7 @@
  */
 package org.apache.freemarker.generator.tools.commonsexec;
 
+import org.apache.freemarker.generator.base.util.OperatingSystem;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -27,16 +28,19 @@ public class CommonsExecToolTest {
 
     @Test
     public void shouldExecuteCommandLine() {
-        final String output = commonsExecTool().execute("echo Hello World!");
-
-        assertEquals("Hello World!\n", output);
+        if (OperatingSystem.isMac() || OperatingSystem.isUnix()) {
+            final String output = commonsExecTool().execute("echo Hello World!");
+            assertEquals("Hello World!\n", output);
+        }
     }
 
     @Test
     public void shouldExecuteCommandLineArgs() {
-        final String output = commonsExecTool().execute("echo", Collections.singletonList("Hello World!"));
+        if (OperatingSystem.isMac() || OperatingSystem.isUnix()) {
+            final String output = commonsExecTool().execute("echo", Collections.singletonList("Hello World!"));
 
-        assertEquals("\"Hello World!\"\n", output);
+            assertEquals("\"Hello World!\"\n", output);
+        }
     }
 
     @Test(expected = RuntimeException.class)
