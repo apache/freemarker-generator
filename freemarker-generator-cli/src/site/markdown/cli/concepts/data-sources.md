@@ -230,7 +230,7 @@ Extension       : csv
 Nr of chars     : 12,643
 Nr of bytes     : 12,643
 File name       : transactions.csv
-URI schema      : file
+URI scheme      : file
 
 Iterating Over Metadata Of A Datasource
 ---------------------------------------------------------------------------
@@ -261,7 +261,7 @@ Extension       :
 Nr of chars     : 330
 Nr of bytes     : 330
 File name       :
-URI schema      : https
+URI scheme      : https
 
 Iterating Over Metadata Of A Datasource
 ---------------------------------------------------------------------------
@@ -291,7 +291,7 @@ Extension       :
 Nr of chars     : 1,476
 Nr of bytes     : 1,478
 File name       :
-URI schema      : env
+URI scheme     : env
 
 Iterating Over Metadata Of A Datasource
 ---------------------------------------------------------------------------

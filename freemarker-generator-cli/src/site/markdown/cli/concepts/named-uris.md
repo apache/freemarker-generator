@@ -123,7 +123,7 @@ Extension       : csv
 Nr of chars     : 376
 Nr of bytes     : 376
 File name       : user.csv
-URI schema      : file
+URI scheme      : file
 
 Iterating Over Metadata Of A Datasource
 ---------------------------------------------------------------------------

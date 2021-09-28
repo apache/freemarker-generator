@@ -21,7 +21,6 @@ import org.apache.freemarker.generator.base.mime.MimetypesFileTypeMapFactory;
 import org.apache.freemarker.generator.base.uri.NamedUri;
 import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
 import org.apache.freemarker.generator.base.util.FileUtils;
-import org.apache.freemarker.generator.base.util.UriUtils;
 import org.apache.freemarker.generator.base.util.Validate;
 
 import javax.activation.FileDataSource;
