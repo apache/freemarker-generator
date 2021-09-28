@@ -53,17 +53,18 @@ ${dataSource.name}
 Invoke Arbitrary Methods On DataSource
 ---------------------------------------------------------------------------
 <#assign dataSource=dataSources?values?first>
-Name            : ${dataSource.name}
-Group           : ${dataSource.group}
-Nr of lines     : ${dataSource.lines?size}
-ContentType     : ${dataSource.contentType}
-MimeType        : ${dataSource.mimeType}
-Charset         : ${dataSource.charset}
-Extension       : ${dataSource.extension}
-Nr of chars     : ${dataSource.text?length}
-Nr of bytes     : ${dataSource.bytes?size}
-File name       : ${dataSource.fileName}
-URI schema      : ${dataSource.uri.scheme}
+Name                : ${dataSource.name}
+Group               : ${dataSource.group}
+Nr of lines         : ${dataSource.lines?size}
+ContentType         : ${dataSource.contentType}
+MimeType            : ${dataSource.mimeType}
+Charset             : ${dataSource.charset}
+Extension           : ${dataSource.extension}
+Nr of chars         : ${dataSource.text?length}
+Nr of bytes         : ${dataSource.bytes?size}
+File name           : ${dataSource.fileName}
+URI schema          : ${dataSource.uri.scheme}
+Relative File Path  : ${dataSource.relativeFilePath}
 
 Iterating Over Metadata Of A Datasource
 ---------------------------------------------------------------------------

@@ -16,6 +16,7 @@
  */
 package org.apache.freemarker.generator.cli.config;
 
+import org.apache.freemarker.generator.base.FreeMarkerConstants;
 import org.apache.freemarker.generator.base.FreeMarkerConstants.Model;
 import org.apache.freemarker.generator.base.util.LocaleUtils;
 import org.apache.freemarker.generator.base.util.NonClosableWriterWrapper;
@@ -36,8 +37,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.emptyList;
 import static java.util.Objects.requireNonNull;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.Configuration.LOCALE_KEY;
-import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_CHARSET;
-import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_LOCALE;
 
 /**
  * Capture all the settings required for rendering a FreeMarker template.
@@ -65,11 +64,11 @@ public class Settings {
     /** List of additional shared data models */
     private final List<String> sharedDataModels;
 
-    /** Include pattern for sources */
-    private final String sourceIncludePattern;
+    /** Global include pattern for data sources */
+    private final String dataSourceIncludePattern;
 
-    /** Exclude pattern for sources */
-    private final String sourceExcludePattern;
+    /** Global exclude pattern for data sources */
+    private final String dataSourceExcludePattern;
 
     /** Encoding of input files */
     private final Charset inputEncoding;
@@ -86,10 +85,10 @@ public class Settings {
     /** Read from stdin? */
     private final boolean isReadFromStdin;
 
-    /** User-supplied parameters */
+    /** User-supplied parameters available for template processing */
     private final Map<String, Object> userParameters;
 
-    /** User-supplied system properties */
+    /** User-supplied properties to be copied to global system properties */
     private final Properties userSystemProperties;
 
     /** Caller-supplied writer */
@@ -103,8 +102,8 @@ public class Settings {
             List<OutputGeneratorDefinition> outputGeneratorDefinitions,
             List<String> sharedDataSources,
             List<String> sharedDataModels,
-            String sourceIncludePattern,
-            String sourceExcludePattern,
+            String dataSourceIncludePattern,
+            String dataSourceExcludePattern,
             Charset inputEncoding,
             Charset outputEncoding,
             boolean verbose,
@@ -120,8 +119,8 @@ public class Settings {
         this.outputGeneratorDefinitions = requireNonNull(outputGeneratorDefinitions);
         this.sharedDataSources = requireNonNull(sharedDataSources);
         this.sharedDataModels = requireNonNull(sharedDataModels);
-        this.sourceIncludePattern = sourceIncludePattern;
-        this.sourceExcludePattern = sourceExcludePattern;
+        this.dataSourceIncludePattern = dataSourceIncludePattern;
+        this.dataSourceExcludePattern = dataSourceExcludePattern;
         this.inputEncoding = inputEncoding;
         this.outputEncoding = outputEncoding;
         this.verbose = verbose;
@@ -161,12 +160,12 @@ public class Settings {
         return sharedDataModels;
     }
 
-    public String getSourceIncludePattern() {
-        return sourceIncludePattern;
+    public String getDataSourceIncludePattern() {
+        return dataSourceIncludePattern;
     }
 
-    public String getSourceExcludePattern() {
-        return sourceExcludePattern;
+    public String getDataSourceExcludePattern() {
+        return dataSourceExcludePattern;
     }
 
     public Charset getInputEncoding() {
@@ -231,8 +230,8 @@ public class Settings {
                 ", outputGeneratorDefinitions=" + outputGeneratorDefinitions +
                 ", sharedDataSources=" + sharedDataSources +
                 ", sharedDataModels=" + sharedDataModels +
-                ", sourceIncludePattern='" + sourceIncludePattern + '\'' +
-                ", sourceExcludePattern='" + sourceExcludePattern + '\'' +
+                ", dataSourceIncludePattern='" + dataSourceIncludePattern +
+                ", dataSourceExcludePattern='" + dataSourceExcludePattern +
                 ", inputEncoding=" + inputEncoding +
                 ", outputEncoding=" + outputEncoding +
                 ", verbose=" + verbose +
@@ -275,11 +274,11 @@ public class Settings {
             this.sourceIncludePattern = null;
             this.sourceExcludePattern = null;
             this.configuration = new Properties();
-            this.locale = DEFAULT_LOCALE.toString();
+            this.locale = FreeMarkerConstants.DEFAULT_LOCALE.toString();
             this.parameters = new HashMap<>();
             this.systemProperties = new Properties();
-            this.setInputEncoding(DEFAULT_CHARSET.name());
-            this.setOutputEncoding(DEFAULT_CHARSET.name());
+            this.setInputEncoding(FreeMarkerConstants.DEFAULT_CHARSET.name());
+            this.setOutputEncoding(FreeMarkerConstants.DEFAULT_CHARSET.name());
         }
 
         public SettingsBuilder setCommandLineArgs(String[] args) {
@@ -406,7 +405,7 @@ public class Settings {
         private String getDefaultLocale() {
             return configuration.getProperty(
                     LOCALE_KEY,
-                    System.getProperty(LOCALE_KEY, DEFAULT_LOCALE.toString()));
+                    System.getProperty(LOCALE_KEY, FreeMarkerConstants.DEFAULT_LOCALE.toString()));
         }
     }
 }

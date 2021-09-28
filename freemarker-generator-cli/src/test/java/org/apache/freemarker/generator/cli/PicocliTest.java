@@ -148,7 +148,7 @@ public class PicocliTest {
                 "-i", "some-interactive-template01", "-s", "datasource30.csv", "-o", "out.txt",
                 "-i", "some-interactive-template02");
 
-        main.validate();
+        main.validateCommandLineParameters();
 
         final List<OutputGeneratorDefinition> defs = main.outputGeneratorDefinitions;
         assertEquals(4, defs.size());

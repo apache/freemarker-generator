@@ -106,7 +106,7 @@ public class SuppliersTest {
         final List<DataSource> dataSourceList = dataSourcesSupplier.get();
 
         assertEquals(1, dataSourceList.size());
-        assertTrue(dataSourceList.get(0).getName().endsWith(ANY_DATA_SOURCE_NAME));
+        assertTrue(dataSourceList.get(0).getName().endsWith(fixSeparators(ANY_DATA_SOURCE_NAME)));
     }
 
     @Test

@@ -140,15 +140,14 @@ public class Main implements Callable<Integer> {
 
     @Override
     public Integer call() {
-        validate();
+        validateCommandLineParameters();
+        updateGlobalSystemProperties();
         return IntStream.range(0, times).map(i -> onCall()).max().orElse(0);
     }
 
     private Integer onCall() {
-        updateSystemProperties();
-
         final String currentConfigFile = isNotEmpty(configFile) ? configFile : getDefaultConfigFileName();
-        final Properties configuration = loadFreeMarkerCliConfiguration(currentConfigFile);
+        final Properties configuration = loadFreeMarkerGeneratorConfiguration(currentConfigFile);
         final List<File> templateDirectories = getTemplateDirectories(templateDir);
         final Settings settings = settings(configuration, templateDirectories, outputGeneratorDefinitions);
 
@@ -166,7 +165,11 @@ public class Main implements Callable<Integer> {
         }
     }
 
-    void validate() {
+    /**
+     * Invoke a custom validation of the command line parameters supplementing
+     * the checks already done by Picocli.
+     */
+    void validateCommandLineParameters() {
         outputGeneratorDefinitions.forEach(t -> t.validate(spec.commandLine()));
     }
 
@@ -195,7 +198,7 @@ public class Main implements Callable<Integer> {
                 .build();
     }
 
-    private void updateSystemProperties() {
+    private void updateGlobalSystemProperties() {
         if (systemProperties != null && !systemProperties.isEmpty()) {
             System.getProperties().putAll(systemProperties);
         }
@@ -226,7 +229,7 @@ public class Main implements Callable<Integer> {
         return isNotEmpty(appHome) ? new File(appHome, Configuration.CONFIG_FILE_NAME).getAbsolutePath() : null;
     }
 
-    private static Properties loadFreeMarkerCliConfiguration(String fileName) {
+    private static Properties loadFreeMarkerGeneratorConfiguration(String fileName) {
         if (isEmpty(fileName)) {
             return new Properties();
         }

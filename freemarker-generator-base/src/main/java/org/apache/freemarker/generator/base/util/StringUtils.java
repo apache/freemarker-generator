@@ -30,6 +30,10 @@ public class StringUtils {
         return value != null && value.trim().isEmpty() ? null : value;
     }
 
+    public static String nullToEmpty(String value) {
+        return isEmpty(value) ? "" : value;
+    }
+
     public static String firstNonEmpty(final String... values) {
         if (values != null) {
             for (final String value : values) {
@@ -39,6 +43,10 @@ public class StringUtils {
             }
         }
         return null;
+    }
+
+    public static String trim(String value) {
+        return value != null ? value.trim() : null;
     }
 
     public static int count(final String s, final char c) {

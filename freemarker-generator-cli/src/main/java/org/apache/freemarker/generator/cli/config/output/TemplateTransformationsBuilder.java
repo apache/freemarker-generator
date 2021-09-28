@@ -14,13 +14,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.base.template;
+package org.apache.freemarker.generator.cli.config.output;
 
 import org.apache.freemarker.generator.base.FreeMarkerConstants.Location;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceLoader;
 import org.apache.freemarker.generator.base.datasource.DataSourceLoaderFactory;
 import org.apache.freemarker.generator.base.file.RecursiveFileSupplier;
+import org.apache.freemarker.generator.base.template.TemplateOutput;
+import org.apache.freemarker.generator.base.template.TemplateSource;
 import org.apache.freemarker.generator.base.util.NonClosableWriterWrapper;
 import org.apache.freemarker.generator.base.util.StringUtils;
 import org.apache.freemarker.generator.base.util.Validate;

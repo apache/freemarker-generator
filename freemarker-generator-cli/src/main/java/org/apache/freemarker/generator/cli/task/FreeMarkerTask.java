@@ -23,8 +23,11 @@ import org.apache.commons.io.FileUtils;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSources;
 import org.apache.freemarker.generator.base.output.OutputGenerator;
+import org.apache.freemarker.generator.base.output.OutputGenerator.SeedType;
 import org.apache.freemarker.generator.base.template.TemplateOutput;
 import org.apache.freemarker.generator.base.template.TemplateSource;
+import org.apache.freemarker.generator.base.util.ListUtils;
+import org.apache.freemarker.generator.base.util.Validate;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -33,14 +36,11 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model;
@@ -50,7 +50,7 @@ import static org.apache.freemarker.generator.base.FreeMarkerConstants.Model;
  */
 public class FreeMarkerTask implements Callable<Integer> {
 
-    private static final int SUCCESS = 0;
+    private static final int SUCCESS_CODE = 0;
 
     private final Supplier<Configuration> configurationSupplier;
     private final Supplier<List<OutputGenerator>> outputGeneratorsSupplier;
@@ -85,7 +85,7 @@ public class FreeMarkerTask implements Callable<Integer> {
                 sharedDataSources,
                 sharedParameters));
 
-        return SUCCESS;
+        return SUCCESS_CODE;
     }
 
     private void process(Configuration configuration,
@@ -102,14 +102,36 @@ public class FreeMarkerTask implements Callable<Integer> {
         try (Writer writer = writer(templateOutput)) {
             final Template template = template(configuration, templateSource);
             template.process(templateDataModel, writer);
-        } catch (TemplateException | IOException e) {
+        } catch (TemplateException | IOException | RuntimeException e) {
             throw new RuntimeException("Failed to process template: " + templateSource.getName(), e);
         }
     }
 
+    /**
+     * Merge the <code>DataSourced</code>.
+     * The data sources to be used are determined by the seed type
+     * <ul>
+     *     <li>TEMPLATE: aggregates a list of data source</li>
+     *     <li>DATASOURCE: only takes a single data source</li>
+     * </ul>
+     *
+     * @param outputGenerator   current output generator
+     * @param sharedDataSources shared data sources
+     * @return <code>DataSources</code> to be passed to FreeMarker
+     */
     private static DataSources toDataSources(OutputGenerator outputGenerator, List<DataSource> sharedDataSources) {
-        return new DataSources(Stream.of(outputGenerator.getDataSources(), sharedDataSources)
-                .flatMap(Collection::stream).collect(Collectors.toList()));
+        final List<DataSource> dataSources = outputGenerator.getDataSources();
+        final SeedType seedType = outputGenerator.getSeedType();
+
+        if (seedType == SeedType.TEMPLATE) {
+            return new DataSources(ListUtils.concatenate(dataSources, sharedDataSources));
+        } else if (seedType == SeedType.DATASOURCE) {
+            // Since every data source shall generate an output there can be only 1 datasource supplied.
+            Validate.isTrue(dataSources.size() == 1, "One data source expected for generation driven by data sources");
+            return new DataSources(dataSources);
+        } else {
+            throw new IllegalArgumentException("Don't know how to handle the seed type: " + seedType);
+        }
     }
 
     @SafeVarargs

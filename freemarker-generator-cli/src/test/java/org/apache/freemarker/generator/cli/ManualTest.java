@@ -24,7 +24,11 @@ import java.io.IOException;
 public class ManualTest extends AbstractMainTest {
 
     // private static final String CMD = "-V";
-    private static final String CMD = "-t src/app/examples/templates/datasources.ftl transactions:csv=src/app/examples/data/csv/transactions.csv#delimiter=TAB https://xkcd.com/info.0.json envvars=env:///";
+    private static final String CMD =
+            "-M generate " +
+                    "-o target/out " +
+                    "-t freemarker-generator/csv/html/transform.ftl " +
+                    "src/app/examples/data/csv";
 
     @Override
     public String execute(String commandLine) throws IOException {

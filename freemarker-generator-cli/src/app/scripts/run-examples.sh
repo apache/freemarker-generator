@@ -210,5 +210,15 @@ $FREEMARKER_CMD -t examples/templates/yaml/txt/transform.ftl examples/data/yaml/
 echo "templates/freemarker-generator/yaml/json/transform.ftl"
 $FREEMARKER_CMD -t freemarker-generator/yaml/json/transform.ftl examples/data/yaml/swagger-spec.yaml > target/out/swagger-spec.json || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
+#############################################################################
+# DataSource Seeding
+#############################################################################
+
+echo "examples/data/csv"
+$FREEMARKER_CMD --seed=datasource --template freemarker-generator/csv/html/transform.ftl --output target/out/datasource/csv --output-mapper="*.html" examples/data/csv
+
+echo "examples/data/csv"
+$FREEMARKER_CMD --seed=datasource --template freemarker-generator/csv/html/transform.ftl --data-source . --data-source-include="*.csv" --output target/out/datasource/csv --output-mapper="*.html"
+
 echo "Created the following sample files in ./target/out"
 ls -l ./target/out

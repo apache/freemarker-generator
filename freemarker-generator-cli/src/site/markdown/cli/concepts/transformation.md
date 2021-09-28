@@ -3,15 +3,17 @@
 The `freemarker-generator` generates text output based on processing FreeMarker templates and data 
 
 * A command line invocation requires 1..n `templates` and 0..n `data sources` / `data models` 
-* A command line invocation is internally mapped to a list of `output generators`
+* A command line invocation is internally mapped to a list of `output generators` - the mapping is controlled by the `seed`
+  * `template` transforms 0 ..n `data sources` using a `template` to an `output`
+  * `datasource` applies a `template` for 1..n `data sources` generating 1..n `outputs`
 * The `output generator` consists of exactly one `template`, 0..n `data sources` / `data models` written to an `output` destination
 * The `output` of an `output generator` is either written to
     * `stdout`
-    * an output file
-    * an output directory
+    * An output file
+    * An output directory
 * When the output is written to a directory
-    * the structure of the input directory is preserved
-    * any `ftl` file extension is removed
+    * The structure of the input directory is preserved
+    * Any `ftl` file extension is removed
 * Positional command line arguments are interpreted as `data sources` (or directories) and accessible by a all `output generators`   
 
 ### Examples
@@ -25,7 +27,7 @@ freemarker-generator -t freemarker-generator/csv/md/transform.ftl -o target/cont
 Transform multiple templates to multiple output files (1:1 mapping between templates and outputs)
 
 ```
-freemarker-generator \
+> freemarker-generator \
 -t freemarker-generator/csv/md/transform.ftl -o target/contract.md \
 -t freemarker-generator/csv/html/transform.ftl -o target/contract.html \
 examples/data/csv/contract.csv
@@ -40,7 +42,8 @@ Transform a single template directory to single output directory
 
 ```
 > freemarker-generator \
--t examples/data/template -o target/template1
+-t examples/data/template \
+-o target/template1
 
 > tree target     
 target
@@ -53,7 +56,7 @@ target
 Transforming multiple template directories to multiple output directories
 
 ```
-freemarker-generator \
+> freemarker-generator \
 -t examples/data/template -o target/template1 \
 -t examples/data/template -o target/template2 
 
@@ -67,6 +70,31 @@ target
     |-- application.properties
     `-- nginx
         `-- nginx.conf
+```
+
+Transforming multiple `data sources` to multiple output files (aka source code generation)
+
+```
+> freemarker-generator \
+	--seed=datasource \
+	--template freemarker-generator/csv/html/transform.ftl \
+	--data-source . \
+	--data-source-include="*.csv" \
+	--output target \
+	--output-mapper="*.html"
+
+> tree target               
+target
+`-- examples
+    `-- data
+        `-- csv
+            |-- contract.html
+            |-- dataframe.html
+            |-- excel-export-utf8.html
+            |-- locker-test-users.html
+            |-- sales-records.html
+            |-- transactions.html
+            `-- user.html
 ```
 
 Defining multiple transformation on the command line can be clumsy but [Picolic's @-Files](https://picocli.info/#AtFiles) can help - the following `@-File` defined, e.g. `@examples.args`

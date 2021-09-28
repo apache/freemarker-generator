@@ -189,5 +189,15 @@ echo "examples\templates\yaml\txt\transform.ftl"
 echo "templates\freemarker-generator\yaml\json\transform.ftl"
 %FREEMARKER_CMD% -t freemarker-generator\yaml\json\transform.ftl examples\data\yaml\swagger-spec.yaml > target\out\swagger-spec.json
 
+REM =========================================================================
+REM DataSource Seeding
+REM =========================================================================
+
+echo "examples\data\csv"
+%FREEMARKER_CMD% --seed=datasource --template freemarker-generator\csv\html\transform.ftl --output target\out\datasource\csv --output-mapper="*.html" examples\data\csv
+
+echo "examples\data\csv"
+%FREEMARKER_CMD% --seed=datasource --template freemarker-generator\csv\html\transform.ftl --data-source . --data-source-include="*.csv" --output target\out\datasource\csv --output-mapper="*.html"
+
 echo "Created the following sample files in .\target\out"
 dir .\target\out

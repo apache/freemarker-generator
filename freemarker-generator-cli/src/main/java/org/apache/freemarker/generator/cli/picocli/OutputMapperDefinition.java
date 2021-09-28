@@ -14,25 +14,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.base.util;
+package org.apache.freemarker.generator.cli.picocli;
 
-import java.util.Locale;
+import picocli.CommandLine.Option;
 
-/**
- * Helper class to detect the operating system.
- */
-public class OperatingSystem {
-    private static final String OS = System.getProperty("os.name", "unknown").toLowerCase(Locale.ROOT);
+public class OutputMapperDefinition {
 
-    public static boolean isWindows() {
-        return OS.contains("win");
-    }
+    @Option(names = { "--output-mapper" }, description = "maps the name of the output file")
+    public String outputMapper;
 
-    public static boolean isMac() {
-        return OS.contains("mac");
-    }
-
-    public static boolean isUnix() {
-        return OS.contains("nux");
+    @Override
+    public String toString() {
+        return "OutputMapperDefinition{" +
+                "outputMapper='" + outputMapper + '\'' +
+                '}';
     }
 }

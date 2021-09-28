@@ -26,6 +26,7 @@ import java.net.URL;
  */
 public class CachingUrlDataSource extends URLDataSource {
 
+    /** Cached content type. */
     private String contentType;
 
     public CachingUrlDataSource(URL url) {

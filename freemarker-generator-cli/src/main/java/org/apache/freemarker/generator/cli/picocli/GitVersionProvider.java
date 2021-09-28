@@ -53,4 +53,13 @@ public class GitVersionProvider implements IVersionProvider {
         }
         return properties;
     }
+
+    @Override
+    public String toString() {
+        return "GitVersionProvider{" +
+                "gitBuildVersion='" + gitBuildVersion + '\'' +
+                ", gitCommitId='" + gitCommitId + '\'' +
+                ", gitCommitTime='" + gitCommitTime + '\'' +
+                '}';
+    }
 }

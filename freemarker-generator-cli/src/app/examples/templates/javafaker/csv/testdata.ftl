@@ -16,7 +16,7 @@
 -->
 <#-- Get a localized JavaFaker instance -->
 <#assign faker = tools.javafaker.getFaker("de_DE")>
-<#assign nrOfRecords = tools.system.getString("NR_OF_RECORDS","100")>
+<#assign nrOfRecords = tools.system.getProperty("NR_OF_RECORDS","100")>
 <#assign days = tools.javafaker.timeUnits["DAYS"]>
 <#assign csvTargetFormat = tools.csv.formats["DEFAULT"].withFirstRecordAsHeader()>
 <#assign csvPrinter = tools.csv.printer(csvTargetFormat)>

@@ -29,8 +29,6 @@ import static org.junit.Assert.assertTrue;
 
 public class ConfigurationSupplierTest {
 
-    private static final String ANY_TEMPLATE_NAME = "templateName";
-
     @Test
     public void shouldProvideDefaultConfiguration() {
         final ConfigurationSupplier configurationSupplier = configurationSupplier(settingsBuilder().build());

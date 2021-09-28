@@ -27,4 +27,11 @@ public class DataModelDefinition {
 
     @Option(names = { "-m", "--data-model" }, description = "data model used for rendering")
     public List<String> dataModels;
+
+    @Override
+    public String toString() {
+        return "DataModelDefinition{" +
+                "dataModels=" + dataModels +
+                '}';
+    }
 }

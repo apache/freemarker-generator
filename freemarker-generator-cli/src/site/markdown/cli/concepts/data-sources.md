@@ -199,10 +199,10 @@ Iterating Over Metadata Of A Datasource
 ---------------------------------------------------------------------------
 extension       : csv
 filename        : contract.csv
-basename        : contract
-filepath        : /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/src/app/examples/data/csv
+baseName        : contract
+filePath        : /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/src/app/examples/data/csv
 name            : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/src/app/examples/data/csv/contract.csv
-mimetype        : text/csv
+mimeType        : text/csv
 uri             : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/src/app/examples/data/csv/contract.csv
 group           : default
 ```
@@ -230,16 +230,16 @@ Extension       : csv
 Nr of chars     : 12,643
 Nr of bytes     : 12,643
 File name       : transactions.csv
-URI schema      : file
+URI scheme      : file
 
 Iterating Over Metadata Of A Datasource
 ---------------------------------------------------------------------------
 extension       : csv
-basename        : transactions
-filename        : transactions.csv
-filepath        : /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/csv
+baseName        : transactions
+fileName        : transactions.csv
+filePath        : /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/csv
 name            : transactions
-mimetype        : text/csv
+mimeType        : text/csv
 uri             : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/csv/transactions.csv
 group           : csv
 
@@ -261,16 +261,16 @@ Extension       :
 Nr of chars     : 330
 Nr of bytes     : 330
 File name       :
-URI schema      : https
+URI scheme      : https
 
 Iterating Over Metadata Of A Datasource
 ---------------------------------------------------------------------------
 extension       :
-basename        :
-filename        :
-filepath        : /
+baseName        :
+fileName        :
+filePath        : /
 name            : https://xkcd.com/info.0.json
-mimetype        : application/json
+mimeType        : application/json
 uri             : https://xkcd.com/info.0.json
 group           : default
 
@@ -291,16 +291,16 @@ Extension       :
 Nr of chars     : 1,476
 Nr of bytes     : 1,478
 File name       :
-URI schema      : env
+URI scheme     : env
 
 Iterating Over Metadata Of A Datasource
 ---------------------------------------------------------------------------
 extension       :
-basename        :
-filename        :
-filepath        : /
+baseName        :
+fileName        :
+filePath        : /
 name            : envvars
-mimetype        : text/plain
+mimeType        : text/plain
 uri             : env:///
 group           : default
 

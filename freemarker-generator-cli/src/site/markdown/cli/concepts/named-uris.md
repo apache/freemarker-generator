@@ -123,16 +123,16 @@ Extension       : csv
 Nr of chars     : 376
 Nr of bytes     : 376
 File name       : user.csv
-URI schema      : file
+URI scheme      : file
 
 Iterating Over Metadata Of A Datasource
 ---------------------------------------------------------------------------
 extension       : csv
-basename        : user
-filename        : user.csv
-filepath        : /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/csv
+baseName        : user
+fileName        : user.csv
+filePath        : /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/csv
 name            : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/csv/user.csv
-mimetype        : text/csv
+mimeType        : text/csv
 uri             : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/csv/user.csv
 group           : default
 

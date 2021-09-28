@@ -14,25 +14,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.base.util;
+package org.apache.freemarker.generator.cli.picocli;
 
-import java.util.Locale;
+import picocli.CommandLine.Option;
 
 /**
- * Helper class to detect the operating system.
+ * Seeding of template output.
  */
-public class OperatingSystem {
-    private static final String OS = System.getProperty("os.name", "unknown").toLowerCase(Locale.ROOT);
+public class OutputSeedDefinition {
 
-    public static boolean isWindows() {
-        return OS.contains("win");
-    }
+    @Option(names = { "--seed" }, defaultValue = "template", description = "seed mode: [template|datasource]")
+    public String type;
 
-    public static boolean isMac() {
-        return OS.contains("mac");
-    }
-
-    public static boolean isUnix() {
-        return OS.contains("nux");
+    @Override
+    public String toString() {
+        return "OutputSeedDefinition{" +
+                "type='" + type + '\'' +
+                '}';
     }
 }
