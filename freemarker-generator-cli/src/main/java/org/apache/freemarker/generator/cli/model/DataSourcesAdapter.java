@@ -54,6 +54,7 @@ public class DataSourcesAdapter extends WrappingTemplateModel
      *
      * @param dataSources The dataSources to adapt; can't be {@code null}.
      * @param wrapper     The {@link ObjectWrapper} used to wrap the items in the array.
+     * @return adapter
      */
     public static DataSourcesAdapter create(DataSources dataSources, ObjectWrapperWithAPISupport wrapper) {
         return new DataSourcesAdapter(dataSources, wrapper);
