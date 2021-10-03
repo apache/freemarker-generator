@@ -1,4 +1,4 @@
-<#ftl output_format="plainText">
+<#ftl output_format="plainText" strip_whitespace=true>
 <#--
   Licensed to the Apache Software Foundation (ASF) under one
   or more contributor license agreements.  See the NOTICE file
@@ -17,64 +17,83 @@
 -->
 Support FreeMarker Directives
 ==============================================================================
-has_content: ${dataSources?has_content?c}
-size: ${dataSources?size}
+dataSources?has_content: ${dataSources?has_content?c}
+dataSources?size: ${dataSources?size}
 
 Use FTL Array-style Access
 ==============================================================================
-${dataSources?values[0].name}
-${dataSources?values?first.name}
+<#if dataSources?has_content>
+    dataSources[0]: ${dataSources[0].name}
+<#else>
+    No data sources provided ...
+</#if>
+
+Iterate Over DataSources as List
+==============================================================================
+<#list dataSources as dataSource>
+    dataSource[${dataSource?index}] => ${dataSource.uri}<#lt>
+</#list>
+
+Iterate Over DataSources as Map
+==============================================================================
+<#list dataSources as name, dataSource>
+    dataSource["${name}"] => ${dataSource.uri}<#lt>
+</#list>
+
+Iterate Over DataSources as Values
+==============================================================================
+<#list dataSources?values as dataSource>
+    dataSource[${dataSource?index}] => ${dataSource.uri}<#lt>
+</#list>
 
 Get Document Names As Keys
 ==============================================================================
 <#list dataSources?keys as name>
-    ${name}<#lt>
+    - ${name}<#lt>
 </#list>
 
-Iterate Over Names & DataSources
+Access Underlying DataSources API
 ==============================================================================
-<#list dataSources as name, dataSource>
-    ${name} => ${dataSource.uri}<#lt>
-</#list>
+DataSources.getNames(): ${dataSources?api.names?size}
+DataSources.getGroups(): ${dataSources?api.getGroups()?size}
+DataSources.find(): ${dataSources?api.find("*")?size}
+
+Iterate Over DataSources Using Wildcard Search
+==============================================================================
+<#if dataSources?has_content>
+    <#list dataSources?api.find("*") as dataSource>
+        - ${dataSource.name}
+    </#list>
+<#else>
+    No data sources provided ...
+</#if>
 
 <#if dataSources?has_content>
     <#list dataSources?values as dataSource>
-        <@writeDataSource dataSource/>
+        [#${dataSource?counter}] - ${dataSource.name}
+        ==============================================================================
+
+        Invoke Arbitrary Methods On DataSource
+        ---------------------------------------------------------------------------
+        <#assign dataSource=dataSources?values?first>
+        Name                : ${dataSource.name}
+        Nr of lines         : ${dataSource.lines?size}
+        Content Type        : ${dataSource.contentType}
+        Charset             : ${dataSource.charset}
+        Extension           : ${dataSource.extension}
+        Nr of chars         : ${dataSource.text?length}
+        Nr of bytes         : ${dataSource.bytes?size}
+
+        Iterating Over Metadata Of A Datasource
+        ---------------------------------------------------------------------------
+        <#list dataSource.metadata as name, value>
+            ${name?right_pad(19)} : ${value}
+        </#list>
+
+        Iterating Over Properties Of A Datasource
+        ---------------------------------------------------------------------------
+        <#list dataSource.properties as name, value>
+            ${name?right_pad(19)} : ${value}
+        </#list>
     </#list>
-<#else>
-    No data sources found ...
 </#if>
-
-<#macro writeDataSource dataSource>
-
-${dataSource.name}
-==============================================================================
-
-Invoke Arbitrary Methods On DataSource
----------------------------------------------------------------------------
-<#assign dataSource=dataSources?values?first>
-Name                : ${dataSource.name}
-Group               : ${dataSource.group}
-Nr of lines         : ${dataSource.lines?size}
-ContentType         : ${dataSource.contentType}
-MimeType            : ${dataSource.mimeType}
-Charset             : ${dataSource.charset}
-Extension           : ${dataSource.extension}
-Nr of chars         : ${dataSource.text?length}
-Nr of bytes         : ${dataSource.bytes?size}
-File name           : ${dataSource.fileName}
-URI schema          : ${dataSource.uri.scheme}
-Relative File Path  : ${dataSource.relativeFilePath}
-
-Iterating Over Metadata Of A Datasource
----------------------------------------------------------------------------
-<#list dataSource.metadata as name, value>
-${name?right_pad(15)} : ${value}
-</#list>
-
-Iterating Over Properties Of A Datasource
----------------------------------------------------------------------------
-<#list dataSource.properties as name, value>
-${name?right_pad(15)} : ${value}
-</#list>
-</#macro>

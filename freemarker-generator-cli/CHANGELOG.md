@@ -2,7 +2,12 @@
 
 All notable changes to this project will be documented in this file. We try to adhere to https://github.com/olivierlacan/keep-a-changelog.
 
-## 0.1.0-SNAPSHOT
+## 0.2.0-SNAPSHOT
+
+## 0.1.0-SNAPSHOT (unreleased)
+
+### Changed
+* [FREEMARKER-195] Improve exposure of DataSources using TemplateHashModelEx2
 
 ### Added
 * Use `-Xverify:none -XX:TieredStopAtLevel=1` to improve startup time of CLI
@@ -22,7 +27,6 @@ All notable changes to this project will be documented in this file. We try to a
 * [FREEMARKER-129] Migrate `freemarker-cli` into `freemarker-generator` project (see [https://github.com/sgoeschl/freemarker-cli](https://github.com/sgoeschl/freemarker-cli))
 * [FREEMARKER-129] Provide a `toString()` method for all tools
 
-### Changed
 * [FREEMARKER-182] Upgrade to Apache FreeMarker 2.3.31
 * [FREEMARKER-175] Use latest FreeMarker version
 * [FREEMARKER-173] Allow to pass arbitrary key/value pairs to DataSource when using NamedURIs
@@ -85,4 +89,5 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-181]: https://issues.apache.org/jira/browse/FREEMARKER-181
 [FREEMARKER-182]: https://issues.apache.org/jira/browse/FREEMARKER-182
 [FREEMARKER-188]: https://issues.apache.org/jira/browse/FREEMARKER-188
+[FREEMARKER-195]: https://issues.apache.org/jira/browse/FREEMARKER-195
 

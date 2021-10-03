@@ -138,8 +138,7 @@ public class FreeMarkerTask implements Callable<Integer> {
     private static Map<String, Object> toTemplateDataModel(DataSources dataSources, Map<String, Object>... maps) {
         final Map<String, Object> result = new HashMap<>();
         Arrays.stream(maps).forEach(result::putAll);
-        // expose only the map and not the "DataSources" instance (see FREEMARKER-174)
-        result.put(Model.DATASOURCES, dataSources.toMap());
+        result.put(Model.DATASOURCES, dataSources);
         return result;
     }
 

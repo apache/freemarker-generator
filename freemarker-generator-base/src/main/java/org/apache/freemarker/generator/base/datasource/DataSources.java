@@ -89,6 +89,15 @@ public class DataSources implements Closeable {
     }
 
     /**
+     * Get an array representation of the underlying data sources.
+     *
+     * @return list of data sources
+     */
+    public DataSource[] toArray() {
+        return dataSources.toArray(new DataSource[0]);
+    }
+
+    /**
      * Get a list representation of the underlying data sources.
      *
      * @return list of data sources
