@@ -48,7 +48,7 @@ java.math.RoundingMode#UP: ${tools.freemarker.enums["java.math.RoundingMode"].UP
 6) Display list of data sources
 ---------------------------------------------------------------------------
 List all data sources:
-<#list dataSources?values as dataSource>
+<#list dataSources as dataSource>
 - Document: name=${dataSource.name} uri=${dataSource.uri} length=${dataSource.length} charset=${dataSource.charset}
 </#list>
 
@@ -89,22 +89,22 @@ Get the number of data sources:
 - ${dataSources?size}
 <#if dataSources?has_content>
 Get the first data source:
-- ${dataSources?values[0].name!"No data sources provided"}
+- ${dataSources[0].name!"No data sources provided"}
 </#if>
 Get all documents as map:
 <#list dataSources as name, ds>
 - ${name} => ${ds.mimeType}
 </#list>
 List all data sources containing "test" in the name
-<#list dataSources?values?filter(ds -> ds.match("name", "*test*")) as ds>
+<#list dataSources?filter(ds -> ds.match("name", "*test*")) as ds>
 - ${ds.name}
 </#list>
 List all data sources having "json" extension
-<#list dataSources?values?filter(ds -> ds.match("extension", "json")) as ds>
+<#list dataSources?filter(ds -> ds.match("extension", "json")) as ds>
 - ${ds.name}
 </#list>
 List all data sources having "src/test/data/properties" in their file path
-<#list dataSources?values?filter(ds -> ds.match("filePath", "*/src/test/data/properties")) as ds>
+<#list dataSources?filter(ds -> ds.match("filePath", "*/src/test/data/properties")) as ds>
 - ${ds.name}
 </#list>
 

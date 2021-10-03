@@ -126,14 +126,14 @@ public class ExamplesTest extends AbstractMainTest {
 
     @Test
     public void shouldRunInteractiveTemplateExamples() throws IOException {
-        assertValid(execute("-i ${tools.jsonpath.parse(dataSources?values[0]).read(\"$.info.title\")} src/app/examples/data/json/swagger-spec.json"));
-        assertValid(execute("-i ${tools.xml.parse(dataSources?values[0])[\"recipients/person[1]/name\"]} src/app/examples/data/xml/recipients.xml"));
-        assertValid(execute("-i ${tools.jsoup.parse(dataSources?values[0]).select(\"a\")[0]} src/app/examples/data/html/dependencies.html"));
-        assertValid(execute("-i ${tools.gson.toJson(tools.yaml.parse(dataSources?values[0]))} src/app/examples/data/yaml/swagger-spec.yaml"));
+        assertValid(execute("-i ${tools.jsonpath.parse(dataSources[0]).read(\"$.info.title\")} src/app/examples/data/json/swagger-spec.json"));
+        assertValid(execute("-i ${tools.xml.parse(dataSources[0])[\"recipients/person[1]/name\"]} src/app/examples/data/xml/recipients.xml"));
+        assertValid(execute("-i ${tools.jsoup.parse(dataSources[0]).select(\"a\")[0]} src/app/examples/data/html/dependencies.html"));
+        assertValid(execute("-i ${tools.gson.toJson(tools.yaml.parse(dataSources[0]))} src/app/examples/data/yaml/swagger-spec.yaml"));
         assertValid(execute("-i ${tools.gson.toJson(yaml)} -m yaml=src/app/examples/data/yaml/swagger-spec.yaml"));
-        assertValid(execute("-i ${tools.yaml.toYaml(tools.gson.parse(dataSources?values[0]))} src/app/examples/data/json/swagger-spec.json"));
+        assertValid(execute("-i ${tools.yaml.toYaml(tools.gson.parse(dataSources[0]))} src/app/examples/data/json/swagger-spec.json"));
         assertValid(execute("-i ${tools.yaml.toYaml(json)} -m json=src/app/examples/data/json/swagger-spec.json"));
-        assertValid(execute("-i ${tools.dataframe.print(tools.dataframe.fromMaps(tools.gson.parse(dataSources?values[0])))} src/app/examples/data/json/github-users.json"));
+        assertValid(execute("-i ${tools.dataframe.print(tools.dataframe.fromMaps(tools.gson.parse(dataSources[0])))} src/app/examples/data/json/github-users.json"));
     }
 
     @Test

@@ -35,7 +35,7 @@
 <#compress>
     TIMESTAMP;MILLIS
     <#if dataSources?has_content>
-        <#list dataSources?values as dataSource>
+        <#list dataSources as dataSource>
             <#list dataSource.getLineIterator() as line>
                 <#assign parts = grok.match(line).capture()>
                 <#if parts?has_content>

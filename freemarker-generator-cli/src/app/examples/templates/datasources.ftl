@@ -42,7 +42,7 @@ Iterate Over DataSources as Map
 
 Iterate Over DataSources as Values
 ==============================================================================
-<#list dataSources?values as dataSource>
+<#list dataSources as dataSource>
     dataSource[${dataSource?index}] => ${dataSource.uri}<#lt>
 </#list>
 
@@ -69,13 +69,13 @@ Iterate Over DataSources Using Wildcard Search
 </#if>
 
 <#if dataSources?has_content>
-    <#list dataSources?values as dataSource>
+    <#list dataSources as dataSource>
         [#${dataSource?counter}] - ${dataSource.name}
         ==============================================================================
 
         Invoke Arbitrary Methods On DataSource
         ---------------------------------------------------------------------------
-        <#assign dataSource=dataSources?values?first>
+        <#assign dataSource=dataSources?first>
         Name                : ${dataSource.name}
         Nr of lines         : ${dataSource.lines?size}
         Content Type        : ${dataSource.contentType}

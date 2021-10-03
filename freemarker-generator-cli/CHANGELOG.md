@@ -4,10 +4,10 @@ All notable changes to this project will be documented in this file. We try to a
 
 ## 0.2.0-SNAPSHOT
 
-## 0.1.0-SNAPSHOT (unreleased)
-
 ### Changed
 * [FREEMARKER-195] Improve exposure of DataSources using TemplateHashModelEx2
+
+## 0.1.0-SNAPSHOT (unreleased)
 
 ### Added
 * Use `-Xverify:none -XX:TieredStopAtLevel=1` to improve startup time of CLI

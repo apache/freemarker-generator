@@ -50,7 +50,7 @@ FreeMarker Generator Data Model
 FreeMarker Generator Data Sources
 ==============================================================================
 <#if dataSources?has_content>
-<#list dataSources?values as dataSource>
+<#list dataSources as dataSource>
 
 DataSource #${dataSource?counter}
 ------------------------------------------------------------------------------

@@ -30,7 +30,7 @@ Meier;30;Germany
 and create a `DateFrame` using the following code snippet
 
 ```
-<#assign dataSource = dataSources?values[0]>
+<#assign dataSource = dataSources[0]>
 <#assign csvParser = tools.csv.parse(dataSource, tools.csv.formats["DATAFRAME"])>
 <#assign users = tools.dataframe.fromCSVParser(csvParser)>
 ```
@@ -162,7 +162,7 @@ it is a list of maps hence we invoke `tools.dataframe.fromMaps()
 
 ```
 freemarker-generator \
--i '${tools.dataframe.print(tools.dataframe.fromMaps(tools.gson.parse(dataSources?values[0])))}' \
+-i '${tools.dataframe.print(tools.dataframe.fromMaps(tools.gson.parse(dataSources[0])))}' \
 examples/data/json/github-users.json
 
 ┌────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┬────────────┐
@@ -189,7 +189,7 @@ examples/data/json/github-users.json
 Let's transform an Excel Sheet to a `DataFrame` being printed using the following template
 
 ```
-<#assign dataSource = dataSources?values[0]>
+<#assign dataSource = dataSources[0]>
 <#assign workbook = tools.excel.parse(dataSource)>
 <#list tools.excel.getSheets(workbook) as sheet>
     <#assign table = tools.excel.toTable(sheet)>

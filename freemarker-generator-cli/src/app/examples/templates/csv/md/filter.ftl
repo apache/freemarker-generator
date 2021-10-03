@@ -15,7 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign dataSource = dataSources?values[0]>
+<#assign dataSource = dataSources[0]>
 <#assign parser = parser(dataSource)>
 <#assign headers = parser.getHeaderNames()>
 <#assign column = tools.system.getParameter("column")>
