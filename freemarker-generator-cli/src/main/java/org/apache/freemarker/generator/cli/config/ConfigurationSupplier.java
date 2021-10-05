@@ -20,7 +20,7 @@ import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Version;
 import org.apache.freemarker.generator.base.util.PropertiesTransformer;
-import org.apache.freemarker.generator.cli.model.FreeMarkerGeneratorObjectWrapper;
+import org.apache.freemarker.generator.cli.wrapper.FreeMarkerGeneratorObjectWrapper;
 
 import java.util.Properties;
 import java.util.function.Supplier;

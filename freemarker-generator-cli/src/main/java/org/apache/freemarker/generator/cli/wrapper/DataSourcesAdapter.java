@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.cli.model;
+package org.apache.freemarker.generator.cli.wrapper;
 
 import freemarker.ext.util.WrapperTemplateModel;
 import freemarker.template.AdapterTemplateModel;
@@ -41,8 +41,8 @@ import static java.util.Objects.requireNonNull;
  * API can be accessed using FreeMarkers "?api" built-in.
  */
 public class DataSourcesAdapter extends WrappingTemplateModel
-        implements TemplateHashModelEx2, AdapterTemplateModel, WrapperTemplateModel, TemplateModelWithAPISupport, TemplateSequenceModel,
-        Serializable {
+        implements TemplateHashModelEx2, AdapterTemplateModel, WrapperTemplateModel, TemplateModelWithAPISupport,
+        TemplateSequenceModel, Serializable {
 
     /** Wrapped instance */
     private final DataSources dataSources;

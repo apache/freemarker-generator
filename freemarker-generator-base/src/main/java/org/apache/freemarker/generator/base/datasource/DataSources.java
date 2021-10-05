@@ -160,7 +160,7 @@ public class DataSources implements Closeable {
     }
 
     /**
-     * Find data sources based on their name using a wildcard string..
+     * Find data sources based on their name using a wildcard string.
      *
      * @param wildcard the wildcard string to match against
      * @return list of matching data sources

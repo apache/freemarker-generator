@@ -410,7 +410,8 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     }
 
     /**
-     * Matches a metadata key with a wildcard expression.
+     * Matches a metadata key with a wildcard expression. If the wildcard is prefixed
+     * with a "!" than the match will be negated.
      *
      * @param key      metadata key, e.g. "name", "fileName", "baseName", "extension", "uri", "group"
      * @param wildcard the wildcard string to match against
@@ -419,7 +420,11 @@ public class DataSource implements Closeable, javax.activation.DataSource {
      */
     public boolean match(String key, String wildcard) {
         final String value = getMetadata(key);
-        return FilenameUtils.wildcardMatch(value, wildcard);
+        if (wildcard != null && wildcard.startsWith("!")) {
+            return !FilenameUtils.wildcardMatch(value, wildcard.substring(1));
+        } else {
+            return FilenameUtils.wildcardMatch(value, wildcard);
+        }
     }
 
     /**

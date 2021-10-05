@@ -60,13 +60,17 @@ public class DataSourcesTest {
             assertEquals(1, dataSources.find("*o*.xml").size());
 
             assertEquals(3, dataSources.find("*").size());
+
+            assertEquals(2, dataSources.find("!pom.xml").size());
+            assertEquals(3, dataSources.find("!").size());
+            assertEquals(0, dataSources.find("!*").size());
+            assertEquals(1, dataSources.find("!*.*").size());
         }
     }
 
     @Test
     public void shouldFindByGroupPart() {
         try (DataSources dataSources = dataSources()) {
-
             assertEquals(0, dataSources.find(GROUP_PART, null).size());
             assertEquals(0, dataSources.find(GROUP_PART, "").size());
 
@@ -76,6 +80,10 @@ public class DataSourcesTest {
             assertEquals(3, dataSources.find(GROUP_PART, "default").size());
             assertEquals(3, dataSources.find(GROUP_PART, "d*").size());
             assertEquals(3, dataSources.find(GROUP_PART, "d??????").size());
+
+            assertEquals(0, dataSources.find(GROUP_PART, "!*").size());
+            assertEquals(3, dataSources.find(GROUP_PART, "!unknown").size());
+            assertEquals(0, dataSources.find(GROUP_PART, "!default").size());
         }
     }
 

@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.cli.model;
+package org.apache.freemarker.generator.cli.wrapper;
 
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.TemplateModel;

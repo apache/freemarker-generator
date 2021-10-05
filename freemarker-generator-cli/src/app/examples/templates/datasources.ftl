@@ -84,6 +84,7 @@ DataSources.getGroups(): ${dataSources?api.getGroups()?size}
 DataSources.find("*"): ${dataSources?api.find("*")?size}
 DataSources.find("uri", "*.md"): ${dataSources?api.find("uri", "*.md")?size}
 DataSources.find("extension", "md"): ${dataSources?api.find("extension", "md")?size}
+DataSources.find("name", "!readme"): ${dataSources?api.find("name", "!readme")?size}
 
 <#if dataSources?has_content>
 <#list dataSources as dataSource>
