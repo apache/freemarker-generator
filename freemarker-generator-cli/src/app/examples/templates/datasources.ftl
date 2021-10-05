@@ -61,6 +61,14 @@ Iterate Over DataSources Using Hash Map Keys
 No data sources provided ...
 </#list>
 
+Iterate Over DataSources Using Lambda Expression
+==============================================================================
+<#list dataSources?filter(ds -> ds.match("group", "default")) as dataSource>
+- Group "default" => ${dataSource.name}
+<#else>
+No data sources provided ...
+</#list>
+
 Iterate Over DataSources Using Wildcard Search
 ==============================================================================
 <#list dataSources?api.find("*") as dataSource>
@@ -76,6 +84,7 @@ DataSources.getGroups(): ${dataSources?api.getGroups()?size}
 DataSources.find("*"): ${dataSources?api.find("*")?size}
 DataSources.find("uri", "*.md"): ${dataSources?api.find("uri", "*.md")?size}
 DataSources.find("extension", "md"): ${dataSources?api.find("extension", "md")?size}
+
 
 <#if dataSources?has_content>
 <#list dataSources as dataSource>
