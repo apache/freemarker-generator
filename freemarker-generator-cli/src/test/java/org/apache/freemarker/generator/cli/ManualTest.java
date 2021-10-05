@@ -25,10 +25,8 @@ public class ManualTest extends AbstractMainTest {
 
     // private static final String CMD = "-V";
     private static final String CMD =
-            "-M generate " +
-                    "-o target/out " +
-                    "-t freemarker-generator/csv/html/transform.ftl " +
-                    "src/app/examples/data/csv";
+            "-t src/app/examples/templates/datasources.ftl readme:documentation=README.md src/main/assembly";
+            // "-t src/app/examples/templates/datasources.ftl";
 
     @Override
     public String execute(String commandLine) throws IOException {

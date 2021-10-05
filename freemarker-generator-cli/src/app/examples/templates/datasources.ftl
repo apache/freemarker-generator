@@ -1,4 +1,3 @@
-<#ftl output_format="plainText" strip_whitespace=true>
 <#--
 Licensed to the Apache Software Foundation (ASF) under one
 or more contributor license agreements.  See the NOTICE file
@@ -15,58 +14,68 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-Support FreeMarker Directives
+Support Of FreeMarker Directives
 ==============================================================================
 dataSources?has_content: ${dataSources?has_content?c}
 dataSources?size: ${dataSources?size}
 
-Use FTL Array-style Access
+Iterate Over DataSources Using Array-style Access
 ==============================================================================
 <#if dataSources?has_content>
-dataSources[0]: ${dataSources[0].name}
+<#list 0..dataSources?size-1 as i>
+- dataSource[${i}] ==> ${dataSources[i].name}
+</#list>
 <#else>
 No data sources provided ...
 </#if>
 
-Iterate Over DataSources as List
+Iterate Over DataSources Using Sequence
 ==============================================================================
 <#list dataSources as dataSource>
-- dataSource[${dataSource?index}] => ${dataSource.name}<#lt>
+- dataSource[${dataSource?index}] => ${dataSource.name}
+<#else>
+No data sources provided ...
 </#list>
 
-Iterate Over DataSources as Map
+Iterate Over DataSources Using Key & Values
 ==============================================================================
 <#list dataSources as name, dataSource>
 - dataSource["${name}"] => ${dataSource.name}<#lt>
+<#else>
+No data sources provided ...
 </#list>
 
-Iterate Over DataSources as Values
+Iterate Over DataSources Using Values
 ==============================================================================
 <#list dataSources?values as dataSource>
-- dataSource[${dataSource?index}] => ${dataSource.name}<#lt>
+- dataSource[${dataSource?index}] => ${dataSource.name}
+<#else>
+No data sources provided ...
 </#list>
 
-Get Document Names As Keys
+Iterate Over DataSources Using Hash Map Keys
 ==============================================================================
-<#list dataSources?keys as name>
-- ${name}<#lt>
+<#list dataSources?keys as key>
+- dataSource["${key}"] => ${dataSources[key].name}
+<#else>
+No data sources provided ...
+</#list>
+
+Iterate Over DataSources Using Wildcard Search
+==============================================================================
+<#list dataSources?api.find("*") as dataSource>
+- ${dataSource.name}
+<#else>
+No data sources provided ...
 </#list>
 
 Access Underlying DataSources API
 ==============================================================================
 DataSources.getNames(): ${dataSources?api.names?size}
 DataSources.getGroups(): ${dataSources?api.getGroups()?size}
-DataSources.find(): ${dataSources?api.find("*")?size}
-
-Iterate Over DataSources Using Wildcard Search
-==============================================================================
-<#if dataSources?has_content>
-<#list dataSources?api.find("*") as dataSource>
-- ${dataSource.name}
-</#list>
-<#else>
-No data sources provided ...
-</#if>
+DataSources.find("*"): ${dataSources?api.find("*")?size}
+DataSources.find("uri", "*.md"): ${dataSources?api.find("uri", "*.md")?size}
+DataSources.find("extension", "md"): ${dataSources?api.find("extension", "md")?size}
 
 <#if dataSources?has_content>
 <#list dataSources as dataSource>
