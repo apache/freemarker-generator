@@ -62,6 +62,9 @@ REM =========================================================================
 REM CSV
 REM =========================================================================
 
+echo "templates\freemarker-generator\csv\confluence\transform.ftl"
+%FREEMARKER_CMD% -t freemarker-generator\csv\confluence\transform.ftl examples\data\csv\contract.csv > target\out\contract.txt
+
 echo "templates\freemarker-generator\csv\html\transform.ftl"
 %FREEMARKER_CMD% -t freemarker-generator\csv\html\transform.ftl examples\data\csv\contract.csv > target\out\contract.html
 

@@ -85,7 +85,6 @@ DataSources.find("*"): ${dataSources?api.find("*")?size}
 DataSources.find("uri", "*.md"): ${dataSources?api.find("uri", "*.md")?size}
 DataSources.find("extension", "md"): ${dataSources?api.find("extension", "md")?size}
 
-
 <#if dataSources?has_content>
 <#list dataSources as dataSource>
 [#${dataSource?counter}] - ${dataSource.name}

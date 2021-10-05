@@ -67,6 +67,9 @@ $FREEMARKER_CMD -i '${tools.dataframe.print(tools.dataframe.fromMaps(tools.gson.
 # CSV
 #############################################################################
 
+echo "templates/freemarker-generator/csv/confluence/transform.ftl"
+$FREEMARKER_CMD -t freemarker-generator/csv/confluence/transform.ftl examples/data/csv/contract.csv > target/out/contract.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
 echo "templates/freemarker-generator/csv/html/transform.ftl"
 $FREEMARKER_CMD -t freemarker-generator/csv/html/transform.ftl examples/data/csv/contract.csv > target/out/contract.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
