@@ -23,6 +23,7 @@ Template name          : ${.current_template_name}
 Language               : ${.lang}
 Locale                 : ${.locale}
 Timestamp              : ${.now}
+Time zone              : ${.now?string["z"]}
 Output encoding        : ${.output_encoding}
 Output format          : ${.output_format}
 
@@ -30,66 +31,66 @@ FreeMarker Command-line Parameters
 ==============================================================================
 
 <#list tools.system.getCommandLineArgs() as arg>
-[#${arg?counter}] ${arg}
+    [#${arg?counter}] ${arg}
 </#list>
 
 FreeMarker Generator Template Loader Directories
 ==============================================================================
 
 <#list tools.system.getTemplateDirectories() as directory>
-[#${directory?counter}] ${directory}
+    [#${directory?counter}] ${directory}
 </#list>
 
 FreeMarker Generator Data Model
 ==============================================================================
 
 <#list .data_model?keys?sort as key>
-- ${key}<#lt>
+    - ${key}<#lt>
 </#list>
 
 FreeMarker Generator Data Sources
 ==============================================================================
 <#if dataSources?has_content>
-<#list dataSources as dataSource>
+    <#list dataSources as dataSource>
 
-DataSource #${dataSource?counter}
-------------------------------------------------------------------------------
-name                  : ${dataSource.name}
-group                 : ${dataSource.group}
-contentType           : ${dataSource.contentType}
-fileName              : ${dataSource.fileName}
-baseName              : ${dataSource.baseName}
-extension             : ${dataSource.extension}
-relativeFilePath      : ${dataSource.relativeFilePath}
-charset               : ${dataSource.charset}
-mimeType              : ${dataSource.mimeType}
-uri                   : ${dataSource.uri}
-length                : ${dataSource.length} bytes
-metadata              : ${dataSource.metadata?size} entries
-</#list>
+        DataSource #${dataSource?counter}
+        ------------------------------------------------------------------------------
+        name                  : ${dataSource.name}
+        group                 : ${dataSource.group}
+        contentType           : ${dataSource.contentType}
+        fileName              : ${dataSource.fileName}
+        baseName              : ${dataSource.baseName}
+        extension             : ${dataSource.extension}
+        relativeFilePath      : ${dataSource.relativeFilePath}
+        charset               : ${dataSource.charset}
+        mimeType              : ${dataSource.mimeType}
+        uri                   : ${dataSource.uri}
+        length                : ${dataSource.length} bytes
+        metadata              : ${dataSource.metadata?size} entries
+    </#list>
 <#else>
 
-No data sources found ...
+    No data sources found ...
 </#if>
 
 FreeMarker Generator Parameters
 ==============================================================================
 
 <#if tools.system.parameters?has_content>
-<#list tools.system.parameters as key,value>
-<#if value?is_hash>
-- ${key} ==> { <#list value as name,value>${name}=${value} </#list>}
+    <#list tools.system.parameters as key,value>
+        <#if value?is_hash>
+            - ${key} ==> { <#list value as name,value>${name}=${value} </#list>}
+        <#else>
+            - ${key} ==> ${value}
+        </#if>
+    </#list>
 <#else>
-- ${key} ==> ${value}
-</#if>
-</#list>
-<#else>
-No parameters found ...
+    No parameters found ...
 </#if>
 
 FreeMarker Generator Tools
 ==============================================================================
 
 <#list tools?keys?sort as name>
-- ${name?right_pad(19)} : ${tools[name]}
+    - ${name?right_pad(19)} : ${tools[name]}
 </#list>
