@@ -60,7 +60,7 @@ public class DataSources implements Closeable {
     }
 
     /**
-     * Get a list of unique metadata value for all data sources.
+     * Get a list of distinct metadata values for all data sources.
      *
      * @param key key of the metadata part
      * @return list of metadata values
@@ -74,7 +74,7 @@ public class DataSources implements Closeable {
     }
 
     /**
-     * Get a list of unique group names of all data sources.
+     * Get a list of distinct group names of all data sources.
      *
      * @return list of group names
      */
@@ -102,6 +102,15 @@ public class DataSources implements Closeable {
      */
     public boolean isEmpty() {
         return dataSources.isEmpty();
+    }
+
+    /**
+     * Get an array representation of the underlying data sources.
+     *
+     * @return array of data sources
+     */
+    public DataSource[] toArray() {
+        return dataSources.toArray(new DataSource[0]);
     }
 
     /**
@@ -146,7 +155,7 @@ public class DataSources implements Closeable {
      * @return data source
      */
     public DataSource get(String name) {
-        final List<DataSource> list = find(name);
+        final List<DataSource> list = findByName(name);
 
         if (list.isEmpty()) {
             throw new IllegalArgumentException("Data source not found : " + name);
@@ -166,7 +175,7 @@ public class DataSources implements Closeable {
      * @return list of matching data sources
      * @see <a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.7/org/apache/commons/io/FilenameUtils.html#wildcardMatch-java.lang.String-java.lang.String-">Apache Commons IO</a>
      */
-    public List<DataSource> find(String wildcard) {
+    public List<DataSource> findByName(String wildcard) {
         return find(DataSource.METADATA_NAME, wildcard);
     }
 
@@ -182,6 +191,19 @@ public class DataSources implements Closeable {
         return dataSources.stream()
                 .filter(dataSource -> dataSource.match(key, wildcard))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Create a new <code>DataSources</code> instance consisting of
+     * data sources matching the filter.
+     *
+     * @param key      metadata key to match
+     * @param wildcard the wildcard string to match against
+     * @return list of matching data sources
+     * @see <a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.7/org/apache/commons/io/FilenameUtils.html#wildcardMatch-java.lang.String-java.lang.String-">Apache Commons IO</a>
+     */
+    public DataSources filter(String key, String wildcard) {
+        return new DataSources(find(key, wildcard));
     }
 
     @Override

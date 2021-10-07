@@ -22,7 +22,7 @@ dataSources?size: ${dataSources?size}
 Iterate Over DataSources Using Array-style Access
 ==============================================================================
 <#if dataSources?has_content>
-<#list 0..dataSources?size-1 as i>
+<#list 0..<dataSources?size as i>
 - dataSource[${i}] ==> ${dataSources[i].name}
 </#list>
 <#else>
@@ -61,7 +61,7 @@ Iterate Over DataSources Using Hash Map Keys
 No data sources provided ...
 </#list>
 
-Iterate Over DataSources Using Lambda Expression
+Iterate Over DataSources Using Local Lambda Expression
 ==============================================================================
 <#list dataSources?filter(ds -> ds.match("group", "default")) as dataSource>
 - Group "default" => ${dataSource.name}
@@ -71,7 +71,7 @@ No data sources provided ...
 
 Iterate Over DataSources Using Wildcard Search
 ==============================================================================
-<#list dataSources?api.find("*") as dataSource>
+<#list dataSources?api.findByName("*") as dataSource>
 - ${dataSource.name}
 <#else>
 No data sources provided ...
@@ -81,10 +81,10 @@ Access Underlying DataSources API
 ==============================================================================
 DataSources.getNames(): ${dataSources?api.names?size}
 DataSources.getGroups(): ${dataSources?api.getGroups()?size}
-DataSources.find("*"): ${dataSources?api.find("*")?size}
+DataSources.find("name", "*"): ${dataSources?api.find("name", "*")?size}
+DataSources.find("name", "!readme"): ${dataSources?api.find("name", "!readme")?size}
 DataSources.find("uri", "*.md"): ${dataSources?api.find("uri", "*.md")?size}
 DataSources.find("extension", "md"): ${dataSources?api.find("extension", "md")?size}
-DataSources.find("name", "!readme"): ${dataSources?api.find("name", "!readme")?size}
 
 <#if dataSources?has_content>
 <#list dataSources as dataSource>
