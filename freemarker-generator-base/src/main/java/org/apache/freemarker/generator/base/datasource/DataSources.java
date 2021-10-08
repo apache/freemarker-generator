@@ -125,7 +125,7 @@ public class DataSources implements Closeable {
     /**
      * Get a map representation of the underlying data sources.
      * In <code>freemarker-cli</code> the map is also used to
-     * iterate over data source so we need to return a
+     * iterate over data source, so we need to return a
      * <code>LinkedHashMap</code>.
      * <p>
      * The implementation also throws as <code>IllegalStateException</code>

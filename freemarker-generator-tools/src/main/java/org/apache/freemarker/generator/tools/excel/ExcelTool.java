@@ -80,7 +80,7 @@ public class ExcelTool {
     }
 
     /**
-     * Transform the Excel sheet into a table. Please not that locales are mostly
+     * Transform the Excel sheet into a table. Please note that locales are mostly
      * ignored by Apache POI (see https://poi.apache.org/apidocs/dev/org/apache/poi/ss/usermodel/DataFormatter.html)
      *
      * @param sheet Excel sheet

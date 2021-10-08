@@ -110,7 +110,7 @@ public class CommonsCSVTool {
     }
 
     /**
-     * Extract the list of unique values (keys) of the column with the given index..
+     * Extract the list of unique values (keys) of the column with the given index.
      *
      * @param records records to process
      * @param index   column index to map
@@ -123,7 +123,7 @@ public class CommonsCSVTool {
     /**
      * Map the given value of the CVS record into (key to record). If duplicates
      * are encountered return the first occurrence of the CVS record. The map
-     * retains the insertion order of they keys.
+     * retains the insertion order of their keys.
      *
      * @param records records to process
      * @param name    column name to map
@@ -136,7 +136,7 @@ public class CommonsCSVTool {
     /**
      * Map the given value of the CVS record into (key to record). If duplicates
      * are encountered return the first occurrence of the CVS record. The map
-     * retains the insertion order of they keys.
+     * retains the insertion order of their keys.
      *
      * @param records records to process
      * @param index   column index to map
