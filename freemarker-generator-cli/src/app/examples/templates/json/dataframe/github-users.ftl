@@ -15,6 +15,6 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
-<#assign json = tools.gson.parse(dataSources?values[0])>
+<#assign json = tools.gson.parse(dataSources[0])>
 <#assign dataframe = tools.dataframe.fromMaps(json)>
 ${tools.dataframe.print(dataframe)}

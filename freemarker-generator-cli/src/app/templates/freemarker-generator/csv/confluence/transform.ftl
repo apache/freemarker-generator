@@ -1,4 +1,3 @@
-<#ftl output_format="plainText">
 <#--
   Licensed to the Apache Software Foundation (ASF) under one
   or more contributor license agreements.  See the NOTICE file
@@ -15,32 +14,27 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign map = tools.yaml.parse(dataSources[0])>
+<#import "/freemarker-generator/lib/commons-csv.ftl" as csv />
+<#assign dataSource = dataSources[0]>
+<#assign csvParser = tools.csv.parse(dataSource, csv.sourceFormat())>
+<#assign headers = (csvParser.getHeaderMap()!{})?keys>
+<#assign records = csvParser.records>
 <#--------------------------------------------------------------------------->
 <#compress>
-<@print map 1/>
+    <@writeHeaders headers/>
+    <@writeColums records/>
 </#compress>
-
-<#macro print object level>
-    <#if object?is_sequence>
-        <#list object as value>
-            <@print value level/>
-        </#list>
-    <#elseif object?is_hash>
-        <#list object as key, value>
-            ${level} ${key} : <@printValue value level/>
-        </#list>
+<#--------------------------------------------------------------------------->
+<#macro writeHeaders headers>
+    <#if headers?has_content>
+        || ${headers?join(" || ", "")} ||
     </#if>
 </#macro>
-
-<#macro printValue value level>
-        <#if value?is_sequence>
-            ${'\n'}<@print value level+1/>
-        <#elseif value?is_hash>
-            ${'\n'}<@print value level+1/>
-        <#elseif value?is_number>
-            ${value?c}
-        <#else>
-            ${value}
-        </#if>
+<#--------------------------------------------------------------------------->
+<#macro writeColums columns>
+    <#if columns?has_content>
+        <#list columns as column>
+            | ${column.iterator()?join(" | ", "")} |
+        </#list>
+    </#if>
 </#macro>

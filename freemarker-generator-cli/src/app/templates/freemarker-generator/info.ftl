@@ -1,4 +1,3 @@
-<#ftl output_format="plainText" strip_whitespace=true>
 <#--
   Licensed to the Apache Software Foundation (ASF) under one
   or more contributor license agreements.  See the NOTICE file
@@ -23,6 +22,7 @@ Template name          : ${.current_template_name}
 Language               : ${.lang}
 Locale                 : ${.locale}
 Timestamp              : ${.now}
+Time zone              : ${.now?string["z"]}
 Output encoding        : ${.output_encoding}
 Output format          : ${.output_format}
 
@@ -50,7 +50,7 @@ FreeMarker Generator Data Model
 FreeMarker Generator Data Sources
 ==============================================================================
 <#if dataSources?has_content>
-<#list dataSources?values as dataSource>
+<#list dataSources as dataSource>
 
 DataSource #${dataSource?counter}
 ------------------------------------------------------------------------------
@@ -59,6 +59,7 @@ group                 : ${dataSource.group}
 contentType           : ${dataSource.contentType}
 fileName              : ${dataSource.fileName}
 baseName              : ${dataSource.baseName}
+extension             : ${dataSource.extension}
 extension             : ${dataSource.extension}
 relativeFilePath      : ${dataSource.relativeFilePath}
 charset               : ${dataSource.charset}

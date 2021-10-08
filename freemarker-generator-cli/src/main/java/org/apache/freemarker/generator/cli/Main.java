@@ -206,7 +206,7 @@ public class Main implements Callable<Integer> {
 
     /**
      * Data sources can be passed via command line option and/or
-     * positional parameter so we need to merge them.
+     * positional parameter, so we need to merge them.
      *
      * @return List of data sources
      */

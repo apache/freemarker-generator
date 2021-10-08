@@ -20,6 +20,7 @@ import freemarker.cache.TemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Version;
 import org.apache.freemarker.generator.base.util.PropertiesTransformer;
+import org.apache.freemarker.generator.cli.wrapper.FreeMarkerGeneratorObjectWrapper;
 
 import java.util.Properties;
 import java.util.function.Supplier;
@@ -49,6 +50,10 @@ public class ConfigurationSupplier implements Supplier<Configuration> {
     public Configuration get() {
         try {
             final Configuration configuration = new Configuration(FREEMARKER_VERSION);
+
+            // support a custom "DataSourcesAdaptor"
+            configuration.setAPIBuiltinEnabled(true);
+            configuration.setObjectWrapper(new FreeMarkerGeneratorObjectWrapper(configuration.getIncompatibleImprovements()));
 
             // apply all "freemarker.configuration.setting" values
             configuration.setSettings(freeMarkerConfigurationSettings());

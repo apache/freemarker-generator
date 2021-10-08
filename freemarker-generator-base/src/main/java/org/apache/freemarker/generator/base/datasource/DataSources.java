@@ -23,6 +23,7 @@ import org.apache.freemarker.generator.base.util.Validate;
 import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,24 +40,27 @@ public class DataSources implements Closeable {
     /** The underlying list of data sources */
     private final List<DataSource> dataSources;
 
+    /** Map of named data sources */
+    private final Map<String, DataSource> dataSourcesMap;
+
     public DataSources(Collection<DataSource> dataSources) {
-        Validate.notNull(dataSources, "No data sources provided");
-        this.dataSources = new ArrayList<>(dataSources);
+        Validate.notNull(dataSources, "dataSources must not be null");
+
+        this.dataSources = Collections.unmodifiableList(new ArrayList<>(dataSources));
+        this.dataSourcesMap = Collections.unmodifiableMap(dataSourcesMap(dataSources));
     }
 
     /**
      * Get the names of all data sources.
      *
-     * @return data source names
+     * @return list of data source names
      */
     public List<String> getNames() {
-        return dataSources.stream()
-                .map(DataSource::getName)
-                .collect(Collectors.toList());
+        return new ArrayList<>(dataSourcesMap.keySet());
     }
 
     /**
-     * Get the requested metadata value for all data sources.
+     * Get a list of distinct metadata values for all data sources.
      *
      * @param key key of the metadata part
      * @return list of metadata values
@@ -64,13 +68,15 @@ public class DataSources implements Closeable {
     public List<String> getMetadata(String key) {
         return dataSources.stream()
                 .map(ds -> ds.getMetadata(key))
+                .filter(StringUtils::isNotEmpty)
+                .distinct()
                 .collect(Collectors.toList());
     }
 
     /**
-     * Get a list of unique groups of all data sources.
+     * Get a list of distinct group names of all data sources.
      *
-     * @return list of groups
+     * @return list of group names
      */
     public List<String> getGroups() {
         return dataSources.stream()
@@ -80,12 +86,31 @@ public class DataSources implements Closeable {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Returns the number of elements in this list.
+     *
+     * @return the number of elements in this list
+     */
     public int size() {
         return dataSources.size();
     }
 
+    /**
+     * Returns <tt>true</tt> if this list contains no elements.
+     *
+     * @return <tt>true</tt> if this list contains no elements
+     */
     public boolean isEmpty() {
         return dataSources.isEmpty();
+    }
+
+    /**
+     * Get an array representation of the underlying data sources.
+     *
+     * @return array of data sources
+     */
+    public DataSource[] toArray() {
+        return dataSources.toArray(new DataSource[0]);
     }
 
     /**
@@ -94,13 +119,13 @@ public class DataSources implements Closeable {
      * @return list of data sources
      */
     public List<DataSource> toList() {
-        return new ArrayList<>(dataSources);
+        return dataSources;
     }
 
     /**
      * Get a map representation of the underlying data sources.
      * In <code>freemarker-cli</code> the map is also used to
-     * iterate over data source so we need to return a
+     * iterate over data source, so we need to return a
      * <code>LinkedHashMap</code>.
      * <p>
      * The implementation also throws as <code>IllegalStateException</code>
@@ -109,15 +134,15 @@ public class DataSources implements Closeable {
      * @return linked hasp map of data sources
      */
     public Map<String, DataSource> toMap() {
-        return dataSources.stream().collect(Collectors.toMap(
-                DataSource::getName,
-                identity(),
-                (ds1, ds2) -> {
-                    throw new IllegalStateException("Duplicate key detected when generating map: " + ds1 + ", " + ds2);
-                },
-                LinkedHashMap::new));
+        return dataSourcesMap;
     }
 
+    /**
+     * Returns the element at the specified position in this list.
+     *
+     * @param index index of the element to return
+     * @return the element at the specified position in this list
+     */
     public DataSource get(int index) {
         return dataSources.get(index);
     }
@@ -130,7 +155,7 @@ public class DataSources implements Closeable {
      * @return data source
      */
     public DataSource get(String name) {
-        final List<DataSource> list = find(name);
+        final List<DataSource> list = findByName(name);
 
         if (list.isEmpty()) {
             throw new IllegalArgumentException("Data source not found : " + name);
@@ -144,16 +169,14 @@ public class DataSources implements Closeable {
     }
 
     /**
-     * Find data sources based on their name using a wildcard string..
+     * Find data sources based on their name using a wildcard string.
      *
      * @param wildcard the wildcard string to match against
      * @return list of matching data sources
      * @see <a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.7/org/apache/commons/io/FilenameUtils.html#wildcardMatch-java.lang.String-java.lang.String-">Apache Commons IO</a>
      */
-    public List<DataSource> find(String wildcard) {
-        return dataSources.stream()
-                .filter(dataSource -> dataSource.match("name", wildcard))
-                .collect(Collectors.toList());
+    public List<DataSource> findByName(String wildcard) {
+        return find(DataSource.METADATA_NAME, wildcard);
     }
 
     /**
@@ -170,6 +193,19 @@ public class DataSources implements Closeable {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Create a new <code>DataSources</code> instance consisting of
+     * data sources matching the filter.
+     *
+     * @param key      metadata key to match
+     * @param wildcard the wildcard string to match against
+     * @return list of matching data sources
+     * @see <a href="https://commons.apache.org/proper/commons-io/javadocs/api-2.7/org/apache/commons/io/FilenameUtils.html#wildcardMatch-java.lang.String-java.lang.String-">Apache Commons IO</a>
+     */
+    public DataSources filter(String key, String wildcard) {
+        return new DataSources(find(key, wildcard));
+    }
+
     @Override
     public void close() {
         dataSources.forEach(ClosableUtils::closeQuietly);
@@ -180,5 +216,22 @@ public class DataSources implements Closeable {
         return "DataSource{" +
                 "dataSources=" + dataSources +
                 '}';
+    }
+
+    private static List<DataSource> getNamedDataSources(Collection<DataSource> dataSources) {
+        return dataSources.stream()
+                .filter(dataSource -> StringUtils.isNotEmpty(dataSource.getName()))
+                .collect(Collectors.toList());
+    }
+
+    private Map<String, DataSource> dataSourcesMap(Collection<DataSource> dataSources) {
+        final List<DataSource> namedDataSources = getNamedDataSources(dataSources);
+        return namedDataSources.stream().collect(Collectors.toMap(
+                DataSource::getName,
+                identity(),
+                (ds1, ds2) -> {
+                    throw new IllegalStateException("Duplicate names detected when generating data source map: " + ds1 + ", " + ds2);
+                },
+                LinkedHashMap::new));
     }
 }

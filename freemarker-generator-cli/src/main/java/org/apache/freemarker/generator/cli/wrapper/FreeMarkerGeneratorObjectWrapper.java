@@ -14,23 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.base.datasource;
+package org.apache.freemarker.generator.cli.wrapper;
 
-public interface DataSourceLoader {
+import freemarker.template.DefaultObjectWrapper;
+import freemarker.template.TemplateModel;
+import freemarker.template.TemplateModelException;
+import freemarker.template.Version;
+import org.apache.freemarker.generator.base.datasource.DataSources;
 
-    /**
-     * Check if the data source can be loaded by this instance.
-     *
-     * @param source source to be loaded from
-     * @return true if the instance would be able to load a data source
-     */
-    boolean accept(String source);
+public class FreeMarkerGeneratorObjectWrapper extends DefaultObjectWrapper {
 
-    /**
-     * Load a DataSource.
-     *
-     * @param source source of the data source
-     * @return DataSource
-     */
-    DataSource load(String source);
+    public FreeMarkerGeneratorObjectWrapper(Version incompatibleImprovements) {
+        super(incompatibleImprovements);
+    }
+
+    @Override
+    protected TemplateModel handleUnknownType(final Object obj) throws TemplateModelException {
+        if (obj instanceof DataSources) {
+            return DataSourcesAdapter.create((DataSources) obj, this);
+        }
+
+        return super.handleUnknownType(obj);
+    }
 }

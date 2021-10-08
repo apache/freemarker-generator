@@ -45,28 +45,32 @@ public class DataSourcesTest {
     private static final String GROUP_PART = "group";
 
     @Test
-    public void shouldFindByName() {
+    public void shouldFindDataSourcesByName() {
         try (DataSources dataSources = dataSources()) {
-            assertEquals(0, dataSources.find(null).size());
-            assertEquals(0, dataSources.find("").size());
-            assertEquals(0, dataSources.find("*.bar").size());
-            assertEquals(0, dataSources.find("foo.*").size());
-            assertEquals(0, dataSources.find("foo.bar").size());
+            assertEquals(0, dataSources.findByName(null).size());
+            assertEquals(0, dataSources.findByName("").size());
+            assertEquals(0, dataSources.findByName("*.bar").size());
+            assertEquals(0, dataSources.findByName("foo.*").size());
+            assertEquals(0, dataSources.findByName("foo.bar").size());
 
-            assertEquals(2, dataSources.find("*.*").size());
-            assertEquals(1, dataSources.find("*." + ANY_FILE_EXTENSION).size());
-            assertEquals(1, dataSources.find("*.???").size());
-            assertEquals(1, dataSources.find("*om*").size());
-            assertEquals(1, dataSources.find("*o*.xml").size());
+            assertEquals(2, dataSources.findByName("*.*").size());
+            assertEquals(1, dataSources.findByName("*." + ANY_FILE_EXTENSION).size());
+            assertEquals(1, dataSources.findByName("*.???").size());
+            assertEquals(1, dataSources.findByName("*om*").size());
+            assertEquals(1, dataSources.findByName("*o*.xml").size());
 
-            assertEquals(3, dataSources.find("*").size());
+            assertEquals(3, dataSources.findByName("*").size());
+
+            assertEquals(2, dataSources.findByName("!pom.xml").size());
+            assertEquals(3, dataSources.findByName("!").size());
+            assertEquals(0, dataSources.findByName("!*").size());
+            assertEquals(1, dataSources.findByName("!*.*").size());
         }
     }
 
     @Test
-    public void shouldFindByGroupPart() {
+    public void shouldFindDataSourcesByMetadata() {
         try (DataSources dataSources = dataSources()) {
-
             assertEquals(0, dataSources.find(GROUP_PART, null).size());
             assertEquals(0, dataSources.find(GROUP_PART, "").size());
 
@@ -76,6 +80,10 @@ public class DataSourcesTest {
             assertEquals(3, dataSources.find(GROUP_PART, "default").size());
             assertEquals(3, dataSources.find(GROUP_PART, "d*").size());
             assertEquals(3, dataSources.find(GROUP_PART, "d??????").size());
+
+            assertEquals(0, dataSources.find(GROUP_PART, "!*").size());
+            assertEquals(3, dataSources.find(GROUP_PART, "!unknown").size());
+            assertEquals(0, dataSources.find(GROUP_PART, "!default").size());
         }
     }
 
@@ -87,10 +95,10 @@ public class DataSourcesTest {
     @Test
     public void shouldGetAllDataSource() {
         try (DataSources dataSources = dataSources()) {
-
             assertEquals("unknown", dataSources.get(0).getName());
             assertEquals("pom.xml", dataSources.get(1).getName());
             assertEquals("server.invalid?foo=bar", dataSources.get(2).getName());
+            assertEquals(3, dataSources.toArray().length);
             assertEquals(3, dataSources.toList().size());
             assertEquals(3, dataSources.toMap().size());
             assertEquals(3, dataSources.size());
@@ -100,9 +108,9 @@ public class DataSourcesTest {
 
     @Test
     public void shouldGetMetadataParts() {
-        assertEquals(asList("", "pom.xml", ""), dataSources().getMetadata("fileName"));
-        assertEquals(asList("default", "default", "default"), dataSources().getMetadata("group"));
-        assertEquals(asList("", "xml", ""), dataSources().getMetadata("extension"));
+        assertEquals(asList("pom.xml"), dataSources().getMetadata("fileName"));
+        assertEquals(asList("default"), dataSources().getMetadata("group"));
+        assertEquals(asList("xml"), dataSources().getMetadata("extension"));
         assertEquals(asList("unknown", "pom.xml", "server.invalid?foo=bar"), dataSources().getMetadata("name"));
     }
 

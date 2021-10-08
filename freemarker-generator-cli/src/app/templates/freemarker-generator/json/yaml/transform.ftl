@@ -14,4 +14,4 @@
   specific language governing permissions and limitations
   under the License.
 -->
-${tools.yaml.toYaml(tools.gson.parse(dataSources?values[0]))}
+${tools.yaml.toYaml(tools.gson.parse(dataSources[0]))}

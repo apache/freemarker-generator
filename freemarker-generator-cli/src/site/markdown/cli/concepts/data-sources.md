@@ -98,7 +98,7 @@ URI : system:///stdin
 
 After loading one or more `DataSource` they are accessible as `dataSource` map in the FreeMarker model
 
-* `dataSources?values[0]` or `dataSources?values?first` selects the first data source
+* `dataSources[0]` or `dataSources?first` selects the first data source
 * `dataSources["user.csv"]` selects the data source with the name "user.csv"
 
 ### Iterating Over DataSources
@@ -122,7 +122,7 @@ ${dataSources?size}
 </#list>
 
 <#-- Iterate over a list of data sources -->
-<#list dataSources?values as dataSource>
+<#list dataSources as dataSource>
 - [#${dataSource?counter}]: name=${dataSource.name}
 </#list>
 ```
@@ -134,22 +134,22 @@ selection of data sources (using Apache Commons IO wild-card matching)
 
 ```
 <#-- List all data sources containing "test" in the name -->
-<#list dataSources?values?filter(ds -> ds.match("name", "*test*")) as ds>
+<#list dataSources?filter(ds -> ds.match("name", "*test*")) as ds>
 - ${ds.name}
 </#list>
 
 <#-- List all data sources having "json" extension -->
-<#list dataSources?values?filter(ds -> ds.match("extension", "json")) as ds>
+<#list dataSources?filter(ds -> ds.match("extension", "json")) as ds>
 - ${ds.name}
 </#list>
 
 <#-- List all data sources having "src/test/data/properties" in their file path -->
-<#list dataSources?values?filter(ds -> ds.match("filePath", "*/src/test/data/properties")) as ds>
+<#list dataSources?filter(ds -> ds.match("filePath", "*/src/test/data/properties")) as ds>
 - ${ds.name}
 </#list>
 
 <#-- List all data sources of a group -->
-<#list dataSources?values?filter(ds -> ds.match("group", "default")) as ds>
+<#list dataSources?filter(ds -> ds.match("group", "default")) as ds>
 - ${ds.name}
 </#list>
 
@@ -163,7 +163,7 @@ In most cases the data source will be passed to a tool, but there are some usefu
 Invoke Arbitrary Methods On DataSource
 ---------------------------------------------------------------------------
 <#if dataSources?has_content>
-<#assign dataSource=dataSources?values?first>
+<#assign dataSource=dataSources?first>
 Name            : ${dataSource.name}
 Nr of lines     : ${dataSource.lines?size}
 Content Type    : ${dataSource.contentType}

@@ -22,7 +22,7 @@ import java.io.Writer;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Wraps a writer (usually the internal FreeMarker's writer instance
+ * Wraps a writer (usually the internal FreeMarker's writer instance)
  * and avoids closing it since this would crash FreeMarker. E.g. the
  * Commons CSV integration uses the FreeMarker writer directly but
  * some implementation could call "CSVPrinter#close"

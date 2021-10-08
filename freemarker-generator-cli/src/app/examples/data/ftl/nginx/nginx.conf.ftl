@@ -1,4 +1,4 @@
-<#assign env = tools.properties.parse(dataSources?values[0])>
+<#assign env = tools.properties.parse(dataSources[0])>
 
 server {
   listen 80;
