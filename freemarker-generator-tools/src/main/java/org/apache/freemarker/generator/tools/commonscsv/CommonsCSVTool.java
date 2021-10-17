@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -96,6 +97,11 @@ public class CommonsCSVTool {
 
     public CommonsCSVPrinterFacade printer(CSVFormat csvFormat) throws IOException {
         return new CommonsCSVPrinterFacade(csvFormat);
+    }
+
+    public String[] extractHeaders(Map<String, Object> map) {
+        final Set<String> keySet = map.keySet();
+        return keySet.toArray(new String[0]);
     }
 
     /**

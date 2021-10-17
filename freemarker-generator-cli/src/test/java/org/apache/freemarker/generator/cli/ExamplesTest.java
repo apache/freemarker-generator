@@ -126,6 +126,17 @@ public class ExamplesTest extends AbstractMainTest {
     }
 
     @Test
+    public void shouldRunUtahParserExamples() throws IOException {
+        assertValid(execute("-t src/app/examples/templates/utahparser/csv/transform.ftl " +
+                "src/app/examples/data/text/utahparser/juniper_bgp_summary_template.xml " +
+                "src/app/examples/data/text/utahparser/juniper_bgp_summary_example.txt"));
+
+        assertValid(execute("-t src/app/examples/templates/utahparser/json/transform.ftl " +
+                "src/app/examples/data/text/utahparser/juniper_bgp_summary_template.xml " +
+                "src/app/examples/data/text/utahparser/juniper_bgp_summary_example.txt"));
+    }
+
+    @Test
     public void shouldRunInteractiveTemplateExamples() throws IOException {
         assertValid(execute("-i ${tools.jsonpath.parse(dataSources[0]).read(\"$.info.title\")} src/app/examples/data/json/swagger-spec.json"));
         assertValid(execute("-i ${tools.xml.parse(dataSources[0])[\"recipients/person[1]/name\"]} src/app/examples/data/xml/recipients.xml"));
