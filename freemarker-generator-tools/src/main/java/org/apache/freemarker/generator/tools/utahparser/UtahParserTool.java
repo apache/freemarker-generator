@@ -26,6 +26,12 @@ import org.apache.freemarker.generator.tools.utahparser.impl.ParserWrapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 public class UtahParserTool {
 
@@ -44,6 +50,23 @@ public class UtahParserTool {
     public ParserWrapper getParser(Config config, DataSource dataSource) {
         final InputStreamReader is = new InputStreamReader(dataSource.getInputStream());
         return new ParserWrapper(Parser.parse(config, is));
+    }
+
+    public String[] getHeaders(Map<String, Object> map) {
+        final Set<String> keySet = map.keySet();
+        return keySet.toArray(new String[0]);
+    }
+
+    public Set<String> getHeaders(Collection<Map<String, String>> records) {
+        if (records == null || records.isEmpty()) {
+            return Collections.emptySet();
+        }
+
+        return records.stream()
+                .map(record -> record.keySet())
+                .flatMap(Collection::stream)
+                .collect(Collectors.toCollection(() -> new TreeSet<>())
+                );
     }
 
     public String toString() {

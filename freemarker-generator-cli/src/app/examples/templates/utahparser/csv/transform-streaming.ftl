@@ -14,19 +14,21 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#-- Setup Utah-Parser and parse all records to determine the headers -->
+<#-- Setup Utah-Parser -->
 <#assign conf =  tools.utahparser.getConfig(dataSources[0])>
 <#assign parser = tools.utahparser.getParser(conf, dataSources[1])>
-<#assign records = parser.toList()>
-<#assign headers = tools.utahparser.getHeaders(records)>
-<#-- Setup CSVPrinter  -->
-<#assign defaultCsvformat = tools.csv.formats[CSV_TARGET_FORMAT!"DEFAULT"]>
-<#assign csvDelimiter = tools.csv.toDelimiter(CSV_TARGET_DELIMITER!defaultCsvformat.getDelimiter())>
-<#assign cvsFormat = defaultCsvformat.withHeader(headers).withDelimiter(csvDelimiter)>
-<#assign csvPrinter = tools.csv.printer(cvsFormat)>
+<#assign csvPrinter = "">
 <#-- Print records as CSV  -->
 <#compress>
-    <#list records as record>
-        ${csvPrinter.printRecord(record, headers)}
+    <#list parser.iterator() as record>
+        <#if !csvPrinter?has_content>
+            <#-- Lazy creation of a CSVFormat for writing the records -->
+            <#assign defaultCsvformat = tools.csv.formats[CSV_TARGET_FORMAT!"DEFAULT"]>
+            <#assign delimiter = tools.csv.toDelimiter(CSV_TARGET_DELIMITER!defaultCsvformat.getDelimiter())>
+            <#assign csvHeaders = tools.utahparser.getHeaders(record)>
+            <#assign cvsFormat = defaultCsvformat.withHeader(csvHeaders).withDelimiter(delimiter)>
+            <#assign csvPrinter = tools.csv.printer(cvsFormat)>
+        </#if>
+        ${csvPrinter.printRecord(record, csvHeaders)}
     </#list>
 </#compress>

@@ -99,11 +99,6 @@ public class CommonsCSVTool {
         return new CommonsCSVPrinterFacade(csvFormat);
     }
 
-    public String[] extractHeaders(Map<String, Object> map) {
-        final Set<String> keySet = map.keySet();
-        return keySet.toArray(new String[0]);
-    }
-
     /**
      * Extract the list of unique values (keys) of the column "name".
      *

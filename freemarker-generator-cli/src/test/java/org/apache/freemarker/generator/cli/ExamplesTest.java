@@ -127,7 +127,9 @@ public class ExamplesTest extends AbstractMainTest {
 
     @Test
     public void shouldRunUtahParserExamples() throws IOException {
-        assertValid(execute("-t src/app/examples/templates/utahparser/csv/transform.ftl " +
+        assertValid(execute("-PCSV_TARGET_FORMAT=EXCEL " +
+                "-PCSV_TARGET_DELIMITER=SEMICOLON " +
+                "-t src/app/examples/templates/utahparser/csv/transform.ftl " +
                 "src/app/examples/data/text/utahparser/juniper_bgp_summary_template.xml " +
                 "src/app/examples/data/text/utahparser/juniper_bgp_summary_example.txt"));
 
