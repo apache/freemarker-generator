@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file. We try to a
 
 ## 0.2.0-SNAPSHOT
 
+### Added
+* [FREEMARKER-199] Add [utah-parser-tool](https://github.com/sonalake/utah-parser) to parse semi-structured text.
+
 ### Changed
 * [FREEMARKER-195] Improve exposure of DataSources using TemplateHashModelEx2
 
@@ -90,4 +93,5 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-182]: https://issues.apache.org/jira/browse/FREEMARKER-182
 [FREEMARKER-188]: https://issues.apache.org/jira/browse/FREEMARKER-188
 [FREEMARKER-195]: https://issues.apache.org/jira/browse/FREEMARKER-195
+[FREEMARKER-199]: https://issues.apache.org/jira/browse/FREEMARKER-199
 
