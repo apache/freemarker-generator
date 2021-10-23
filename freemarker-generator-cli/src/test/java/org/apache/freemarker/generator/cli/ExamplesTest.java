@@ -82,6 +82,11 @@ public class ExamplesTest extends AbstractMainTest {
     }
 
     @Test
+    public void shouldRunNginxParsingExamples() throws IOException {
+        assertValid(execute("-t src/app/examples/templates/nginx/confluence/nginx-config-parser.ftl -s src/app/examples/data/nginx"));
+    }
+
+    @Test
     public void shouldRunJsonExamples() throws IOException {
         assertValid(execute("-t src/app/examples/templates/json/csv/swagger-endpoints.ftl src/app/examples/data/json/swagger-spec.json"));
         assertValid(execute("-t src/app/examples/templates/json/md/github-users.ftl src/app/examples/data/json/github-users.json"));
@@ -228,6 +233,7 @@ public class ExamplesTest extends AbstractMainTest {
     }
 
     private static void assertValid(String output) {
+        // System.out.println(output);
         assertTrue(output.length() > MIN_OUTPUT_SIZE);
         assertFalse(output.contains("Exception"));
         assertFalse(output.contains("FreeMarker template error"));

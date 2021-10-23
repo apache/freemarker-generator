@@ -183,6 +183,13 @@ echo "examples/templates/json/md/github-users.ftl"
 $FREEMARKER_CMD -t examples/templates/json/md/github-users.ftl examples/data/json/github-users.json > target/out/github-users.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
+# NGINX
+#############################################################################
+
+echo "examples/templates/nginx/confluence/nginx-config-parser.ftl"
+$FREEMARKER_CMD -t examples/templates/nginx/confluence/nginx-config-parser.ftl -s examples/data/nginx > target/out/nginx-config.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
+#############################################################################
 # Properties
 #############################################################################
 
