@@ -27,6 +27,8 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.function.Function.identity;
@@ -180,7 +182,7 @@ public class DataSources implements Closeable {
     }
 
     /**
-     * Find data sources based on their metadata key and wildcard string.
+     * Find <code>DataSources</code> based on their metadata key and wildcard string.
      *
      * @param key      metadata key to match
      * @param wildcard the wildcard string to match against
@@ -204,6 +206,19 @@ public class DataSources implements Closeable {
      */
     public DataSources filter(String key, String wildcard) {
         return new DataSources(find(key, wildcard));
+    }
+
+    /**
+     * Group the <code>DataSources</code> by a metadata value.
+     * @param key metadata key to group by
+     * @return groups of <code>DataSources</code>
+     */
+    public Map<String, DataSources> groupingBy(String key) {
+        final Function<DataSource, String> metadataFunction = dataSource -> dataSource.getMetadata(key);
+        return dataSources.stream()
+                .collect(Collectors.groupingBy(metadataFunction))
+                .entrySet().stream()
+                .collect(Collectors.toMap(Entry::getKey, p -> new DataSources(p.getValue())));
     }
 
     @Override

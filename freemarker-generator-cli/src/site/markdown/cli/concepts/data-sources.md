@@ -96,7 +96,7 @@ URI : system:///stdin
 
 ### Selecting A DataSource
 
-After loading one or more `DataSource` they are accessible as `dataSource` map in the FreeMarker model
+After loading one or more `DataSource` they are accessible as `dataSources` map in the FreeMarker model
 
 * `dataSources[0]` or `dataSources?first` selects the first data source
 * `dataSources["user.csv"]` selects the data source with the name "user.csv"
@@ -306,8 +306,6 @@ group           : default
 
 Iterating Over Properties Of A Datasource
 ---------------------------------------------------------------------------
-
-
 ```
 
 

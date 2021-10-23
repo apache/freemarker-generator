@@ -6,72 +6,44 @@ Run `run-examples.sh` in the `Apache FreeMarker Generator` installation director
 
 ```text
 ./run-examples.sh 
-templates/info.ftl
+templates/freemarker-generator/info.ftl
 examples/templates/demo.ftl
-templates/csv/html/transform.ftl
-templates/csv/md/transform.ftl
+examples/templates/datasources.ftl
+examples/templates/datasources.ftl
+templates/freemarker-generator/csv/confluence/transform.ftl
+templates/freemarker-generator/csv/html/transform.ftl
+templates/freemarker-generator/csv/md/transform.ftl
 examples/templates/csv/shell/curl.ftl
 examples/templates/csv/md/filter.ftl
 examples/templates/csv/fo/transform.ftl
 fop -fo target/out/locker-test-users.fo target/out/locker-test-users.pdf
 examples/templates/csv/fo/transactions.ftl
 fop -fo target/out/transactions.fo target/out/transactions-fo.pdf
-templates/csv/html/transform.ftl
+examples/templates/csv/html/transform.ftl
 wkhtmltopdf -O landscape target/out/transactions.html target/out/transactions-html.pdf
 examples/templates/dataframe/example.ftl
 examples/templates/accesslog/combined-access.ftl
+examples/templates/logs/csv/serverlog-to-csv.ftl
 examples/templates/excel/dataframe/transform.ftl
-templates/excel/html/transform.ftl
-templates/excel/md/transform.ftl
-templates/excel/csv/transform.ftl
+templates/freemarker-generator/excel/html/transform.ftl
+templates/freemarker-generator/excel/md/transform.ftl
+templates/freemarker-generator/excel/csv/transform.ftl
 examples/templates/excel/csv/custom.ftl
 examples/templates/html/csv/dependencies.ftl
+examples/templates/html/txt/licence.ftl
+examples/templates/javafaker/csv/testdata.ftl
 examples/templates/json/csv/swagger-endpoints.ftl
-templates/json/yaml/transform.ftl
+templates/freemarker-generator/json/yaml/transform.ftl
 examples/templates/json/md/github-users.ftl
 examples/templates/properties/csv/locker-test-users.ftl
 examples/data/template
-examples/templates/yaml/txt/transform.ftl
-templates/yaml/json/transform.ftl
+examples/templates/utahparser/csv/transform.ftl
+examples/templates/utahparser/json/transform.ftl
 examples/templates/xml/txt/recipients.ftl
-Created the following sample files in ./target/out
-total 1464
--rw-r--r--  1 sgoeschl  staff     646 Jun 27 16:38 combined-access.log.txt
--rw-r--r--  1 sgoeschl  staff   25676 Jun 27 16:38 contract.html
--rw-r--r--  1 sgoeschl  staff    7933 Jun 27 16:38 contract.md
--rw-r--r--  1 sgoeschl  staff     784 Jun 27 16:38 curl.sh
--rw-r--r--  1 sgoeschl  staff     232 Jun 27 16:38 customer.txt
--rw-r--r--  1 sgoeschl  staff    6486 Jun 27 16:38 dataframe.txt
--rw-r--r--  1 sgoeschl  staff   15613 Jun 27 16:38 demo.txt
--rw-r--r--  1 sgoeschl  staff    1310 Jun 27 16:38 dependencies.csv
--rw-r--r--  1 sgoeschl  staff    2029 Jun 27 16:38 github-users-curl.md
--rw-r--r--  1 sgoeschl  staff    2627 Jun 27 16:38 info.txt
--rw-r--r--  1 sgoeschl  staff    8075 Jun 27 16:38 interactive-dataframe.txt
--rw-r--r--  1 sgoeschl  staff      66 Jun 27 16:38 interactive-html.txt
--rw-r--r--  1 sgoeschl  staff      16 Jun 27 16:38 interactive-json.txt
--rw-r--r--  1 sgoeschl  staff   25090 Jun 27 16:38 interactive-swagger.json
--rw-r--r--  1 sgoeschl  staff   16870 Jun 27 16:38 interactive-swagger.yaml
--rw-r--r--  1 sgoeschl  staff      10 Jun 27 16:38 interactive-xml.txt
--rw-r--r--  1 sgoeschl  staff     285 Jun 27 16:38 locker-test-users.csv
--rw-r--r--  1 sgoeschl  staff    6341 Jun 27 16:38 locker-test-users.fo
--rw-r--r--  1 sgoeschl  staff    5526 Jun 27 16:38 locker-test-users.pdf
--rw-r--r--  1 sgoeschl  staff     921 Jun 27 16:38 recipients.txt
--rw-r--r--  1 sgoeschl  staff     910 Jun 27 16:38 sales-records.md
--rw-r--r--  1 sgoeschl  staff    2453 Jun 27 16:38 swagger-spec.csv
--rw-r--r--  1 sgoeschl  staff   25090 Jun 27 16:38 swagger-spec.json
--rw-r--r--  1 sgoeschl  staff   16870 Jun 27 16:38 swagger-spec.yaml
-drwxr-xr-x  4 sgoeschl  staff     128 Jun 27 16:38 template
--rw-r--r--  1 sgoeschl  staff     154 Jun 27 16:38 test-multiple-sheets.xlsx.csv
--rw-r--r--  1 sgoeschl  staff    1917 Jun 27 16:38 test-multiple-sheets.xlsx.html
--rw-r--r--  1 sgoeschl  staff     389 Jun 27 16:38 test-multiple-sheets.xlsx.md
--rw-r--r--  1 sgoeschl  staff     155 Jun 27 16:38 test-transform-xls.csv
--rw-r--r--  1 sgoeschl  staff    1439 Jun 27 16:38 test.xls.dataframe.txt
--rw-r--r--  1 sgoeschl  staff    1556 Jun 27 16:38 test.xls.html
--rw-r--r--  1 sgoeschl  staff    1558 Jun 27 16:38 test.xslx.html
--rw-r--r--  1 sgoeschl  staff   25757 Jun 27 16:38 transactions-fo.pdf
--rw-r--r--  1 sgoeschl  staff   66016 Jun 27 16:38 transactions-html.pdf
--rw-r--r--  1 sgoeschl  staff  330128 Jun 27 16:38 transactions.fo
--rw-r--r--  1 sgoeschl  staff   51008 Jun 27 16:38 transactions.html
+examples/templates/yaml/txt/transform.ftl
+templates/freemarker-generator/yaml/json/transform.ftl
+examples/data/csv
+examples/data/csv
 ```
 
 Please note that generated PDF files are very likely not found since they require `wkhtmltopdf` and `Apache FOP` installation.

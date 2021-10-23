@@ -93,7 +93,7 @@ URI : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-ge
 or use a charset for all files of a directory
 
 ```text
-freemarker-generator -t freemarker-generator/info.ftl 'examples/data/csv#charset=UTF-16&mimetype=text/plain'
+freemarker-generator -t freemarker-generator/info.ftl 'examples/data/csv#charset=UTF-16&mimeType=text/plain'
 
 FreeMarker Generator DataSources
 ------------------------------------------------------------------------------

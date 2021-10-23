@@ -25,7 +25,7 @@ public class ManualTest extends AbstractMainTest {
 
     // private static final String CMD = "-V";
     private static final String CMD =
-            "-t src/app/examples/templates/datasources.ftl readme:documentation=README.md src/main/assembly";
+            "-t src/app/examples/templates/nginx/confluence/nginx-config-parser.ftl -s src/app/examples/data/nginx";
             // "-t src/app/examples/templates/datasources.ftl";
 
     @Override

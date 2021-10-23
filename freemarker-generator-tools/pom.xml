@@ -129,6 +129,12 @@
             <artifactId>snakeyaml</artifactId>
             <version>1.28</version>
         </dependency>
+        <!-- UtahPrserTool -->
+        <dependency>
+            <groupId>com.sonalake</groupId>
+            <artifactId>utah-parser</artifactId>
+            <version>1.0.2</version>
+        </dependency>
         <!-- Testing -->
         <dependency>
             <groupId>junit</groupId>

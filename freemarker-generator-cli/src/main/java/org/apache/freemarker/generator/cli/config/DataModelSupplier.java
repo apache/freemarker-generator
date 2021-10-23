@@ -16,6 +16,7 @@
  */
 package org.apache.freemarker.generator.cli.config;
 
+import org.apache.commons.io.FilenameUtils;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceLoader;
 import org.apache.freemarker.generator.base.datasource.DataSourceLoaderFactory;
@@ -79,13 +80,20 @@ public class DataModelSupplier implements Supplier<Map<String, Object>> {
 
         if (contentType.startsWith(MIME_APPLICATION_JSON)) {
             return fromJson(dataSource, isExplodedDataModel);
+        } else if (isYamlDataSource(dataSource)) {
+            return fromYaml(dataSource, isExplodedDataModel);
         } else if (contentType.startsWith(MIME_TEXT_PLAIN)) {
             return fromProperties(dataSource, isExplodedDataModel);
-        } else if (contentType.startsWith(MIME_TEXT_YAML)) {
-            return fromYaml(dataSource, isExplodedDataModel);
         } else {
             throw new IllegalArgumentException("Don't know how to handle content type: " + contentType);
         }
+    }
+
+    private static boolean isYamlDataSource(DataSource dataSource) {
+        final String contentType = dataSource.getContentType();
+        final String extension = FilenameUtils.getExtension(dataSource.getUri().toString());
+        return contentType.startsWith(MIME_TEXT_YAML)
+                || (contentType.startsWith(MIME_TEXT_PLAIN)) && "yaml".equalsIgnoreCase(extension);
     }
 
     private static Map<String, Object> fromJson(DataSource dataSource, boolean isExplodedDataModel) {
