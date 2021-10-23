@@ -60,7 +60,6 @@ contentType           : ${dataSource.contentType}
 fileName              : ${dataSource.fileName}
 baseName              : ${dataSource.baseName}
 extension             : ${dataSource.extension}
-extension             : ${dataSource.extension}
 relativeFilePath      : ${dataSource.relativeFilePath}
 charset               : ${dataSource.charset}
 mimeType              : ${dataSource.mimeType}

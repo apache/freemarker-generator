@@ -25,6 +25,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Arrays.asList;
@@ -119,6 +120,36 @@ public class DataSourcesTest {
         assertEquals(singletonList(DEFAULT_GROUP), dataSources().getGroups());
     }
 
+    @Test
+    public void shouldSupportGroupingByMetadata() {
+        try (DataSources dataSources = dataSources()) {
+            final Map<String, DataSources> map = dataSources.groupingBy("mimeType");
+
+            assertEquals(2, map.size());
+            assertEquals(1, map.get("application/xml").size());
+            assertEquals(2, map.get("text/plain").size());
+        }
+    }
+
+    @Test
+    public void shouldSupportFilteringByMetadata() {
+        try (DataSources dataSources = dataSources().filter("mimeType", "text/plain")) {
+            assertEquals(2, dataSources.size());
+            assertEquals("text/plain", dataSources.get(0).getMimeType());
+            assertEquals("text/plain", dataSources.get(1).getMimeType());
+        }
+
+        try (DataSources dataSources = dataSources().filter("mimeType", "application/xml")) {
+            assertEquals(1, dataSources.size());
+            assertEquals("application/xml", dataSources.get(0).getMimeType());
+        }
+
+        try (DataSources dataSources = dataSources().filter("mimeType", "!text/plain")) {
+            assertEquals(1, dataSources.size());
+            assertEquals("application/xml", dataSources.get(0).getMimeType());
+        }
+    }
+
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionWhenGetDoesNotFindDataSource() {
         dataSources().get("file-does-not-exist");
@@ -142,7 +173,7 @@ public class DataSourcesTest {
     }
 
     private static DataSource urlDataSource() {
-        return DataSourceFactory.fromUrl("server.invalid?foo=bar", "default", toUrl(ANY_URL), "plain/text", UTF_8, new HashMap<>());
+        return DataSourceFactory.fromUrl("server.invalid?foo=bar", "default", toUrl(ANY_URL), "text/plain", UTF_8, new HashMap<>());
     }
 
     private static URL toUrl(String value) {

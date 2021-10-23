@@ -1,0 +1,30 @@
+server {
+  listen               443 ssl;
+  server_name          test1-api.company.org;
+
+  access_log           /var/log/nginx/test1-api.access.log;
+  error_log            /var/log/nginx/test1-api.error.log;
+
+  ssl_certificate      /etc/nginx/ssl/wildcard.company.org-public.crt;
+  ssl_certificate_key  /etc/nginx/ssl/wildcard.company.org-private.rsa;
+
+  include              /etc/nginx/includes/FLKPMM.nginx;
+
+  proxy_buffers        16 64k;
+  proxy_buffer_size    128k;
+  proxy_next_upstream  error timeout invalid_header http_500 http_502 http_503 http_504;
+  proxy_redirect       off;
+  proxy_set_header     Host              $host;
+  proxy_set_header     X-Real-IP         $remote_addr;
+  proxy_set_header     X-Forwarded-For   $proxy_add_x_forwarded_for;
+  proxy_set_header     X-Forwarded-Proto https;
+  proxy_set_header     X-TPP-QWAC        $ssl_client_cert;
+
+  ssl_verify_client    optional_no_ca;
+
+
+  location / {
+    return 403;
+  }
+
+}

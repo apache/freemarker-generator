@@ -197,6 +197,16 @@ echo "examples/data/template"
 $FREEMARKER_CMD -t examples/data/template -PNGINX_HOSTNAME=localhost -o target/out/template  || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
+# Utah Parser
+#############################################################################
+
+echo "examples/templates/utahparser/csv/transform.ftl"
+$FREEMARKER_CMD -PCSV_TARGET_FORMAT=EXCEL -PCSV_TARGET_DELIMITER=SEMICOLON -t examples/templates/utahparser/csv/transform.ftl examples/data/text/utahparser/juniper_bgp_summary_template.xml examples/data/text/utahparser/juniper_bgp_summary_example.txt -o target/out/utahparserjuniper_bgp_summary_example.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
+echo "examples/templates/utahparser/json/transform.ftl"
+$FREEMARKER_CMD -t examples/templates/utahparser/json/transform.ftl examples/data/text/utahparser/juniper_bgp_summary_template.xml examples/data/text/utahparser/juniper_bgp_summary_example.txt -o target/out/utahparser/juniper_bgp_summary_example.json || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
+#############################################################################
 # XML
 #############################################################################
 

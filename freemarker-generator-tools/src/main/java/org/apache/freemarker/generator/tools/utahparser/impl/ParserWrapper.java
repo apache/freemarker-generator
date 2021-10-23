@@ -28,7 +28,7 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * Wraps the <code>com.sonalake.utah.Parser</code> to provide convenience
- * methods such support of iterators.
+ * methods such as support of iterators.
  */
 public class ParserWrapper implements Iterable<Map<String, String>> {
 
@@ -44,6 +44,11 @@ public class ParserWrapper implements Iterable<Map<String, String>> {
         return new RecordsIterator(parser);
     }
 
+    /**
+     * Iterates over all records and return a list.
+     *
+     * @return list of records
+     */
     public List<Map<String, String>> toList() {
         final List<Map<String, String>> result = new ArrayList<>();
         for (Map<String, String> record : this) {
@@ -57,7 +62,6 @@ public class ParserWrapper implements Iterable<Map<String, String>> {
         private final Parser parser;
         private Map<String, String> nextRecord;
 
-        // constructor
         RecordsIterator(Parser parser) {
             this.parser = requireNonNull(parser);
             this.nextRecord = parser.next();

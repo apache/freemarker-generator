@@ -26,47 +26,68 @@ import org.apache.freemarker.generator.tools.utahparser.impl.ParserWrapper;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public class UtahParserTool {
 
+    /**
+     * Create a Utah Parser config based on the given source.
+     *
+     * @param source source of configuration file
+     * @return config instance
+     */
     public Config getConfig(String source) {
-        return this.getConfig(DataSourceLoaderFactory.create().load(source));
+        return getConfig(DataSourceLoaderFactory.create().load(source));
     }
 
+    /**
+     * Create a Utah Parser config based on teh textual content of the data source,
+     *
+     * @param dataSource XML configuration file
+     * @return config instance
+     */
     public Config getConfig(DataSource dataSource) {
         try (InputStream is = dataSource.getUnsafeInputStream()) {
             return loadConfig(is);
-        } catch (IOException var16) {
-            throw new RuntimeException("Failed to load parser configuration: " + dataSource, var16);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load parser configuration: " + dataSource, e);
         }
     }
 
+    /**
+     * Create a parser instance.
+     *
+     * @param config     configuration
+     * @param dataSource data source to be parsed
+     * @return parser
+     */
     public ParserWrapper getParser(Config config, DataSource dataSource) {
         final InputStreamReader is = new InputStreamReader(dataSource.getInputStream());
-        return new ParserWrapper(Parser.parse(config, is));
+        final Parser parser = Parser.parse(config, is);
+        return new ParserWrapper(parser);
     }
 
-    public String[] getHeaders(Map<String, Object> map) {
-        final Set<String> keySet = map.keySet();
-        return keySet.toArray(new String[0]);
+    public List<String> getHeaders(Map<String, Object> record) {
+        if (record == null || record.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return new ArrayList<>(record.keySet());
     }
 
-    public Set<String> getHeaders(Collection<Map<String, String>> records) {
+    public List<String> getHeaders(Collection<Map<String, String>> records) {
         if (records == null || records.isEmpty()) {
-            return Collections.emptySet();
+            return Collections.emptyList();
         }
 
         return records.stream()
-                .map(record -> record.keySet())
-                .flatMap(Collection::stream)
-                .collect(Collectors.toCollection(() -> new TreeSet<>())
-                );
+                .map(Map::keySet)
+                .flatMap(Collection::stream).distinct().sorted().collect(Collectors.toList());
     }
 
     public String toString() {
