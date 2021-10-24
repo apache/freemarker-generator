@@ -14,7 +14,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign dataSource = dataSources?values[0]>
+<#assign dataSource = dataSources[0]>
 <#assign csvParser = tools.csv.parse(dataSource, tools.csv.formats.DATAFRAME)>
 <#assign users = tools.dataframe.fromCSVParser(csvParser)>
 

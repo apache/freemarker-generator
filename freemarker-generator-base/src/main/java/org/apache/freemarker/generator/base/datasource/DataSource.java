@@ -59,24 +59,29 @@ import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_APPLICATI
  */
 public class DataSource implements Closeable, javax.activation.DataSource {
 
-    public static final String METADATA_BASE_NAME = "basename";
+    public static final String METADATA_BASE_NAME = "baseName";
+    public static final String METADATA_CHARSET = "charset";
     public static final String METADATA_EXTENSION = "extension";
-    public static final String METADATA_FILE_NAME = "filename";
-    public static final String METADATA_FILE_PATH = "filepath";
+    public static final String METADATA_FILE_NAME = "fileName";
+    public static final String METADATA_FILE_PATH = "filePath";
     public static final String METADATA_GROUP = "group";
+    public static final String METADATA_MIME_TYPE = "mimeType";
     public static final String METADATA_NAME = "name";
+    public static final String METADATA_RELATIVE_FILE_PATH = "relativeFilePath";
     public static final String METADATA_URI = "uri";
-    public static final String METADATA_MIME_TYPE = "mimetype";
 
+    /** List of metadata keys */
     public static final List<String> METADATA_KEYS = Arrays.asList(
             METADATA_BASE_NAME,
+            METADATA_CHARSET,
             METADATA_EXTENSION,
             METADATA_FILE_NAME,
             METADATA_FILE_PATH,
             METADATA_GROUP,
+            METADATA_MIME_TYPE,
             METADATA_NAME,
-            METADATA_URI,
-            METADATA_MIME_TYPE
+            METADATA_RELATIVE_FILE_PATH,
+            METADATA_URI
     );
 
     /** Human-readable name of the data source */
@@ -90,6 +95,9 @@ public class DataSource implements Closeable, javax.activation.DataSource {
 
     /** The underlying "javax.activation.DataSource" */
     private final javax.activation.DataSource dataSource;
+
+    /** The relative path for a file-based data source */
+    private final String relativeFilePath;
 
     /** Content type of data source either provided by the caller or fetched directly from the data source */
     private final String contentType;
@@ -106,19 +114,21 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     /**
      * Constructor.
      *
-     * @param name        Human-readable name of the data source
-     * @param group       Optional group of data source
-     * @param uri         source URI of the data source
-     * @param dataSource  JAF data source being wrapped
-     * @param contentType content type of data source either provided by the caller or fetched directly from the data source
-     * @param charset     option charset for directly accessing text-based content
-     * @param properties  optional name/value pairs
+     * @param name             Human-readable name of the data source
+     * @param group            Optional group of data source
+     * @param uri              source URI of the data source
+     * @param dataSource       JAF data source being wrapped
+     * @param relativeFilePath relative path regarding a source directory
+     * @param contentType      content type of data source either provided by the caller or fetched directly from the data source
+     * @param charset          option charset for directly accessing text-based content
+     * @param properties       optional name/value pairs
      */
     public DataSource(
             String name,
             String group,
             URI uri,
             javax.activation.DataSource dataSource,
+            String relativeFilePath,
             String contentType,
             Charset charset,
             Map<String, String> properties) {
@@ -126,10 +136,15 @@ public class DataSource implements Closeable, javax.activation.DataSource {
         this.group = StringUtils.emptyToNull(group);
         this.uri = requireNonNull(uri);
         this.dataSource = requireNonNull(dataSource);
+        this.relativeFilePath = relativeFilePath != null ? relativeFilePath : "";
         this.contentType = contentType;
         this.charset = charset;
         this.properties = properties != null ? new HashMap<>(properties) : new HashMap<>();
         this.closeables = new CloseableReaper();
+    }
+
+    public static DataSourceBuilder builder() {
+        return DataSourceBuilder.builder();
     }
 
     @Override
@@ -182,6 +197,16 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     }
 
     /**
+     * Get the path from the underlying "FileDataSource". All
+     * other data sources will return an empty string.
+     *
+     * @return file name or empty string
+     */
+    public String getFilePath() {
+        return isFileDataSource() ? FilenameUtils.getFullPathNoEndSeparator(uri.getPath()) : "";
+    }
+
+    /**
      * Get the base name from the underlying "FileDataSource". All
      * other data sources will return an empty string.
      *
@@ -199,6 +224,16 @@ public class DataSource implements Closeable, javax.activation.DataSource {
      */
     public String getExtension() {
         return FilenameUtils.getExtension(getFileName());
+    }
+
+    /**
+     * Get the relative path for a file-based data source starting from
+     * the data source directory.
+     *
+     * @return relative path
+     */
+    public String getRelativeFilePath() {
+        return relativeFilePath;
     }
 
     /**
@@ -341,12 +376,16 @@ public class DataSource implements Closeable, javax.activation.DataSource {
         switch (key) {
             case METADATA_BASE_NAME:
                 return getBaseName();
+            case METADATA_CHARSET:
+                return getCharset().name();
             case METADATA_EXTENSION:
                 return getExtension();
             case METADATA_FILE_NAME:
                 return getFileName();
             case METADATA_FILE_PATH:
-                return FilenameUtils.getFullPathNoEndSeparator(uri.getPath());
+                return getFilePath();
+            case METADATA_RELATIVE_FILE_PATH:
+                return getRelativeFilePath();
             case METADATA_GROUP:
                 return getGroup();
             case METADATA_NAME:
@@ -371,7 +410,8 @@ public class DataSource implements Closeable, javax.activation.DataSource {
     }
 
     /**
-     * Matches a metadata key with a wildcard expression.
+     * Matches a metadata key with a wildcard expression. If the wildcard is prefixed
+     * with a "!" than the match will be negated.
      *
      * @param key      metadata key, e.g. "name", "fileName", "baseName", "extension", "uri", "group"
      * @param wildcard the wildcard string to match against
@@ -380,7 +420,11 @@ public class DataSource implements Closeable, javax.activation.DataSource {
      */
     public boolean match(String key, String wildcard) {
         final String value = getMetadata(key);
-        return FilenameUtils.wildcardMatch(value, wildcard);
+        if (wildcard != null && wildcard.startsWith("!")) {
+            return !FilenameUtils.wildcardMatch(value, wildcard.substring(1));
+        } else {
+            return FilenameUtils.wildcardMatch(value, wildcard);
+        }
     }
 
     /**
@@ -431,5 +475,67 @@ public class DataSource implements Closeable, javax.activation.DataSource {
 
     private boolean isByteArrayDataSource() {
         return dataSource instanceof ByteArrayDataSource;
+    }
+
+    public static final class DataSourceBuilder {
+        private String name;
+        private String group;
+        private URI uri;
+        private javax.activation.DataSource dataSource;
+        private String relativeFilePath;
+        private String contentType;
+        private Charset charset;
+        private Map<String, String> properties;
+
+        private DataSourceBuilder() {
+        }
+
+        static DataSourceBuilder builder() {
+            return new DataSourceBuilder();
+        }
+
+        public DataSourceBuilder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public DataSourceBuilder group(String group) {
+            this.group = group;
+            return this;
+        }
+
+        public DataSourceBuilder uri(URI uri) {
+            this.uri = uri;
+            return this;
+        }
+
+        public DataSourceBuilder dataSource(javax.activation.DataSource dataSource) {
+            this.dataSource = dataSource;
+            return this;
+        }
+
+        public DataSourceBuilder relativeFilePath(String relativeFilePath) {
+            this.relativeFilePath = relativeFilePath;
+            return this;
+        }
+
+        public DataSourceBuilder contentType(String contentType) {
+            this.contentType = contentType;
+            return this;
+        }
+
+        public DataSourceBuilder charset(Charset charset) {
+            this.charset = charset;
+            return this;
+        }
+
+        public DataSourceBuilder properties(Map<String, String> properties) {
+            this.properties = properties;
+            return this;
+        }
+
+        public DataSource build() {
+            return new DataSource(name, group, uri, dataSource, relativeFilePath, contentType, charset, properties);
+        }
     }
 }

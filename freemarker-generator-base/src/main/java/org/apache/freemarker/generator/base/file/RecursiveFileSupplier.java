@@ -16,11 +16,14 @@
  */
 package org.apache.freemarker.generator.base.file;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.AndFileFilter;
+import org.apache.commons.io.filefilter.HiddenFileFilter;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.NotFileFilter;
 import org.apache.commons.io.filefilter.OrFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
+import org.apache.freemarker.generator.base.util.StringUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -32,10 +35,6 @@ import java.util.function.Supplier;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static org.apache.commons.io.FileUtils.listFiles;
-import static org.apache.commons.io.filefilter.HiddenFileFilter.HIDDEN;
-import static org.apache.commons.io.filefilter.HiddenFileFilter.VISIBLE;
-import static org.apache.freemarker.generator.base.util.StringUtils.isEmpty;
 
 /**
  * Resolve a list of files or directories recursively.
@@ -94,7 +93,7 @@ public class RecursiveFileSupplier implements Supplier<List<File>> {
     }
 
     private List<File> resolveDirectory(File directory) {
-        return new ArrayList<>(listFiles(directory, fileFilter, directoryFilter));
+        return new ArrayList<>(FileUtils.listFiles(directory, fileFilter, directoryFilter));
     }
 
     private static IOFileFilter fileFilter(Collection<String> includes, Collection<String> excludes) {
@@ -113,7 +112,10 @@ public class RecursiveFileSupplier implements Supplier<List<File>> {
     }
 
     private static IOFileFilter includeFilter(String include) {
-        return isEmpty(include) ? VISIBLE : new AndFileFilter(new WildcardFileFilter(include), VISIBLE);
+        return StringUtils.isEmpty(include) ?
+                HiddenFileFilter.VISIBLE :
+                new AndFileFilter(
+                        new WildcardFileFilter(include), HiddenFileFilter.VISIBLE);
     }
 
     private static List<IOFileFilter> excludeFilters(Collection<String> excludes) {
@@ -125,12 +127,14 @@ public class RecursiveFileSupplier implements Supplier<List<File>> {
     }
 
     private static IOFileFilter excludeFilter(String exclude) {
-        return isEmpty(exclude) ?
-                VISIBLE :
-                new NotFileFilter(new OrFileFilter(new WildcardFileFilter(exclude), HIDDEN));
+        return StringUtils.isEmpty(exclude) ?
+                HiddenFileFilter.VISIBLE :
+                new NotFileFilter(
+                        new OrFileFilter(
+                                new WildcardFileFilter(exclude), HiddenFileFilter.HIDDEN));
     }
 
     private static IOFileFilter directoryFilter() {
-        return VISIBLE;
+        return HiddenFileFilter.VISIBLE;
     }
 }

@@ -43,7 +43,7 @@ Exposed the JSON data source as variable `post` in FreeMarker's model
 post title is: qui est esse
 ```
 
-Expose all environment variables as `env` in theFreeMarker model
+Expose all environment variables as `env` in the FreeMarker model
  
 ```
 > freemarker-generator --data-model env=env:/// -i '<#list env as name,value>${name}=${value}${"\n"}</#list>'

@@ -29,10 +29,12 @@ import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_TEXT_PLAI
 import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_TEXT_RTF;
 import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_TEXT_TSV;
 import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_TEXT_YAML;
+import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_TYPE_GZIP;
+import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_TYPE_ZIP;
 import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_VENDOR_MS_EXCEL;
 import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_VENDOR_OPEN_XML_SPREADSHEET;
 
-public class MimetypesFileTypeMapFactory {
+public abstract class MimetypesFileTypeMapFactory {
 
     private static MimetypesFileTypeMap mimeTypes;
 
@@ -52,6 +54,8 @@ public class MimetypesFileTypeMapFactory {
             mimeTypes.addMimeTypes(MIME_TEXT_RTF + " rtf RTF");
             mimeTypes.addMimeTypes(MIME_TEXT_TSV + " tsv TSV");
             mimeTypes.addMimeTypes(MIME_TEXT_YAML + " yml YML yaml YAML");
+            mimeTypes.addMimeTypes(MIME_TYPE_GZIP + " gzip GZIP");
+            mimeTypes.addMimeTypes(MIME_TYPE_ZIP + " zip ZIP");
         }
 
         return mimeTypes;

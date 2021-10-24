@@ -15,7 +15,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#assign map = tools.yaml.parse(dataSources?values[0])>
+<#assign map = tools.yaml.parse(dataSources[0])>
 <#--------------------------------------------------------------------------->
 <#compress>
 <@print map 1/>

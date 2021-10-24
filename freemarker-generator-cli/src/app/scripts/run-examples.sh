@@ -56,16 +56,19 @@ $FREEMARKER_CMD -t examples/templates/datasources.ftl -s https://xkcd.com/info.0
 # Interactive Mode
 #############################################################################
 
-$FREEMARKER_CMD -i '${tools.jsonpath.parse(dataSources?values[0]).read("$.info.title")}' examples/data/json/swagger-spec.json > target/out/interactive-json.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
-$FREEMARKER_CMD -i '${tools.xml.parse(dataSources?values[0])["recipients/person[1]/name"]}' examples/data/xml/recipients.xml > target/out/interactive-xml.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
-$FREEMARKER_CMD -i '${tools.jsoup.parse(dataSources?values[0]).select("a")[0]}' examples/data/html/dependencies.html > target/out/interactive-html.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
-$FREEMARKER_CMD -i '${tools.gson.toJson(tools.yaml.parse(dataSources?values[0]))}' examples/data/yaml/swagger-spec.yaml > target/out/interactive-swagger.json || { echo >&2 "Test failed.  Aborting."; exit 1; }
-$FREEMARKER_CMD -i '${tools.yaml.toYaml(tools.gson.parse(dataSources?values[0]))}' examples/data/json/swagger-spec.json > target/out/interactive-swagger.yaml || { echo >&2 "Test failed.  Aborting."; exit 1; }
-$FREEMARKER_CMD -i '${tools.dataframe.print(tools.dataframe.fromMaps(tools.gson.parse(dataSources?values[0])))}' examples/data/json/github-users.json > target/out/interactive-dataframe.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -i '${tools.jsonpath.parse(dataSources[0]).read("$.info.title")}' examples/data/json/swagger-spec.json > target/out/interactive-json.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -i '${tools.xml.parse(dataSources[0])["recipients/person[1]/name"]}' examples/data/xml/recipients.xml > target/out/interactive-xml.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -i '${tools.jsoup.parse(dataSources[0]).select("a")[0]}' examples/data/html/dependencies.html > target/out/interactive-html.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -i '${tools.gson.toJson(tools.yaml.parse(dataSources[0]))}' examples/data/yaml/swagger-spec.yaml > target/out/interactive-swagger.json || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -i '${tools.yaml.toYaml(tools.gson.parse(dataSources[0]))}' examples/data/json/swagger-spec.json > target/out/interactive-swagger.yaml || { echo >&2 "Test failed.  Aborting."; exit 1; }
+$FREEMARKER_CMD -i '${tools.dataframe.print(tools.dataframe.fromMaps(tools.gson.parse(dataSources[0])))}' examples/data/json/github-users.json > target/out/interactive-dataframe.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
 # CSV
 #############################################################################
+
+echo "templates/freemarker-generator/csv/confluence/transform.ftl"
+$FREEMARKER_CMD -t freemarker-generator/csv/confluence/transform.ftl examples/data/csv/contract.csv > target/out/contract.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 echo "templates/freemarker-generator/csv/html/transform.ftl"
 $FREEMARKER_CMD -t freemarker-generator/csv/html/transform.ftl examples/data/csv/contract.csv > target/out/contract.html || { echo >&2 "Test failed.  Aborting."; exit 1; }
@@ -180,6 +183,13 @@ echo "examples/templates/json/md/github-users.ftl"
 $FREEMARKER_CMD -t examples/templates/json/md/github-users.ftl examples/data/json/github-users.json > target/out/github-users.md || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
+# NGINX
+#############################################################################
+
+echo "examples/templates/nginx/confluence/nginx-config-parser.ftl"
+$FREEMARKER_CMD -t examples/templates/nginx/confluence/nginx-config-parser.ftl -s examples/data/nginx > target/out/nginx-config.txt || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
+#############################################################################
 # Properties
 #############################################################################
 
@@ -192,6 +202,16 @@ $FREEMARKER_CMD -t examples/templates/properties/csv/locker-test-users.ftl examp
 
 echo "examples/data/template"
 $FREEMARKER_CMD -t examples/data/template -PNGINX_HOSTNAME=localhost -o target/out/template  || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
+#############################################################################
+# Utah Parser
+#############################################################################
+
+echo "examples/templates/utahparser/csv/transform.ftl"
+$FREEMARKER_CMD -PCSV_TARGET_FORMAT=EXCEL -PCSV_TARGET_DELIMITER=SEMICOLON -t examples/templates/utahparser/csv/transform.ftl examples/data/text/utahparser/juniper_bgp_summary_template.xml examples/data/text/utahparser/juniper_bgp_summary_example.txt -o target/out/utahparserjuniper_bgp_summary_example.csv || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
+echo "examples/templates/utahparser/json/transform.ftl"
+$FREEMARKER_CMD -t examples/templates/utahparser/json/transform.ftl examples/data/text/utahparser/juniper_bgp_summary_template.xml examples/data/text/utahparser/juniper_bgp_summary_example.txt -o target/out/utahparser/juniper_bgp_summary_example.json || { echo >&2 "Test failed.  Aborting."; exit 1; }
 
 #############################################################################
 # XML
@@ -209,6 +229,16 @@ $FREEMARKER_CMD -t examples/templates/yaml/txt/transform.ftl examples/data/yaml/
 
 echo "templates/freemarker-generator/yaml/json/transform.ftl"
 $FREEMARKER_CMD -t freemarker-generator/yaml/json/transform.ftl examples/data/yaml/swagger-spec.yaml > target/out/swagger-spec.json || { echo >&2 "Test failed.  Aborting."; exit 1; }
+
+#############################################################################
+# DataSource Seeding
+#############################################################################
+
+echo "examples/data/csv"
+$FREEMARKER_CMD --seed=datasource --template freemarker-generator/csv/html/transform.ftl --output target/out/datasource/csv --output-mapper="*.html" examples/data/csv
+
+echo "examples/data/csv"
+$FREEMARKER_CMD --seed=datasource --template freemarker-generator/csv/html/transform.ftl --data-source . --data-source-include="*.csv" --output target/out/datasource/csv --output-mapper="*.html"
 
 echo "Created the following sample files in ./target/out"
 ls -l ./target/out

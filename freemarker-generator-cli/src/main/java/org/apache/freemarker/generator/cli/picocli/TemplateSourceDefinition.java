@@ -29,4 +29,12 @@ public class TemplateSourceDefinition {
     public boolean isInteractiveTemplate() {
         return interactiveTemplate != null && !interactiveTemplate.isEmpty();
     }
+
+    @Override
+    public String toString() {
+        return "TemplateSourceDefinition{" +
+                "template='" + template + '\'' +
+                ", interactiveTemplate='" + interactiveTemplate + '\'' +
+                '}';
+    }
 }

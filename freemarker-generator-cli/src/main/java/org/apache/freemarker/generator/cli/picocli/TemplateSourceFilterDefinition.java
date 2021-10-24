@@ -20,7 +20,9 @@ import picocli.CommandLine.Option;
 
 import java.util.List;
 
-/** Include/exclude pattern when processing template directories */
+/**
+ * Include/exclude pattern when processing template directories
+ */
 public class TemplateSourceFilterDefinition {
 
     @Option(names = { "--template-include" }, description = "template include pattern")
@@ -28,4 +30,12 @@ public class TemplateSourceFilterDefinition {
 
     @Option(names = { "--template-exclude" }, description = "template exclude pattern")
     public List<String> templateExcludePatterns;
+
+    @Override
+    public String toString() {
+        return "TemplateSourceFilterDefinition{" +
+                "templateIncludePatterns=" + templateIncludePatterns +
+                ", templateExcludePatterns=" + templateExcludePatterns +
+                '}';
+    }
 }

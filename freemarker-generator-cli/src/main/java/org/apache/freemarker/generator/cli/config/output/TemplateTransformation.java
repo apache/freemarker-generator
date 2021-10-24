@@ -14,7 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.freemarker.generator.base.template;
+package org.apache.freemarker.generator.cli.config.output;
+
+import org.apache.freemarker.generator.base.template.TemplateOutput;
+import org.apache.freemarker.generator.base.template.TemplateSource;
 
 import static java.util.Objects.requireNonNull;
 

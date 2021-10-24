@@ -24,7 +24,9 @@ import java.io.IOException;
 public class ManualTest extends AbstractMainTest {
 
     // private static final String CMD = "-V";
-    private static final String CMD = "-t src/app/examples/templates/datasources.ftl transactions:csv=src/app/examples/data/csv/transactions.csv#delimiter=TAB https://xkcd.com/info.0.json envvars=env:///";
+    private static final String CMD =
+            "-t src/app/examples/templates/nginx/confluence/nginx-config-parser.ftl -s src/app/examples/data/nginx";
+            // "-t src/app/examples/templates/datasources.ftl";
 
     @Override
     public String execute(String commandLine) throws IOException {

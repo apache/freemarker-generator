@@ -22,8 +22,8 @@ Nr. of Documents: ${dataSources?size}
 
 Use FTL Array-style Access
 ==============================================================================
-${dataSources?values[0].toString()}
-${dataSources?values?first.toString()}
+${dataSources[0].toString()}
+${dataSources?first.toString()}
 
 Get Document Names As Keys
 ==============================================================================
@@ -38,13 +38,13 @@ Iterate Over Names & DataSources
 </#list>
 
 <#if dataSources?has_content>
-    <#list dataSources?values as dataSource>
+    <#list dataSources as dataSource>
 [#${dataSource?counter}] - ${dataSource.name}
 ==============================================================================
 
 Invoke Arbitrary Methods On DataSource
 ---------------------------------------------------------------------------
-<#assign dataSource=dataSources?values?first>
+<#assign dataSource=dataSources?first>
 Name            : ${dataSource.name}
 Nr of lines     : ${dataSource.lines?size}
 Content Type    : ${dataSource.contentType}

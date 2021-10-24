@@ -2,9 +2,19 @@
 
 All notable changes to this project will be documented in this file. We try to adhere to https://github.com/olivierlacan/keep-a-changelog.
 
-## 0.1.0-SNAPSHOT
+## 0.2.0-SNAPSHOT
 
 ### Added
+* [FREEMARKER-199] Add [utah-parser-tool](https://github.com/sonalake/utah-parser) to parse semi-structured text.
+
+### Changed
+* [FREEMARKER-195] Improve exposure of DataSources using TemplateHashModelEx2
+
+## 0.1.0-SNAPSHOT (unreleased)
+
+### Added
+* Use `-Xverify:none -XX:TieredStopAtLevel=1` to improve startup time of CLI
+* [FREEMARKER-188] Support an output "generation" mode to create an output for each `DataSource`
 * [FREEMARKER-181] Support custom pattern definitions for Grok tool
 * Parse a list of `DataSources` for the various tools
 * [FREEMARKER-161] Allow multiple transformations on the CLI
@@ -20,7 +30,6 @@ All notable changes to this project will be documented in this file. We try to a
 * [FREEMARKER-129] Migrate `freemarker-cli` into `freemarker-generator` project (see [https://github.com/sgoeschl/freemarker-cli](https://github.com/sgoeschl/freemarker-cli))
 * [FREEMARKER-129] Provide a `toString()` method for all tools
 
-### Changed
 * [FREEMARKER-182] Upgrade to Apache FreeMarker 2.3.31
 * [FREEMARKER-175] Use latest FreeMarker version
 * [FREEMARKER-173] Allow to pass arbitrary key/value pairs to DataSource when using NamedURIs
@@ -82,4 +91,7 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-176]: https://issues.apache.org/jira/browse/FREEMARKER-176
 [FREEMARKER-181]: https://issues.apache.org/jira/browse/FREEMARKER-181
 [FREEMARKER-182]: https://issues.apache.org/jira/browse/FREEMARKER-182
+[FREEMARKER-188]: https://issues.apache.org/jira/browse/FREEMARKER-188
+[FREEMARKER-195]: https://issues.apache.org/jira/browse/FREEMARKER-195
+[FREEMARKER-199]: https://issues.apache.org/jira/browse/FREEMARKER-199
 

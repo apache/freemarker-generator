@@ -17,8 +17,11 @@
 package org.apache.freemarker.generator.base.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ListUtils {
 
@@ -57,10 +60,24 @@ public class ListUtils {
      * @param <T>  the type of the array
      * @return copied array
      */
-    public static <T> T coalesce(List<T> list) {
+    public static <T> T coalesce(Collection<T> list) {
         return list.stream()
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);
+    }
+
+    /**
+     * Concatenate an array of lists.
+     *
+     * @param lists array of lists
+     * @param <T>   the type of the array
+     * @return concatenated list
+     */
+    @SafeVarargs
+    public static <T> List<T> concatenate(Collection<T>... lists) {
+        return Stream.of(lists)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
     }
 }

@@ -95,18 +95,41 @@ public class SystemTool {
         return System.getProperties();
     }
 
+    /**
+     * Get the value of a user-supplied parameter.
+     *
+     * @param name name of the parameter
+     * @return value or null
+     */
     public String getParameter(String name) {
         return parameters.get(name);
     }
 
+    /**
+     * Get the value of a user-supplied parameter.
+     *
+     * @param name name of the parameter
+     * @param def  default value
+     * @return value or default value
+     */
     public String getParameter(String name, String def) {
         return parameters.getOrDefault(name, def);
     }
 
+    /**
+     * Get the map of user-supplied parameters.
+     *
+     * @return map of parameters
+     */
     public Map<String, String> getParameters() {
         return parameters;
     }
 
+    /**
+     * Get the list of system properties provided by the caller.
+     *
+     * @return list of user-supplied system properties
+     */
     public Properties getUserSystemProperties() {
         return userSystemProperties;
     }
@@ -132,7 +155,7 @@ public class SystemTool {
      * @param name name of the configuration parameter
      * @return value of null
      */
-    public String getString(String name) {
+    public String getProperty(String name) {
         return StringUtils.firstNonEmpty(
                 getParameter(name),
                 System.getProperty(name),
@@ -148,8 +171,8 @@ public class SystemTool {
      * @param def  default value
      * @return value of null
      */
-    public String getString(String name, String def) {
-        return StringUtils.firstNonEmpty(getString(name), def);
+    public String getProperty(String name, String def) {
+        return StringUtils.firstNonEmpty(getProperty(name), def);
     }
 
     public String getHostName() {

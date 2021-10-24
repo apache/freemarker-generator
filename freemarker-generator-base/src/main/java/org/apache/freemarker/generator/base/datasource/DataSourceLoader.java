@@ -22,7 +22,7 @@ public interface DataSourceLoader {
      * Check if the data source can be loaded by this instance.
      *
      * @param source source to be loaded from
-     * @return true if the instance wold be able to load a data source
+     * @return true if the instance would be able to load a data source
      */
     boolean accept(String source);
 

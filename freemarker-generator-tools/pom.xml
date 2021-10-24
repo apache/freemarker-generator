@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.apache.freemarker.generator</groupId>
         <artifactId>freemarker-generator</artifactId>
-        <version>0.1.0-SNAPSHOT</version>
+        <version>0.2.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>freemarker-generator-tools</artifactId>
@@ -128,6 +128,12 @@
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <version>1.28</version>
+        </dependency>
+        <!-- UtahPrserTool -->
+        <dependency>
+            <groupId>com.sonalake</groupId>
+            <artifactId>utah-parser</artifactId>
+            <version>1.0.2</version>
         </dependency>
         <!-- Testing -->
         <dependency>

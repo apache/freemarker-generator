@@ -17,7 +17,7 @@
 <#--
 FreeMarker template to create a LICENCE file.
 -->
-<#assign dataSource = dataSources?values[0]>
+<#assign dataSource = dataSources[0]>
 <#assign html = tools.jsoup.parse(dataSource)>
 <#assign dataframe = tools.dataframe.create()
     .addStringColumn("GroupId")

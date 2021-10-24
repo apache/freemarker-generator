@@ -24,7 +24,8 @@ import java.util.Properties;
 public class PropertiesTransformer {
 
     /**
-     * Create a new <code>java.util.Properties</code> instance having only key with the prefix.
+     * Create a new <code>java.util.Properties</code> instance having only key with the
+     * given prefix.
      *
      * @param properties the properties
      * @param prefix     prefix

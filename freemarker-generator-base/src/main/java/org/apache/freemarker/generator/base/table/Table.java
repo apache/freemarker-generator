@@ -141,7 +141,7 @@ public class Table {
 
     /**
      * Create a table from a list of rows representing tabular data
-     * where the first row may consists of column headers.
+     * where the first row may consist of column headers.
      *
      * @param rows                      row values
      * @param withFirstRowAsColumnNames column names as first row?

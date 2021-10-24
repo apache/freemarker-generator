@@ -15,7 +15,7 @@
   under the License.
 -->
 <#import "/freemarker-generator/lib/commons-csv.ftl" as csv />
-<#assign dataSource = dataSources?values[0]>
+<#assign dataSource = dataSources[0]>
 <#assign csvParser = tools.csv.parse(dataSource, csv.sourceFormat())>
 <#assign headers = (csvParser.getHeaderMap()!{})?keys>
 <#assign records = csvParser.records>

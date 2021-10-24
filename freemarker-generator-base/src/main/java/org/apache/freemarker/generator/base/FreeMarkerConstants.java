@@ -93,6 +93,15 @@ public class FreeMarkerConstants {
         public static final String FREEMARKER_USER_PARAMETERS = "freemarker.user.parameters";
     }
 
+    public static class SeedType {
+
+        private SeedType() {
+        }
+
+        public static final String TEMPLATE = "template";
+        public static final String DATASOURCE = "datasource";
+    }
+
     public static class SystemProperties {
 
         private SystemProperties() {

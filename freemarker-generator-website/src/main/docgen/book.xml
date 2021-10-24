@@ -627,15 +627,15 @@ freemarker-generator -i 'Some template here... ${1 + 1}'
 [/docgen.insertWithOutput]
 
 [docgen.insertWithOutput]
-freemarker-generator -i '${tools.jsonpath.parse(dataSources?values[0]).read("$.info.title")}' [docgen.wd]/examples/data/json/swagger-spec.json
+freemarker-generator -i '${tools.jsonpath.parse(dataSources[0]).read("$.info.title")}' [docgen.wd]/examples/data/json/swagger-spec.json
 [/docgen.insertWithOutput]
 
 [docgen.insertWithOutput]
-freemarker-generator -i '${tools.xml.parse(dataSources?values[0])["recipients/person[1]/name"]}' [docgen.wd]/examples/data/xml/recipients.xml
+freemarker-generator -i '${tools.xml.parse(dataSources[0])["recipients/person[1]/name"]}' [docgen.wd]/examples/data/xml/recipients.xml
 [/docgen.insertWithOutput]
 
 [docgen.insertWithOutput]
-freemarker-generator -i '${tools.jsoup.parse(dataSources?values[0]).select("a")[0]}' [docgen.wd]/examples/data/html/dependencies.html
+freemarker-generator -i '${tools.jsoup.parse(dataSources[0]).select("a")[0]}' [docgen.wd]/examples/data/html/dependencies.html
 [/docgen.insertWithOutput]</programlisting>
 
         <remark>I have deleted some examples above, as they were problematic
@@ -653,7 +653,7 @@ freemarker-generator -i '${tools.jsoup.parse(dataSources?values[0]).select("a")[
         filtering (based on some primary key) and and transforming into a
         human-readable output format (Markdown).</para>
 
-        <para>So lets start the filtering &amp; transformaction using the
+        <para>So lets start the filtering &amp; transformation using the
         following command line</para>
 
         <programlisting>[docgen.insertWithOutput]
@@ -674,11 +674,11 @@ freemarker-generator -e UTF-8 -l de_AT -Pcolumn="Order ID" \
         YAML or the other way around.</para>
 
         <programlisting>[docgen.insertWithOutput]freemarker-generator -t freemarker-generator/yaml/json/transform.ftl [docgen.wd]/examples/data/yaml/swagger-spec.yaml[/docgen.insertWithOutput]
-[docgen.insertWithOutput]freemarker-generator -i '${tools.gson.toJson(tools.yaml.parse(dataSources?values[0]))}' [docgen.wd]/examples/data/yaml/swagger-spec.yaml[/docgen.insertWithOutput]
+[docgen.insertWithOutput]freemarker-generator -i '${tools.gson.toJson(tools.yaml.parse(dataSources[0]))}' [docgen.wd]/examples/data/yaml/swagger-spec.yaml[/docgen.insertWithOutput]
 [docgen.insertWithOutput]freemarker-generator -i '${tools.gson.toJson(yaml)}' -m yaml=[docgen.wd]/examples/data/yaml/swagger-spec.yaml[/docgen.insertWithOutput]
 
 [docgen.insertWithOutput]freemarker-generator -t freemarker-generator/json/yaml/transform.ftl [docgen.wd]/examples/data/json/swagger-spec.json[/docgen.insertWithOutput]
-[docgen.insertWithOutput]freemarker-generator -i '${tools.yaml.toYaml(tools.gson.parse(dataSources?values[0]))}' [docgen.wd]/examples/data/json/swagger-spec.json[/docgen.insertWithOutput]
+[docgen.insertWithOutput]freemarker-generator -i '${tools.yaml.toYaml(tools.gson.parse(dataSources[0]))}' [docgen.wd]/examples/data/json/swagger-spec.json[/docgen.insertWithOutput]
 [docgen.insertWithOutput]freemarker-generator -i '${tools.yaml.toYaml(json)}' -m json=[docgen.wd]/examples/data/json/swagger-spec.json[/docgen.insertWithOutput]</programlisting>
       </section>
 
@@ -848,20 +848,20 @@ freemarker-generator -t [docgen.wd]/examples/templates/demo.ftl
         <para>A <literal>DataSource</literal> can be loaded from the file
         system, e.g., as positional command line argument:</para>
 
-        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
+        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator Data Sources" to=r"^\s*$"]
 freemarker-generator -t freemarker-generator/info.ftl [docgen.wd]/README.md
 [/docgen.insertWithOutput]</programlisting>
 
         <para>from an URL:</para>
 
-        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
+        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator Data Sources" to=r"^\s*$"]
 freemarker-generator -t freemarker-generator/info.ftl --data-source xkcd=https://xkcd.com/info.0.json
 [/docgen.insertWithOutput]</programlisting>
 
         <para>or from an environment variable, e.g.
         <literal>NGINX_CONF</literal> having a JSON payload:</para>
 
-        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"
+        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator Data Sources" to=r"^\s*$"
   systemProperties={'freemarker.generator.datasource.envOverride.NGINX_CONF': '{"NGINX_PORT":"8443","NGINX_HOSTNAME":"localhost"}'}
 ]
 freemarker-generator -t freemarker-generator/info.ftl --data-source conf=env:///NGINX_CONF#mimeType=application/json
@@ -869,20 +869,20 @@ freemarker-generator -t freemarker-generator/info.ftl --data-source conf=env:///
 
         <para>Of course you can load multiple data sources directly:</para>
 
-        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
+        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator Data Sources" to=r"^\s*$"]
 freemarker-generator -t freemarker-generator/info.ftl [docgen.wd]/README.md xkcd=https://xkcd.com/info.0.json
 [/docgen.insertWithOutput]</programlisting>
 
         <para>or load them from a directory:</para>
 
-        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
+        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator Data Sources" to=r"^\s*$"]
 freemarker-generator -t freemarker-generator/info.ftl --data-source [docgen.wd]/examples/data
 [/docgen.insertWithOutput]</programlisting>
 
         <para>which can be combined with <literal>include</literal> and
         <literal>exclude</literal> filters:</para>
 
-        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
+        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator Data Sources" to=r"^\s*$"]
 freemarker-generator -t freemarker-generator/info.ftl -s [docgen.wd]/examples/data --data-source-include='*.json' 
 [/docgen.insertWithOutput]</programlisting>
 
@@ -894,7 +894,7 @@ freemarker-generator -t freemarker-generator/info.ftl -s [docgen.wd]/examples/da
 
         <programlisting>cat examples/data/csv/contract.csv | bin/freemarker-generator -t freemarker-generator/info.ftl --stdin
 
-FreeMarker Generator DataSources
+FreeMarker Generator Data Sources
 ------------------------------------------------------------------------------
 [#1]: name=stdin, group=default, fileName=stdin mimeType=text/plain, charset=UTF-8, length=-1 Bytes
 URI : system:///stdin</programlisting>
@@ -909,8 +909,8 @@ URI : system:///stdin</programlisting>
 
         <itemizedlist>
           <listitem>
-            <para><literal>dataSources?values[0]</literal> or
-            <literal>dataSources?values?first</literal> selects the first data
+            <para><literal>dataSources[0]</literal> or
+            <literal>dataSources?first</literal> selects the first data
             source</para>
           </listitem>
 
@@ -944,7 +944,7 @@ ${dataSources?size}
 &lt;/#list&gt;
 
 &lt;#-- Iterate over a list of data sources --&gt;
-&lt;#list dataSources?values as dataSource&gt;
+&lt;#list dataSources as dataSource&gt;
 - [#${dataSource?counter}]: name=${dataSource.name}
 &lt;/#list&gt;</programlisting>
       </section>
@@ -959,22 +959,22 @@ ${dataSources?size}
         here)</remark>:</para>
 
         <programlisting>&lt;#-- List all data sources containing "test" in the name --&gt;
-&lt;#list dataSources?values?filter(ds -&gt; ds.match("name", "*test*")) as ds&gt;
+&lt;#list dataSources?filter(ds -&gt; ds.match("name", "*test*")) as ds&gt;
 - ${ds.name}
 &lt;/#list&gt;
 
 &lt;#-- List all data sources having "json" extension --&gt;
-&lt;#list dataSources?values?filter(ds -&gt; ds.match("extension", "json")) as ds&gt;
+&lt;#list dataSources?filter(ds -&gt; ds.match("extension", "json")) as ds&gt;
 - ${ds.name}
 &lt;/#list&gt;
 
 &lt;#-- List all data sources having "src/test/data/properties" in their file path --&gt;
-&lt;#list dataSources?values?filter(ds -&gt; ds.match("filePath", "*/src/test/data/properties")) as ds&gt;
+&lt;#list dataSources?filter(ds -&gt; ds.match("filePath", "*/src/test/data/properties")) as ds&gt;
 - ${ds.name}
 &lt;/#list&gt;
 
 &lt;#-- List all data sources of a group --&gt;
-&lt;#list dataSources?values?filter(ds -&gt; ds.match("group", "default")) as ds&gt;
+&lt;#list dataSources?filter(ds -&gt; ds.match("group", "default")) as ds&gt;
 - ${ds.name}
 &lt;/#list&gt;</programlisting>
       </section>
@@ -1073,27 +1073,27 @@ freemarker-generator -t [docgen.wd]/examples/templates/datasources.ftl --data-so
         <para>The following Named URI loads a <literal>user.csv</literal> and
         the data source is available as <literal>my_users</literal>:</para>
 
-        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
+        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator Data Sources" to=r"^\s*$"]
 freemarker-generator -t freemarker-generator/info.ftl my_users=[docgen.wd]/examples/data/csv/user.csv
 [/docgen.insertWithOutput]</programlisting>
 
         <para>A Named URI allows to pass additional information as part of the
         fragment, e.g. the charset of the text file:</para>
 
-        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
+        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator Data Sources" to=r"^\s*$"]
 freemarker-generator -t freemarker-generator/info.ftl my_users=[docgen.wd]/examples/data/csv/user.csv#charset=UTF-16
 [/docgen.insertWithOutput]</programlisting>
 
         <para>In addition to the simplified file syntax full URIs can be
         used:</para>
 
-        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
+        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator Data Sources" to=r"^\s*$"]
 freemarker-generator -t freemarker-generator/info.ftl https://www.google.com#charset=ISO-8859-1
 [/docgen.insertWithOutput]</programlisting>
 
         <para>and also combined with a name:</para>
 
-        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
+        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator Data Sources" to=r"^\s*$"]
 freemarker-generator -t freemarker-generator/info.ftl page=http://www.google.com#charset=ISO-8859-1
 [/docgen.insertWithOutput]</programlisting>
       </section>
@@ -1105,14 +1105,14 @@ freemarker-generator -t freemarker-generator/info.ftl page=http://www.google.com
 
         <para>Load all CVS files of a directory using the group "csv":</para>
 
-        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
+        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator Data Sources" to=r"^\s*$"]
 freemarker-generator -t freemarker-generator/info.ftl :csv=[docgen.wd]/examples/data/csv
 [/docgen.insertWithOutput]</programlisting>
 
         <para>or use a charset for all files of a directory</para>
 
-        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator DataSources" to=r"^\s*$"]
-freemarker-generator -t freemarker-generator/info.ftl '[docgen.wd]/examples/data/csv#charset=UTF-16&amp;mimetype=text/plain'
+        <programlisting>[docgen.insertWithOutput from="FreeMarker Generator Data Sources" to=r"^\s*$"]
+freemarker-generator -t freemarker-generator/info.ftl '[docgen.wd]/examples/data/csv#charset=UTF-16&amp;mimeType=text/plain'
 [/docgen.insertWithOutput]</programlisting>
 
         <para>It is also possible to provide data source properties to all

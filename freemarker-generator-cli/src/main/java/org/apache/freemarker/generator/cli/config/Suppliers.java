@@ -48,8 +48,8 @@ public class Suppliers {
 
     public static DataSourcesSupplier sharedDataSourcesSupplier(Settings settings) {
         return new DataSourcesSupplier(settings.getSharedDataSources(),
-                settings.getSourceIncludePattern(),
-                settings.getSourceExcludePattern(),
+                settings.getDataSourceIncludePattern(),
+                settings.getDataSourceExcludePattern(),
                 settings.getInputEncoding());
     }
 

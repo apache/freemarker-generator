@@ -96,9 +96,9 @@ URI : system:///stdin
 
 ### Selecting A DataSource
 
-After loading one or more `DataSource` they are accessible as `dataSource` map in the FreeMarker model
+After loading one or more `DataSource` they are accessible as `dataSources` map in the FreeMarker model
 
-* `dataSources?values[0]` or `dataSources?values?first` selects the first data source
+* `dataSources[0]` or `dataSources?first` selects the first data source
 * `dataSources["user.csv"]` selects the data source with the name "user.csv"
 
 ### Iterating Over DataSources
@@ -122,7 +122,7 @@ ${dataSources?size}
 </#list>
 
 <#-- Iterate over a list of data sources -->
-<#list dataSources?values as dataSource>
+<#list dataSources as dataSource>
 - [#${dataSource?counter}]: name=${dataSource.name}
 </#list>
 ```
@@ -134,22 +134,22 @@ selection of data sources (using Apache Commons IO wild-card matching)
 
 ```
 <#-- List all data sources containing "test" in the name -->
-<#list dataSources?values?filter(ds -> ds.match("name", "*test*")) as ds>
+<#list dataSources?filter(ds -> ds.match("name", "*test*")) as ds>
 - ${ds.name}
 </#list>
 
 <#-- List all data sources having "json" extension -->
-<#list dataSources?values?filter(ds -> ds.match("extension", "json")) as ds>
+<#list dataSources?filter(ds -> ds.match("extension", "json")) as ds>
 - ${ds.name}
 </#list>
 
 <#-- List all data sources having "src/test/data/properties" in their file path -->
-<#list dataSources?values?filter(ds -> ds.match("filePath", "*/src/test/data/properties")) as ds>
+<#list dataSources?filter(ds -> ds.match("filePath", "*/src/test/data/properties")) as ds>
 - ${ds.name}
 </#list>
 
 <#-- List all data sources of a group -->
-<#list dataSources?values?filter(ds -> ds.match("group", "default")) as ds>
+<#list dataSources?filter(ds -> ds.match("group", "default")) as ds>
 - ${ds.name}
 </#list>
 
@@ -163,7 +163,7 @@ In most cases the data source will be passed to a tool, but there are some usefu
 Invoke Arbitrary Methods On DataSource
 ---------------------------------------------------------------------------
 <#if dataSources?has_content>
-<#assign dataSource=dataSources?values?first>
+<#assign dataSource=dataSources?first>
 Name            : ${dataSource.name}
 Nr of lines     : ${dataSource.lines?size}
 Content Type    : ${dataSource.contentType}
@@ -199,10 +199,10 @@ Iterating Over Metadata Of A Datasource
 ---------------------------------------------------------------------------
 extension       : csv
 filename        : contract.csv
-basename        : contract
-filepath        : /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/src/app/examples/data/csv
+baseName        : contract
+filePath        : /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/src/app/examples/data/csv
 name            : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/src/app/examples/data/csv/contract.csv
-mimetype        : text/csv
+mimeType        : text/csv
 uri             : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/src/app/examples/data/csv/contract.csv
 group           : default
 ```
@@ -230,16 +230,16 @@ Extension       : csv
 Nr of chars     : 12,643
 Nr of bytes     : 12,643
 File name       : transactions.csv
-URI schema      : file
+URI scheme      : file
 
 Iterating Over Metadata Of A Datasource
 ---------------------------------------------------------------------------
 extension       : csv
-basename        : transactions
-filename        : transactions.csv
-filepath        : /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/csv
+baseName        : transactions
+fileName        : transactions.csv
+filePath        : /Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/csv
 name            : transactions
-mimetype        : text/csv
+mimeType        : text/csv
 uri             : file:/Users/sgoeschl/work/github/apache/freemarker-generator/freemarker-generator-cli/target/appassembler/examples/data/csv/transactions.csv
 group           : csv
 
@@ -261,16 +261,16 @@ Extension       :
 Nr of chars     : 330
 Nr of bytes     : 330
 File name       :
-URI schema      : https
+URI scheme      : https
 
 Iterating Over Metadata Of A Datasource
 ---------------------------------------------------------------------------
 extension       :
-basename        :
-filename        :
-filepath        : /
+baseName        :
+fileName        :
+filePath        : /
 name            : https://xkcd.com/info.0.json
-mimetype        : application/json
+mimeType        : application/json
 uri             : https://xkcd.com/info.0.json
 group           : default
 
@@ -291,23 +291,21 @@ Extension       :
 Nr of chars     : 1,476
 Nr of bytes     : 1,478
 File name       :
-URI schema      : env
+URI scheme     : env
 
 Iterating Over Metadata Of A Datasource
 ---------------------------------------------------------------------------
 extension       :
-basename        :
-filename        :
-filepath        : /
+baseName        :
+fileName        :
+filePath        : /
 name            : envvars
-mimetype        : text/plain
+mimeType        : text/plain
 uri             : env:///
 group           : default
 
 Iterating Over Properties Of A Datasource
 ---------------------------------------------------------------------------
-
-
 ```
 
 

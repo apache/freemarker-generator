@@ -40,7 +40,7 @@ public class CSVConverter {
             final CSVRecord firstRecord = records.get(0);
 
             //  build dataframe with headers
-            if (headerNames != null && !headerNames.isEmpty()) {
+            if (!headerNames.isEmpty()) {
                 headerNames.forEach(builder::addStringColumn);
             } else {
                 for (int i = 0; i < firstRecord.size(); i++) {

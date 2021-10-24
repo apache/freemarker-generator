@@ -62,7 +62,13 @@ public abstract class DataSourceFactory {
             URI uri,
             javax.activation.DataSource dataSource,
             Map<String, String> properties) {
-        return new DataSource(name, group, uri, dataSource, null, null, properties);
+        return DataSource.builder()
+                .name(name)
+                .group(group)
+                .uri(uri)
+                .dataSource(dataSource)
+                .properties(properties)
+                .build();
     }
 
     public static DataSource create(
@@ -73,7 +79,15 @@ public abstract class DataSourceFactory {
             String contentType,
             Charset charset,
             Map<String, String> properties) {
-        return new DataSource(name, group, uri, dataSource, contentType, charset, properties);
+        return DataSource.builder()
+                .name(name)
+                .group(group)
+                .uri(uri)
+                .dataSource(dataSource)
+                .contentType(contentType)
+                .charset(charset)
+                .properties(properties)
+                .build();
     }
 
     // == URL ===============================================================

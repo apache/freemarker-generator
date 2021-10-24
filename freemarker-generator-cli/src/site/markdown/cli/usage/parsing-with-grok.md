@@ -33,7 +33,7 @@ using the following FreeMarker template
 ```text
 <#ftl output_format="plainText" strip_whitespace=true>
 <#assign grok = tools.grok.create("%{COMBINEDAPACHELOG}")>
-<#assign dataSource = dataSources?values[0]>
+<#assign dataSource = dataSources[0]>
 <#assign lines = dataSource.getLineIterator()>
 
 <#compress>
@@ -93,7 +93,7 @@ In technical terms the FTL
 <#compress>
     TIMESTAMP;MILLIS
     <#if dataSources?has_content>
-        <#list dataSources?values as dataSource>
+        <#list dataSources as dataSource>
             <#list dataSource.getLineIterator() as line>
                 <#assign parts = grok.match(line).capture()>
                 <#if parts?has_content>

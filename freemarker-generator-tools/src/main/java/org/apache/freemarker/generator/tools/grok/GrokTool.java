@@ -28,7 +28,7 @@ public class GrokTool {
     private static final String DEFAULT_PATTERN_FILE = "/patterns/patterns";
 
     /**
-     * Create a default Grok instance using the the default pattern files loaded
+     * Create a default Grok instance using the default pattern files loaded
      * from the classpath.
      *
      * @param pattern Grok pattern to compile
@@ -39,7 +39,7 @@ public class GrokTool {
     }
 
     /**
-     * Get a default Grok instance using the the default pattern files loaded
+     * Get a default Grok instance using the default pattern files loaded
      * from the classpath.
      *
      * @param pattern            Grok pattern to compile

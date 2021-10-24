@@ -29,8 +29,6 @@ import static org.junit.Assert.assertTrue;
 
 public class ConfigurationSupplierTest {
 
-    private static final String ANY_TEMPLATE_NAME = "templateName";
-
     @Test
     public void shouldProvideDefaultConfiguration() {
         final ConfigurationSupplier configurationSupplier = configurationSupplier(settingsBuilder().build());
@@ -43,11 +41,12 @@ public class ConfigurationSupplierTest {
         assertTrue(configuration.isOutputEncodingSet());
 
         assertFalse(configuration.isCacheStorageExplicitlySet());
-        assertFalse(configuration.isObjectWrapperExplicitlySet());
+        assertTrue(configuration.isObjectWrapperExplicitlySet());
         assertFalse(configuration.isOutputFormatExplicitlySet());
         assertFalse(configuration.isTemplateExceptionHandlerExplicitlySet());
         assertFalse(configuration.isTimeZoneExplicitlySet());
         assertFalse(configuration.isWrapUncheckedExceptionsExplicitlySet());
+        assertTrue(configuration.isAPIBuiltinEnabled());
     }
 
     private ConfigurationSupplier configurationSupplier(Settings settings) {

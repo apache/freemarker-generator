@@ -14,7 +14,7 @@
   specific language governing permissions and limitations
   under the License.
 -->
-<#list dataSources?values as dataSource>
+<#list dataSources as dataSource>
 <#list dataSource.lineIterator as line>
 ${line}
 </#list>

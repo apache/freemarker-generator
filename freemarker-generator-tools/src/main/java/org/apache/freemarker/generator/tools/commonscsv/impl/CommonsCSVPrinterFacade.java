@@ -25,6 +25,9 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Wrap <code>CSVPrinter</code> so each print method returns
@@ -89,6 +92,15 @@ public class CommonsCSVPrinterFacade implements Flushable, Closeable {
     public String printRecords(ResultSet resultSet) throws SQLException, IOException {
         csvPrinter.printRecords(resultSet);
         return getOutput();
+    }
+
+    public String printRecord(Map<String, Object> map, String[] headers) throws IOException {
+        final List<String> values = new ArrayList<>(headers.length);
+        for (String header : headers) {
+            final Object value = map.get(header);
+            values.add(value != null ? value.toString() : "");
+        }
+        return printRecord(values);
     }
 
     private String getOutput() {

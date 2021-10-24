@@ -31,6 +31,9 @@ public class Mimetypes {
     public static final String MIME_TEXT_TSV = "text/tab-separated-values";
     public static final String MIME_TEXT_YAML = "text/yaml";
 
+    public static final String MIME_TYPE_ZIP = "application/zip";
+    public static final String MIME_TYPE_GZIP = "application/gzip";
+
     public static final String MIME_VENDOR_MS_EXCEL = "application/vnd.ms-excel xls XLS";
     public static final String MIME_VENDOR_OPEN_XML_SPREADSHEET = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet xlsx XLSX\"";
 }

@@ -16,6 +16,7 @@
  */
 package org.apache.freemarker.generator.cli.picocli;
 
+import org.apache.freemarker.generator.base.FreeMarkerConstants.SeedType;
 import picocli.CommandLine;
 import picocli.CommandLine.ArgGroup;
 import picocli.CommandLine.ParameterException;
@@ -24,6 +25,9 @@ import java.util.List;
 
 import static java.util.Collections.emptyList;
 
+/**
+ * Collects the setting for an output generator.
+ */
 public class OutputGeneratorDefinition {
 
     @ArgGroup(multiplicity = "1")
@@ -40,6 +44,12 @@ public class OutputGeneratorDefinition {
 
     @ArgGroup(exclusive = false)
     public DataModelDefinition dataModelDefinition;
+
+    @ArgGroup(exclusive = false)
+    public OutputSeedDefinition outputSeedDefinition;
+
+    @ArgGroup(exclusive = false)
+    public OutputMapperDefinition outputMapperDefinition;
 
     public void validate(CommandLine commandLine) {
         if (templateSourceDefinition == null) {
@@ -97,6 +107,31 @@ public class OutputGeneratorDefinition {
         return getTemplateSourceFilterDefinition() != null &&
                 getTemplateSourceFilterDefinition().templateExcludePatterns != null &&
                 !getTemplateSourceFilterDefinition().templateExcludePatterns.isEmpty();
+    }
+
+    public String getOutputSeedType() {
+        if (outputSeedDefinition != null && outputSeedDefinition.type != null) {
+            return outputSeedDefinition.type;
+        } else {
+            return SeedType.TEMPLATE;
+        }
+    }
+
+    public String getOutputMapper() {
+        return (outputMapperDefinition != null) ? outputMapperDefinition.outputMapper : null;
+    }
+
+    @Override
+    public String toString() {
+        return "OutputGeneratorDefinition{" +
+                "templateSourceDefinition=" + templateSourceDefinition +
+                ", templateSourceFilterDefinition=" + templateSourceFilterDefinition +
+                ", templateOutputDefinition=" + templateOutputDefinition +
+                ", dataSourceDefinition=" + dataSourceDefinition +
+                ", dataModelDefinition=" + dataModelDefinition +
+                ", outputSeedDefinition=" + outputSeedDefinition +
+                ", outputMapperDefinition=" + outputMapperDefinition +
+                '}';
     }
 
     private static boolean isFileSource(String source) {

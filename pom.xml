@@ -27,7 +27,7 @@
     <groupId>org.apache.freemarker.generator</groupId>
     <artifactId>freemarker-generator</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.2.0-SNAPSHOT</version>
     <name>Apache FreeMarker Generator</name>
     <url>https://freemarker-generator.apache.org/</url>
 
@@ -163,6 +163,10 @@
                     <version>3.12.0</version>
                 </plugin>
                 <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.0.0-M5</version>
+                </plugin>
+                <plugin>
                     <!-- Required by custom Maven skin -->
                     <artifactId>maven-site-plugin</artifactId>
                     <version>3.8.2</version>
@@ -217,6 +221,10 @@
     </build>
     <reporting>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>

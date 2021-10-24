@@ -49,11 +49,13 @@ public class ExamplesTest extends AbstractMainTest {
 
     @Test
     public void shouldRunDataSourceExamples() throws IOException {
+        assertValid(execute("-t src/app/examples/templates/datasources.ftl"));
         assertValid(execute("-t src/app/examples/templates/datasources.ftl -s :csv=src/app/examples/data/csv"));
     }
 
     @Test
     public void shouldRunCsvExamples() throws IOException {
+        assertValid(execute("-t freemarker-generator/csv/confluence/transform.ftl src/app/examples/data/csv/contract.csv"));
         assertValid(execute("-t freemarker-generator/csv/html/transform.ftl src/app/examples/data/csv/contract.csv"));
         assertValid(execute("-t freemarker-generator/csv/md/transform.ftl src/app/examples/data/csv/contract.csv"));
         assertValid(execute("-t src/app/examples/templates/csv/shell/curl.ftl src/app/examples/data/csv/user.csv"));
@@ -77,6 +79,11 @@ public class ExamplesTest extends AbstractMainTest {
     @Test
     public void shouldRunHtmlExamples() throws IOException {
         assertValid(execute("-t src/app/examples/templates/html/csv/dependencies.ftl src/app/examples/data/html/dependencies.html"));
+    }
+
+    @Test
+    public void shouldRunNginxParsingExamples() throws IOException {
+        assertValid(execute("-t src/app/examples/templates/nginx/confluence/nginx-config-parser.ftl -s src/app/examples/data/nginx"));
     }
 
     @Test
@@ -124,15 +131,28 @@ public class ExamplesTest extends AbstractMainTest {
     }
 
     @Test
+    public void shouldRunUtahParserExamples() throws IOException {
+        assertValid(execute("-PCSV_TARGET_FORMAT=EXCEL " +
+                "-PCSV_TARGET_DELIMITER=SEMICOLON " +
+                "-t src/app/examples/templates/utahparser/csv/transform.ftl " +
+                "src/app/examples/data/text/utahparser/juniper_bgp_summary_template.xml " +
+                "src/app/examples/data/text/utahparser/juniper_bgp_summary_example.txt"));
+
+        assertValid(execute("-t src/app/examples/templates/utahparser/json/transform.ftl " +
+                "src/app/examples/data/text/utahparser/juniper_bgp_summary_template.xml " +
+                "src/app/examples/data/text/utahparser/juniper_bgp_summary_example.txt"));
+    }
+
+    @Test
     public void shouldRunInteractiveTemplateExamples() throws IOException {
-        assertValid(execute("-i ${tools.jsonpath.parse(dataSources?values[0]).read(\"$.info.title\")} src/app/examples/data/json/swagger-spec.json"));
-        assertValid(execute("-i ${tools.xml.parse(dataSources?values[0])[\"recipients/person[1]/name\"]} src/app/examples/data/xml/recipients.xml"));
-        assertValid(execute("-i ${tools.jsoup.parse(dataSources?values[0]).select(\"a\")[0]} src/app/examples/data/html/dependencies.html"));
-        assertValid(execute("-i ${tools.gson.toJson(tools.yaml.parse(dataSources?values[0]))} src/app/examples/data/yaml/swagger-spec.yaml"));
+        assertValid(execute("-i ${tools.jsonpath.parse(dataSources[0]).read(\"$.info.title\")} src/app/examples/data/json/swagger-spec.json"));
+        assertValid(execute("-i ${tools.xml.parse(dataSources[0])[\"recipients/person[1]/name\"]} src/app/examples/data/xml/recipients.xml"));
+        assertValid(execute("-i ${tools.jsoup.parse(dataSources[0]).select(\"a\")[0]} src/app/examples/data/html/dependencies.html"));
+        assertValid(execute("-i ${tools.gson.toJson(tools.yaml.parse(dataSources[0]))} src/app/examples/data/yaml/swagger-spec.yaml"));
         assertValid(execute("-i ${tools.gson.toJson(yaml)} -m yaml=src/app/examples/data/yaml/swagger-spec.yaml"));
-        assertValid(execute("-i ${tools.yaml.toYaml(tools.gson.parse(dataSources?values[0]))} src/app/examples/data/json/swagger-spec.json"));
+        assertValid(execute("-i ${tools.yaml.toYaml(tools.gson.parse(dataSources[0]))} src/app/examples/data/json/swagger-spec.json"));
         assertValid(execute("-i ${tools.yaml.toYaml(json)} -m json=src/app/examples/data/json/swagger-spec.json"));
-        assertValid(execute("-i ${tools.dataframe.print(tools.dataframe.fromMaps(tools.gson.parse(dataSources?values[0])))} src/app/examples/data/json/github-users.json"));
+        assertValid(execute("-i ${tools.dataframe.print(tools.dataframe.fromMaps(tools.gson.parse(dataSources[0])))} src/app/examples/data/json/github-users.json"));
     }
 
     @Test
@@ -178,6 +198,20 @@ public class ExamplesTest extends AbstractMainTest {
     }
 
     @Test
+    public void shouldSupportDataSourceSeedingTransformation() throws IOException {
+        final String output = execute("--seed=datasource " +
+                "--template freemarker-generator/csv/html/transform.ftl " +
+                "--data-source src/app/examples/data/csv " +
+                "--data-source-include=*.csv " +
+                "--output target " +
+                "--output-mapper=*.html");
+
+        assertTrue(output.startsWith("<!DOCTYPE html>"));
+        assertTrue(output.contains("The Electric Company"));
+        assertTrue(output.contains("test user DDDDDDD"));
+    }
+
+    @Test
     @Ignore("Manual test to check memory consumption and resource handling")
     public void shouldCloseAllResources() throws IOException {
         for (int i = 0; i < 500; i++) {
@@ -199,6 +233,7 @@ public class ExamplesTest extends AbstractMainTest {
     }
 
     private static void assertValid(String output) {
+        // System.out.println(output);
         assertTrue(output.length() > MIN_OUTPUT_SIZE);
         assertFalse(output.contains("Exception"));
         assertFalse(output.contains("FreeMarker template error"));

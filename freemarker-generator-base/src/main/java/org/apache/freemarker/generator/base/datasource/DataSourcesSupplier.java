@@ -17,11 +17,13 @@
 package org.apache.freemarker.generator.base.datasource;
 
 import org.apache.freemarker.generator.base.file.RecursiveFileSupplier;
+import org.apache.freemarker.generator.base.mime.MimetypesFileTypeMapFactory;
 import org.apache.freemarker.generator.base.uri.NamedUri;
 import org.apache.freemarker.generator.base.uri.NamedUriStringParser;
-import org.apache.freemarker.generator.base.util.UriUtils;
+import org.apache.freemarker.generator.base.util.FileUtils;
 import org.apache.freemarker.generator.base.util.Validate;
 
+import javax.activation.FileDataSource;
 import java.io.File;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
@@ -34,10 +36,9 @@ import static java.util.Collections.singletonList;
 import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toList;
 import static org.apache.freemarker.generator.base.FreeMarkerConstants.DEFAULT_GROUP;
-import static org.apache.freemarker.generator.base.datasource.DataSourceFactory.fromFile;
 
 /**
- * Create a list of <code>DataSource</code> based on a list URIs, directories and files.
+ * Supply a list of <code>DataSource</code> based on a list URIs, directories and files.
  */
 public class DataSourcesSupplier implements Supplier<List<DataSource>> {
 
@@ -110,14 +111,41 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
     }
 
     private static List<DataSource> resolveFileOrDirectory(String source, String include, String exclude, Charset charset) {
-        final NamedUri namedUri = NamedUriStringParser.parse(source);
-        final String path = namedUri.getFile().getPath();
-        final String group = namedUri.getGroupOrDefault(DEFAULT_GROUP);
-        final Charset currCharset = getCharsetOrDefault(namedUri, charset);
-        final Map<String, String> parameters = namedUri.getParameters();
+        final NamedUri sourceUri = NamedUriStringParser.parse(source);
+        final String path = sourceUri.getFile().getPath();
+        final String group = sourceUri.getGroupOrDefault(DEFAULT_GROUP);
+        final Charset currCharset = getCharsetOrDefault(sourceUri, charset);
+        final Map<String, String> parameters = sourceUri.getParameters();
         return fileSupplier(path, include, exclude).get().stream()
-                .map(file -> fromFile(getDataSourceName(namedUri, file), group, file, currCharset, parameters))
+                .map(file -> fromFile(sourceUri, getDataSourceName(sourceUri, file), group, file, currCharset, parameters))
                 .collect(toList());
+    }
+
+    private static DataSource fromFile(
+            NamedUri sourceUri,
+            String name,
+            String group,
+            File file,
+            Charset charset,
+            Map<String, String> properties) {
+        Validate.isTrue(file.exists(), "File not found: " + file);
+
+        final FileDataSource dataSource = new FileDataSource(file);
+        // content type is determined from file extension
+        dataSource.setFileTypeMap(MimetypesFileTypeMapFactory.create());
+        final String relativePath = FileUtils.getRelativePath(sourceUri.getFile(), file);
+        final String contentType = dataSource.getContentType();
+
+        return DataSource.builder()
+                .name(name)
+                .group(group)
+                .uri(file.toURI())
+                .dataSource(dataSource)
+                .relativeFilePath(relativePath)
+                .contentType(contentType)
+                .charset(charset)
+                .properties(properties)
+                .build();
     }
 
     private static RecursiveFileSupplier fileSupplier(String source, String include, String exclude) {
@@ -140,7 +168,7 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
         if (namedUri.hasName()) {
             return namedUri.getName();
         } else {
-            return UriUtils.toStringWithoutFragment(file.toURI());
+            return file.getAbsolutePath();
         }
     }
 }
