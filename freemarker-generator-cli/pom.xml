@@ -178,6 +178,7 @@
                         <exclude>src/test/data/encoding/utf8.txt</exclude>
                         <exclude>src/test/data/json/*/**</exclude>
                         <exclude>src/test/data/yaml/environments.yaml</exclude>
+                        <exclude>src/app/examples/templates/nginx/confluence/nginx-config-parser.ftl</exclude>
                     </excludes>
                 </configuration>
             </plugin>
