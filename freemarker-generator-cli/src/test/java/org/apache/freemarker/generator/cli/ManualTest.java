@@ -25,11 +25,7 @@ public class ManualTest extends AbstractMainTest {
 
     // private static final String CMD = "-V";
     private static final String CMD =
-            // "-i 'Hello${tools.system.systemProperty(\"NAME\")}' -DNAME=sgoeschl"
-            // "-i ${tools.yaml.toYaml(json)} -m json=src/app/examples/data/json/swagger-spec.json"
-            "-i '${tools.yaml.toYaml(json)}' -m json=https://petstore.swagger.io/v2/swagger.json"
-            // "-t src/app/examples/templates/nginx/confluence/nginx-config-parser.ftl -s src/app/examples/data/nginx";
-            // "-t src/app/examples/templates/datasources.ftl";
+            "-t src/app/examples/templates/demo.ftl src/test/data/json"
             ;
 
     @Override
