@@ -20,6 +20,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.freemarker.generator.base.activation.ByteArrayDataSource;
+import org.apache.freemarker.generator.base.activation.InputStreamDataSource;
 import org.apache.freemarker.generator.base.activation.StringDataSource;
 import org.apache.freemarker.generator.base.mime.MimeTypeParser;
 import org.apache.freemarker.generator.base.util.CloseableReaper;
@@ -193,7 +194,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
      * @return file name or empty string
      */
     public String getFileName() {
-        return isFileDataSource() ? FilenameUtils.getName(dataSource.getName()) : "";
+        return isHierarchicalPathSupported() ? FilenameUtils.getName(uri.getPath()) : "";
     }
 
     /**
@@ -203,7 +204,7 @@ public class DataSource implements Closeable, javax.activation.DataSource {
      * @return file name or empty string
      */
     public String getFilePath() {
-        return isFileDataSource() ? FilenameUtils.getFullPathNoEndSeparator(uri.getPath()) : "";
+        return isHierarchicalPathSupported() ? FilenameUtils.getFullPathNoEndSeparator(uri.getPath()) : "";
     }
 
     /**
@@ -475,6 +476,16 @@ public class DataSource implements Closeable, javax.activation.DataSource {
 
     private boolean isByteArrayDataSource() {
         return dataSource instanceof ByteArrayDataSource;
+    }
+
+    private boolean isInputStreamDataSource() {
+        return dataSource instanceof InputStreamDataSource;
+    }
+
+    private boolean isHierarchicalPathSupported() {
+        return !isByteArrayDataSource()
+                && !isStringDataSource()
+                && !isInputStreamDataSource();
     }
 
     public static final class DataSourceBuilder {

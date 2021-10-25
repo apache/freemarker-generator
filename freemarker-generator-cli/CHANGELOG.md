@@ -10,6 +10,9 @@ All notable changes to this project will be documented in this file. We try to a
 ### Changed
 * [FREEMARKER-195] Improve exposure of DataSources using TemplateHashModelEx2
 
+### Fixed
+* [FREEMARKER-200] Handle non-standard content types for JSON & YAML data models
+
 ## 0.1.0-SNAPSHOT (unreleased)
 
 ### Added
@@ -94,4 +97,5 @@ All notable changes to this project will be documented in this file. We try to a
 [FREEMARKER-188]: https://issues.apache.org/jira/browse/FREEMARKER-188
 [FREEMARKER-195]: https://issues.apache.org/jira/browse/FREEMARKER-195
 [FREEMARKER-199]: https://issues.apache.org/jira/browse/FREEMARKER-199
+[FREEMARKER-200]: https://issues.apache.org/jira/browse/FREEMARKER-200
 
