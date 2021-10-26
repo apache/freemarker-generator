@@ -21,7 +21,7 @@ FreeMarker Generator is a set of tools that generates files based on FreeMarker
 templates and data that's typically provided in files (such as JSON files) as
 well. It can be used to generated source code, configuration files, etc.
 
-Currently it can be invoked as a 
+Currently, it can be invoked as a 
 
 * Command-line interface `freemarker-generator`
 * Maven plug-in `freemarker-generator-maven-plugin`
@@ -40,11 +40,12 @@ To build the documentation site run
 Releasing Apache FreeMarker Generator
 -----------------------------------------------------------------------------
 
-Releasing an Apache project is a dark art mastered only be the fiercest of software developers - in other words we try to find out how to make the first release :(
+Releasing an Apache project is a dark art mastered only be the fiercest of software developers - in other words we try to find out how to make the first release :-)
 
 What currently works
 
 > mvn clean install -Prelease
+> mvn deploy
 
 Licensing
 -----------------------------------------------------------------------------
