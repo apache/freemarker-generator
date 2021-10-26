@@ -37,6 +37,15 @@ To build the documentation site run
 
 > mvn clean site site:stage
 
+Releasing Apache FreeMarker Generator
+-----------------------------------------------------------------------------
+
+Releasing an Apache project is a dark art mastered only be the fiercest of software developers - in other words we try to find out how to make the first release :(
+
+What currently works
+
+> mvn clean install -Prelease
+
 Licensing
 -----------------------------------------------------------------------------
 
