@@ -83,7 +83,7 @@ public class DataSourcesSupplier implements Supplier<List<DataSource>> {
     /**
      * Resolve a <code>source</code> to a <code>DataSource</code>.
      *
-     * @param source the source being a file name, an URI or <code>NamedUri</code>
+     * @param source the source being a file name, URI or <code>NamedUri</code>
      * @return list of <code>DataSource</code>
      */
     protected List<DataSource> get(String source) {

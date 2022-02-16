@@ -159,7 +159,7 @@ public class TemplateTransformationsBuilder {
     /**
      * Resolve a <code>source</code> to a list of <code>TemplateTransformation</code>.
      *
-     * @param source the source being a file name, an URI or <code>NamedUri</code>
+     * @param source the source being a file name, URI or <code>NamedUri</code>
      * @param output Optional output file or directory
      * @return list of <code>TemplateTransformation</code>
      */
