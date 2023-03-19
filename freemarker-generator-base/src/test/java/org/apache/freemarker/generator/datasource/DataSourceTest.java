@@ -51,6 +51,7 @@ public class DataSourceTest {
         try (DataSource dataSource = DataSourceFactory.fromString("stdin", ANY_GROUP, ANY_TEXT, Mimetypes.MIME_TEXT_PLAIN)) {
             assertEquals("stdin", dataSource.getName());
             assertEquals(ANY_GROUP, dataSource.getGroup());
+            assertEquals("", dataSource.getFileName());
             assertEquals("", dataSource.getBaseName());
             assertEquals("", dataSource.getExtension());
             assertTrue(dataSource.getUri().toString().startsWith("string:///"));
@@ -69,6 +70,7 @@ public class DataSourceTest {
         try (DataSource dataSource = DataSourceFactory.fromFile(ANY_FILE, ANY_CHAR_SET)) {
             assertEquals(ANY_FILE_NAME, dataSource.getFileName());
             assertEquals(DEFAULT_GROUP, dataSource.getGroup());
+            assertEquals("pom.xml", dataSource.getFileName());
             assertEquals("pom", dataSource.getBaseName());
             assertEquals("xml", dataSource.getExtension());
             assertEquals(ANY_FILE.toURI().toString(), dataSource.getUri().toString());
@@ -90,6 +92,7 @@ public class DataSourceTest {
         try (DataSource dataSource = DataSourceFactory.fromUrl("www.google.com", DEFAULT_GROUP, toUrl("https://www.google.com/?foo=bar"), null, null, null)) {
             assertEquals("www.google.com", dataSource.getName());
             assertEquals(DEFAULT_GROUP, dataSource.getGroup());
+            assertEquals("", dataSource.getFileName());
             assertEquals("", dataSource.getBaseName());
             assertEquals("", dataSource.getExtension());
             assertEquals("https://www.google.com/?foo=bar", dataSource.getUri().toString());
@@ -97,6 +100,26 @@ public class DataSourceTest {
             assertEquals("text/html; charset=ISO-8859-1", dataSource.getContentType());
             assertEquals(MIME_TEXT_HTML, dataSource.getMimeType());
             assertEquals("ISO-8859-1", dataSource.getCharset().name());
+            assertEquals(-1, dataSource.getLength());
+            assertFalse(dataSource.getText().isEmpty());
+        }
+    }
+
+    @Test
+    @Ignore("Requires internet access")
+    public void shouldSupportPathLikeUrlDataSource() {
+        final String url = "https://petstore.swagger.io/v2/swagger.yaml";
+        try (DataSource dataSource = DataSourceFactory.fromUrl(url, DEFAULT_GROUP, toUrl(url), null, null, null)) {
+            assertEquals(url, dataSource.getName());
+            assertEquals(DEFAULT_GROUP, dataSource.getGroup());
+            assertEquals("swagger.yaml", dataSource.getFileName());
+            assertEquals("swagger", dataSource.getBaseName());
+            assertEquals("yaml", dataSource.getExtension());
+            assertEquals(url, dataSource.getUri().toString());
+            assertEquals("", dataSource.getRelativeFilePath());
+            assertEquals("application/yaml", dataSource.getContentType());
+            assertEquals("application/yaml", dataSource.getMimeType());
+            assertEquals("UTF-8", dataSource.getCharset().name());
             assertEquals(-1, dataSource.getLength());
             assertFalse(dataSource.getText().isEmpty());
         }

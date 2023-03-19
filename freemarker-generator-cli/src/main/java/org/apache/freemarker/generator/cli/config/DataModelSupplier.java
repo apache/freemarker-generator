@@ -16,7 +16,6 @@
  */
 package org.apache.freemarker.generator.cli.config;
 
-import org.apache.commons.io.FilenameUtils;
 import org.apache.freemarker.generator.base.datasource.DataSource;
 import org.apache.freemarker.generator.base.datasource.DataSourceLoader;
 import org.apache.freemarker.generator.base.datasource.DataSourceLoaderFactory;
@@ -41,6 +40,7 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_APPLICATION_JSON;
+import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_APPLICATION_YAML;
 import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_TEXT_PLAIN;
 import static org.apache.freemarker.generator.base.mime.Mimetypes.MIME_TEXT_YAML;
 
@@ -78,7 +78,7 @@ public class DataModelSupplier implements Supplier<Map<String, Object>> {
         final boolean isExplodedDataModel = !namedUri.hasName();
         final String contentType = dataSource.getContentType();
 
-        if (contentType.startsWith(MIME_APPLICATION_JSON)) {
+        if (isJsonDataSource(dataSource)) {
             return fromJson(dataSource, isExplodedDataModel);
         } else if (isYamlDataSource(dataSource)) {
             return fromYaml(dataSource, isExplodedDataModel);
@@ -91,9 +91,21 @@ public class DataModelSupplier implements Supplier<Map<String, Object>> {
 
     private static boolean isYamlDataSource(DataSource dataSource) {
         final String contentType = dataSource.getContentType();
-        final String extension = FilenameUtils.getExtension(dataSource.getUri().toString());
-        return contentType.startsWith(MIME_TEXT_YAML)
-                || (contentType.startsWith(MIME_TEXT_PLAIN)) && "yaml".equalsIgnoreCase(extension);
+        if(contentType.startsWith(MIME_TEXT_YAML) || contentType.startsWith(MIME_APPLICATION_YAML)) {
+            return true;
+        }
+
+        final String extension = dataSource.getExtension();
+        final boolean hasYamlExtension = "yml".equalsIgnoreCase(extension) || "yaml".equalsIgnoreCase(extension);
+        return (contentType.startsWith(MIME_TEXT_PLAIN)) && hasYamlExtension;
+    }
+
+    private static boolean isJsonDataSource(DataSource dataSource) {
+        final String contentType = dataSource.getContentType();
+        final String extension = dataSource.getExtension();
+        final boolean hasJsonExtension = "json".equalsIgnoreCase(extension);
+        return contentType.startsWith(MIME_APPLICATION_JSON)
+                || (contentType.startsWith(MIME_TEXT_PLAIN)) && hasJsonExtension;
     }
 
     private static Map<String, Object> fromJson(DataSource dataSource, boolean isExplodedDataModel) {

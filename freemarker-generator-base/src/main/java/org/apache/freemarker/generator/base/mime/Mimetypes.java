@@ -20,6 +20,7 @@ public class Mimetypes {
 
     public static final String MIME_APPLICATION_JSON = "application/json";
     public static final String MIME_APPLICATION_OCTET_STREAM = "application/octet-stream";
+    public static final String MIME_APPLICATION_YAML = "application/yaml";
     public static final String MIME_APPLICATION_XML = "application/xml";
     public static final String MIME_APPLICATION_XHTML = "application/xhtml+xml";
 

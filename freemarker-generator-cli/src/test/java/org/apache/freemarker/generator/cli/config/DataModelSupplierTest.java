@@ -184,9 +184,9 @@ public class DataModelSupplierTest {
         assertNotNull(model.get("post"));
     }
 
-    @Test
+    @Test(expected = RuntimeException.class)
     @Ignore("Requires internet access")
-    public void shouldResolveUrlToDataModelVariables() {
+    public void shouldThrowExceptionForUnresolvableUrl() {
         supplier("https://jsonplaceholder.typicode.com/posts/does-not-exist").get();
     }
 
