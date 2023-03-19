@@ -98,9 +98,9 @@ public class DataSources implements Closeable {
     }
 
     /**
-     * Returns <tt>true</tt> if this list contains no elements.
+     * Returns <code>true</code> if this list contains no elements.
      *
-     * @return <tt>true</tt> if this list contains no elements
+     * @return <code>true</code> if this list contains no elements
      */
     public boolean isEmpty() {
         return dataSources.isEmpty();

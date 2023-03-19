@@ -12,7 +12,7 @@
 </#compress>
 <#--------------------------------------------------------------------------->
 <#function splunkSearchUrl accessLog>
-    <#return "https://splunk.p.santanderconsumer.at/en-US/app/scbdevteam/search?q=search%20source%3D%22${accessLog?url}%22">
+    <#return "https://server.invalid/en-US/app/name/search?q=search%20source%3D%22${accessLog?url}%22">
 </#function>
 <#--------------------------------------------------------------------------->
 <#function getAccessLog text>
