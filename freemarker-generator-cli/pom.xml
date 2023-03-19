@@ -206,6 +206,12 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-nop</artifactId>
         </dependency>
+        <!-- XPath support -->
+        <dependency>
+            <groupId>jaxen</groupId>
+            <artifactId>jaxen</artifactId>
+            <version>1.2.0</version>
+        </dependency>
         <!-- Testing -->
         <dependency>
             <groupId>junit</groupId>
