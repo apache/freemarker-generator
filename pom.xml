@@ -38,6 +38,9 @@
 
     <scm>
         <url>https://github.com/sgoeschl/freemarker-cli</url>
+        <connection>scm:git:git://github.com/sgoeschl/freemarker-cli.git</connection>
+        <developerConnection>scm:git:git@github.com:sgoeschl/freemarker-cli.git</developerConnection>
+        <tag>HEAD</tag>
     </scm>
 
     <modules>
