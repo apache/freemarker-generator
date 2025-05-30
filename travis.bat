@@ -17,7 +17,7 @@ REM specific language governing permissions and limitations
 REM under the License.
 REM
 REM Simulate the Travis build locally
-CALL mvn clean install site site:stage
+CALL mvn clean install site
 cd .\freemarker-generator-cli\target\appassembler\
 CALL .\run-examples.bat
 cd ..\..\..\freemarker-generator-maven-plugin-sample

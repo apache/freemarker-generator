@@ -17,7 +17,7 @@
 # under the License.
 #
 # Simulate the Travis build locally
-mvn clean install site site:stage
+mvn clean install site
 cd ./freemarker-generator-cli/target/appassembler/
 sh ./bin/freemarker-generator @examples.args
 sh ./run-examples.sh
